@@ -49,9 +49,9 @@ class DwooTemplateString implements DwooITemplate
 
 	/**
 	 * validity duration of the generated cache file (in seconds)
-	 * 
+	 *
 	 * set to -1 for infinite cache, 0 to disable and null to inherit the Dwoo instance's cache time
-	 * 
+	 *
 	 * @var int
 	 */
 	protected $cacheTime;
@@ -72,10 +72,10 @@ class DwooTemplateString implements DwooITemplate
 	 * @var array
 	 */
 	protected static $cache = array('cached'=>array(), 'compiled'=>array());
-	
+
 	/**
 	 * holds the compiler that built this template
-	 * 
+	 *
 	 * @var DwooICompiler
 	 */
 	protected $compiler;
@@ -135,17 +135,17 @@ class DwooTemplateString implements DwooITemplate
 	{
 		return $this->name;
 	}
-	
+
 	/**
 	 * returns the resource name for this template class
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getResourceName()
 	{
 		return 'string';
 	}
-		
+
 	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
 	 *
@@ -219,11 +219,11 @@ class DwooTemplateString implements DwooITemplate
 
 		self::$cache['cached'][$this->cacheId] = true;
 	}
-	
+
 	/**
 	 * clears the cached template if it's older than the given time
 	 *
-	 * @param int $olderThan minimum time (in seconds) required for the cache to be cleared 
+	 * @param int $olderThan minimum time (in seconds) required for the cache to be cleared
 	 * @return bool true if the cache was not present or if it was deleted, false if it remains there
 	 */
 	public function clearCache($olderThan=0)
@@ -232,13 +232,12 @@ class DwooTemplateString implements DwooITemplate
 
 		return !file_exists($cachedFile) || (filectime($cachedFile) < (time() - $olderThan) && unlink($cachedFile));
 	}
-	
+
 	/**
 	 * returns the compiled template file name
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param DwooICompiler $compiler the compiler that must be used, if null a
-	 * 								  DwooCompiler will be used by default
+	 * @param DwooICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler)
@@ -262,6 +261,7 @@ class DwooTemplateString implements DwooITemplate
 			$this->compiler = $compiler;
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
+			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
 			file_put_contents($compiledFile, $compiler->compile($this->template));
 			touch($compiledFile, $_SERVER['REQUEST_TIME']);
 

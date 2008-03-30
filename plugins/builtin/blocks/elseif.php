@@ -35,9 +35,12 @@ class DwooPlugin_elseif extends DwooPlugin_if implements DwooICompilableBlock
 		$currentBlock =& $compiler->getCurrentBlock();
 		$currentBlock['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n}".DwooCompiler::PHP_CLOSE;
 
-		$out = substr($out, 0, -strlen(DwooCompiler::PHP_CLOSE));
+		if($out === '')
+			$out = DwooCompiler::PHP_OPEN."\n}";
+		else
+			$out = substr($out, 0, -strlen(DwooCompiler::PHP_CLOSE));
 
-		return $out . "elseif(".implode(' ', self::replaceKeywords($params, $compiler)).") {\n" . DwooCompiler::PHP_CLOSE;
+		return $out . " elseif(".implode(' ', self::replaceKeywords($params, $compiler)).") {\n" . DwooCompiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')

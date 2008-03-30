@@ -17,6 +17,10 @@ DwooLoader::loadPlugin('topLevelBlock');
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
  *
+ * requirements :
+ *  php 5.2.0 or above
+ *  php's mbstring extension for some plugins
+ *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -130,6 +134,13 @@ class Dwoo
      */
     protected $cacheTime = 0;
 
+	/**
+	 * security policy object
+	 *
+	 * @var DwooSecurityPolicy
+	 */
+	protected $securityPolicy = null;
+
     /**
      * stores the custom plugins callbacks
      *
@@ -159,12 +170,12 @@ class Dwoo
         'file'		=>	array
     	(
         	'class'		=>	'DwooTemplateFile',
-        	'compiler'	=>	array('DwooCompiler', 'compilerFactory')
+        	'compiler'	=>	null
     	),
     	'string'	=>	array
     	(
     		'class'		=>	'DwooTemplateString',
-    		'compiler'	=>	array('DwooCompiler', 'compilerFactory')
+    		'compiler'	=>	null
     	)
     );
 
@@ -306,11 +317,11 @@ class Dwoo
 			{
 				$compiler = $this->resources[$tpl->getResourceName()]['compiler'];
 
-				if($compiler === null)
+				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
 				{
 					if(class_exists('DwooCompiler', false) === false)
 						include DWOO_PATH . 'DwooCompiler.php';
-					$compiler = DwooCompiler::getInstance();
+					$compiler = DwooCompiler::compilerFactory();
 				}
 				else
 					$compiler = call_user_func($compiler);
@@ -511,9 +522,9 @@ class Dwoo
      *
      * @param string $name the resource name
      * @param string $class the resource class (which must implement DwooITemplate)
-     * @param callback $compilerFactory the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided
+     * @param callback $compilerFactory the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a DwooCompiler object
      */
-    public function addResource($name, $class, $compilerFactory = array('DwooCompiler', 'compilerFactory'))
+    public function addResource($name, $class, $compilerFactory = null)
     {
         if(strlen($name) < 2)
             throw new Exception('Resource names must be at least two-character long to avoid conflicts with Windows paths', E_USER_NOTICE);
@@ -534,7 +545,7 @@ class Dwoo
     {
     	unset($this->resources[$name]);
     	if($name==='file')
-    		$this->resources['file'] = array('class'=>'DwooTemplateFile', 'compiler'=>array('DwooCompiler', 'compilerFactory'));
+    		$this->resources['file'] = array('class'=>'DwooTemplateFile', 'compiler'=>null);
     }
 
 /*    public function addConfig(array $config)
@@ -700,6 +711,28 @@ class Dwoo
     	return $this->resources[$resourceName]['compiler'];
     }
 
+	/**
+	 * sets the security policy object to enforce some php security settings
+	 *
+	 * use this if untrusted persons can modify templates
+	 *
+	 * @param DwooSecurityPolicy $policy the security policy object
+	 */
+	public function setSecurityPolicy(DwooSecurityPolicy $policy = null)
+	{
+		$this->securityPolicy = $policy;
+	}
+
+	/**
+	 * returns the current security policy object or null by default
+	 *
+	 * @return DwooSecurityPolicy|null the security policy object if any
+	 */
+	public function getSecurityPolicy()
+	{
+		return $this->securityPolicy;
+	}
+
     /*
      * --------- util functions ---------
      */
@@ -723,7 +756,8 @@ class Dwoo
 	 */
     public function clearCache($olderThan=0)
    	{
-   		$cache = new RecursiveDirectoryIterator($this->cacheDir);
+   		$cacheDirs = new RecursiveDirectoryIterator($this->cacheDir);
+   		$cache = new RecursiveIteratorIterator($cacheDirs);
    		$expired = time() - $olderThan;
    		$count = 0;
    		foreach($cache as $file)
@@ -1483,6 +1517,206 @@ class DwooLoader
         else
             DwooLoader::rebuildClassPathCache($dir, $writeableDir);
     }
+}
+
+/**
+ * represents the security settings of a dwoo instance, it can be passed around to different dwoo instances
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
+ * This file is released under the LGPL
+ * "GNU Lesser General Public License"
+ * More information can be found here:
+ * {@link http://www.gnu.org/copyleft/lesser.html}
+ *
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
+ * @link       http://dwoo.org/
+ * @version    0.3.3
+ * @date       2008-03-19
+ * @package    Dwoo
+ */
+class DwooSecurityPolicy
+{
+	/**#@+
+	 * php handling constants, defaults to PHP_REMOVE
+	 *
+	 * PHP_REMOVE : remove all <?php ?> (+ short tags if your short tags option is on) from the input template
+	 * PHP_ALLOW : leave them as they are
+	 * PHP_ENCODE : run htmlentities over them
+	 *
+	 * @var int
+	 */
+	const PHP_ENCODE = 1;
+	const PHP_REMOVE = 2;
+	const PHP_ALLOW = 3;
+	/**#@-*/
+
+	/**#@+
+	 * constant handling constants, defaults to CONST_DISALLOW
+	 *
+	 * CONST_DISALLOW : throw an error if {$dwoo.const.*} is used in the template
+	 * CONST_ALLOW : allow {$dwoo.const.*} calls
+	 */
+	const CONST_DISALLOW = false;
+	const CONST_ALLOW = true;
+	/**#@-*/
+
+	/**
+	 * php functions that are allowed to be used within the template
+	 *
+	 * @var array
+	 */
+	protected $allowedPhpFunctions = array
+	(
+		'str_repeat', 'count', 'number_format', 'htmlentities', 'htmlspecialchars',
+		'long2ip', 'strlen', 'list', 'empty', 'count', 'sizeof', 'in_array', 'is_array',
+	);
+
+	/**
+	 * paths that are safe to use with include or other file-access plugins
+	 *
+	 * @var array
+	 */
+	protected $allowedDirectories = array();
+
+	/**
+	 * stores the php handling level
+	 *
+	 * defaults to DwooSecurityPolicy::PHP_REMOVE
+	 *
+	 * @var int
+	 */
+	protected $phpHandling = self::PHP_REMOVE;
+
+	/**
+	 * stores the constant handling level
+	 *
+	 * defaults to DwooSecurityPolicy::CONST_DISALLOW
+	 *
+	 * @var bool
+	 */
+	protected $constHandling = self::CONST_DISALLOW;
+
+	/**
+	 * adds a php function to the allowed list
+	 *
+	 * @param mixed $func function name or array of function names
+	 */
+	public function allowPhpFunction($func)
+	{
+		if(is_array($func))
+			foreach($func as $fname)
+				$this->allowedPhpFunctions[strtolower($fname)] = true;
+		else
+			$this->allowedPhpFunctions[strtolower($func)] = true;
+	}
+
+	/**
+	 * removes a php function from the allowed list
+	 *
+	 * @param mixed $func function name or array of function names
+	 */
+	public function disallowPhpFunction($func)
+	{
+		if(is_array($func))
+			foreach($func as $fname)
+				unset($this->allowedPhpFunctions[strtolower($fname)]);
+		else
+			unset($this->allowedPhpFunctions[strtolower($func)]);
+	}
+
+	/**
+	 * returns the list of php functions allowed to run, note that the function names
+	 * are stored in the array keys and not values
+	 *
+	 * @return array
+	 */
+	public function getAllowedPhpFunctions()
+	{
+		return $this->allowedPhpFunctions;
+	}
+
+	/**
+	 * adds a directory to the safelist for includes and other file-access plugins
+	 *
+	 * @param mixed $path a path name or an array of paths
+	 */
+	public function allowDirectory($path)
+	{
+		if(is_array($path))
+			foreach($path as $dir)
+				$this->allowedDirectories[realpath($dir)] = true;
+		else
+			$this->allowedDirectories[realpath($path)] = true;
+	}
+
+	/**
+	 * removes a directory from the safelist
+	 *
+	 * @param mixed $path a path name or an array of paths
+	 */
+	public function disallowDirectory($path)
+	{
+		if(is_array($path))
+			foreach($path as $dir)
+				unset($this->allowedDirectories[realpath($dir)]);
+		else
+			unset($this->allowedDirectories[realpath($path)]);
+	}
+
+	/**
+	 * returns the list of safe paths, note that the paths are stored in the array
+	 * keys and not values
+	 *
+	 * @return array
+	 */
+	public function getAllowedDirectories()
+	{
+		return $this->allowedPHPFunc;
+	}
+
+	/**
+	 * sets the php handling level, defaults to REMOVE
+	 *
+	 * @param int $level one of the DwooSecurityPolicy::PHP_* constants
+	 */
+	public function setPhpHandling($level = self::PHP_REMOVE)
+	{
+		$this->phpHandling = $level;
+	}
+
+	/**
+	 * returns the php handling level
+	 *
+	 * @return int the current level, one of the DwooSecurityPolicy::PHP_* constants
+	 */
+	public function getPhpHandling()
+	{
+		return $this->phpHandling;
+	}
+
+	/**
+	 * sets the constant handling level, defaults to CONST_DISALLOW
+	 *
+	 * @param bool $level one of the DwooSecurityPolicy::CONST_* constants
+	 */
+	public function setConstantHandling($level = self::CONST_DISALLOW)
+	{
+		$this->constHandling = $level;
+	}
+
+	/**
+	 * returns the constant handling level
+	 *
+	 * @return bool the current level, one of the DwooSecurityPolicy::CONST_* constants
+	 */
+	public function getConstantHandling()
+	{
+		return $this->constHandling;
+	}
 }
 
 ?>

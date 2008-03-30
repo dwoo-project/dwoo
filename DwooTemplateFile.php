@@ -69,8 +69,7 @@ class DwooTemplateFile extends DwooTemplateString
 	 * returns the compiled template file name
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param DwooICompiler $compiler the compiler that must be used, if null a
-	 * 								  DwooCompiler will be used by default
+	 * @param DwooICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler)
@@ -94,6 +93,7 @@ class DwooTemplateFile extends DwooTemplateString
 			$this->compiler = $compiler;
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
+			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
 			file_put_contents($compiledFile, $compiler->compile(file_get_contents($this->file)));
 			touch($compiledFile, max($_SERVER['REQUEST_TIME'], filemtime($this->file)));
 
@@ -105,7 +105,7 @@ class DwooTemplateFile extends DwooTemplateString
 
 	/**
 	 * returns the resource name for this template class
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getResourceName()
@@ -122,7 +122,7 @@ class DwooTemplateFile extends DwooTemplateString
 	{
 		return $this->file;
 	}
-	
+
 	/**
 	 * returns a new template object from the given include name, null if no include is
 	 * possible (resource not found), or false if include is not permitted by this resource type
@@ -143,20 +143,25 @@ class DwooTemplateFile extends DwooTemplateString
 	{
 		$resourceId = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $resourceId);
 
-		// TODO check for recursion here if security is enabled
-
-		if(file_exists($resourceId))
-			return new self($resourceId, $cacheTime, $cacheId, $compileId);
-
-		$tpl = $dwoo->getCurrentTemplate();
-		if($tpl instanceof DwooTemplateFile)
+		if(file_exists($resourceId) === false)
 		{
-			$file = dirname($tpl->getFilename()).DIRECTORY_SEPARATOR.$resourceId;
-			if(file_exists($file))
-				return new self($file, $cacheTime, $cacheId, $compileId);
+			$tpl = $dwoo->getCurrentTemplate();
+			if($tpl instanceof DwooTemplateFile)
+			{
+				$resourceId = dirname($tpl->getFilename()).DIRECTORY_SEPARATOR.$resourceId;
+				if(file_exists($resourceId) === false)
+					return null;
+			}
 		}
 
-		return null;
+		if($policy = $dwoo->getSecurityPolicy())
+		{
+			$resourceId = realpath($resourceId);
+			if($resourceId === $this->file)
+				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
+		}
+
+		return new self($resourceId, $cacheTime, $cacheId, $compileId);
 	}
 }
 

@@ -75,6 +75,22 @@ class DwooCompiler implements DwooICompiler
 	protected $rdr = '\\}';
 
 	/**
+	 * defines whether opening and closing tags can contain spaces before valid data or not
+	 *
+	 * turn to true if you want to be sloppy with the syntax, but when set to false it allows
+	 * to skip javascript and css tags as long as they are in the form "{ something", which is
+	 * nice. default is false.
+	 */
+	protected $allowLooseOpenings = false;
+
+	/**
+	 * security policy object
+	 *
+	 * @var DwooSecurityPolicy
+	 */
+	protected $securityPolicy;
+
+	/**
 	 * storage for parse errors/warnings
 	 *
 	 * will be deprecated when proper exceptions are added
@@ -82,14 +98,6 @@ class DwooCompiler implements DwooICompiler
 	 * @var array
 	 */
 	protected $errors = array();
-
-	/**
-	 * boolean flag determining whether to use smarty compatibility
-	 * tweaks or not, will probably become deprecated at some point
-	 *
-	 * @var bool
-	 */
-	public $smartyCompat = true;
 
 	/**
 	 * stores the custom plugins registered with this compiler
@@ -188,18 +196,6 @@ class DwooCompiler implements DwooICompiler
 	protected static $instance;
 
 	/**
-	 * php functions that are allowed to be used within the template
-	 *
-	 * @var array
-	 */
-	protected $allowedPHPFunc = array
-	(
-		// TODO move this into a security policy class
-		'str_repeat','count','number_format','htmlentities','htmlspecialchars',
-		'long2ip', 'strlen',
-	);
-
-	/**
 	 * sets the delimiters to use in the templates
 	 *
 	 * delimiters can be multi-character strings but should not be one of those as they will
@@ -227,29 +223,29 @@ class DwooCompiler implements DwooICompiler
 	}
 
 	/**
-	 * adds a php function to the allowed list
+	 * sets the tag openings handling strictness, if set to true, template tags can
+	 * contain spaces before the first function/string/variable such as { $foo} is valid.
 	 *
-	 * @deprecated will be replaced by a security policy class
-	 * @param callback $func function name
+	 * if set to false (default setting), { $foo} is invalid but that is however a good thing
+	 * as it allows css (i.e. #foo { color:red; }) to be parsed silently without triggering
+	 * an error, same goes for javascript.
+	 *
+	 * @param bool $allow true to allow loose handling, false to restore default setting
 	 */
-	public function addPhpFunction($func)
+	public function setLooseOpeningHandling($allow = false)
 	{
-		if(!is_string($func) || !function_exists($func))
-			throw new Exception('Callback must be a valid function name (string)', E_USER_NOTICE);
-
-		$this->allowedPHPFunc[] = strtolower($func);
+		$this->allowLooseOpenings = (bool) $allow;
 	}
 
 	/**
-	 * removes a php function from the allowed list
+	 * returns the tag openings handling strictness setting
 	 *
-	 * @deprecated will be replaced by a security policy class
-	 * @param callback $func function name
+	 * @see setLooseOpeningHandling
+	 * @return bool true if loose tags are allowed
 	 */
-	public function removePhpFunction($func)
+	public function getLooseOpeningHandling()
 	{
-		if(($index = array_search(strtolower($func), $this->allowedPHPFunc, true)) !== false)
-			unset($this->allowedPHPFunc[$index]);
+		return $this->allowLooseOpenings;
 	}
 
 	/**
@@ -378,6 +374,28 @@ class DwooCompiler implements DwooICompiler
 	}
 
 	/**
+	 * sets the security policy object to enforce some php security settings
+	 *
+	 * use this if untrusted persons can modify templates
+	 *
+	 * @param DwooSecurityPolicy $policy the security policy object
+	 */
+	public function setSecurityPolicy(DwooSecurityPolicy $policy = null)
+	{
+		$this->securityPolicy = $policy;
+	}
+
+	/**
+	 * returns the current security policy object or null by default
+	 *
+	 * @return DwooSecurityPolicy|null the security policy object if any
+	 */
+	public function getSecurityPolicy()
+	{
+		return $this->securityPolicy;
+	}
+
+	/**
 	 * compiles the provided string down to php code
 	 *
 	 * @param string $tpl the template to compile
@@ -391,12 +409,6 @@ class DwooCompiler implements DwooICompiler
 		$this->scope =& $this->data;
 		$this->scopeTree = array();
 		$this->stack = array();
-
-		// adds a smarty compat preprocessor if required
-		if($this->smartyCompat)
-		{
-			$this->addPreProcessor('smarty_compat', true);
-		}
 
 		if($this->debug) echo 'PROCESSING PREPROCESSORS<br>';
 
@@ -421,11 +433,29 @@ class DwooCompiler implements DwooICompiler
 
 		// strips comments
 		if(strstr($tpl, $this->ld.'*') !== false)
-			$tpl = preg_replace('#'.$this->ldr.'\*.*?\*'.$this->rdr.'#s', '', $tpl);
+			$tpl = preg_replace('{'.$this->ldr.'\*.*?\*'.$this->rdr.'}s', '', $tpl);
+
+		// strips php tags if required by the security policy
+		if($this->securityPolicy !== null)
+		{
+			$search = array('{<\?php.*?\?>}');
+			if(ini_get('short_open_tags'))
+				$search = array('{<\?.*?\?>}', '{<%.*?%>}');
+			switch($this->securityPolicy->getPhpHandling())
+			{
+				case DwooSecurityPolicy::PHP_ALLOW:
+					break;
+				case DwooSecurityPolicy::PHP_ENCODE:
+					$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
+					break;
+				case DwooSecurityPolicy::PHP_REMOVE:
+					$tpl = preg_replace($search, '', $tpl);
+			}
+		}
 
 		// handles the built-in strip function
 		if(($pos = strpos($tpl, $this->ld.'strip'.$this->rd)) !== false && substr($tpl, $pos-1, 1) !== '\\')
-			$tpl = preg_replace_callback('#'.$this->ldr.'strip'.$this->rdr.'(.+?)'.$this->ldr.'/strip'.$this->rdr.'#s', array($this, 'stripPreprocessorHelper'), $tpl);
+			$tpl = preg_replace_callback('{'.$this->ldr.'strip'.$this->rdr.'(.+?)'.$this->ldr.'/strip'.$this->rdr.'}s', array($this, 'stripPreprocessorHelper'), $tpl);
 
 		while(true)
 		{
@@ -468,15 +498,32 @@ class DwooCompiler implements DwooICompiler
 					$tpl = substr_replace($tpl, $this->rd, $endpos-1, 1+strlen($this->rd));
 					$endpos = strpos($tpl, $this->rd, $endpos);
 				}
+
+				$pos += strlen($this->ld);
+				if($this->allowLooseOpenings)
+				{
+					while(substr($tpl, $pos, 1) === ' ')
+						$pos+=1;
+				}
+				else
+				{
+					if(substr($tpl, $pos, 1) === ' ' || substr($tpl, $pos, 1) === "\r" || substr($tpl, $pos, 1) === "\n")
+					{
+						$ptr = $pos;
+						$compiled .= $this->ld;
+						continue;
+					}
+				}
+
 				$ptr = $endpos+strlen($this->rd);
 
-				if(substr($tpl, $pos+strlen($this->ld), 1)==='/')
-					$compiled .= $this->removeBlock(substr($tpl, $pos+strlen($this->ld)+1, $endpos-$pos-1-strlen($this->ld)));
+				if(substr($tpl, $pos, 1)==='/')
+					$compiled .= $this->removeBlock(substr($tpl, $pos+1, $endpos-$pos-1));
 				else
-					$compiled .= $this->parse($tpl, $pos+strlen($this->ld), $endpos, false, 'root');
+					$compiled .= $this->parse($tpl, $pos, $endpos, false, 'root');
 
 				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
-				if(substr($compiled, -2) === '?>' && preg_match('#^(([\r\n])([\r\n]?))#', substr($tpl, $ptr, 3), $m))
+				if(substr($compiled, -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m))
 				{
 					if($m[3] === '')
 					{
@@ -536,17 +583,14 @@ class DwooCompiler implements DwooICompiler
 					throw new Exception('Type error for '.$plugin.' with type'.$type, E_USER_NOTICE);
 			}
 		}
-		if($this->smartyCompat)
-		{
-			$output .= '$_tag_stack = array();'."\n";
-		}
+
 		$output .= $compiled."\n?>";
 
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
 
 		if($this->debug) {
 			echo '<hr><pre>';
-			$lines = preg_split('#\r\n|\n#', htmlentities($output));
+			$lines = preg_split('{\r\n|\n}', htmlentities($output));
 			foreach($lines as $i=>$line)
 				echo ($i+1).'. '.$line."\r\n";
 		}
@@ -1007,7 +1051,7 @@ class DwooCompiler implements DwooICompiler
 			if($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : 0) + strlen($func)).' TO POINTER<br/>';
 		}
 
-		if(array_search($func, $this->allowedPHPFunc, true) !== false)
+		if($curBlock === 'method')
 		{
 			$pluginType = Dwoo::NATIVE_PLUGIN;
 		}
@@ -1073,8 +1117,10 @@ class DwooCompiler implements DwooICompiler
 			$p = $p[0];
 		if($pluginType & Dwoo::NATIVE_PLUGIN)
 		{
-			$params = $params['*'];
-			$output = $func.'('.implode(', ', $params).')';
+			if(isset($params['*']))
+				$output = $func.'('.implode(', ', $params['*']).')';
+			else
+				$output = $func.'()';
 		}
 		elseif($pluginType & Dwoo::FUNC_PLUGIN)
 		{
@@ -1153,6 +1199,8 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($curBlock === 'namedparam')
 			return array($output, $output);
+		elseif($curBlock === 'method')
+			return $output;
 		else
 			return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
 	}
@@ -1245,26 +1293,42 @@ class DwooCompiler implements DwooICompiler
 	{
 		$substr = substr($in, $from, $to-$from);
 
-		if(preg_match('#(\$?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)'.
-			($curBlock==='root' || $curBlock==='function' ? '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+|[0-9.,]*))*)':'()').
-			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\4|:[^\s`"\']*))*))+)?':'(())').
+		if(preg_match('#(\$?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)':'()') . // simple math expressions
+			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match))
 		{
 			$key = substr($match[1],1);
 
 			$matchedLength = strlen($match[0]);
-			$hasModifiers = isset($match[3]);
-			$hasExpression = isset($match[2]) && !empty($match[2]);
+			$hasModifiers = isset($match[4]) && !empty($match[4]);
+			$hasExpression = isset($match[3]) && !empty($match[3]);
+			$hasMethodCall = isset($match[2]) && !empty($match[2]);
+
+			if($hasMethodCall)
+			{
+				$key = substr($match[1], 1, strrpos($match[1], '->')-1);
+				$methodCall = substr($match[1], strrpos($match[1], '->')) . $match[2];
+			}
 
 			if($pointer !== null)
 				$pointer += $matchedLength;
 
-			// Replace useless brackets by dot accessed vars
+			// replace useless brackets by dot accessed vars
 			$key = preg_replace('#\[([^\[.->]+)\]#', '.$1', $key);
+
+			// prevent $foo->$bar calls because it doesn't seem worth the trouble
 			if(strpos($key, '->$') !== false)
 				throw new Exception('You can not access an object\'s property using a variable name.', E_USER_NOTICE);
 
-			if($this->debug) echo 'VAR FOUND (len:'.(strlen($key)+1).')<br />';
+			if($this->debug)
+			{
+				if($hasMethodCall)
+					echo 'METHOD CALL FOUND : $'.$key.$methodCall.'<br />';
+				else
+					echo 'VAR FOUND : $'.$key.'<br />';
+			}
 
 			$key = str_replace('"','\\"',$key);
 
@@ -1316,9 +1380,30 @@ class DwooCompiler implements DwooICompiler
 				$output = $this->parseVarKey($key);
 			}
 
+			if($hasMethodCall)
+			{
+				preg_match_all('{->([a-z0-9_]+)(\([^)]*\))?}i', $methodCall, $calls);
+				foreach($calls[1] as $i=>$method)
+				{
+					$args = $calls[2][$i];
+					// property
+					if($args === '')
+						$output = '(property_exists($tmp = '.$output.', \''.$method.'\') ? $tmp->'.$method.' : null)';
+					// method
+					else
+					{
+						if($args === '()')
+							$parsedCall = '->'.$method.$args;
+						else
+							$parsedCall = '->'.$this->parseFunction($method.$args, 0, strlen($method.$args), false, 'method');
+						$output = '(is_object($tmp = '.$output.') ? (method_exists($tmp, \''.$method.'\') ? $tmp'.$parsedCall.' : $this->triggerError(\'Call to an undefined method : <em>\'.get_class($tmp).\'::'.$method.'()</em>\')) : $this->triggerError(\'Method <em>'.$method.'()</em> was called on a non-object (\'.var_export($tmp, true).\')\'))';
+					}
+				}
+			}
+
 			if($hasExpression)
 			{
-				preg_match_all('#(?:([+/*%-])(\$[a-z0-9.[\]>_:-]+|[0-9.,]*))#i', $match[2], $expMatch);
+				preg_match_all('#(?:([+/*%-])(\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))#i', $match[3], $expMatch);
 
 				foreach($expMatch[1] as $k=>$operator)
 				{
@@ -1336,7 +1421,7 @@ class DwooCompiler implements DwooICompiler
 			// handle modifiers
 			if($curBlock !== 'modifier' && $hasModifiers)
 			{
-				$output = $this->replaceModifiers(array(null, null, $output, $match[3]), 'var');
+				$output = $this->replaceModifiers(array(null, null, $output, $match[4]), 'var');
 			}
 
 			if(is_array($parsingParams))
@@ -1348,7 +1433,7 @@ class DwooCompiler implements DwooICompiler
 				return array($output, $key);
 			elseif($curBlock === 'string')
 				return array($matchedLength, $output);
-			elseif($curBlock === 'expression')
+			elseif($curBlock === 'expression' || $curBlock === 'variable')
 				return $output;
 			elseif(substr($output, 0, strlen(self::PHP_OPEN)) === self::PHP_OPEN)
 				return $output;
@@ -1386,6 +1471,8 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif(preg_match('#dwoo\.const\.([a-z0-9_:-]+)#i', $key, $m))
 		{
+			if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === DwooSecurityPolicy::CONST_DISALLOW)
+				return 'null';
 			if(strpos($m[1], ':') !== false)
 				$output = '(defined("'.$m[1].'") ? constant("'.$m[1].'") : null)';
 			else
@@ -1512,10 +1599,20 @@ class DwooCompiler implements DwooICompiler
 						{
 							$last = strrpos($key, '$');
 						}
-						preg_match('#\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*#i', substr($key, $last), $submatch);
+						preg_match('#\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*'.
+								  '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', substr($key, $last), $submatch);
 
 						$len = strlen($submatch[0]);
-						$key = substr_replace($key, preg_replace_callback('#\$([a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)#i', array($this, 'replaceVarKeyHelper'), substr($key, $last, $len)), $last, $len);
+						$key = substr_replace(
+							$key,
+							preg_replace_callback(
+								'#(\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)'.
+								'((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i',
+								array($this, 'replaceVarKeyHelper'), substr($key, $last, $len)
+							),
+							$last,
+							$len
+						);
 						if($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key.'<br>';
 					}
 
@@ -1539,7 +1636,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	protected function replaceVarKeyHelper($match)
 	{
-		return '".'.$this->parseVarKey($match[1]).'."';
+		return '".'.$this->parseVar($match[0], 0, strlen($match[0]), false, 'variable').'."';
 	}
 
 	/**
@@ -1666,7 +1763,7 @@ class DwooCompiler implements DwooICompiler
 				$last = strrpos($string, '$');
 			}
 
-			if($string[$last-1]==='\\')
+			if(array_search($string[$last-1], array('\\', '/', '*', '+', '-', '%')) !== false)
 				continue;
 
 			$var = $this->parse($string, $last, null, false, $curBlock === 'modifier' ? 'modifier' : 'string');
@@ -1931,9 +2028,10 @@ class DwooCompiler implements DwooICompiler
 	{
 		$pluginType = -1;
 
-		if(array_search(strtolower($name), $this->allowedPHPFunc, true) !== false)
+		if(($this->securityPolicy === null && function_exists($name)) ||
+			($this->securityPolicy !== null && in_array(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false))
 		{
-			return Dwoo::NATIVE_PLUGIN;
+			$phpFunc = true;
 		}
 
 		while($pluginType <= 0)
@@ -1963,14 +2061,23 @@ class DwooCompiler implements DwooICompiler
 			else
 			{
 				if($pluginType===-1)
-					DwooLoader::loadPlugin($name);
+				{
+					try {
+						DwooLoader::loadPlugin($name);
+					} catch (Exception $e) {
+						if(isset($phpFunc))
+							$pluginType = Dwoo::NATIVE_PLUGIN;
+						else
+							throw $e;
+					}
+				}
 				else
 					throw new Exception('Plugin "'.$name.'" could not be found');
 				$pluginType++;
 			}
 		}
 
-		if(($pluginType & Dwoo::COMPILABLE_PLUGIN) === 0)
+		if(($pluginType & Dwoo::COMPILABLE_PLUGIN) === 0 && ($pluginType & Dwoo::NATIVE_PLUGIN) === 0)
 			$this->usedPlugins[$name] = $pluginType;
 
 		return $pluginType;
@@ -1986,6 +2093,17 @@ class DwooCompiler implements DwooICompiler
 	{
 		// TODO make this into a separated plugin
 		return str_replace(array("\n","\r"), null, preg_replace('#^\s*(.+?)\s*$#m', '$1', $matches[1]));
+	}
+
+	/**
+	 * runs htmlentities over the matched <?php ?> blocks when the security policy enforces that
+	 *
+	 * @param array $match matched php block
+	 * @return string the htmlentities-converted string
+	 */
+	protected function phpTagEncodingHelper($match)
+	{
+		return htmlspecialchars($match[0]);
 	}
 
 	/**

@@ -75,7 +75,6 @@ class CoreTests extends PHPUnit_Framework_TestCase
     	$tpl = new DwooTemplateString('{"foo"|strtoupper}');
 		$tpl->forceCompilation();
 
-		$this->compiler->addPhpFunction('strtoupper');
 		$this->assertEquals("FOO", $this->dwoo->get($tpl, array(), $this->compiler));
 
     	$tpl = new DwooTemplateString('{foreach $foo|count p}{$p}{/foreach}');

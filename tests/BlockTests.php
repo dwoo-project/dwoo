@@ -159,6 +159,13 @@ class BlockTests extends PHPUnit_Framework_TestCase
 
     public function testForeachDwoo()
     {
+    	// Item only, key arg is mapped to it just as foreach($foo as $item)
+		$tpl = new DwooTemplateString('{foreach $sub item}{$item}{/foreach}');
+		$tpl->forceCompilation();
+
+        $this->assertEquals('foobar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
+
+    	// Item and key used, key is second just as foreach($foo as $key=>$item)
 		$tpl = new DwooTemplateString('{foreach $sub key item}{$key}.{$item}{/foreach}');
 		$tpl->forceCompilation();
 

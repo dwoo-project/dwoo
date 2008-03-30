@@ -28,8 +28,6 @@ class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
 
 	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
 	{
-		// TODO pad the range to 1000 or something if security is enabled
-
 		$params = $compiler->getCompiledParams($params);
 		$tpl = $compiler->getTemplateSource(true);
 

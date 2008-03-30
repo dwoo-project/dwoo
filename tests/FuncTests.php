@@ -279,7 +279,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals((string)(3+5+100+20), $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$tpl = new DwooTemplateString('{math equation="3+5+$a+b" b="20"}');
+		$tpl = new DwooTemplateString('{math equation="3+5+`$a`+b" b="20"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals((string)(3+5+100+20), $this->dwoo->get($tpl, array('a'=>100), $this->compiler));

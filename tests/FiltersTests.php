@@ -41,10 +41,12 @@ SNIPPET
 
     public function testSmartyCompat()
     {
-		$tpl = new DwooTemplateString('{ldelim}{$smarty.version}{rdelim}');
+    	$tpl = new DwooTemplateString('{ldelim}{$smarty.version}{rdelim}');
 		$tpl->forceCompilation();
+		$cmp = new DwooCompiler();
+		$cmp->addPreProcessor('smarty_compat', true);
 
-        $this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $this->compiler));
+        $this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
     }
 }
 

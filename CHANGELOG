@@ -1,3 +1,15 @@
+[2008--] 0.3.4
++ Syntax: Added support for method calls on objects i.e. {$foo->bar()}
++ Added support for smarty security features, see the DwooSecurityPolicy class
+  and $dwoo->setSecurityPolicy()
++ API: Added a DwooCompiler->setLooseOpeningHandling() method that, if set to
+  true, allows tags to
+* Fixed {elseif} bug that appeared when multiple elseif tags were used in a row
+* Syntax: Improved simple math support to work within variable variables
+  (i.e. you can do {$array[$index+1]}) and within strings as well. To prevent
+  this enclose the variables in backticks (i.e. {"$foo/$bar"} will do the math
+  while {"`$foo`/$bar"} won't as $foo is properly delimited)
+
 [2008-03-19] 0.3.3
 + Syntax: Added support for $dwoo.const.CONSTANT and
   $dwoo.const.Class::CONSTANT to read PHP constants from the template

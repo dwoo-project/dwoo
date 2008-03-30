@@ -16,7 +16,7 @@ if(class_exists('DwooCompiler', false) === false)
 	require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'DwooCompiler.php';
 
 /**
- * A Smarty compatibility layer for Dwoo
+ * a Smarty compatibility layer for Dwoo
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -36,6 +36,7 @@ if(class_exists('DwooCompiler', false) === false)
  */
 class DwooSmarty_Adapter extends Dwoo
 {
+	// magic get/set/call functions that handle unsupported features
 	public function __set($p, $v)
 	{
 		if(array_key_exists($p, $this->compat['properties']) !== false)
@@ -79,71 +80,76 @@ class DwooSmarty_Adapter extends Dwoo
 		}
 	}
 
+	// list of unsupported properties and methods
 	protected $compat = array
 	(
 		'methods' => array
 		(
-			'register_resource', 'unregister_resource', 'load_filter',
+			'register_resource', 'unregister_resource', 'load_filter', 'clear_compiled_tpl',
 			'register_object', 'unregister_object', 'get_registered_object',
-			'clear_compiled_tpl',
 			'clear_config', 'get_config_vars', 'config_load'
 		),
 		'properties' => array
 		(
+			'cache_handler_func' => null,
 			'debugging' => false,
 			'error_reporting' => null,
 			'debugging_ctrl' => 'NONE',
 			'request_vars_order' => 'EGPCS',
 			'request_use_auto_globals' => true,
 			'use_sub_dirs' => false,
-			'default_resource_type' => 'file',
-			'cache_handler_func' => null,
 			'autoload_filters' => array(),
 			'default_template_handler_func' => '',
 			'debug_tpl' => '',
-			'trusted_dir' => array(),
 			'cache_modified_check' => false,
-			'secure_dir' => array(),
-			'security_settings' => array(
-			                                    'PHP_HANDLING'    => false,
-			                                    'IF_FUNCS'        => array('array', 'list',
-			                                                               'isset', 'empty',
-			                                                               'count', 'sizeof',
-			                                                               'in_array', 'is_array',
-			                                                               'true', 'false', 'null'),
-			                                    'INCLUDE_ANY'     => false,
-			                                    'PHP_TAGS'        => false,
-			                                    'MODIFIER_FUNCS'  => array('count'),
-			                                    'ALLOW_CONSTANTS'  => false
-			                                   ),
 			'default_modifiers' => array(),
+			'default_resource_type' => 'file',
 			'config_overwrite' => true,
 			'config_booleanize' => true,
 			'config_read_hidden' => false,
 			'config_fix_newlines' => true,
 			'config_class' => 'Config_File',
-			'php_handling' => SMARTY_PHP_PASSTHRU,
-			'security' => false
 		),
 	);
 
+	// security vars
+	public $security = false;
+	public $trusted_dir = array();
+	public $secure_dir = array();
+	public $php_handling = SMARTY_PHP_PASSTHRU;
+	public $security_settings = array
+	(
+		'PHP_HANDLING'    => false,
+		'IF_FUNCS'        => array
+		(
+			'list', 'empty', 'count', 'sizeof',
+			'in_array', 'is_array',
+		),
+		'INCLUDE_ANY'     => false,
+		'PHP_TAGS'        => false,
+		'MODIFIER_FUNCS'  => array(),
+		'ALLOW_CONSTANTS'  => false
+	);
+
+	// paths
 	public $template_dir = 'templates';
 	public $compile_dir = 'templates_c';
 	public $config_dir = 'configs';
 	public $cache_dir = 'cache';
 	public $plugins_dir = array();
+
+	// misc options
 	public $left_delimiter = '{';
 	public $right_delimiter = '}';
-
 	public $compile_check = true;
 	public $force_compile = false;
 	public $caching = 0;
 	public $cache_lifetime = 3600;
 	public $compile_id = null;
-
 	public $compiler_file = null;
 	public $compiler_class = null;
 
+	// dwoo/smarty compat layer
 	public $show_compat_errors = false;
 	protected $dataProvider;
 	protected $_filters = array('pre'=>array(), 'post'=>array(), 'output'=>array());
@@ -166,6 +172,40 @@ class DwooSmarty_Adapter extends Dwoo
 
 	public function fetch($filename, $cacheId=null, $compileId=null, $display=false)
 	{
+		if($this->security)
+		{
+			$policy = new DwooSecurityPolicy();
+			$policy->addPhpFunction(array_merge($this->security_settings['IF_FUNCS'], $this->security_settings['MODIFIER_FUNCS']));
+
+			$phpTags = $this->security_settings['PHP_HANDLING'] ? SMARTY_PHP_ALLOW : $this->php_handling;
+			if($this->security_settings['PHP_TAGS'])
+				$phpTags = SMARTY_PHP_ALLOW;
+			switch($phpTags)
+			{
+				case SMARTY_PHP_ALLOW:
+				case SMARTY_PHP_PASSTHRU:
+					$phpTags = DwooSecurityPolicy::PHP_ALLOW;
+					break;
+				case SMARTY_PHP_QUOTE:
+					$phpTags = DwooSecurityPolicy::PHP_ENCODE;
+					break;
+				case SMARTY_PHP_REMOVE:
+				default:
+					$phpTags = DwooSecurityPolicy::PHP_REMOVE;
+					break;
+			}
+			$policy->setPhpHandling($phpTags);
+
+			$policy->setConstantHandling($this->security_settings['ALLOW_CONSTANTS']);
+
+			if($this->security_settings['INCLUDE_ANY'])
+				$policy->allowDirectory(preg_replace('{^((?:[a-z]:)?[\\\\/]).*}i', '$1', __FILE__));
+			else
+				$policy->allowDirectory($this->secure_dir);
+
+			$this->setSecurityPolicy($policy);
+		}
+
 		if(!empty($this->plugins_dir))
 			foreach($this->plugins_dir as $dir)
 				DwooLoader::addDirectory(rtrim($dir, '\\/'));
@@ -184,6 +224,11 @@ class DwooSmarty_Adapter extends Dwoo
 			if($this->compiler_file !== null && !class_exists($this->compiler_class, false))
 				include $this->compiler_file;
 			$this->compiler = new $this->compiler_class;
+		}
+		else
+		{
+			$this->compiler->addPreProcessor('smarty_compat', true);
+			$this->compiler->setLooseOpeningHandling(true);
 		}
 
 		$this->compiler->setDelimiters($this->left_delimiter, $this->right_delimiter);

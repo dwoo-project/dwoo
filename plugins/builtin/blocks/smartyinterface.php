@@ -48,7 +48,7 @@ class DwooPlugin_smartyinterface extends DwooPlugin
 
 		$compiler->curBlock['params']['postOut'] = DwooCompiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.DwooCompiler::PHP_CLOSE;
 
-		return DwooCompiler::PHP_OPEN.$prepend.' $_tag_stack[] = '.var_export($params,true).'; $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.DwooCompiler::PHP_CLOSE;
+		return DwooCompiler::PHP_OPEN.$prepend.' if(!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = '.var_export($params,true).'; $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.DwooCompiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
