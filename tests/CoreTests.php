@@ -18,7 +18,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new DwooCompiler();
 		$this->dwoo = new Dwoo();
-		DwooLoader::rebuildClassPathCache(DWOO_PATH.'plugins', DWOO_PATH.'cache');
+		DwooLoader::rebuildClassPathCache(DWOO_PATH.'plugins', DWOO_PATH.'cache'.DIRECTORY_SEPARATOR.'classpath.cache');
     }
 
     public function testReadVar()
