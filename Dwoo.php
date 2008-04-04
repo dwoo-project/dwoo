@@ -1502,16 +1502,17 @@ class DwooLoader
 	/**
 	 * adds a plugin directory
 	 *
-	 * @param string $dir the plugin path to scan
+	 * @param string $pluginDir the plugin path to scan
+	 * @param string $cacheDir the directory where the classpath cache is written, it must be writeable and will default to /path/to/Dwoo/cache if not provided
 	 */
-	public static function addDirectory($dir)
+	public static function addDirectory($pluginDir, $cacheDir = null)
 	{
-		$cacheFile = DWOO_PATH.'cache'.DIRECTORY_SEPARATOR.'classpath-'.strtr($dir, '/\\.', '---').'.cache';
-		self::$paths[] = array($dir, $cacheFile);
+		$cacheFile = ($cacheDir === null ? DWOO_PATH.'cache' : $cacheDir).DIRECTORY_SEPARATOR.'classpath-'.strtr($pluginDir, '/\\.', '---').'.cache';
+		self::$paths[] = array($pluginDir, $cacheFile);
 		if(file_exists($cacheFile))
 			include $cacheFile;
 		else
-			DwooLoader::rebuildClassPathCache($dir, $cacheFile);
+			DwooLoader::rebuildClassPathCache($pluginDir, $cacheFile);
 	}
 }
 
