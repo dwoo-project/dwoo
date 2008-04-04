@@ -1,7 +1,7 @@
 <?php
 
 if(!defined('DIR_SEP')) {
-    define('DIR_SEP', DIRECTORY_SEPARATOR);
+	define('DIR_SEP', DIRECTORY_SEPARATOR);
 }
 
 if(!defined('SMARTY_PHP_PASSTHRU'))
@@ -236,95 +236,95 @@ class DwooSmarty_Adapter extends Dwoo
 		return $this->output($tpl, $this->dataProvider, $this->compiler, $display===false);
 	}
 
-    public function register_function($name, $callback, $cacheable=true, $cache_attrs=null)
-    {
-    	if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION)
-    		throw new Exception('Multiple plugins of different types can not share the same name');
+	public function register_function($name, $callback, $cacheable=true, $cache_attrs=null)
+	{
+		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION)
+			throw new Exception('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_FUNCTION, 'callback'=>$callback);
-    }
+	}
 
-    public function unregister_function($name)
-    {
-        unset($this->plugins[$name]);
-    }
+	public function unregister_function($name)
+	{
+		unset($this->plugins[$name]);
+	}
 
-    public function register_block($name, $callback, $cacheable=true, $cache_attrs=null)
-    {
-    	if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK)
-    		throw new Exception('Multiple plugins of different types can not share the same name');
+	public function register_block($name, $callback, $cacheable=true, $cache_attrs=null)
+	{
+		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK)
+			throw new Exception('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_BLOCK, 'callback'=>$callback);
-    }
+	}
 
-    public function unregister_block($name)
-    {
-        unset($this->plugins[$name]);
-    }
+	public function unregister_block($name)
+	{
+		unset($this->plugins[$name]);
+	}
 
-    public function register_modifier($name, $callback)
-    {
-    	if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER)
-    		throw new Exception('Multiple plugins of different types can not share the same name');
+	public function register_modifier($name, $callback)
+	{
+		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER)
+			throw new Exception('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_MODIFIER, 'callback'=>$callback);
-    }
+	}
 
-    public function unregister_modifier($name)
-    {
-        unset($this->plugins[$name]);
-    }
+	public function unregister_modifier($name)
+	{
+		unset($this->plugins[$name]);
+	}
 
-    public function register_prefilter($callback)
-    {
-    	$processor = new DwooSmartyProcessorAdapter($this->compiler);
-    	$processor->registerCallback($callback);
-    	$this->_filters['pre'][] = $processor;
-    	$this->compiler->addPreProcessor($processor);
-    }
+	public function register_prefilter($callback)
+	{
+		$processor = new DwooSmartyProcessorAdapter($this->compiler);
+		$processor->registerCallback($callback);
+		$this->_filters['pre'][] = $processor;
+		$this->compiler->addPreProcessor($processor);
+	}
 
-    public function unregister_prefilter($callback)
-    {
-    	foreach($this->_filters['pre'] as $index => $processor)
-	    	if($processor->callback === $callback)
-	    	{
-	    		$this->compiler->removePostProcessor($processor);
-	    		unset($this->_filters['pre'][$index]);
-	    	}
-    }
+	public function unregister_prefilter($callback)
+	{
+		foreach($this->_filters['pre'] as $index => $processor)
+			if($processor->callback === $callback)
+			{
+				$this->compiler->removePostProcessor($processor);
+				unset($this->_filters['pre'][$index]);
+			}
+	}
 
-    public function register_postfilter($callback)
-    {
-    	$processor = new DwooSmartyProcessorAdapter($this->compiler);
-    	$processor->registerCallback($callback);
-    	$this->_filters['post'][] = $processor;
-    	$this->compiler->addPostProcessor($processor);
-    }
+	public function register_postfilter($callback)
+	{
+		$processor = new DwooSmartyProcessorAdapter($this->compiler);
+		$processor->registerCallback($callback);
+		$this->_filters['post'][] = $processor;
+		$this->compiler->addPostProcessor($processor);
+	}
 
-    public function unregister_postfilter($callback)
-    {
-    	foreach($this->_filters['post'] as $index => $processor)
-	    	if($processor->callback === $callback)
-	    	{
-	    		$this->compiler->removePostProcessor($processor);
-	    		unset($this->_filters['post'][$index]);
-	    	}
-    }
+	public function unregister_postfilter($callback)
+	{
+		foreach($this->_filters['post'] as $index => $processor)
+			if($processor->callback === $callback)
+			{
+				$this->compiler->removePostProcessor($processor);
+				unset($this->_filters['post'][$index]);
+			}
+	}
 
-    public function register_outputfilter($callback)
-    {
-    	$filter = new DwooSmartyFilterAdapter($this);
-    	$filter->registerCallback($callback);
-    	$this->_filters['output'][] = $filter;
-    	$this->addFilter($filter);
-    }
+	public function register_outputfilter($callback)
+	{
+		$filter = new DwooSmartyFilterAdapter($this);
+		$filter->registerCallback($callback);
+		$this->_filters['output'][] = $filter;
+		$this->addFilter($filter);
+	}
 
-    public function unregister_outputfilter($callback)
-    {
-    	foreach($this->_filters['output'] as $index => $filter)
-	    	if($filter->callback === $callback)
-	    	{
-	    		$this->removeOutputFilter($filter);
-	    		unset($this->_filters['output'][$index]);
-	    	}
-    }
+	public function unregister_outputfilter($callback)
+	{
+		foreach($this->_filters['output'] as $index => $filter)
+			if($filter->callback === $callback)
+			{
+				$this->removeOutputFilter($filter);
+				unset($this->_filters['output'][$index]);
+			}
+	}
 
 	public function template_exists($filename)
 	{
@@ -379,7 +379,7 @@ class DwooSmarty_Adapter extends Dwoo
    		$this->makeTemplate($template, $cacheId, $compileId)->clearCache($olderThan);
    	}
 
-    public function trigger_error($error_msg, $error_type = E_USER_WARNING)
+	public function trigger_error($error_msg, $error_type = E_USER_WARNING)
 	{
 		$this->triggerError($error_msg, $error_type);
 	}

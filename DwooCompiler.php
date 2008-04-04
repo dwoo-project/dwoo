@@ -255,12 +255,12 @@ class DwooCompiler implements DwooICompiler
 	 * @param mixed $callback either a valid callback to the preprocessor or a simple name if the autoload is set to true
 	 * @param bool $autoload if set to true, the preprocessor is auto-loaded from one of the plugin directories, else you must provide a valid callback
 	 */
-    public function addPreProcessor($callback, $autoload = false)
-    {
-    	if($autoload)
-    	{
-    		$name = str_replace('DwooProcessor_', '', $callback);
-    		$class = 'DwooProcessor_'.$name;
+	public function addPreProcessor($callback, $autoload = false)
+	{
+		if($autoload)
+		{
+			$name = str_replace('DwooProcessor_', '', $callback);
+			$class = 'DwooProcessor_'.$name;
 
 			if(!class_exists($class, false) && !function_exists($class))
 				DwooLoader::loadPlugin($name);
@@ -272,38 +272,38 @@ class DwooCompiler implements DwooICompiler
 			else
 				$this->triggerError('Wrong pre-processor name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "DwooProcessor_name"', E_USER_ERROR);
 
-	        $this->processors['pre'][] = $callback;
-    	}
-    	else
-    	{
-	        $this->processors['pre'][] = $callback;
-    	}
-    }
+			$this->processors['pre'][] = $callback;
+		}
+		else
+		{
+			$this->processors['pre'][] = $callback;
+		}
+	}
 
 	/**
 	 * removes a preprocessor from the compiler
 	 *
 	 * @param mixed $callback either a valid callback to the preprocessor or a simple name if it was autoloaded
 	 */
-    public function removePreProcessor($callback)
-    {
-        if(($index = array_search($callback, $this->processors['pre'], true)) !== false)
-	        unset($this->processors['pre'][$index]);
-	    elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['pre'], true)) !== false)
-	    	unset($this->processors['pre'][$index]);
-	    else
-	    {
-	    	$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
-	    	foreach($this->processors['pre'] as $index=>$proc)
-	    	{
+	public function removePreProcessor($callback)
+	{
+		if(($index = array_search($callback, $this->processors['pre'], true)) !== false)
+			unset($this->processors['pre'][$index]);
+		elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['pre'], true)) !== false)
+			unset($this->processors['pre'][$index]);
+		else
+		{
+			$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
+			foreach($this->processors['pre'] as $index=>$proc)
+			{
 				if(is_array($proc) && $proc[0] instanceof $class)
 				{
 					unset($this->processors['pre'][$index]);
 					break;
 				}
-	    	}
-	    }
-    }
+			}
+		}
+	}
 
 	/**
 	 * adds a postprocessor to the compiler, it will be called
@@ -312,12 +312,12 @@ class DwooCompiler implements DwooICompiler
 	 * @param mixed $callback either a valid callback to the postprocessor or a simple name if the autoload is set to true
 	 * @param bool $autoload if set to true, the postprocessor is auto-loaded from one of the plugin directories, else you must provide a valid callback
 	 */
-    public function addPostProcessor($callback, $autoload = false)
-    {
-    	if($autoload)
-    	{
-    		$name = str_replace('DwooProcessor_', '', $callback);
-    		$class = 'DwooProcessor_'.$name;
+	public function addPostProcessor($callback, $autoload = false)
+	{
+		if($autoload)
+		{
+			$name = str_replace('DwooProcessor_', '', $callback);
+			$class = 'DwooProcessor_'.$name;
 
 			if(!class_exists($class, false) && !function_exists($class))
 				DwooLoader::loadPlugin($name);
@@ -329,38 +329,38 @@ class DwooCompiler implements DwooICompiler
 			else
 				$this->triggerError('Wrong post-processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "DwooProcessor_name"', E_USER_ERROR);
 
-	        $this->processors['post'][] = $callback;
-    	}
-    	else
-    	{
-	        $this->processors['post'][] = $callback;
-    	}
-    }
+			$this->processors['post'][] = $callback;
+		}
+		else
+		{
+			$this->processors['post'][] = $callback;
+		}
+	}
 
 	/**
 	 * removes a postprocessor from the compiler
 	 *
 	 * @param mixed $callback either a valid callback to the postprocessor or a simple name if it was autoloaded
 	 */
-    public function removePostProcessor($callback)
-    {
-        if(($index = array_search($callback, $this->processors['post'], true)) !== false)
-	        unset($this->processors['post'][$index]);
-	    elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['post'], true)) !== false)
-	    	unset($this->processors['post'][$index]);
-	    else
-	    {
-	    	$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
-	    	foreach($this->processors['post'] as $index=>$proc)
-	    	{
+	public function removePostProcessor($callback)
+	{
+		if(($index = array_search($callback, $this->processors['post'], true)) !== false)
+			unset($this->processors['post'][$index]);
+		elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['post'], true)) !== false)
+			unset($this->processors['post'][$index]);
+		else
+		{
+			$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
+			foreach($this->processors['post'] as $index=>$proc)
+			{
 				if(is_array($proc) && $proc[0] instanceof $class)
 				{
 					unset($this->processors['post'][$index]);
 					break;
 				}
-	    	}
-	    }
-    }
+			}
+		}
+	}
 
 	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
@@ -413,13 +413,13 @@ class DwooCompiler implements DwooICompiler
 		if($this->debug) echo 'PROCESSING PREPROCESSORS<br>';
 
 		// runs preprocessors
-        foreach($this->processors['pre'] as $preProc)
-        {
-        	if(is_array($preProc) && $preProc[0] instanceof DwooProcessor)
-                $tpl = call_user_func($preProc, $tpl);
-            else
-                $tpl = call_user_func($preProc, $this, $tpl);
-        }
+		foreach($this->processors['pre'] as $preProc)
+		{
+			if(is_array($preProc) && $preProc[0] instanceof DwooProcessor)
+				$tpl = call_user_func($preProc, $tpl);
+			else
+				$tpl = call_user_func($preProc, $this, $tpl);
+		}
 		unset($preProc);
 
 		$ptr = 0;
@@ -543,13 +543,13 @@ class DwooCompiler implements DwooICompiler
 
 		if($this->debug) echo 'PROCESSING POSTPROCESSORS<br>';
 
-        foreach($this->processors['post'] as $postProc)
-        {
-        	if(is_array($postProc) && $postProc[0] instanceof DwooProcessor)
-                $compiled = call_user_func($postProc, $compiled);
-            else
-                $compiled = call_user_func($postProc, $this, $compiled);
-        }
+		foreach($this->processors['post'] as $postProc)
+		{
+			if(is_array($postProc) && $postProc[0] instanceof DwooProcessor)
+				$compiled = call_user_func($postProc, $compiled);
+			else
+				$compiled = call_user_func($postProc, $this, $compiled);
+		}
 		unset($postProc);
 
 		if($this->debug) echo 'COMPILATION COMPLETE : MEM USAGE : '.memory_get_usage().'<br>';
@@ -982,7 +982,7 @@ class DwooCompiler implements DwooICompiler
 			$params = array();
 
 			if($curBlock === 'namedparam' || $curBlock === 'modifier' || $curBlock === 'function' || $curBlock === 'condition') /* smarty supports unquoted strings so they're supported for named param (smarty syntax),
-										       any [a-z0-9_]+ without parenthesis/arguments after it is considered to be a string */
+											   any [a-z0-9_]+ without parenthesis/arguments after it is considered to be a string */
 			{
 				return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			}
@@ -2269,10 +2269,10 @@ class DwooCompiler implements DwooICompiler
 	 * @param string $message error message
 	 * @param int $level error level, one of the PHP's E_* constants
 	 */
-    public function triggerError($message, $level=E_USER_NOTICE)
-    {
-        trigger_error('DwooCompiler error: '.$message, $level);
-    }
+	public function triggerError($message, $level=E_USER_NOTICE)
+	{
+		trigger_error('DwooCompiler error: '.$message, $level);
+	}
 }
 
 ?>

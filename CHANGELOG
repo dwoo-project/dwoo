@@ -9,6 +9,9 @@
   (i.e. you can do {$array[$index+1]}) and within strings as well. To prevent
   this enclose the variables in backticks (i.e. {"$foo/$bar"} will do the math
   while {"`$foo`/$bar"} won't as $foo is properly delimited)
+* Changed DwooLoader::addDirectory() so that it writes the cached paths in the
+  Dwoo/cache directory, that way you don't have to make your plugin directory
+  writeable
 
 [2008-03-19] 0.3.3
 + Syntax: Added support for $dwoo.const.CONSTANT and
