@@ -96,7 +96,7 @@ class DwooTemplateString implements DwooITemplate
 	public function __construct($templateString, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		$this->template = $templateString;
-		$this->name = bin2hex(md5($templateString, true));
+		$this->name = hash('md4', $templateString);
 		$this->cacheTime = $cacheTime;
 
 		// no compile id provided, set it to an md5 hash of the template
@@ -109,7 +109,7 @@ class DwooTemplateString implements DwooITemplate
 		// no cache id provided, use request_uri
 		if($cacheId === null)
 		{
-			$cacheId = bin2hex(md5($_SERVER['REQUEST_URI'], true));
+			$cacheId = strtr($_SERVER['REQUEST_URI'], '\\/%?=!:;*"<>|', '-------------');
 		}
 		$this->cacheId = $this->compileId . $cacheId;
 	}
@@ -175,7 +175,7 @@ class DwooTemplateString implements DwooITemplate
 	 */
 	public function getCachedTemplate(Dwoo $dwoo)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.dwoo';
+		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
 		if($this->cacheTime !== null)
 			$cacheLength = $this->cacheTime;
 		else
@@ -212,7 +212,7 @@ class DwooTemplateString implements DwooITemplate
 	 */
 	public function cache(Dwoo $dwoo, $output)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.dwoo';
+		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
 
 		file_put_contents($cachedFile, $output);
 		touch($cachedFile, $_SERVER['REQUEST_TIME']);
@@ -228,7 +228,7 @@ class DwooTemplateString implements DwooITemplate
 	 */
 	public function clearCache($olderThan=0)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.dwoo';
+		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
 
 		return !file_exists($cachedFile) || (filectime($cachedFile) < (time() - $olderThan) && unlink($cachedFile));
 	}
@@ -242,7 +242,7 @@ class DwooTemplateString implements DwooITemplate
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null)
 	{
-		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.'.Dwoo::RELEASE_TAG.'.dwoo';
+		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
 
 		// already checked, return compiled file
 		if($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true)
@@ -265,7 +265,7 @@ class DwooTemplateString implements DwooITemplate
 				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
 				{
 					if(class_exists('DwooCompiler', false) === false)
-						include DWOO_DIR . 'DwooCompiler.php';
+						include DWOO_DIRECTORY . 'DwooCompiler.php';
 					$compiler = DwooCompiler::compilerFactory();
 				}
 				else

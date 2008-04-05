@@ -1,5 +1,5 @@
-[2008--] 0.3.4
-! BC Break: DWOO_PATH constant changed to DWOO_DIR
+[2008-04-] 0.3.4
+! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY
 + Syntax: Added support for method calls on objects i.e. {$foo->bar()}
 + Added support for smarty security features, see the DwooSecurityPolicy class
   and $dwoo->setSecurityPolicy()
@@ -7,20 +7,23 @@
   true, allows tags to contain spaces between the opening bracket and the
   content. Turned off by default as it allows to compile files containing
   css and javascript without the need to escape it through {literal} or \{
-+ Added DWOO_CACHEDIR and DWOO_COMPILEDIR constants that you can set before
-  including Dwoo.php to override the defaults (although
++ Added DWOO_CACHE_DIRECTORY and DWOO_COMPILE_DIRECTORY constants that you can
+  set before including Dwoo.php to override the defaults (although
   Dwoo->setCacheDir/setCompileDir() still work to change that if required)
 + Added the DwooException class
++ Smarty: Added partial support for register_object(), unregister_object() and
+  get_registered_object(). All features can not be supported by the adapter
+  though so you might get compatibility warnings
 * Fixed {elseif} bug that appeared when multiple elseif tags were used in a row
 * Syntax: Improved simple math support to work within variable variables
   (i.e. you can do {$array[$index+1]}) and within strings as well. To prevent
   this enclose the variables in backticks (i.e. {"$foo/$bar"} will do the math
   while {"`$foo`/$bar"} won't as $foo is properly delimited)
-* Changed DwooLoader::addDirectory() so that it writes the cached paths in the
-  Dwoo/cache directory, that way you don't have to make your plugin directory
-  writeable
+* Changed DwooLoader::addDirectory() so that it writes the class paths cache
+  into DWOO_COMPILE_DIRECTORY, that way you don't have to make your plugin
+  directory writable
 * Made all the error triggering more consistent
-
+* Changed automatic cacheId generation in DwooTemplateFile/String to be faster
 
 [2008-03-19] 0.3.3
 + Syntax: Added support for $dwoo.const.CONSTANT and

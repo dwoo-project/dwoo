@@ -60,7 +60,7 @@ class DwooTemplateFile extends DwooTemplateString
 		// no cache id provided, use request_uri
 		if($cacheId === null)
 		{
-			$cacheId = bin2hex(md5($_SERVER['REQUEST_URI'], true));
+			$cacheId = strtr($_SERVER['REQUEST_URI'], '\\/%?=!:;', '--------');
 		}
 		$this->cacheId = $this->compileId . $cacheId;
 	}
@@ -74,7 +74,7 @@ class DwooTemplateFile extends DwooTemplateString
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null)
 	{
-		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.'.Dwoo::RELEASE_TAG.'.dwoo';
+		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
 
 		// already checked, return compiled file
 		if($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true)
@@ -97,7 +97,7 @@ class DwooTemplateFile extends DwooTemplateString
 				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
 				{
 					if(class_exists('DwooCompiler', false) === false)
-						include DWOO_DIR . 'DwooCompiler.php';
+						include DWOO_DIRECTORY . 'DwooCompiler.php';
 					$compiler = DwooCompiler::compilerFactory();
 				}
 				else

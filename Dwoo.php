@@ -6,19 +6,19 @@ include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooTemplateString.php';
 include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooTemplateFile.php';
 include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooData.php';
 
-define('DWOO_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR);
-if(defined('DWOO_CACHEDIR') === false)
-	define('DWOO_CACHEDIR', DWOO_DIR.'cache'.DIRECTORY_SEPARATOR);
-if(defined('DWOO_COMPILEDIR') === false)
-	define('DWOO_COMPILEDIR', DWOO_DIR.'compiled'.DIRECTORY_SEPARATOR);
-if(is_writable(DWOO_CACHEDIR) === false)
-	throw new DwooException('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHEDIR.'" to make it writable or define DWOO_CACHEDIR to a writable directory before including Dwoo.php');
-if(is_writable(DWOO_COMPILEDIR) === false)
-	throw new DwooException('Dwoo compile directory must be writable, either chmod "'.DWOO_COMPILEDIR.'" to make it writable or define DWOO_COMPILEDIR to a writable directory before including Dwoo.php');
+define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
+if(defined('DWOO_CACHE_DIRECTORY') === false)
+	define('DWOO_CACHE_DIRECTORY', DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR);
+if(defined('DWOO_COMPILE_DIRECTORY') === false)
+	define('DWOO_COMPILE_DIRECTORY', DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR);
+if(is_writable(DWOO_CACHE_DIRECTORY) === false)
+	throw new DwooException('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHE_DIRECTORY.'" to make it writable or define DWOO_CACHE_DIRECTORY to a writable directory before including Dwoo.php');
+if(is_writable(DWOO_COMPILE_DIRECTORY) === false)
+	throw new DwooException('Dwoo compile directory must be writable, either chmod "'.DWOO_COMPILE_DIRECTORY.'" to make it writable or define DWOO_COMPILE_DIRECTORY to a writable directory before including Dwoo.php');
 
 // include class paths or rebuild paths if the cache file isn't there
-if((file_exists(DWOO_CACHEDIR.DIRECTORY_SEPARATOR.'classpath.cache') && include DWOO_CACHEDIR.DIRECTORY_SEPARATOR.'classpath.cache') === false)
-	DwooLoader::rebuildClassPathCache(DWOO_DIR.'plugins', DWOO_CACHEDIR.DIRECTORY_SEPARATOR.'classpath.cache');
+if((file_exists(DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') && include DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') === false)
+	DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache');
 
 DwooLoader::loadPlugin('topLevelBlock');
 
@@ -28,6 +28,7 @@ DwooLoader::loadPlugin('topLevelBlock');
  * requirements :
  *  php 5.2.0 or above
  *  php's mbstring extension for some plugins
+ *  php's hash extension to use DwooTemplateString class
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -114,7 +115,7 @@ class Dwoo
 	/**
 	 * directory where the compiled templates are stored
 	 *
-	 * defaults to DWOO_COMPILEDIR (= DWOO_DIR/compiled by default)
+	 * defaults to DWOO_COMPILEDIR (= DWOO_DIRECTORY/compiled by default)
 	 *
 	 * @var string
 	 */
@@ -123,7 +124,7 @@ class Dwoo
 	/**
 	 * directory where the cached templates are stored
 	 *
-	 * defaults to DWOO_CACHEDIR (= DWOO_DIR/cache by default)
+	 * defaults to DWOO_CACHEDIR (= DWOO_DIRECTORY/cache by default)
 	 *
 	 * @var string
 	 */
@@ -241,8 +242,8 @@ class Dwoo
 	 */
 	public function __construct()
 	{
-		$this->cacheDir = DWOO_CACHEDIR.DIRECTORY_SEPARATOR;
-		$this->compileDir = DWOO_COMPILEDIR.DIRECTORY_SEPARATOR;
+		$this->cacheDir = DWOO_CACHE_DIRECTORY.DIRECTORY_SEPARATOR;
+		$this->compileDir = DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR;
 	}
 
 	/**
@@ -1483,7 +1484,7 @@ class DwooLoader
 		// a new class was added or the include failed so we rebuild the cache
 		if(!isset(self::$classpath[$class]) || !include self::$classpath[$class])
 		{
-			self::rebuildClassPathCache(DWOO_DIR.'plugins', DWOO_CACHEDIR . DIRECTORY_SEPARATOR . 'classpath.cache');
+			self::rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath.cache.php');
 			foreach(self::$paths as $path)
 				self::rebuildClassPathCache($path[0], $path[1]);
 			if(isset(self::$classpath[$class]))
@@ -1500,7 +1501,7 @@ class DwooLoader
 	 */
 	public static function addDirectory($pluginDir)
 	{
-		$cacheFile = DWOO_CACHEDIR . DIRECTORY_SEPARATOR . 'classpath-'.strtr($pluginDir, ':/\\.', '----').'.cache';
+		$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), -80).'.cache.php';
 		self::$paths[] = array($pluginDir, $cacheFile);
 		if(file_exists($cacheFile))
 			include $cacheFile;

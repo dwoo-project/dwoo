@@ -86,7 +86,6 @@ class DwooSmarty_Adapter extends Dwoo
 		'methods' => array
 		(
 			'register_resource', 'unregister_resource', 'load_filter', 'clear_compiled_tpl',
-			'register_object', 'unregister_object', 'get_registered_object',
 			'clear_config', 'get_config_vars', 'config_load'
 		),
 		'properties' => array
@@ -325,6 +324,37 @@ class DwooSmarty_Adapter extends Dwoo
 				unset($this->_filters['output'][$index]);
 			}
 	}
+
+    function register_object($object, $object_impl, $allowed = array(), $smarty_args = false, $block_methods = array())
+    {
+        settype($allowed, 'array');
+        settype($block_methods, 'array');
+        settype($smarty_args, 'boolean');
+
+    	if(!empty($allowed) && $this->show_compat_errors)
+    		$this->triggerError('You can register objects but can not restrict the method/properties used, this is PHP5, you have proper OOP access restrictions so use them.', E_USER_NOTICE);
+
+    	if($smarty_args)
+    		$this->triggerError('You can register objects but methods will be called using method($arg1, $arg2, $arg3), not as an argument array like smarty did.', E_USER_NOTICE);
+
+    	if(!empty($block_methods))
+    		$this->triggerError('You can register objects but can not use methods as being block methods, you have to build a plugin for that.', E_USER_NOTICE);
+
+    	$this->dataProvider->assign($object, $object_impl);
+    }
+
+    function unregister_object($object)
+    {
+    	$this->dataProvider->clear($object);
+    }
+
+    function get_registered_object($name) {
+        $data = $this->dataProvider->getData();
+        if(isset($data[$name]) && is_object($data[$name]))
+        	return $data[$name];
+        else
+        	trigger_error('DwooCompiler: object "'.$name.'" was not registered or is not an object', E_USER_ERROR);
+    }
 
 	public function template_exists($filename)
 	{

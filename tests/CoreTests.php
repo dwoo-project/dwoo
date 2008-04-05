@@ -18,7 +18,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new DwooCompiler();
 		$this->dwoo = new Dwoo();
-		DwooLoader::rebuildClassPathCache(DWOO_DIR.'plugins', DWOO_DIR.'cache'.DIRECTORY_SEPARATOR.'classpath.cache');
+		DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR.'classpath.cache');
     }
 
     public function testReadVar()
@@ -119,21 +119,21 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	public function testAddAndRemoveResource()
 	{
     	$this->dwoo->addResource('news', 'DwooTemplateFile', array('DwooCompiler', 'compilerFactory'));
-    	$tpl = new DwooTemplateString('{include file="news:'.DWOO_DIR.'tests/resources/test.html" foo=3 bar=4}');
+    	$tpl = new DwooTemplateString('{include file="news:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 		$this->dwoo->removeResource('news');
 
     	$this->dwoo->addResource('file', 'DwooTemplateString', 'Fake');
 		$this->dwoo->removeResource('file');
-    	$tpl = new DwooTemplateString('{include file="'.DWOO_DIR.'tests/resources/test.html" foo=3 bar=4}');
+    	$tpl = new DwooTemplateString('{include file="'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 	}
 
 	public function testTemplateFile()
 	{
-    	$tpl = new DwooTemplateFile(DWOO_DIR.'tests/resources/test.html');
+    	$tpl = new DwooTemplateFile(DWOO_DIRECTORY.'tests/resources/test.html');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("12", $this->dwoo->get($tpl, array('foo'=>1, 'bar'=>2)));
