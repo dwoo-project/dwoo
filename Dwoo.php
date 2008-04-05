@@ -18,7 +18,7 @@ if(is_writable(DWOO_COMPILE_DIRECTORY) === false)
 
 // include class paths or rebuild paths if the cache file isn't there
 if((file_exists(DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') && include DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') === false)
-	DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache');
+	DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
 
 DwooLoader::loadPlugin('topLevelBlock');
 
@@ -1501,7 +1501,7 @@ class DwooLoader
 	 */
 	public static function addDirectory($pluginDir)
 	{
-		$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), -80).'.cache.php';
+		$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
 		self::$paths[] = array($pluginDir, $cacheFile);
 		if(file_exists($cacheFile))
 			include $cacheFile;

@@ -1,7 +1,7 @@
 <?php
 
-define('DWOO_CACHEDIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
-define('DWOO_COMPILEDIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
+define('DWOO_CACHE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
+define('DWOO_COMPILE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'Dwoo.php';
 
 class DwooTests {

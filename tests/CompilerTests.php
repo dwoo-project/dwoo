@@ -138,10 +138,10 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
     public function testExpressions()
     {
-        $tpl = new DwooTemplateString('{$foo+5} {$foo+$foo} {$foo+3*$foo} {$foo*$foo+4*$foo} {$foo*2/2|number_format} {$foo*2/3|number_format:1} {number_format $foo*2/3 1}');
+        $tpl = new DwooTemplateString('{$foo+5} {$foo+$foo} {$foo+3*$foo} {$foo*$foo+4*$foo} {$foo*2/2|number_format} {$foo*2/3|number_format:1} {number_format $foo*2/3 1} {if $foo+5>9 && $foo < 7 && $foo+$foo==$foo*2}win{/if} {$arr[$foo+3]}');
         $tpl->forceCompilation();
 
-        $this->assertEquals("10 10 40 145 5 3.3 3.3", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));
+        $this->assertEquals("10 10 40 145 5 3.3 3.3 win win", $this->dwoo->get($tpl, array('foo'=>5, 'arr'=>array(8=>'win')), $this->compiler));
 
         $tpl = new DwooTemplateString('{"$foo/$foo"}');
         $tpl->forceCompilation();
