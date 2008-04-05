@@ -91,7 +91,7 @@ interface DwooITemplate
 	 * @param DwooICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler);
+	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null);
 
 	/**
 	 * returns the template name

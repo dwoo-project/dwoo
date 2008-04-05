@@ -54,7 +54,7 @@ function DwooPlugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
 		case 'mail':
 			return str_replace(array('@', '.'), array('&nbsp;(AT)&nbsp;', '&nbsp;(DOT)&nbsp;'), (string) $value);
 		default:
-			throw new Exception('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "'.$format.'" given.');
+			$dwoo->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "'.$format.'" given.', E_USER_WARNING);
 	}
 }
 

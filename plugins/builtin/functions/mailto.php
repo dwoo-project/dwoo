@@ -77,7 +77,7 @@ function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $enc
 
 		case 'hex':
 			if(strpos($address, '?') !== false)
-				throw new Exception('Hex encoding is not possible with extra attributes.', E_USER_NOTICE);
+				$dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
 
 			$out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
 			$len = strlen($address);
@@ -95,7 +95,7 @@ function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $enc
 			return $out.'</a>';
 
 		default:
-			$dwoo->throwError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>');
+			$dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
 	}
 }
 

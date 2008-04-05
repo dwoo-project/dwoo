@@ -239,7 +239,7 @@ class DwooSmarty_Adapter extends Dwoo
 	public function register_function($name, $callback, $cacheable=true, $cache_attrs=null)
 	{
 		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION)
-			throw new Exception('Multiple plugins of different types can not share the same name');
+			throw new DwooException('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_FUNCTION, 'callback'=>$callback);
 	}
 
@@ -251,7 +251,7 @@ class DwooSmarty_Adapter extends Dwoo
 	public function register_block($name, $callback, $cacheable=true, $cache_attrs=null)
 	{
 		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK)
-			throw new Exception('Multiple plugins of different types can not share the same name');
+			throw new DwooException('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_BLOCK, 'callback'=>$callback);
 	}
 
@@ -263,7 +263,7 @@ class DwooSmarty_Adapter extends Dwoo
 	public function register_modifier($name, $callback)
 	{
 		if(isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER)
-			throw new Exception('Multiple plugins of different types can not share the same name');
+			throw new DwooException('Multiple plugins of different types can not share the same name');
 		$this->plugins[$name] = array('type'=>self::SMARTY_MODIFIER, 'callback'=>$callback);
 	}
 

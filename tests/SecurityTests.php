@@ -20,17 +20,17 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 
     public function testConstantHandling()
     {
-    	$tpl = new DwooTemplateString('{$dwoo.const.DWOO_PATH}');
+    	$tpl = new DwooTemplateString('{$dwoo.const.DWOO_DIR}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("", $this->dwoo->get($tpl, array(), $this->compiler));
 
 		$this->policy->setConstantHandling(DwooSecurityPolicy::CONST_ALLOW);
 
-    	$tpl = new DwooTemplateString('{$dwoo.const.DWOO_PATH}');
+    	$tpl = new DwooTemplateString('{$dwoo.const.DWOO_DIR}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals(DWOO_PATH, $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals(DWOO_DIR, $this->dwoo->get($tpl, array(), $this->compiler));
     }
 
     public function testPhpHandling()

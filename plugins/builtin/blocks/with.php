@@ -35,9 +35,6 @@ class DwooPlugin_with extends DwooBlockPlugin implements DwooICompilableBlock
 
 		$compiler->setScope($c);
 
-		if(empty($c))
-			throw new Exception('With requires one parameter : <em>var</em> - the variable to use as the active scope inside the {with} block');
-
 		$params =& $compiler->getCurrentBlock();
 		$params['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n// -- end with output\n".'$this->forceScope($_with'.(self::$cnt).');'."\n}\n".DwooCompiler::PHP_CLOSE;
 

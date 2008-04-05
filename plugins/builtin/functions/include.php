@@ -53,12 +53,16 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 		}
 	}
 
-	$include = $dwoo->getTemplate($resource, $identifier, $cache_time, $cache_id, $compile_id);
+	try {
+		$include = $dwoo->getTemplate($resource, $identifier, $cache_time, $cache_id, $compile_id);
+	} catch (DwooException $e) {
+		$dwoo->triggerError('Include : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_WARNING);
+	}
 
 	if($include === null)
 		return;
 	elseif($include === false)
-		throw new Exception('Include not permitted.', E_USER_ERROR);
+		$dwoo->triggerError('Include : Including "'.$resource.'://'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
 
 	if(count($rest))
 	{

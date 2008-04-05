@@ -240,7 +240,7 @@ class DwooTemplateString implements DwooITemplate
 	 * @param DwooICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler)
+	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null)
 	{
 		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.'.Dwoo::RELEASE_TAG.'.dwoo';
 
@@ -257,6 +257,20 @@ class DwooTemplateString implements DwooITemplate
 		else
 		{
 			$this->compilationEnforced = false;
+
+			if($compiler === null)
+			{
+				$compiler = $dwoo->getDefaultCompilerFactory('string');
+
+				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
+				{
+					if(class_exists('DwooCompiler', false) === false)
+						include DWOO_DIR . 'DwooCompiler.php';
+					$compiler = DwooCompiler::compilerFactory();
+				}
+				else
+					$compiler = call_user_func($compiler);
+			}
 
 			$this->compiler = $compiler;
 

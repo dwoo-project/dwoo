@@ -112,7 +112,7 @@ function DwooPlugin_math_compile(DwooCompiler $compiler, $equation, $format='', 
 		}
 		// parse error if we've consumed the entire equation without finding anything valid
 		elseif ($ptr >= strlen($equation)) {
-			throw new Exception('Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr, E_USER_NOTICE);
+			$compiler->triggerError('Math : Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr, E_USER_ERROR);
 			return;
 		}
 		else

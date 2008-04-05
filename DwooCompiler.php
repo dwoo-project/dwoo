@@ -491,7 +491,7 @@ class DwooCompiler implements DwooICompiler
 				$endpos = strpos($tpl, $this->rd, $pos);
 
 				if($endpos===false)
-					throw new Exception('A tag was not closed, started with <em>'.substr($tpl, $pos, 100).'</em>', E_USER_NOTICE);
+					$this->triggerError('A template tag was not closed, started with <em>'.substr($tpl, $pos, 100).'</em>', E_USER_ERROR);
 
 				while(substr($tpl, $endpos-1, 1) === '\\')
 				{
@@ -580,7 +580,7 @@ class DwooCompiler implements DwooICompiler
 					$output .= "if(function_exists('smarty_block_$plugin')===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
 					break;
 				default:
-					throw new Exception('Type error for '.$plugin.' with type'.$type, E_USER_NOTICE);
+					$this->triggerError('Type error for '.$plugin.' with type'.$type, E_USER_ERROR);
 			}
 		}
 
@@ -774,7 +774,7 @@ class DwooCompiler implements DwooICompiler
 					break 2;
 			}
 
-			throw new Exception('Syntax malformation, a block of type "'.$type.'" was closed but was not opened', E_USER_NOTICE);
+			$this->triggerError('Syntax malformation, a block of type "'.$type.'" was closed but was not opened', E_USER_ERROR);
 			break;
 		}
 
@@ -817,7 +817,7 @@ class DwooCompiler implements DwooICompiler
 			}
 		}
 
-		throw new Exception('A parent block of type "'.$type.'" is required and can not be found', E_USER_NOTICE);
+		$this->triggerError('A parent block of type "'.$type.'" is required and can not be found', E_USER_ERROR);
 	}
 
 	/**
@@ -840,7 +840,7 @@ class DwooCompiler implements DwooICompiler
 	{
 		$o = array_pop($this->stack);
 		if($o === null)
-			throw new Exception('Syntax malformation, a block of unknown type was closed but was not opened.', E_USER_NOTICE);
+			$this->triggerError('Syntax malformation, a block of unknown type was closed but was not opened.', E_USER_ERROR);
 		if($o['custom'])
 			$class = $o['class'];
 		else
@@ -929,7 +929,7 @@ class DwooCompiler implements DwooICompiler
 		}
 		else // parse error
 		{
-			throw new Exception('Parse error in <em>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em> @ '.$from, E_USER_NOTICE);
+			$this->triggerError('Parse error in <em>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em> @ '.$from, E_USER_ERROR);
 		}
 	}
 
@@ -1041,7 +1041,7 @@ class DwooCompiler implements DwooICompiler
 						$state |= 1;
 				}
 				if($state === 3)
-					throw new Exception('Function <em>'.$func.'</em> can not have both named and un-named parameters', E_USER_NOTICE);
+					$this->triggerError('Function calls can not have both named and un-named parameters', E_USER_ERROR);
 			}
 		}
 
@@ -1063,7 +1063,7 @@ class DwooCompiler implements DwooICompiler
 			if($pluginType & Dwoo::BLOCK_PLUGIN)
 			{
 				if($curBlock !== 'root' || is_array($parsingParams))
-					throw new Exception('Block plugins can not be used as other plugin\'s arguments', E_USER_NOTICE);
+					$this->triggerError('Block plugins can not be used as other plugin\'s arguments', E_USER_ERROR);
 				if($pluginType & Dwoo::CUSTOM_PLUGIN)
 					return $this->addCustomBlock($func, $params, $state);
 				else
@@ -1072,7 +1072,7 @@ class DwooCompiler implements DwooICompiler
 			elseif($pluginType & Dwoo::SMARTY_BLOCK)
 			{
 				if($curBlock !== 'root' || is_array($parsingParams))
-					throw new Exception('Block plugins can not be used as other plugin\'s arguments', E_USER_NOTICE);
+					$this->triggerError('Block plugins can not be used as other plugin\'s arguments', E_USER_ERROR);
 
 				if($state===2)
 				{
@@ -1229,7 +1229,7 @@ class DwooCompiler implements DwooICompiler
 			$strend = strpos($in, $first, $o);
 			if($strend === false)
 			{
-				throw new Exception('Unfinished string in : <strong>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</strong>', E_USER_NOTICE);
+				$this->triggerError('Unfinished string in : <strong>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</strong>', E_USER_ERROR);
 			}
 			if(substr($in, $strend-1, 1) === '\\')
 			{
@@ -1320,7 +1320,7 @@ class DwooCompiler implements DwooICompiler
 
 			// prevent $foo->$bar calls because it doesn't seem worth the trouble
 			if(strpos($key, '->$') !== false)
-				throw new Exception('You can not access an object\'s property using a variable name.', E_USER_NOTICE);
+				$this->triggerError('You can not access an object\'s property using a variable name.', E_USER_ERROR);
 
 			if($this->debug)
 			{
@@ -1414,7 +1414,7 @@ class DwooCompiler implements DwooICompiler
 					elseif(!empty($expMatch[2][$k]))
 						$output = '('.$output.' '.$operator.' '.str_replace(',', '.', $expMatch[2][$k]).')';
 					else
-						throw new Exception('Unfinished expression, <em>'.$substr.'</em>, missing var or number after math operator', E_USER_NOTICE);
+						$this->triggerError('Unfinished expression, <em>'.$substr.'</em>, missing var or number after math operator', E_USER_ERROR);
 				}
 			}
 
@@ -1446,7 +1446,7 @@ class DwooCompiler implements DwooICompiler
 				return array(0, '');
 			else
 			{
-				throw new Exception('Invalid variable name <em>'.$substr.'</em>', E_USER_NOTICE);
+				$this->triggerError('Invalid variable name <em>'.$substr.'</em>', E_USER_ERROR);
 			}
 		}
 	}
@@ -2072,7 +2072,7 @@ class DwooCompiler implements DwooICompiler
 					}
 				}
 				else
-					throw new Exception('Plugin "'.$name.'" could not be found');
+					$this->triggerError('Plugin "'.$name.'" could not be found', E_USER_ERROR);
 				$pluginType++;
 			}
 		}
@@ -2137,7 +2137,7 @@ class DwooCompiler implements DwooICompiler
 					if(count($ps) === 0)
 					{
 						if($v[1]===false)
-							throw new Exception('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_NOTICE);
+							$this->triggerError('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 						else
 							break;
 					}
@@ -2160,7 +2160,7 @@ class DwooCompiler implements DwooICompiler
 				}
 				// parameter is not defined and not optional, throw error
 				elseif($v[1]===false)
-					throw new Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_NOTICE);
+					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				elseif($v[2]===null)
 					$paramlist[$v[0]] = array('null', null);
@@ -2181,7 +2181,7 @@ class DwooCompiler implements DwooICompiler
 					if(count($params) === 0)
 					{
 						if($v[1]===false)
-							throw new Exception('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_NOTICE);
+							$this->triggerError('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 						else
 							break;
 					}
@@ -2204,7 +2204,7 @@ class DwooCompiler implements DwooICompiler
 				}
 				// parameter is not defined and not optional, throw error
 				elseif($v[1]===false)
-					throw new Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_NOTICE);
+					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				elseif($v[2]===null)
 					$paramlist[$v[0]] = array('null', null);
@@ -2213,8 +2213,9 @@ class DwooCompiler implements DwooICompiler
 					$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
 			}
 		}
+		// parser failed miserably
 		else
-			throw new Exception('This should not happen, please report it.', E_USER_NOTICE);
+			$this->triggerError('This should not happen, please report it if you see this message', E_USER_ERROR);
 
 		return $paramlist;
 	}
@@ -2271,7 +2272,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('DwooCompiler error: '.$message, $level);
+		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".substr($this->template, $this->pointer-25, 125), $level);
 	}
 }
 

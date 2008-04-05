@@ -1,18 +1,20 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/Dwoo.php';
+define('DWOO_CACHEDIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
+define('DWOO_COMPILEDIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
+require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'Dwoo.php';
 
 class DwooTests {
 	public static function suite() {
-		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_PATH.'plugins/builtin');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'Dwoo.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooCompiler.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooData.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooInterfaces.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooPlugin.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooSmartyAdapter.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooTemplateFile.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_PATH.'DwooTemplateString.php');
+		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIR.'plugins/builtin');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'Dwoo.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooCompiler.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooData.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooInterfaces.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooPlugin.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooSmartyAdapter.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooTemplateFile.php');
+		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIR.'DwooTemplateString.php');
 
 		$suite = new PHPUnit_Framework_TestSuite('Dwoo - Unit Tests Report');
 
