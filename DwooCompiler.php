@@ -2272,7 +2272,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".substr($this->template, $this->pointer-25, 125), $level);
+		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->template, max(0, $this->pointer-30), 130)), $level);
 	}
 }
 
