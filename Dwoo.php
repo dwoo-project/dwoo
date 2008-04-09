@@ -257,7 +257,16 @@ class Dwoo
 	}
 
 	/**
-	 * outputs the given template using the provided data and optional compiler
+	 * outputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true)
+	 * @see get
+	 */
+	public function output($tpl, $data = array(), DwooICompiler $compiler = null)
+	{
+		return $this->get($tpl, $data, $compiler, true);
+	}
+
+	/**
+	 * returns the given template rendered using the provided data and optional compiler
 	 *
 	 * @param mixed $tpl template, can either be a DwooITemplate object (i.e. DwooTemplateFile), a valid path to a template, or
 	 * 					 a template as a string it is recommended to provide a DwooITemplate as it will probably make things faster,
@@ -266,16 +275,16 @@ class Dwoo
 	 * 					  rendering the template from cache, it can be left null
 	 * @param DwooICompiler $compiler the compiler that must be used to compile the template, if left empty a default
 	 * 								  DwooCompiler will be used.
-	 * @param bool $return flag that defines whether the function returns the output of the template (true) or echoes it directly (false)
-	 * @return string the template output or nothing if $return is false
+	 * @param bool $output flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
+	 * @return string nothing or the template output if $output is true
 	 */
-	public function output($tpl, $data = array(), DwooICompiler $compiler = null, $return = false)
+	public function get($tpl, $data = array(), $compiler = null, $output = false)
 	{
 		// a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
 		if($this->template instanceof DwooITemplate)
 		{
 			$proxy = clone $this;
-			return  $proxy->output($tpl, $data, $compiler, $return);
+			return $proxy->get($tpl, $data, $compiler, $output);
 		}
 
 		// auto-create template if required
@@ -309,8 +318,11 @@ class Dwoo
 		// cache is present, run it
 		if($cacheLoaded === true)
 		{
-			if($return === false)
+			if($output === true)
+			{
 				include $file;
+				$this->template = null;
+			}
 			else
 			{
 				ob_start();
@@ -327,52 +339,43 @@ class Dwoo
 			// building cache
 			if($doCache)
 			{
-				$output = include $file;
+				$out = include $file;
 
 				foreach($this->filters as $filter)
 				{
 					if(is_array($filter) && $filter[0] instanceof DwooFilter)
-						$output = call_user_func($filter, $output);
+						$out = call_user_func($filter, $out);
 					else
-						$output = call_user_func($filter, $this, $output);
+						$out = call_user_func($filter, $this, $out);
 				}
 
 				$this->template = null;
-				$tpl->cache($this, $output);
-				if($return === false)
-					echo $output;
+				$tpl->cache($this, $out);
+				if($output === true)
+					echo $out;
 				else
-					return $output;
+					return $out;
 			}
 			// no need to build cache
 			else
 			{
-				$output = include $file;
+				$out = include $file;
 				$this->template = null;
 
 				foreach($this->filters as $filter)
 				{
 					if(is_array($filter) && $filter[0] instanceof DwooFilter)
-						$output = call_user_func($filter, $output);
+						$out = call_user_func($filter, $out);
 					else
-						$output = call_user_func($filter, $this, $output);
+						$out = call_user_func($filter, $this, $out);
 				}
 
-				if($return === false)
-					echo $output;
+				if($output === true)
+					echo $out;
 				else
-					return $output;
+					return $out;
 			}
 		}
-	}
-
-	/**
-	 * returns the template instead of outputting it, this is basically a shortcut for output(*, *, *, true)
-	 * @see output
-	 */
-	public function get($tpl, $data = array(), $compiler = null)
-	{
-		return $this->output($tpl, $data, $compiler, true);
 	}
 
 	/**

@@ -1,4 +1,12 @@
-[2008-04-] 0.3.4
+[2008-04-] 0.4.0
+* Fixed a classpath rebuilding bug that occured on some UNIX platforms due to
+  glob() inconsistencies
+! BC Break: $dwoo->output() and get() have been swapped internally, but it
+  doesn't change anything for you unless you called output(*, *, *, true)
+  directly to emulate get(). This was done to reduce some overhead
+
+
+[2008-04-09] 0.3.4
 ! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY
 ! BC Break: Smarty's @ operator for modifiers is now reversed, for example
   $array|reverse will reverse the items of that array while $array|@reverse

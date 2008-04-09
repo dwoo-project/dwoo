@@ -232,7 +232,7 @@ class DwooSmarty_Adapter extends Dwoo
 
 		$this->compiler->setDelimiters($this->left_delimiter, $this->right_delimiter);
 
-		return $this->output($tpl, $this->dataProvider, $this->compiler, $display===false);
+		return $this->get($tpl, $this->dataProvider, $this->compiler, $display===true);
 	}
 
 	public function register_function($name, $callback, $cacheable=true, $cache_attrs=null)
