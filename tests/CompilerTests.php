@@ -38,6 +38,14 @@ class CompilerTests extends PHPUnit_Framework_TestCase
         $this->assertEquals('B-A-R', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
     }
 
+    public function testModifierWithModifier()
+    {
+        $tpl = new DwooTemplateString('{$foo.0}{assign $foo|reverse foo}{$foo.0}{assign $foo|@reverse foo}{$foo.0}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals('barbazzab', $this->dwoo->get($tpl, array('foo'=>array('bar','baz')), $this->compiler));
+    }
+
     public function testDwooFunc()
     {
         $tpl = new DwooTemplateString('{upper($foo)}');
@@ -72,7 +80,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
     public function testNamedParameter3()
     {
-        $tpl = new DwooTemplateString('{assign value=reverse(array(foo=3,boo=5, 3=4)) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
+        $tpl = new DwooTemplateString('{assign value=reverse(array(foo=3,boo=5, 3=4), true) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
         $tpl->forceCompilation();
 
         $this->assertEquals('34boo5foo3', $this->dwoo->get($tpl, array(), $this->compiler));

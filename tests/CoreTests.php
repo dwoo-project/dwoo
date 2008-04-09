@@ -77,7 +77,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("FOO", $this->dwoo->get($tpl, array(), $this->compiler));
 
-    	$tpl = new DwooTemplateString('{foreach $foo|count p}{$p}{/foreach}');
+    	$tpl = new DwooTemplateString('{foreach $foo|@count subitems}{$subitems}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("21", $this->dwoo->get($tpl, array('foo'=>array('a'=>array(1,2), 'b'=>array(2))), $this->compiler));

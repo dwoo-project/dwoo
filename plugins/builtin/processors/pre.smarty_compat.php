@@ -15,8 +15,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class DwooProcessor_smarty_compat extends DwooProcessor
@@ -52,6 +52,10 @@ class DwooProcessor_smarty_compat extends DwooProcessor
 			'<?php ',
 			' ?>',
 		);
+
+		if(preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches))
+			$this->compiler->triggerError('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
+
 	    return str_replace($smarty, $dwoo, $input);
 	}
 

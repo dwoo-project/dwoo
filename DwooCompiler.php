@@ -15,8 +15,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class DwooCompiler implements DwooICompiler
@@ -1871,7 +1871,15 @@ class DwooCompiler implements DwooICompiler
 					$this->errors[] = 'A function can not have named AND un-named parameters in : '.$cmdstr;
 			}
 
-			$pluginType = $this->getPluginType(ltrim($func,'@'));
+			// check if we must use array_map with this plugin or not
+			$mapped = false;
+			if(substr($func, 0, 1) === '@')
+			{
+				$func = substr($func, 1);
+				$mapped = true;
+			}
+
+			$pluginType = $this->getPluginType($func);
 
 			if($state===2)
 				array_unshift($params, array('value', array($output, $output)));
@@ -1886,10 +1894,10 @@ class DwooCompiler implements DwooICompiler
 
 				$params = $this->implode_r($params);
 
-				if($func[0] === '@')
-					$output = substr($func, 1).'('.$params.')';
+				if($mapped)
+					$output = '$this->arrayMap(\''.$func.'\', array('.$params.'))';
 				else
-					$output = '$this->phpCall(\''.$func.'\', array('.$params.'))';
+					$output = $func.'('.$params.')';
 			}
 			elseif($pluginType & Dwoo::SMARTY_MODIFIER)
 			{
@@ -1904,13 +1912,17 @@ class DwooCompiler implements DwooICompiler
 					if(is_array($callback))
 					{
 						if(is_object($callback[0]))
-							$output = 'call_user_func_array(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
+							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
 						else
-							$output = 'call_user_func_array(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
+							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
 					}
+					elseif($mapped)
+						$output = '$this->arrayMap(\''.$callback.'\', array('.$params.'))';
 					else
 						$output = $callback.'('.$params.')';
 				}
+				elseif($mapped)
+					$output = '$this->arrayMap(\'smarty_modifier_'.$func.'\', array('.$params.'))';
 				else
 					$output = 'smarty_modifier_'.$func.'('.$params.')';
 			}
@@ -1944,6 +1956,8 @@ class DwooCompiler implements DwooICompiler
 				{
 					if($pluginType & Dwoo::COMPILABLE_PLUGIN)
 					{
+						if($mapped)
+							$this->triggerError('The @ operator can not be used on compiled plugins.', E_USER_ERROR);
 						$funcCompiler = 'DwooPlugin_'.$func.'_compile';
 						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
@@ -1953,13 +1967,18 @@ class DwooCompiler implements DwooICompiler
 						array_unshift($params, '$this');
 
 						$params = $this->implode_r($params);
-						$output = $pluginName.'('.$params.')';
+						if($mapped)
+							$output = '$this->arrayMap(\''.$pluginName.'\', array('.$params.'))';
+						else
+							$output = $pluginName.'('.$params.')';
 					}
 				}
 				else
 				{
 					if($pluginType & Dwoo::COMPILABLE_PLUGIN)
 					{
+						if($mapped)
+							$this->triggerError('The @ operator can not be used on compiled plugins.', E_USER_ERROR);
 						$funcCompiler = array('DwooPlugin_'.$func, 'compile');
 						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
@@ -1971,16 +1990,19 @@ class DwooCompiler implements DwooICompiler
 						if($pluginType & Dwoo::CUSTOM_PLUGIN)
 						{
 							if(is_object($callback[0]))
-								$output = 'call_user_func_array(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
+								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
 							else
-								$output = 'call_user_func_array(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
+								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
 						}
+						elseif($mapped)
+							$output = '$this->arrayMap(array($this->getObjectPlugin(\'DwooPlugin_'.$func.'\'), \'process\'), array('.$params.'))';
 						else
 							$output = '$this->classCall(\''.$func.'\', array('.$params.'))';
 					}
 				}
 			}
 		}
+
 		if($curBlock === 'var' || $m[1] === null)
 		{
 			return $output;

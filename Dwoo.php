@@ -42,8 +42,8 @@ DwooLoader::loadPlugin('topLevelBlock');
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class Dwoo
@@ -53,7 +53,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = "0.3.3";
+	const VERSION = "0.3.4";
 
 	/**
 	 * unique number of this dwoo release
@@ -62,7 +62,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 7;
+	const RELEASE_TAG = 8;
 
 	/**#@+
 	 * constants that represents all plugin types
@@ -385,7 +385,7 @@ class Dwoo
 		$this->globals = array
 		(
 			'version'	=>	self::VERSION,
-			'ad'		=>	'<a href="http://dwoo.org">Powered by Dwoo</a>',
+			'ad'		=>	'<a href="http://dwoo.org/">Powered by Dwoo</a>',
 			'now'		=>	$_SERVER['REQUEST_TIME'],
 			'template'	=>	$tpl->getName(),
 			'charset'	=>	$this->charset,
@@ -980,61 +980,77 @@ class Dwoo
 	/**
 	 * [runtime function] calls a php function
 	 *
-	 * @param string $func the php function to call
+	 * @param string $callback the function to call
 	 * @param array $params an array of parameters to send to the function
 	 * @return mixed the return value of the called function
 	 */
-	public function phpCall($func, array $params)
+	public function arrayMap($callback, array $params)
 	{
-		$globCall = false;
-		if($func[0] === '@')
+		if($params[0] === $this)
 		{
-			$func = substr($func,1);
-			$globCall = true;
+			$addThis = true;
+			array_shift($params);
 		}
-
-		if($globCall === false && (is_array($params[0]) || ($params[0] instanceof Iterator && $params[0] instanceof ArrayAccess)))
+		if((is_array($params[0]) || ($params[0] instanceof Iterator && $params[0] instanceof ArrayAccess)))
 		{
+			if(empty($params[0]))
+				return $params[0];
+
 			// array map
 			$out = array();
-			$items = $params[0];
-			$keys = array_keys($items);
-
 			$cnt = count($params);
-			if($cnt===1)
-				while(($i = array_shift($keys)) !== null)
-					$out[] = $func($items[$i]);
-			elseif($cnt===2)
-				while(($i = array_shift($keys)) !== null)
-					$out[] = $func($items[$i], $params[1]);
-			elseif($cnt===3)
-				while(($i = array_shift($keys)) !== null)
-					$out[] = $func($items[$i], $params[1], $params[2]);
-			elseif($cnt===4)
-				while(($i = array_shift($keys)) !== null)
-					$out[] = $func($items[$i], $params[1], $params[2], $params[3]);
-			else
-				while(($i = array_shift($keys)) !== null)
-					$out[] = call_user_func_array($func, array($items[$i]) + $params);
 
+			if(isset($addThis))
+			{
+				array_unshift($params, $this);
+				$items = $params[1];
+				$keys = array_keys($items);
+
+				if(is_string($callback) === false)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = call_user_func_array($callback, array(1=>$items[$i]) + $params);
+				elseif($cnt===1)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($this, $items[$i]);
+				elseif($cnt===2)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($this, $items[$i], $params[2]);
+				elseif($cnt===3)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($this, $items[$i], $params[2], $params[3]);
+				else
+					while(($i = array_shift($keys)) !== null)
+						$out[] = call_user_func_array($callback, array(1=>$items[$i]) + $params);
+			}
+			else
+			{
+				$items = $params[0];
+				$keys = array_keys($items);
+
+				if(is_string($callback) === false)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = call_user_func_array($callback, array($items[$i]) + $params);
+				elseif($cnt===1)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($items[$i]);
+				elseif($cnt===2)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($items[$i], $params[1]);
+				elseif($cnt===3)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($items[$i], $params[1], $params[2]);
+				elseif($cnt===4)
+					while(($i = array_shift($keys)) !== null)
+						$out[] = $callback($items[$i], $params[1], $params[2], $params[3]);
+				else
+					while(($i = array_shift($keys)) !== null)
+						$out[] = call_user_func_array($callback, array($items[$i]) + $params);
+			}
 			return $out;
 		}
 		else
 		{
-			// call normally
-			$cnt = count($params);
-			if($cnt===0)
-				return $func();
-			elseif($cnt===1)
-				return $func($params[0]);
-			elseif($cnt===2)
-				return $func($params[0], $params[1]);
-			elseif($cnt===3)
-				return $func($params[0], $params[1], $params[2]);
-			elseif($cnt===4)
-				return $func($params[0], $params[1], $params[2], $params[3]);
-			else
-				return call_user_func_array($func, $params);
+			return $params[0];
 		}
 	}
 
@@ -1417,8 +1433,8 @@ class Dwoo
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class DwooLoader
@@ -1525,8 +1541,8 @@ class DwooLoader
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class DwooException extends Exception
@@ -1548,8 +1564,8 @@ class DwooException extends Exception
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 class DwooSecurityPolicy

@@ -1,5 +1,8 @@
 [2008-04-] 0.3.4
 ! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY
+! BC Break: Smarty's @ operator for modifiers is now reversed, for example
+  $array|reverse will reverse the items of that array while $array|@reverse
+  will reverse each item of the given array (as if you used array_map)
 + Syntax: Added support for method calls on objects i.e. {$foo->bar()}
 + Added support for smarty security features, see the DwooSecurityPolicy class
   and $dwoo->setSecurityPolicy()

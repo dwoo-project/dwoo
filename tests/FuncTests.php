@@ -293,6 +293,11 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals((string)(3+5+(cos(1) + max(3,2))), $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new DwooTemplateString('{math equation="3+5+(cos(a) + max(3,2))" a="1" assign="foo"}-{$foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('-'.(3+5+(cos(1) + max(3,2))), $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testNl2br()

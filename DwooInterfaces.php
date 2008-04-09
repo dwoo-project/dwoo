@@ -15,8 +15,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 interface DwooIDataProvider
@@ -44,8 +44,8 @@ interface DwooIDataProvider
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 interface DwooITemplate
@@ -152,8 +152,8 @@ interface DwooITemplate
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 interface DwooICompiler

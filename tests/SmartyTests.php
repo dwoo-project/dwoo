@@ -15,6 +15,8 @@ class SmartyTests extends PHPUnit_Framework_TestCase
 		$this->dwoo->compile_dir = DWOO_DIRECTORY.'tests/temp/compiled/';
 		$this->dwoo->cache_dir = DWOO_DIRECTORY.'tests/temp/cache/';
 		$this->dwoo->config_dir = DWOO_DIRECTORY.'tests/resources/configs/';
+		$this->compiler = new DwooCompiler();
+		$this->compiler->addPreProcessor('smarty_compat', true);
 	}
 
     public function testSmartyCompat()

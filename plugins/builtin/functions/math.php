@@ -15,13 +15,12 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.3
- * @date       2008-03-19
+ * @version    0.3.4
+ * @date       2008-04-09
  * @package    Dwoo
  */
 function DwooPlugin_math_compile(DwooCompiler $compiler, $equation, $format='', $assign='', array $rest=array())
 {
-	// TODO add assign support
 	/**
 	 * Holds the allowed function, characters, operators and constants
 	 */
@@ -120,8 +119,10 @@ function DwooPlugin_math_compile(DwooCompiler $compiler, $equation, $format='', 
 			$ptr++;
 		}
 	}
-	if($format != '\'\'')
-		return '(sprintf('.$format.', '.$out.'))';
+	if($format !== '\'\'')
+		$out = 'sprintf('.$format.', '.$out.')';
+	if($assign !== '\'\'')
+		return '($this->assignInScope('.$out.', '.$assign.'))';
 	return '('.$out.')';
 }
 
