@@ -1473,13 +1473,15 @@ class DwooLoader
 		}
 
 		// iterates over all files/folders
-		foreach(glob($path.DIRECTORY_SEPARATOR.'*') as $f)
-		{
-			if(is_dir($f))
-				self::rebuildClassPathCache($f, false);
-			elseif(basename($f) !== 'classpath.cache')
-				self::$classpath[str_replace(array('function.','block.','modifier.','outputfilter.','filter.','prefilter.','postfilter.','pre.','post.','output.','shared.','helper.'), '', basename($f,'.php'))] = $f;
-		}
+		$list = glob($path.DIRECTORY_SEPARATOR.'*');
+		if(is_array($list))
+			foreach($list as $f)
+			{
+				if(is_dir($f))
+					self::rebuildClassPathCache($f, false);
+				elseif(basename($f) !== 'classpath.cache')
+					self::$classpath[str_replace(array('function.','block.','modifier.','outputfilter.','filter.','prefilter.','postfilter.','pre.','post.','output.','shared.','helper.'), '', basename($f,'.php'))] = $f;
+			}
 
 		// save in file if it's the first call (not recursed)
 		if($cacheFile!==false)
