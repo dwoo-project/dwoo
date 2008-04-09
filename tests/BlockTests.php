@@ -226,15 +226,20 @@ class BlockTests extends PHPUnit_Framework_TestCase
 
     public function testTextFormat()
     {
-		$tpl = new DwooTemplateString('{textformat wrap=10}hello world is so unoriginal but hey.. it works.{/textformat}');
+		$tpl = new DwooTemplateString('aa{textformat wrap=10}hello world is so unoriginal but hey.. {textformat wrap=4}a a a a a a{/textformat}it works.{/textformat}bb');
 		$tpl->forceCompilation();
 
-        $this->assertEquals('hello
+        $this->assertEquals('aahello
 world is
 so
 unoriginal
 but hey..
-it works.', $this->dwoo->get($tpl, array(), $this->compiler));
+a a
+
+a a
+
+a ait
+works.bb', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		$tpl = new DwooTemplateString('{textformat style=email indent=50}hello world is so unoriginal but hey.. it works.{/textformat}');
 		$tpl->forceCompilation();

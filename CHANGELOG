@@ -4,7 +4,11 @@
 ! BC Break: $dwoo->output() and get() have been swapped internally, but it
   doesn't change anything for you unless you called output(*, *, *, true)
   directly to emulate get(). This was done to reduce some overhead
-* Performance improvements
+* Various performance improvements, including the removal of a lot of isset()
+  calls. Doing {$foo} if foo is undefined will now display a PHP warning, but
+  doing {foreach $foo}..{/foreach} will not however, that way you don't have
+  to do {if isset($foo)} before the foreach, but automated isset() calls don't
+  impact performance as much as they did before.
 
 
 [2008-04-09] 0.3.4

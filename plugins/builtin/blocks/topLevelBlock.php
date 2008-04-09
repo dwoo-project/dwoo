@@ -31,7 +31,7 @@ final class DwooPlugin_topLevelBlock extends DwooBlockPlugin
 
 	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
 	{
-		return DwooCompiler::PHP_OPEN.'return ob_get_clean();';
+		return DwooCompiler::PHP_OPEN.'return $this->buffer . ob_get_clean();';
 	}
 }
 

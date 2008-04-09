@@ -238,6 +238,13 @@ class Dwoo
 	protected $curBlock;
 
 	/**
+	 * stores the output buffer during template runtime
+	 *
+	 * @var string
+	 */
+	protected $buffer;
+
+	/**
 	 * constructor, sets the cache and compile dir to the default values
 	 */
 	public function __construct()
@@ -408,6 +415,7 @@ class Dwoo
 		$this->scopeTree = array();
 		$this->stack = array();
 		$this->curBlock = null;
+		$this->buffer = '';
 	}
 
 	/*
@@ -837,6 +845,11 @@ class Dwoo
 		if($this->curBlock !== null)
 		{
 			$this->curBlock->buffer(ob_get_contents());
+			ob_clean();
+		}
+		else
+		{
+			$this->buffer .= ob_get_contents();
 			ob_clean();
 		}
 
