@@ -1377,7 +1377,7 @@ class DwooCompiler implements DwooICompiler
 			}
 			else
 			{
-				$output = $this->parseVarKey($key);
+				$output = $this->parseVarKey($key, $curBlock);
 			}
 
 			if($hasMethodCall)
@@ -1457,7 +1457,7 @@ class DwooCompiler implements DwooICompiler
 	 * @param string $key the variable to parse
 	 * @return string parsed variable
 	 */
-	protected function parseVarKey($key)
+	protected function parseVarKey($key, $curBlock)
 	{
 		if(preg_match('#dwoo\.(get|post|server|cookies|session|env|request)((?:\.[a-z0-9_-]+)+)#i', $key, $m))
 		{
@@ -1467,16 +1467,21 @@ class DwooCompiler implements DwooICompiler
 			$key = '$_'.$global;
 			foreach(explode('.', ltrim($m[2], '.')) as $part)
 				$key .= '['.var_export($part, true).']';
-			$output = '(isset('.$key.')?'.$key.':null)';
+			if($curBlock === 'root')
+				$output = $key;
+			else
+				$output = '(isset('.$key.')?'.$key.':null)';
 		}
 		elseif(preg_match('#dwoo\.const\.([a-z0-9_:-]+)#i', $key, $m))
 		{
 			if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === DwooSecurityPolicy::CONST_DISALLOW)
 				return 'null';
 			if(strpos($m[1], ':') !== false)
-				$output = '(defined("'.$m[1].'") ? constant("'.$m[1].'") : null)';
+				$output = 'constant("'.$m[1].'")';
 			else
-				$output = '(defined("'.$m[1].'") ? '.$m[1].' : null)';
+				$output = $m[1];
+			if($curBlock !== 'root')
+				$output = '(defined("'.$m[1].'") ? '.$output.' : null)';
 		}
 		elseif($this->scope !== null)
 		{
@@ -1496,7 +1501,10 @@ class DwooCompiler implements DwooICompiler
 				}
 				else
 				{
-					$output = '(isset($this->scope["'.$key.'"]) ? $this->scope["'.$key.'"] : null)';
+					if($curBlock === 'root')
+						$output = '$this->scope["'.$key.'"]';
+					else
+						$output = '(isset($this->scope["'.$key.'"]) ? $this->scope["'.$key.'"] : null)';
 				}
 			}
 			else
@@ -1546,7 +1554,8 @@ class DwooCompiler implements DwooICompiler
 						array_shift($m[1]);
 					}
 
-					$output = '(isset('.$output.') ? '.$output.':null)';
+					if($curBlock !== 'root')
+						$output = '(isset('.$output.') ? '.$output.':null)';
 				}
 
 				if(count($m[2]))
