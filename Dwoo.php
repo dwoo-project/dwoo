@@ -898,6 +898,8 @@ class Dwoo
 		{
 			echo $tmp->process();
 		}
+
+		unset($tmp);
 	}
 
 	/**

@@ -26,12 +26,12 @@ final class DwooPlugin_topLevelBlock extends DwooBlockPlugin
 
 	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
 	{
-		return 'ob_start(); $this->addStack("topLevelBlock");'.DwooCompiler::PHP_CLOSE;
+		return 'ob_start(); '.DwooCompiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
 	{
-		return DwooCompiler::PHP_OPEN.'$this->delStack(); return ob_get_clean();';
+		return DwooCompiler::PHP_OPEN.'return ob_get_clean();';
 	}
 }
 

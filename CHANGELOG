@@ -4,6 +4,7 @@
 ! BC Break: $dwoo->output() and get() have been swapped internally, but it
   doesn't change anything for you unless you called output(*, *, *, true)
   directly to emulate get(). This was done to reduce some overhead
+* Performance improvements
 
 
 [2008-04-09] 0.3.4
