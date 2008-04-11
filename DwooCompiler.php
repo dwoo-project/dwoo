@@ -1455,6 +1455,7 @@ class DwooCompiler implements DwooICompiler
 	 * parses a constant variable (a variable that doesn't contain another variable) and preprocesses it to save runtime processing time
 	 *
 	 * @param string $key the variable to parse
+	 * @param string $curBlock the current parser-block being processed
 	 * @return string parsed variable
 	 */
 	protected function parseVarKey($key, $curBlock)

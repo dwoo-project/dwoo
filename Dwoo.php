@@ -799,14 +799,36 @@ class Dwoo
 	 *
 	 * @param mixed $value the variable to check
 	 * @param bool $checkIsEmpty if true, the function will also check if the array is empty
+	 * @param bool $allowNonCountable if true, the function will return true if an object is not empty but does not
+	 * 			   implement Countable, by default a non-countable object is considered empty
 	 * @return bool true if it's an array (and not empty) or false if it's not an array (or if it's empty)
 	 */
-	public function isArray($value, $checkIsEmpty=false)
+	public function isArray($value, $checkIsEmpty=false, $allowNonCountable=false)
 	{
-		if(is_array($value) === true || ($value instanceof Iterator && $value instanceof ArrayAccess))
+		if(is_array($value) === true)
 		{
 			if($checkIsEmpty)
-				return !empty($value);
+				return count($value) > 0;
+			else
+				return true;
+		}
+		elseif($value instanceof Iterator)
+		{
+			if($checkIsEmpty)
+			{
+				if($allowNonCountable)
+				{
+					if($value instanceof Countable)
+						return count($value) > 0;
+					else
+					{
+						$value->rewind();
+						return $value->valid();
+					}
+				}
+				else
+					return count($value) > 0;
+			}
 			else
 				return true;
 		}

@@ -77,12 +77,12 @@ class DwooPlugin_foreach extends DwooBlockPlugin implements DwooICompilableBlock
 			if($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
 			if($usesFirst) $out .="\n\t".'"first"		=> null,';
 			if($usesLast) $out .="\n\t".'"last"		=> null,';
-			if($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true),';
+			if($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true, true),';
 			if($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_fh'.$cnt.'_data) ? count($_fh'.$cnt.'_data) : 0,';
 			$out.="\n);\n".'$_fh'.$cnt.'_glob =& $this->globals["foreach"]['.$name.'];';
 		}
 		// checks if foreach must be looped
-		$out .= "\n".'if($this->isArray($_fh'.$cnt.'_data, true) === true)'."\n{";
+		$out .= "\n".'if($this->isArray($_fh'.$cnt.'_data, true, true) === true)'."\n{";
 		// iterates over keys
 		$out .= "\n\t".'foreach($_fh'.$cnt.'_data as '.(isset($key)?'$this->scope['.$key.']=>':'').'$this->scope['.$val.'])'."\n\t{";
 		// updates properties
