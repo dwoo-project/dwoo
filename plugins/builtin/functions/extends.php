@@ -111,7 +111,7 @@ class DwooPlugin_extends extends DwooPlugin implements DwooICompilable
 				$newSource = $parent['source'];
 			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('DwooPlugin_extends', 'replaceBlock'), $newSource);
 
-			$newSource = $l.'extendsCheck "'.$parent['resource'].':'.$parent['identifier'].'" "'.str_replace('"', '\\"', $parent['uid']).'"'.$r.$newSource;
+			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'" "'.str_replace('"', '\\"', $parent['uid']).'")'.$r.$newSource;
 
 			if(self::$lastReplacement)
 				break;

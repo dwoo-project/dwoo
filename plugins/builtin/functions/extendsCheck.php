@@ -25,7 +25,7 @@ function DwooPlugin_extendsCheck_compile(DwooCompiler $compiler, $file, $uid)
 	$resource = $m[1];
 	$identifier = $m[2];
 
-	return '\'\'; // check for modification in '.$resource.':'.$identifier.'
+	return '// check for modification in '.$resource.':'.$identifier.'
 try {
 	$tpl = $this->getTemplate("'.$resource.'", "'.$identifier.'");
 } catch (DwooException $e) {

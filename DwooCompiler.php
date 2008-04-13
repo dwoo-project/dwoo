@@ -1109,7 +1109,7 @@ class DwooCompiler implements DwooICompiler
 			if($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : 0) + strlen($func)).' TO POINTER<br/>';
 		}
 
-		if($curBlock === 'method')
+		if($curBlock === 'method' || $func === 'do')
 		{
 			$pluginType = Dwoo::NATIVE_PLUGIN;
 		}
@@ -1175,10 +1175,25 @@ class DwooCompiler implements DwooICompiler
 			$p = $p[0];
 		if($pluginType & Dwoo::NATIVE_PLUGIN)
 		{
-			if(isset($params['*']))
-				$output = $func.'('.implode(', ', $params['*']).')';
+			if($func === 'do')
+			{
+				if(isset($params['*']))
+					$output = implode(';', $params['*']).';';
+				else
+					$output = '';
+
+				if(is_array($parsingParams) || $curBlock !== 'root')
+					return $this->triggerError('Do can not be used inside another function or block', E_USER_ERROR);
+				else
+					return self::PHP_OPEN.$output.self::PHP_CLOSE;
+			}
 			else
-				$output = $func.'()';
+			{
+				if(isset($params['*']))
+					$output = $func.'('.implode(', ', $params['*']).')';
+				else
+					$output = $func.'()';
+			}
 		}
 		elseif($pluginType & Dwoo::FUNC_PLUGIN)
 		{
