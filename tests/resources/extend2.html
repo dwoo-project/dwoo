@@ -1,0 +1,13 @@
+{extends "extend1.html"}
+
+{block test}
+{$dwoo.parent}child2
+{/block}
+
+{block foo}
+useless, shouldn't appear
+{/block}
+
+{block test2}
+FOO{$foo}{$dwoo.parent}
+{/block}
