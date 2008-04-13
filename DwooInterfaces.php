@@ -127,10 +127,7 @@ interface DwooITemplate
 	 *
 	 * @return string
 	 */
-	public function getUid()
-	{
-		return $this->name;
-	}
+	public function getUid();
 
 	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
