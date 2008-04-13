@@ -1,15 +1,22 @@
 [2008-04-] 0.4.0
-* Fixed a classpath rebuilding bug that occured on some UNIX platforms due to
-  glob() inconsistencies
 ! BC Break: $dwoo->output() and get() have been swapped internally, but it
   doesn't change anything for you unless you called output(*, *, *, true)
   directly to emulate get(). This was done to reduce some overhead
++ Plugins: Added {extends} and {block} to handle template inheritance, read
+  more about it at http://wiki.dwoo.org/index.php/TemplateInheritance
++ API: Added getSource(), getUid() and getResourceIdentifier() to DwooITemplate
++ API: Added setSecurityPolicy() too DwooICompiler and modified the arguments
+  of its compile() method
++ API: Added a bunch of utility functions to DwooCompiler, allowing compiled
+  plugins to access more of the compiler internals
+* Reworked Dwoo template rendering to avoid variable conflicts
+* Fixed a classpath rebuilding bug that occured on some UNIX platforms due to
+  glob() inconsistencies
 * Various performance improvements, including the removal of a lot of isset()
   calls. Doing {$foo} if foo is undefined will now display a PHP warning, but
   doing {foreach $foo}..{/foreach} will not however, that way you don't have
   to do {if isset($foo)} before the foreach, but automated isset() calls don't
   impact performance as much as they did before.
-
 
 [2008-04-09] 0.3.4
 ! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY
