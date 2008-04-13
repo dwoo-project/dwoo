@@ -376,7 +376,8 @@ class DwooCompiler implements DwooICompiler
 	/**
 	 * sets the security policy object to enforce some php security settings
 	 *
-	 * use this if untrusted persons can modify templates
+	 * use this if untrusted persons can modify templates,
+	 * set it on the Dwoo object as it will be passed onto the compiler automatically
 	 *
 	 * @param DwooSecurityPolicy $policy the security policy object
 	 */
@@ -396,19 +397,83 @@ class DwooCompiler implements DwooICompiler
 	}
 
 	/**
+	 * sets the pointer position
+	 *
+	 * @param int $position the new pointer position
+	 * @param bool $isOffset if set to true, the position acts as an offset and not an absolute position
+	 */
+	public function setPointer($position, $isOffset = false)
+	{
+		if($isOffset)
+			$this->pointer += $position;
+		else
+			$this->pointer = $position;
+	}
+
+	/**
+	 * returns the current pointer position, only available during compilation of a template
+	 *
+	 * @return int
+	 */
+	public function getPointer()
+	{
+		return $this->pointer;
+	}
+
+	/**
+	 * returns the dwoo object that initiated this template compilation, only available during compilation of a template
+	 *
+	 * @return Dwoo
+	 */
+	public function getDwoo()
+	{
+		return $this->dwoo;
+	}
+
+	/**
+	 * overwrites the template that is being compiled
+	 *
+	 * @param string $newSource the template source that must replace the current one
+	 * @param bool $fromPointer if set to true, only the source from the current pointer position is replaced
+	 * @return string the template or partial template
+	 */
+	public function setTemplateSource($newSource, $fromPointer = false)
+	{
+		if($fromPointer === true)
+			$this->templateSource = substr($this->templateSource, 0, $this->pointer) . $newSource;
+		else
+			$this->templateSource = $newSource;
+	}
+
+	/**
+	 * returns the template that is being compiled
+	 *
+	 * @param bool $fromPointer if set to true, only the source from the current pointer position is returned
+	 * @return string the template or partial template
+	 */
+	public function getTemplateSource($fromPointer = false)
+	{
+		if($fromPointer)
+			return substr($this->templateSource, $this->pointer);
+		else
+			return $this->templateSource;
+	}
+
+	/**
 	 * compiles the provided string down to php code
 	 *
 	 * @param string $tpl the template to compile
 	 * @return string a compiled php string
 	 */
-	public function compile($tpl)
+	public function compile(Dwoo $dwoo, DwooITemplate $template)
 	{
-		// resets variables
-		$this->usedPlugins = array('topLevelBlock' => Dwoo::BLOCK_PLUGIN);
-		$this->data = array();
-		$this->scope =& $this->data;
-		$this->scopeTree = array();
-		$this->stack = array();
+		// init vars
+		$tpl = $template->getSource();
+		$ptr = 0;
+		$this->dwoo = $dwoo;
+		$this->template = $template;
+		$this->templateSource =& $tpl;
+		$this->pointer =& $ptr;
 
 		if($this->debug) echo 'PROCESSING PREPROCESSORS<br>';
 
@@ -422,14 +487,7 @@ class DwooCompiler implements DwooICompiler
 		}
 		unset($preProc);
 
-		$ptr = 0;
-
-		$this->template =& $tpl;
-		$this->pointer =& $ptr;
-
 		if($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'<hr>';
-
-		$compiled = $this->addBlock('topLevelBlock', array(), 0);
 
 		// strips comments
 		if(strstr($tpl, $this->ld.'*') !== false)
@@ -459,6 +517,19 @@ class DwooCompiler implements DwooICompiler
 
 		while(true)
 		{
+			// if pointer is at the beginning, reset everything, that allows a plugin to externally reset the compiler if everything must be reparsed
+			if($ptr===0)
+			{
+				// resets variables
+				$this->usedPlugins = array('topLevelBlock' => Dwoo::BLOCK_PLUGIN);
+				$this->data = array();
+				$this->scope =& $this->data;
+				$this->scopeTree = array();
+				$this->stack = array();
+				// add top level block
+				$compiled = $this->addBlock('topLevelBlock', array(), 0);
+			}
+
 			$pos = strpos($tpl, $this->ld, $ptr);
 
 			if($pos === false)
@@ -599,23 +670,10 @@ class DwooCompiler implements DwooICompiler
 		if(!empty($this->errors))
 			print_r($this->errors);
 
-		$this->template = null;
+		$this->template = $this->dwoo = null;
+		$tpl = null;
 
 		return $output;
-	}
-
-	/**
-	 * returns the template that is being compiled
-	 *
-	 * @param bool $fromPointer if set to true, only the source from the current pointer position is returned
-	 * @return string the template or partial template
-	 */
-	public function getTemplateSource($fromPointer = false)
-	{
-		if($fromPointer)
-			return substr($this->template, $this->pointer);
-		else
-			return $this->template;
 	}
 
 	/**
@@ -2304,7 +2362,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->template, max(0, $this->pointer-30), 130)), $level);
+		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->templateSource, max(0, $this->pointer-30), 130)), $level);
 	}
 }
 

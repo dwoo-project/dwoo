@@ -285,26 +285,28 @@ class Dwoo
 	 * @param bool $output flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
 	 * @return string nothing or the template output if $output is true
 	 */
-	public function get($tpl, $data = array(), $compiler = null, $output = false)
+	public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
 	{
 		// a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
 		if($this->template instanceof DwooITemplate)
 		{
 			$proxy = clone $this;
-			return $proxy->get($tpl, $data, $compiler, $output);
+			return $proxy->get($_tpl, $data, $_compiler, $_output);
 		}
 
 		// auto-create template if required
-		if($tpl instanceof DwooITemplate)
+		if($_tpl instanceof DwooITemplate)
 		{}
-		elseif(is_string($tpl) && file_exists($tpl))
-			$tpl = new DwooTemplateFile($tpl);
-		elseif(is_string($tpl))
-			$tpl = new DwooTemplateString($tpl);
+		elseif(is_string($_tpl) && file_exists($_tpl))
+			$_tpl = new DwooTemplateFile($_tpl);
+		elseif(is_string($_tpl))
+			$_tpl = new DwooTemplateString($_tpl);
 		else
 			throw new DwooException('Dwoo->get/Dwoo->output\'s first argument must be a DwooITemplate (i.e. DwooTemplateFile) or a valid path to a template file', E_USER_NOTICE);
 
-		$this->template = $tpl;
+		// save the current template, enters render mode at the same time
+		// if another rendering is requested it will be proxied to a new Dwoo instance
+		$this->template = $_tpl;
 
 		// load data
 		if($data instanceof DwooIDataProvider)
@@ -314,18 +316,18 @@ class Dwoo
 		else
 			throw new DwooException('Dwoo->get/Dwoo->output\'s data argument must be a DwooIDataProvider object (i.e. DwooData) or an associative array', E_USER_NOTICE);
 
-		$this->initGlobals($tpl);
-		$this->initRuntimeVars($tpl);
+		$this->initGlobals($_tpl);
+		$this->initRuntimeVars($_tpl);
 
 		// try to get cached template
-		$file = $tpl->getCachedTemplate($this);
+		$file = $_tpl->getCachedTemplate($this);
 		$doCache = $file === true;
 		$cacheLoaded = $doCache === false && is_string($file);
 
 		// cache is present, run it
 		if($cacheLoaded === true)
 		{
-			if($output === true)
+			if($_output === true)
 			{
 				include $file;
 				$this->template = null;
@@ -341,24 +343,33 @@ class Dwoo
 		// no cache present
 		else
 		{
-			$file = $tpl->getCompiledTemplate($this, $compiler);
+			// render template
+			$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+
+			// template returned false so it needs to be recompiled
+			if($out === false)
+			{
+				$_tpl->forceCompilation();
+				$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+			}
+
+			// process filters
+			foreach($this->filters as $filter)
+			{
+				if(is_array($filter) && $filter[0] instanceof DwooFilter)
+					$out = call_user_func($filter, $out);
+				else
+					$out = call_user_func($filter, $this, $out);
+			}
+
+			// exit render mode
+			$this->template = null;
 
 			// building cache
 			if($doCache)
 			{
-				$out = include $file;
-
-				foreach($this->filters as $filter)
-				{
-					if(is_array($filter) && $filter[0] instanceof DwooFilter)
-						$out = call_user_func($filter, $out);
-					else
-						$out = call_user_func($filter, $this, $out);
-				}
-
-				$this->template = null;
-				$tpl->cache($this, $out);
-				if($output === true)
+				$_tpl->cache($this, $out);
+				if($_output === true)
 					echo $out;
 				else
 					return $out;
@@ -366,18 +377,7 @@ class Dwoo
 			// no need to build cache
 			else
 			{
-				$out = include $file;
-				$this->template = null;
-
-				foreach($this->filters as $filter)
-				{
-					if(is_array($filter) && $filter[0] instanceof DwooFilter)
-						$out = call_user_func($filter, $out);
-					else
-						$out = call_user_func($filter, $this, $out);
-				}
-
-				if($output === true)
+				if($_output === true)
 					echo $out;
 				else
 					return $out;

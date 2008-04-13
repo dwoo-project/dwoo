@@ -108,6 +108,31 @@ interface DwooITemplate
 	public function getResourceName();
 
 	/**
+	 * returns the resource identifier for this template or false if it has no identifier
+	 *
+	 * @return string|false
+	 */
+	public function getResourceIdentifier();
+
+	/**
+	 * returns the template source of this template
+	 *
+	 * @return string
+	 */
+	public function getSource();
+
+	/**
+	 * returns an unique string identifying the current version of this template,
+	 * for example a timestamp of the last modified date or a hash of the template source
+	 *
+	 * @return string
+	 */
+	public function getUid()
+	{
+		return $this->name;
+	}
+
+	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
 	 *
 	 * @return DwooICompiler
@@ -164,7 +189,7 @@ interface DwooICompiler
 	 * @param string $templateStr the template to compile
 	 * @return string a compiled php code string
 	 */
-	public function compile($template);
+	public function compile(Dwoo $dwoo, DwooITemplate $template);
 
 	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
@@ -173,6 +198,16 @@ interface DwooICompiler
 	 * @param array $customPlugins an array of custom plugins
 	 */
 	public function setCustomPlugins(array $customPlugins);
+
+	/**
+	 * sets the security policy object to enforce some php security settings
+	 *
+	 * use this if untrusted persons can modify templates,
+	 * set it on the Dwoo object as it will be passed onto the compiler automatically
+	 *
+	 * @param DwooSecurityPolicy $policy the security policy object
+	 */
+	public function setSecurityPolicy(DwooSecurityPolicy $policy = null);
 }
 
 ?>

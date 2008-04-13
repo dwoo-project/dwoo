@@ -62,7 +62,7 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 	if($include === null)
 		return;
 	elseif($include === false)
-		$dwoo->triggerError('Include : Including "'.$resource.'://'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
+		$dwoo->triggerError('Include : Including "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
 
 	if(count($rest))
 	{

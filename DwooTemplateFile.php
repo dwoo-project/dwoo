@@ -108,13 +108,23 @@ class DwooTemplateFile extends DwooTemplateString
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
-			file_put_contents($compiledFile, $compiler->compile(file_get_contents($this->file)));
+			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
 			touch($compiledFile, max($_SERVER['REQUEST_TIME'], filemtime($this->file)));
 
 			self::$cache['compiled'][$this->compileId] = true;
 		}
 
 		return $compiledFile;
+	}
+
+	/**
+	 * returns the template source of this template
+	 *
+	 * @return string
+	 */
+	public function getSource()
+	{
+		return file_get_contents($this->file);
 	}
 
 	/**
@@ -132,9 +142,20 @@ class DwooTemplateFile extends DwooTemplateString
 	 *
 	 * @return string
 	 */
-	public function getFilename()
+	public function getResourceIdentifier()
 	{
 		return $this->file;
+	}
+
+	/**
+	 * returns an unique value identifying the current version of this template,
+	 * in this case it's the unix timestamp of the last modification
+	 *
+	 * @return string
+	 */
+	public function getUid()
+	{
+		return (string) filemtime($this->file);
 	}
 
 	/**
@@ -156,26 +177,27 @@ class DwooTemplateFile extends DwooTemplateString
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		$resourceId = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $resourceId);
-
 		if(file_exists($resourceId) === false)
 		{
 			$tpl = $dwoo->getCurrentTemplate();
 			if($tpl instanceof DwooTemplateFile)
 			{
-				$resourceId = dirname($tpl->getFilename()).DIRECTORY_SEPARATOR.$resourceId;
+				$resourceId = dirname($tpl->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
 				if(file_exists($resourceId) === false)
 					return null;
 			}
+			else
+				return null;
 		}
 
 		if($policy = $dwoo->getSecurityPolicy())
 		{
 			$resourceId = realpath($resourceId);
-			if($resourceId === $this->file)
+			if($resourceId === $dwoo->getCurrentTemplate()->getResourceIdentifier())
 				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
 		}
 
-		return new self($resourceId, $cacheTime, $cacheId, $compileId);
+		return new DwooTemplateFile($resourceId, $cacheTime, $cacheId, $compileId);
 	}
 }
 

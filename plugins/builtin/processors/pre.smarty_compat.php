@@ -28,18 +28,18 @@ class DwooProcessor_smarty_compat extends DwooProcessor
 		$rl = preg_quote($l);
 		$rr = preg_quote($r);
 		$sectionParam = '(?:(name|loop|start|step|max|show)\s*=\s*(\S+))?\s*';
-		$input = preg_replace_callback('{'.$rl.'section '.str_repeat($sectionParam, 6).$rr.'(.+?)(?:'.$rl.'sectionelse'.$rr.'(.+?))?'.$rl.'/section'.$rr.'}is', array($this, 'convertSection'), $input);
+		$input = preg_replace_callback('/'.$rl.'\s*section '.str_repeat($sectionParam, 6).'\s*'.$rr.'(.+?)(?:'.$rl.'\s*sectionelse\s*'.$rr.'(.+?))?'.$rl.'\s*\/section\s*'.$rr.'/is', array($this, 'convertSection'), $input);
 		$input = str_replace('$smarty.section.', '$smarty.for.', $input);
 
 		$smarty = array
 		(
-			$l.'ldelim'.$r,
-			$l.'rdelim'.$r,
-			$l.'$smarty.ldelim'.$r,
-			$l.'$smarty.rdelim'.$r,
-			'$smarty.',
-			'{php}',
-			'{/php}',
+			'/'.$rl.'\s*ldelim\s*'.$rr.'/',
+			'/'.$rl.'\s*rdelim\s*'.$rr.'/',
+			'/'.$rl.'\s*\$smarty\.ldelim\s*'.$rr.'/',
+			'/'.$rl.'\s*\$smarty\.rdelim\s*'.$rr.'/',
+			'/\$smarty\./',
+			'/'.$rl.'\s*php\s*'.$rr.'/',
+			'/'.$rl.'\s*\/php\s*'.$rr.'/',
 		);
 
 		$dwoo = array
@@ -56,7 +56,7 @@ class DwooProcessor_smarty_compat extends DwooProcessor
 		if(preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches))
 			$this->compiler->triggerError('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
 
-	    return str_replace($smarty, $dwoo, $input);
+	    return preg_replace($smarty, $dwoo, $input);
 	}
 
 	protected function convertSection(array $matches)

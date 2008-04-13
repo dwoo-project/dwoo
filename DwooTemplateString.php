@@ -147,6 +147,37 @@ class DwooTemplateString implements DwooITemplate
 	}
 
 	/**
+	 * returns the resource identifier for this template, false here as strings don't have identifiers
+	 *
+	 * @return false
+	 */
+	public function getResourceIdentifier()
+	{
+		return false;
+	}
+
+	/**
+	 * returns the template source of this template
+	 *
+	 * @return string
+	 */
+	public function getSource()
+	{
+		return $this->template;
+	}
+
+	/**
+	 * returns an unique value identifying the current version of this template,
+	 * in this case it's the md4 hash of the content
+	 *
+	 * @return string
+	 */
+	public function getUid()
+	{
+		return $this->name;
+	}
+
+	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
 	 *
 	 * @return DwooICompiler
@@ -276,7 +307,7 @@ class DwooTemplateString implements DwooITemplate
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
-			file_put_contents($compiledFile, $compiler->compile($this->template));
+			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
 			touch($compiledFile, $_SERVER['REQUEST_TIME']);
 
 			self::$cache['compiled'][$this->compileId] = true;
