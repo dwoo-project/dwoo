@@ -182,7 +182,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 
     public function testForeachWithGlobalVarsPreceding()
     {
-		$tpl = new DwooTemplateString('{$dwoo.foreach.foo.total}{foreach $sub key item foo}{/foreach}');
+		$tpl = new DwooTemplateString('{if isset($dwoo.foreach.foo.total)}fail{/if}{foreach $sub key item foo}{/foreach}');
 		$tpl->forceCompilation();
 
         $this->assertEquals('', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
@@ -263,12 +263,12 @@ works.bb', $this->dwoo->get($tpl, array(), $this->compiler));
 
     public function testWith()
     {
-		$tpl = new DwooTemplateString('{with $foo}{$a}{/with}-{$a}-{with $foo.b}mlsk{/with}');
+		$tpl = new DwooTemplateString('{with $foo}{$a}{/with}-{if $a}FAIL{/if}-{with $foo.b}mlsk{/with}');
 		$tpl->forceCompilation();
 
         $this->assertEquals('bar--', $this->dwoo->get($tpl, array('foo'=>array('a'=>'bar')), $this->compiler));
 
-		$tpl = new DwooTemplateString('{with $foo}{$a.0}{with $a}{$0}{/with}{with $b}B{else}NOB{/with}{/with}-{$a}-{with $foo.b}mlsk{/with}{with $fooo}a{withelse}b{/with}');
+		$tpl = new DwooTemplateString('{with $foo}{$a.0}{with $a}{$0}{/with}{with $b}B{else}NOB{/with}{/with}-{if $a}FAIL{/if}-{with $foo.b}mlsk{/with}{with $fooo}a{withelse}b{/with}');
 		$tpl->forceCompilation();
 
         $this->assertEquals('barbarNOB--b', $this->dwoo->get($tpl, array('foo'=>array('a'=>array('bar'))), $this->compiler));

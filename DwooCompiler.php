@@ -981,7 +981,7 @@ class DwooCompiler implements DwooICompiler
 			$parsingParams[] = $output;
 			return $parsingParams;
 		}
-		elseif($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam')) // unquoted string, bool or number
+		elseif($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition')) // unquoted string, bool or number
 		{
 			return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
@@ -1366,9 +1366,9 @@ class DwooCompiler implements DwooICompiler
 	{
 		$substr = substr($in, $from, $to-$from);
 
-		if(preg_match('#(\$?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
+		if(preg_match('#(\$?\.?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)':'()') . // simple math expressions
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match))
 		{
@@ -1453,6 +1453,7 @@ class DwooCompiler implements DwooICompiler
 				$output = $this->parseVarKey($key, $curBlock);
 			}
 
+			// methods
 			if($hasMethodCall)
 			{
 				preg_match_all('{->([a-z0-9_]+)(\([^)]*\))?}i', $methodCall, $calls);
@@ -1474,13 +1475,35 @@ class DwooCompiler implements DwooICompiler
 				}
 			}
 
+			// expressions
 			if($hasExpression)
 			{
-				preg_match_all('#(?:([+/*%-])(\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))#i', $match[3], $expMatch);
+				preg_match_all('#(?:([+/*%=-])(=?-?\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[3], $expMatch);
 
 				foreach($expMatch[1] as $k=>$operator)
 				{
-					if(substr($expMatch[2][$k], 0, 1) === '$')
+					if(substr($expMatch[2][$k],0,1)==='=')
+					{
+						$assign = true;
+						if($operator === '=')
+							$this->triggerError('Invalid expression, <em>'.$substr.'</em>, can not use "==" in expressions', E_USER_ERROR);
+						if($curBlock !== 'root')
+							$this->triggerError('Invalid expression, <em>'.$substr.'</em>, "=" can only be used in pure expressions like {$foo+=3}, {$foo="bar"}', E_USER_ERROR);
+						$operator .= '=';
+						$expMatch[2][$k] = substr($expMatch[2][$k], 1);
+					}
+
+					if(substr($expMatch[2][$k],0,1)==='-' && strlen($expMatch[2][$k]) > 1)
+					{
+						$operator .= '-';
+						$expMatch[2][$k] = substr($expMatch[2][$k], 1);
+					}
+					if(($operator==='+'||$operator==='-') && $expMatch[2][$k]===$operator)
+					{
+						$output = '('.$output.$operator.$operator.')';
+						break;
+					}
+					elseif(substr($expMatch[2][$k], 0, 1) === '$')
 					{
 						$output = '('.$output.' '.$operator.' '.$this->parseVar($expMatch[2][$k], 0, strlen($expMatch[2][$k]), false, 'expression').')';
 					}
@@ -1489,6 +1512,27 @@ class DwooCompiler implements DwooICompiler
 					else
 						$this->triggerError('Unfinished expression, <em>'.$substr.'</em>, missing var or number after math operator', E_USER_ERROR);
 				}
+			}
+			// var assignment
+			elseif($curBlock === 'root' && substr(trim(substr($substr, $matchedLength)), 0, 1) === '=')
+			{
+				$value = trim(substr(trim(substr($substr, $matchedLength)), 1));
+
+				$parts = array();
+				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition');
+
+				// load if plugin
+				try {
+					$this->getPluginType('if');
+				} catch (DwooException $e) {
+					$this->triggerError('Assignments require the "if" plugin to be accessible', E_USER_ERROR);
+				}
+
+				$parts = $this->mapParams($parts, array('DwooPlugin_if', 'init'), 1);
+				$value = DwooPlugin_if::replaceKeywords($parts, $this);
+
+				$output .= '='.implode(' ',$value);
+				$assign = true;
 			}
 
 			// handle modifiers
@@ -1510,6 +1554,8 @@ class DwooCompiler implements DwooICompiler
 				return $output;
 			elseif(substr($output, 0, strlen(self::PHP_OPEN)) === self::PHP_OPEN)
 				return $output;
+			elseif(isset($assign))
+				return self::PHP_OPEN.$output.';'.self::PHP_CLOSE;
 			else
 				return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
 		}
@@ -1533,6 +1579,8 @@ class DwooCompiler implements DwooICompiler
 	 */
 	protected function parseVarKey($key, $curBlock)
 	{
+		if(substr($key, 0, 1) === '.')
+			$key = 'dwoo'.$key;
 		if(preg_match('#dwoo\.(get|post|server|cookies|session|env|request)((?:\.[a-z0-9_-]+)+)#i', $key, $m))
 		{
 			$global = strtoupper($m[1]);

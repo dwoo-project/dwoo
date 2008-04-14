@@ -56,13 +56,14 @@ class DwooPlugin_foreach extends DwooBlockPlugin implements DwooICompilableBlock
 
 		// evaluates which global variables have to be computed
 		$varName = '$dwoo.foreach.'.trim($name, '"\'').'.';
-		$usesAny = strpos($tpl, $varName) !== false;
-		$usesFirst = strpos($tpl, $varName.'first') !== false;
-		$usesLast = strpos($tpl, $varName.'last') !== false;
-		$usesIndex = $usesFirst || strpos($tpl, $varName.'index') !== false;
-		$usesIteration = $usesLast || strpos($tpl, $varName.'iteration') !== false;
-		$usesShow = strpos($tpl, $varName.'show') !== false;
-		$usesTotal = $usesLast || strpos($tpl, $varName.'total') !== false;
+		$shortVarName = '$.foreach.'.trim($name, '"\'').'.';
+		$usesAny = strpos($tpl, $varName) !== false || strpos($tpl, $shortVarName) !== false;
+		$usesFirst = strpos($tpl, $varName.'first') !== false || strpos($tpl, $shortVarName.'first') !== false;
+		$usesLast = strpos($tpl, $varName.'last') !== false || strpos($tpl, $shortVarName.'last') !== false;
+		$usesIndex = $usesFirst || strpos($tpl, $varName.'index') !== false || strpos($tpl, $shortVarName.'index') !== false;
+		$usesIteration = $usesLast || strpos($tpl, $varName.'iteration') !== false || strpos($tpl, $shortVarName.'iteration') !== false;
+		$usesShow = strpos($tpl, $varName.'show') !== false || strpos($tpl, $shortVarName.'show') !== false;
+		$usesTotal = $usesLast || strpos($tpl, $varName.'total') !== false || strpos($tpl, $shortVarName.'total') !== false;
 
 		// gets foreach id
 		$cnt = self::$cnt++;

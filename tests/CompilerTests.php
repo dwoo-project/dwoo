@@ -197,7 +197,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
     public function testNumberedIndexes()
     {
-        $tpl = new DwooTemplateString('{$100}-{$150}-{$0}');
+        $tpl = new DwooTemplateString('{$100}-{$150}-{if $0}FAIL{/if}');
         $tpl->forceCompilation();
 
         $this->assertEquals('bar-foo-', $this->dwoo->get($tpl, array('100'=>'bar', 150=>'foo'), $this->compiler));
@@ -235,6 +235,25 @@ class CompilerTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         $this->assertEquals('{     $a      }moo{     $a}moo', $this->dwoo->get($tpl, array('a'=>'moo'), $this->compiler));
+    }
+
+    public function testDwooDotShortcut()
+    {
+        $tpl = new DwooTemplateString('{$.server.SCRIPT_NAME}{foreach $a item}{$.foreach.default.iteration}{$item}{$.foreach.$b.$c}{/foreach}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals($_SERVER['SCRIPT_NAME'].'1a12b2', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default', 'c'=>'iteration'), $this->compiler));
+    }
+
+    public function testAssignAndIncrement()
+    {
+        $tpl = new DwooTemplateString('{$foo}{$foo+=3}{$foo}
+{$foo}{$foo-=3}{$foo}
+{$foo++}{$foo++}{$foo}{$foo*=$foo}{$foo}
+{$foo--}{$foo=5}{$foo}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("03\n30\n0124\n45", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
     }
 }
 

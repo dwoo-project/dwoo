@@ -4,6 +4,11 @@
   directly to emulate get(). This was done to reduce some overhead
 + Plugins: Added {extends} and {block} to handle template inheritance, read
   more about it at http://wiki.dwoo.org/index.php/TemplateInheritance
++ Plugins: Added {do} that executes whatever you feed it whitout echoing the
+  result, used internally for extends but you can use it if required
++ Syntax: Added support for {$foo+=5}, {$foo="a"}, {$foo++} and {$foo--}
++ Syntax: Added shortcut for $dwoo.*, you can now use {$.const.FOO} instead of
+  {$dwoo.const.FOO} for example, applies to all $dwoo.* vars
 + API: Added getSource(), getUid() and getResourceIdentifier() to DwooITemplate
 + API: Added setSecurityPolicy() too DwooICompiler and modified the arguments
   of its compile() method

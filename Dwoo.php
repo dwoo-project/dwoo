@@ -329,15 +329,15 @@ class Dwoo
 		{
 			if($_output === true)
 			{
-				include $file;
+				readfile($file);
 				$this->template = null;
 			}
 			else
 			{
-				ob_start();
-				include $file;
+				//ob_start();
 				$this->template = null;
-				return ob_get_clean();
+				return file_get_contents($file);
+				//return ob_get_clean();
 			}
 		}
 		// no cache present
@@ -1215,6 +1215,9 @@ class Dwoo
 				else
 					return null;
 			}
+
+			if(substr($varstr, 0, 1) === '.')
+				$varstr = 'dwoo'.$varstr;
 
 			preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $varstr, $m);
 		}
