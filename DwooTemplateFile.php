@@ -57,10 +57,13 @@ class DwooTemplateFile extends DwooTemplateString
 		}
 		$this->compileId = $compileId;
 
-		// no cache id provided, use request_uri
+		// no cache id provided, use request_uri if available
 		if($cacheId === null)
 		{
-			$cacheId = strtr($_SERVER['REQUEST_URI'], '\\/%?=!:;', '--------');
+			if(isset($_SERVER['REQUEST_URI']) === true)
+				$cacheId = strtr($_SERVER['REQUEST_URI'], '\\/%?=!:;', '--------');
+			elseif(isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv']))
+				$cacheId = strtr($_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']), '\\/%?=!:;', '--------');
 		}
 		$this->cacheId = $this->compileId . $cacheId;
 	}
