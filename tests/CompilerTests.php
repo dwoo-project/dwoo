@@ -254,6 +254,11 @@ class CompilerTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         $this->assertEquals("03\n30\n0124\n45", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
+
+        $tpl = new DwooTemplateString('{$foo="moo"}{$foo}{$foo=math("3+5")}{$foo}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("moo8", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
     }
 }
 
