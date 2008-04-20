@@ -175,6 +175,16 @@ class CompilerTests extends PHPUnit_Framework_TestCase
         $this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
     }
 
+    public function testShortConstants()
+    {
+        if(!defined('TEST'))
+            define('TEST', 'Test');
+        $tpl = new DwooTemplateString('{%TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*%Dwoo::BLOCK_PLUGIN}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+    }
+
     public function testAltDelimiters()
     {
         $tpl = new DwooTemplateString('{"test"} <%"test"%> <%"foo{lol}\%>"%>');
@@ -259,6 +269,16 @@ class CompilerTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         $this->assertEquals("moo8", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
+    }
+
+    public function testSetStringValToTrueWhenUsingNamedParams()
+    {
+    	$this->dwoo->addPlugin('test', create_function('Dwoo $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
+        $tpl = new DwooTemplateString('{test name="Name"}{test name="Name" bool}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("Name?Name!", $this->dwoo->get($tpl, array(), $this->compiler));
+        $this->dwoo->removePlugin('test');
     }
 }
 

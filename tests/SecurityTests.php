@@ -69,6 +69,29 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array(), $this->compiler));
     }
 
+    public function testAllowDirectoryGetSet()
+    {
+    	$old = $this->policy->getAllowedDirectories();
+		$this->policy->allowDirectory(array('./resources'));
+		$this->policy->allowDirectory('./temp');
+		$this->assertEquals(array_merge($old, array(realpath('./resources')=>true, realpath('./temp')=>true)), $this->policy->getAllowedDirectories());
+
+    	$this->policy->disallowDirectory(array('./resources'));
+		$this->policy->disallowDirectory('./temp');
+		$this->assertEquals($old, $this->policy->getAllowedDirectories());
+    }
+
+    public function testAllowPhpGetSet()
+    {
+    	$old = $this->policy->getAllowedPhpFunctions();
+		$this->policy->allowPhpFunction(array('a','b'));
+		$this->policy->allowPhpFunction('c');
+		$this->assertEquals(array_merge($old, array('a'=>true, 'b'=>true, 'c'=>true)), $this->policy->getAllowedPhpFunctions());
+
+		$this->policy->disallowPhpFunction(array('a', 'b'));
+		$this->policy->disallowPhpFunction('c');
+		$this->assertEquals($old, $this->policy->getAllowedPhpFunctions());
+    }
 }
 
 ?>

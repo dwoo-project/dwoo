@@ -31,7 +31,8 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 	}
 	else
 	{
-		$resource = 'file';
+		// get the current template's resource
+		$resource = $dwoo->getCurrentTemplate()->getResourceName();
 		$identifier = $file;
 	}
 

@@ -29,7 +29,7 @@ class DwooPlugin_else extends DwooBlockPlugin implements DwooICompilableBlock
 	{
 		$block =& $compiler->getCurrentBlock();
 		$out = '';
-		while($block['type'] !== 'if' && $block['type'] !== 'foreach' && $block['type'] !== 'for' && $block['type'] !== 'with')
+		while($block['type'] !== 'if' && $block['type'] !== 'foreach' && $block['type'] !== 'for' && $block['type'] !== 'with' && $block['type'] !== 'loop')
 		{
 			$out .= $compiler->removeTopBlock();
 			$block =& $compiler->getCurrentBlock();

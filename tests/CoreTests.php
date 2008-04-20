@@ -19,6 +19,10 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->compiler = new DwooCompiler();
 		$this->dwoo = new Dwoo();
 		DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
+
+		// fixes the init call not being called (which is normal)
+    	$fixCall = new DwooPlugin_topLevelBlock($this->dwoo);
+    	$fixCall->init('');
     }
 
     public function testReadVar()
@@ -49,6 +53,72 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("Yay!", $this->dwoo->get($tpl, array('bar'=>'a'), $this->compiler));
 
 		$this->assertEquals('a', $this->dwoo->readParentVar(2, 'bar'));
+    }
+
+    public function testDwooOutput()
+    {
+    	$tpl = new DwooTemplateString('a');
+		$tpl->forceCompilation();
+
+		ob_start();
+		$this->dwoo->output($tpl, array());
+		$output = ob_get_clean();
+		$this->assertEquals('a', $output);
+    }
+
+    /**
+     * @expectedException DwooException
+     */
+    public function testDwooGetNonTemplate()
+    {
+		$this->dwoo->output(null, array());
+    }
+
+    /**
+     * @expectedException DwooException
+     */
+    public function testDwooGetNonData()
+    {
+    	$tpl = new DwooTemplateString('a');
+    	$this->dwoo->get($tpl, null);
+    }
+
+    public function testGetSetSecurityPolicy()
+    {
+    	$dwoo = new Dwoo();
+    	$policy = new DwooSecurityPolicy();
+    	$policy->setConstantHandling(DwooSecurityPolicy::CONST_ALLOW);
+    	$dwoo->setSecurityPolicy($policy);
+    	$this->assertEquals($policy, $dwoo->getSecurityPolicy());
+    	$this->assertEquals($policy->getConstantHandling(), $dwoo->getSecurityPolicy()->getConstantHandling());
+    }
+
+    /**
+     * @expectedException DwooException
+     */
+    public function testWrongResourceName()
+    {
+    	$this->dwoo->getTemplate('sdmlb', 'fookm');
+    }
+
+    public function testIsCached()
+    {
+    	$tpl = new DwooTemplateString('foo');
+    	$this->assertEquals(false, $this->dwoo->isCached($tpl));
+    }
+
+    public function testClearCache()
+    {
+    	$cacheDir = $this->dwoo->getCacheDir();
+    	$this->dwoo->clearCache();
+    	file_put_contents($cacheDir.DIRECTORY_SEPARATOR.'junk.html', 'test');
+
+    	$this->assertEquals(1, $this->dwoo->clearCache());
+    }
+
+    public function testDwooGetFilename()
+    {
+		$this->assertEquals('44BAR', $this->dwoo->get(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'test.html', array('foo'=>44, 'bar'=>'BAR')));
     }
 
     public function testAssignVarInScope()
@@ -126,7 +196,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     	$this->dwoo->addResource('file', 'DwooTemplateString', 'Fake');
 		$this->dwoo->removeResource('file');
-    	$tpl = new DwooTemplateString('{include file="'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
+    	$tpl = new DwooTemplateString('{include file="file:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 	}
@@ -146,6 +216,78 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("13", $tpl->getCacheTime());
 		$this->assertEquals(null, $tpl->getCompiler());
 		$this->assertEquals(false, DwooTemplateString::templateFactory($this->dwoo, 'foo', 5));
+	}
+
+	public function testCachedTemplateAndClearCache()
+	{
+    	$tpl = new DwooTemplateString('foo{$foo}', 10, 'cachetest');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo1", $this->dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(true, $this->dwoo->isCached($tpl));
+		$this->assertEquals("foo1", $this->dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(1, $this->dwoo->clearCache(-11));
+		$this->assertEquals(false, $this->dwoo->isCached($tpl));
+	}
+
+	public function testCachedTemplateAndOutput()
+	{
+    	$tpl = new DwooTemplateString('foo{$foo}', 10, 'cachetest');
+		$tpl->forceCompilation();
+
+		ob_start();
+		$this->dwoo->output($tpl, array('foo'=>1));
+		$cap = ob_get_clean();
+		$this->assertEquals("foo1", $cap);
+		$this->assertEquals(true, $this->dwoo->isCached($tpl));
+		ob_start();
+		$this->dwoo->output($tpl, array('foo'=>1));
+		$cap = ob_get_clean();
+		$this->assertEquals("foo1", $cap);
+		$this->assertEquals(1, $this->dwoo->clearCache(-11));
+	}
+
+	public function testCachedTemplateWithDwooCache()
+	{
+		$dwoo = new Dwoo();
+		$dwoo->setCacheTime(5);
+    	$tpl = new DwooTemplateString('foo{$foo}bar', null, 'cachetest2');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(true, $dwoo->isCached($tpl));
+		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(1, $dwoo->clearCache(-11));
+		$this->assertEquals(false, $dwoo->isCached($tpl));
+	}
+
+	public function testClearCacheOnTemplateClass()
+	{
+		$dwoo = new Dwoo();
+		$dwoo->setCacheTime(5);
+    	$tpl = new DwooTemplateString('foo{$foo}bar', null, 'cachetest2');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(true, $dwoo->isCached($tpl));
+		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
+		$this->assertEquals(false, $tpl->clearCache($dwoo, 1));
+		$this->assertEquals(true, $tpl->clearCache($dwoo, -1));
+		$this->assertEquals(false, $dwoo->isCached($tpl));
+	}
+
+	public function testTemplateGetSet()
+	{
+		$dwoo = new Dwoo();
+		$dwoo->setCacheTime(5);
+    	$tpl = new DwooTemplateString('foo');
+    	$tpl2 = new DwooTemplateFile('./resources/test.html');
+
+		$this->assertEquals(false, $tpl->getResourceIdentifier());
+		$this->assertEquals('string', $tpl->getResourceName());
+		$this->assertEquals('file', $tpl2->getResourceName());
+		$this->assertEquals(hash('md4','foo'), $tpl->getUid());
+
 	}
 }
 

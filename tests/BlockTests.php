@@ -31,7 +31,52 @@ class BlockTests extends PHPUnit_Framework_TestCase
     	$fixCall->init('');
     }
 
-    public function testIf()
+	public function testExtends()
+	{
+		$tpl = new DwooTemplateFile(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'extend1.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("foo
+child1
+toplevelContent1
+bar
+toplevelContent2
+baz"));
+	}
+
+	public function testNonExtendedBlocksFromParent()
+	{
+		$tpl = new DwooTemplateFile(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'toplevel.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("foo
+
+toplevelContent1
+
+bar
+
+toplevelContent2
+
+baz"));
+    	// fixes the init call not being called (which is normal)
+    	$fixCall = new DwooPlugin_block($this->dwoo);
+    	$fixCall->init('');
+	}
+
+	public function testExtendsMultiple()
+	{
+		$tpl = new DwooTemplateFile(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'extend2.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler), new DwooConstraintStringEquals("foo
+child1
+toplevelContent1child2
+bar
+FOObartoplevelContent2
+baz"));
+	}
+
+	public function testIf()
     {
 		$tpl = new DwooTemplateString('{if "BAR"==reverse($foo|reverse|upper)}true{/if}');
 		$tpl->forceCompilation();
@@ -222,6 +267,30 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
         $this->assertEquals('bar', $this->dwoo->get($tpl, array(), $this->compiler));
+    }
+
+    public function testLoop()
+    {
+		$tpl = new DwooTemplateString('{loop $foo}{$.loop.default.index}>{$0}/{$1}{/loop}');
+		$tpl->forceCompilation();
+
+        $this->assertEquals('0>a/b1>c/d', $this->dwoo->get($tpl, array('foo'=>array(array('a','b'), array('c','d'))) , $this->compiler));
+
+    	// fixes the init call not being called (which is normal)
+    	$fixCall = new DwooPlugin_loop($this->dwoo);
+    	$fixCall->init('');
+    }
+
+    public function testLoopElse()
+    {
+		$tpl = new DwooTemplateString('{loop $foo}{$.loop.default.index}>{$0}/{$1}{else}MOO{/loop}');
+		$tpl->forceCompilation();
+
+        $this->assertEquals('MOO', $this->dwoo->get($tpl, array() , $this->compiler));
+
+    	// fixes the init call not being called (which is normal)
+    	$fixCall = new DwooPlugin_loop($this->dwoo);
+    	$fixCall->init('');
     }
 
     public function testTextFormat()

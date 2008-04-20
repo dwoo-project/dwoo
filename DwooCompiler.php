@@ -959,6 +959,10 @@ class DwooCompiler implements DwooICompiler
 		{
 			return $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
+		elseif($first==='%' && preg_match('#^%[a-z]#i', $substr)) // const
+		{
+			return $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
+		}
 		elseif($first==='"' || $first==="'") // string
 		{
 			return $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
@@ -1091,12 +1095,17 @@ class DwooCompiler implements DwooICompiler
 				}
 				$paramstr = substr($paramstr, 0, $ptr);
 				$state = 0;
-				foreach($params as $p)
+				foreach($params as $k=>$p)
 				{
 					if(is_array($p) && is_array($p[1]))
 						$state |= 2;
 					else
-						$state |= 1;
+					{
+						if($state === 2 && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
+							$params[$k] = array($m[2], array('true', 'true'));
+						else
+							$state |= 1;
+					}
 				}
 				if($state === 3)
 					$this->triggerError('Function calls can not have both named and un-named parameters', E_USER_ERROR);
@@ -1232,9 +1241,14 @@ class DwooCompiler implements DwooICompiler
 				{
 					$callback = $this->customPlugins[$func]['callback'];
 					if(!is_array($callback))
-						$output = 'call_user_func(array(\''.$callback.'\', \'process\'), '.$params.')';
+					{
+						if(($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic())
+							$output = 'call_user_func(array(\''.$callback.'\', \'process\'), '.$params.')';
+						else
+							$output = 'call_user_func(array($this->getObjectPlugin(\''.$callback.'\'), \'process\'), '.$params.')';
+					}
 					elseif(is_object($callback[0]))
-						$output = 'call_user_func(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), '.$params.')';
+						$output = 'call_user_func(array($this->plugins[\''.$func.'\'][\'callback\'][0], \''.$callback[1].'\'), '.$params.')';
 					elseif(($ref = new ReflectionMethod($callback[0], $callback[1])) && $ref->isStatic())
 						$output = 'call_user_func(array(\''.$callback[0].'\', \''.$callback[1].'\'), '.$params.')';
 					else
@@ -1254,7 +1268,7 @@ class DwooCompiler implements DwooICompiler
 				if(is_array($callback))
 				{
 					if(is_object($callback[0]))
-						$output = 'call_user_func_array(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array(array('.$params.'), $this))';
+						$output = 'call_user_func_array(array($this->plugins[\''.$func.'\'][\'callback\'][0], \''.$callback[1].'\'), array(array('.$params.'), $this))';
 					else
 						$output = 'call_user_func_array(array(\''.$callback[0].'\', \''.$callback[1].'\'), array(array('.$params.'), $this))';
 				}
@@ -1352,6 +1366,62 @@ class DwooCompiler implements DwooICompiler
 	}
 
 	/**
+	 * parses a constant
+	 *
+	 * @param string $in the string within which we must parse something
+	 * @param int $from the starting offset of the parsed area
+	 * @param int $to the ending offset of the parsed area
+	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock the current parser-block being processed
+	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @return string parsed values
+	 */
+	protected function parseConst($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
+	{
+		$substr = substr($in, $from, $to-$from);
+
+		if($this->debug)
+			echo 'CONST FOUND : '.$substr.'<br />';
+
+		if(!preg_match('#^%([a-z0-9_:]+)#i', $substr, $m))
+			$this->triggerError('Invalid constant', E_USER_ERROR);
+
+		$output = $this->parseConstKey($m[1], $curBlock);
+
+		if(is_array($parsingParams))
+		{
+			$parsingParams[] = array($output, $m[1]);
+			return $parsingParams;
+		}
+		elseif($curBlock === 'namedparam')
+			return array($output, $m[1]);
+		elseif($curBlock === 'root')
+			return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
+		else
+			return $output;
+	}
+
+	/**
+	 * parses a constant
+	 *
+	 * @param string $key the constant to parse
+	 * @param string $curBlock the current parser-block being processed
+	 * @return string parsed constant
+	 */
+	protected function parseConstKey($key, $curBlock)
+	{
+		if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === DwooSecurityPolicy::CONST_DISALLOW)
+			return 'null';
+
+		if($curBlock !== 'root')
+			$output = '(defined("'.$key.'") ? '.$key.' : null)';
+		else
+			$output = $key;
+
+		return $output;
+	}
+
+	/**
 	 * parses a variable
 	 *
 	 * @param string $in the string within which we must parse something
@@ -1368,7 +1438,7 @@ class DwooCompiler implements DwooICompiler
 
 		if(preg_match('#(\$?\.?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match))
 		{
@@ -1478,7 +1548,7 @@ class DwooCompiler implements DwooICompiler
 			// expressions
 			if($hasExpression)
 			{
-				preg_match_all('#(?:([+/*%=-])(=?-?\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[3], $expMatch);
+				preg_match_all('#(?:([+/*%=-])(=?-?[%$][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[3], $expMatch);
 
 				foreach($expMatch[1] as $k=>$operator)
 				{
@@ -1506,6 +1576,10 @@ class DwooCompiler implements DwooICompiler
 					elseif(substr($expMatch[2][$k], 0, 1) === '$')
 					{
 						$output = '('.$output.' '.$operator.' '.$this->parseVar($expMatch[2][$k], 0, strlen($expMatch[2][$k]), false, 'expression').')';
+					}
+					elseif(substr($expMatch[2][$k], 0, 1) === '%')
+					{
+						$output = '('.$output.' '.$operator.' '.$this->parseConst($expMatch[2][$k], 0, strlen($expMatch[2][$k]), false, 'expression').')';
 					}
 					elseif(!empty($expMatch[2][$k]))
 						$output = '('.$output.' '.$operator.' '.str_replace(',', '.', $expMatch[2][$k]).')';
@@ -1594,16 +1668,9 @@ class DwooCompiler implements DwooICompiler
 			else
 				$output = '(isset('.$key.')?'.$key.':null)';
 		}
-		elseif(preg_match('#dwoo\.const\.([a-z0-9_:-]+)#i', $key, $m))
+		elseif(preg_match('#dwoo\.const\.([a-z0-9_:]+)#i', $key, $m))
 		{
-			if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === DwooSecurityPolicy::CONST_DISALLOW)
-				return 'null';
-			if(strpos($m[1], ':') !== false)
-				$output = 'constant("'.$m[1].'")';
-			else
-				$output = $m[1];
-			if($curBlock !== 'root')
-				$output = '(defined("'.$m[1].'") ? '.$output.' : null)';
+			return $this->parseConstKey($m[1], $curBlock);
 		}
 		elseif($this->scope !== null)
 		{
@@ -1996,7 +2063,12 @@ class DwooCompiler implements DwooICompiler
 					if(is_array($p) && is_array($p[1]))
 						$state |= 2;
 					else
-						$state |= 1;
+					{
+						if($state === 2 && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
+							$params[$k] = array($m[2], array('true', 'true'));
+						else
+							$state |= 1;
+					}
 				}
 				if($state === 3)
 					$this->errors[] = 'A function can not have named AND un-named parameters in : '.$cmdstr;
@@ -2043,7 +2115,7 @@ class DwooCompiler implements DwooICompiler
 					if(is_array($callback))
 					{
 						if(is_object($callback[0]))
-							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
+							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->plugins[\''.$func.'\'][\'callback\'][0], \''.$callback[1].'\'), array('.$params.'))';
 						else
 							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
 					}
@@ -2121,7 +2193,7 @@ class DwooCompiler implements DwooICompiler
 						if($pluginType & Dwoo::CUSTOM_PLUGIN)
 						{
 							if(is_object($callback[0]))
-								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->customPlugins[\''.$func.'\'][0], \''.$callback[1].'\'), array('.$params.'))';
+								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->plugins[\''.$func.'\'][\'callback\'][0], \''.$callback[1].'\'), array('.$params.'))';
 							else
 								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
 						}
@@ -2427,6 +2499,30 @@ class DwooCompiler implements DwooICompiler
 	{
 		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->templateSource, max(0, $this->pointer-30), 130)), $level);
 	}
+}
+
+
+/**
+ * dwoo compilation exception class
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
+ * This file is released under the LGPL
+ * "GNU Lesser General Public License"
+ * More information can be found here:
+ * {@link http://www.gnu.org/copyleft/lesser.html}
+ *
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
+ * @link       http://dwoo.org/
+ * @version    0.3.4
+ * @date       2008-04-09
+ * @package    Dwoo
+ */
+class DwooCompilationException extends DwooException
+{
 }
 
 ?>

@@ -1,14 +1,22 @@
-[2008-04-] 0.4.0
+[2008-04-] 0.4.0 (Happy Getty)
 ! BC Break: $dwoo->output() and get() have been swapped internally, but it
   doesn't change anything for you unless you called output(*, *, *, true)
   directly to emulate get(). This was done to reduce some overhead
 + Plugins: Added {extends} and {block} to handle template inheritance, read
   more about it at http://wiki.dwoo.org/index.php/TemplateInheritance
++ Plugins: Added {loop} that combines {foreach} and {with}, see
+  http://wiki.dwoo.org/index.php/Block:loop for details
 + Plugins: Added {do} that executes whatever you feed it whitout echoing the
   result, used internally for extends but you can use it if required
++ Syntax: Added shortcut for {$dwoo.const.*} using '%', for example you can use
+  {%FOO} instead of {$dwoo.const.FOO}
++ Syntax: When using named parameters, typing a parameter name without any
+  value is the same as typing param=true, for example {foo name="test" bar} and
+  {foo name="test" bar=true} are equals, can be useful for very complex plugins
+  with huge amounts of parameters.
 + Syntax: Added support for {$foo+=5}, {$foo="a"}, {$foo++} and {$foo--}
-+ Syntax: Added shortcut for $dwoo.*, you can now use {$.const.FOO} instead of
-  {$dwoo.const.FOO} for example, applies to all $dwoo.* vars
++ Syntax: Added shortcut for $dwoo.*, you can now use {$.foreach.foo} instead
+  of {$dwoo.foreach.foo} for example, applies to all $dwoo.* vars
 + API: Added getSource(), getUid() and getResourceIdentifier() to DwooITemplate
 + API: Added setSecurityPolicy() too DwooICompiler and modified the arguments
   of its compile() method
@@ -22,6 +30,15 @@
   doing {foreach $foo}..{/foreach} will not however, that way you don't have
   to do {if isset($foo)} before the foreach, but automated isset() calls don't
   impact performance as much as they did before.
+* API: DwooITemplate->clearCache now requires a Dwoo instance as its first arg,
+  should not affect you unless you built a custom template class from scratch
+* {include} now uses the current resource if none is provided instead of using
+  file as it did before
+* Dwoo uses include path instead of absolute includes
+* Fixed a regression in the handling of custom class plugins
+* Fixed a bug in DwooSecurityPolicy->getAllowedDirectories(), no security
+  issue though
+* TestFest happened early for Dwoo, lots of new tests and more code covered
 
 [2008-04-09] 0.3.4
 ! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY

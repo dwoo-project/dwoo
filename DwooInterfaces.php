@@ -79,10 +79,11 @@ interface DwooITemplate
 	/**
 	 * clears the cached template if it's older than the given time
 	 *
+	 * @param Dwoo $dwoo the dwoo instance that was used to cache that template
 	 * @param int $olderThan minimum time (in seconds) required for the cache to be cleared
 	 * @return bool true if the cache was not present or if it was deleted, false if it remains there
 	 */
-	public function clearCache($olderThan=0);
+	public function clearCache(Dwoo $dwoo, $olderThan = -1);
 
 	/**
 	 * returns the compiled template file name

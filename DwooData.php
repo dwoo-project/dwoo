@@ -42,7 +42,8 @@ class DwooData implements DwooIDataProvider
 	/**
 	 * clears a the entire data or only the given key
 	 *
-	 * @param string $name clears only that value if set or clears the entire data if left null
+	 * @param array|string $name clears only one value if you give a name, multiple values if
+	 * 							  you give an array of names, or the entire data if left null
 	 */
 	public function clear($name = null)
 	{

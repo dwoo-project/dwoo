@@ -51,8 +51,8 @@ class DwooPlugin_dump extends DwooPlugin
 	{
 		$out = '';
 		foreach ($var as $i=>$v) {
-			if (is_array($v)) {
-				$out .= $i;
+			if (is_array($v) || (is_object($v) && $v instanceof Iterator)) {
+				$out .= $i.' ('.(is_array($v) ? 'array':'object:'.get_class($v)).')';
 				if($v===$scope) {
 					$out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">'.$this->export($v, $scope).'</div>';
 				} else {
@@ -68,7 +68,7 @@ class DwooPlugin_dump extends DwooPlugin
 	protected function exportVar($i, $v)
 	{
 		if (is_string($v) || is_bool($v) || is_numeric($v)) {
-			return $i.var_export($v, true).'<br />';
+			return $i.htmlentities(var_export($v, true)).'<br />';
 		} elseif (is_null($v)) {
 			return $i.'null<br />';
 		} elseif (is_object($v)) {
@@ -76,7 +76,7 @@ class DwooPlugin_dump extends DwooPlugin
 		} elseif (is_resource($v)) {
 			return $i.'resource('.get_resource_type($v).')<br />';
 		} else {
-			return $i.var_export($v, true).'<br />';
+			return $i.htmlentities(var_export($v, true)).'<br />';
 		}
 	}
 }

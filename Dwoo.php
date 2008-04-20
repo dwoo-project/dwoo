@@ -1,10 +1,12 @@
 <?php
 
-include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooInterfaces.php';
-include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooPlugin.php';
-include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooTemplateString.php';
-include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooTemplateFile.php';
-include dirname(__FILE__).DIRECTORY_SEPARATOR . 'DwooData.php';
+set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
+// TODO move those in Dwoo/Interface, ...
+include 'DwooInterfaces.php';
+include 'DwooPlugin.php';
+include 'DwooTemplateString.php';
+include 'DwooTemplateFile.php';
+include 'DwooData.php';
 
 define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
 if(defined('DWOO_CACHE_DIRECTORY') === false)
@@ -760,32 +762,32 @@ class Dwoo
 	 * @param int $olderThan minimum time (in seconds) required for a cached template to be cleared
 	 * @return int the amount of templates cleared
 	 */
-	public function clearCache($olderThan=0)
-	   {
-		   $cacheDirs = new RecursiveDirectoryIterator($this->cacheDir);
-		   $cache = new RecursiveIteratorIterator($cacheDirs);
-		   $expired = time() - $olderThan;
-		   $count = 0;
-		   foreach($cache as $file)
-		   {
-			   if($cache->isDot() || $cache->isDir())
-				   continue;
-			   if($cache->getCTime() < $expired)
-				   $count += unlink((string) $file) ? 1 : 0;
-		   }
-		   return $count;
-	   }
+	public function clearCache($olderThan=-1)
+	{
+		$cacheDirs = new RecursiveDirectoryIterator($this->cacheDir);
+		$cache = new RecursiveIteratorIterator($cacheDirs);
+		$expired = time() - $olderThan;
+		$count = 0;
+		foreach($cache as $file)
+		{
+			if($cache->isDot() || $cache->isDir() || substr($file, -5) !== '.html')
+				continue;
+			if($cache->getCTime() < $expired)
+				$count += unlink((string) $file) ? 1 : 0;
+		}
+		return $count;
+	}
 
-	   /**
-		* [util function] fetches a template object of the given resource
-		*
-		* @param string $resourceName the resource name (i.e. file, string)
-		* @param string $resourceId the resource identifier (i.e. file path)
-		* @param int $cacheTime the cache time setting for this resource
-		* @param string $cacheId the unique cache identifier
-		* @param string $compileId the unique compiler identifier
-		* @return DwooITemplate
-		*/
+	/**
+	 * [util function] fetches a template object of the given resource
+	 *
+	 * @param string $resourceName the resource name (i.e. file, string)
+	 * @param string $resourceId the resource identifier (i.e. file path)
+	 * @param int $cacheTime the cache time setting for this resource
+	 * @param string $cacheId the unique cache identifier
+	 * @param string $compileId the unique compiler identifier
+	 * @return DwooITemplate
+	 */
 	public function getTemplate($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		if(isset($this->resources[$resourceName]))
@@ -1750,7 +1752,7 @@ class DwooSecurityPolicy
 	 */
 	public function getAllowedDirectories()
 	{
-		return $this->allowedPHPFunc;
+		return $this->allowedDirectories;
 	}
 
 	/**

@@ -31,14 +31,12 @@ class DwooPlugin_with extends DwooBlockPlugin implements DwooICompilableBlock
 		$rparams = $compiler->getRealParams($params);
 		$cparams = $compiler->getCompiledParams($params);
 
-		$c = $rparams['var'];
-
-		$compiler->setScope($c);
+		$compiler->setScope($rparams['var']);
 
 		$params =& $compiler->getCurrentBlock();
 		$params['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n// -- end with output\n".'$this->forceScope($_with'.(self::$cnt).');'."\n}\n".DwooCompiler::PHP_CLOSE;
 
-		return DwooCompiler::PHP_OPEN.'if('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$c.'");'."\n// -- start with output\n".DwooCompiler::PHP_CLOSE;
+		return DwooCompiler::PHP_OPEN.'if('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$rparams['var'].'");'."\n// -- start with output\n".DwooCompiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')

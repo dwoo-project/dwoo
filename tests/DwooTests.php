@@ -33,4 +33,26 @@ class DwooTests {
 	}
 }
 
+// Evaluates two strings and ignores differences in line endings (\r\n == \n == \r)
+class DwooConstraintStringEquals extends PHPUnit_Framework_Constraint
+{
+	protected $target;
+
+	public function __construct($target)
+	{
+		$this->target = preg_replace('#(\r\n|\r)#', "\n", $target);
+	}
+
+	public function evaluate($other)
+	{
+		$this->other = preg_replace('#(\r\n|\r)#', "\n", $other);
+		return $this->target == $this->other;
+	}
+
+	public function toString()
+	{
+		return 'equals "'.$this->target.'" / "'.$this->other.'"';
+	}
+}
+
 ?>
