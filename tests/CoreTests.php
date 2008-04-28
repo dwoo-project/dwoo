@@ -98,7 +98,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	 */
 	public function testWrongResourceName()
 	{
-		$this->dwoo->getTemplate('sdmlb', 'fookm');
+		$this->dwoo->templateFactory('sdmlb', 'fookm');
 	}
 
 	public function testIsCached()

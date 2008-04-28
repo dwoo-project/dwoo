@@ -322,7 +322,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 a"}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals("f<br />\r\na", $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals("f<br />\na", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testRegexReplace()
