@@ -56,7 +56,7 @@ class DwooProcessor_smarty_compat extends DwooProcessor
 		if(preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches))
 			$this->compiler->triggerError('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
 
-	    return preg_replace($smarty, $dwoo, $input);
+		return preg_replace($smarty, $dwoo, $input);
 	}
 
 	protected function convertSection(array $matches)
@@ -89,22 +89,22 @@ class DwooProcessor_smarty_compat extends DwooProcessor
 			$step = $params['step'];
 
 		if (!isset($loops))
-            $loops = null;
+			$loops = null;
 
-        if (!isset($max) || $max < 0)
-        {
-        	if(is_numeric($loops))
-            	$max = $loops;
-            else
-            	$max = 'null';
-        }
+		if (!isset($max) || $max < 0)
+		{
+			if(is_numeric($loops))
+				$max = $loops;
+			else
+				$max = 'null';
+		}
 
-        if (!isset($step))
-            $step = 1;
-        if (!isset($start))
-            $start = $loops - 1;
-        elseif(!is_numeric($loops))
-           	$start = 0;
+		if (!isset($step))
+			$step = 1;
+		if (!isset($start))
+			$start = $loops - 1;
+		elseif(!is_numeric($loops))
+			$start = 0;
 
 		list($l, $r) = $this->compiler->getDelimiters();
 

@@ -100,7 +100,7 @@ class DwooTemplateFile extends DwooTemplateString
 				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
 				{
 					if(class_exists('DwooCompiler', false) === false)
-						include DWOO_DIRECTORY . 'DwooCompiler.php';
+						include 'Dwoo/Compiler.php';
 					$compiler = DwooCompiler::compilerFactory();
 				}
 				else
@@ -182,7 +182,7 @@ class DwooTemplateFile extends DwooTemplateString
 		$resourceId = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $resourceId);
 		if(file_exists($resourceId) === false)
 		{
-			$tpl = $dwoo->getCurrentTemplate();
+			$tpl = $dwoo->getTemplate();
 			if($tpl instanceof DwooTemplateFile)
 			{
 				$resourceId = dirname($tpl->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
@@ -196,7 +196,8 @@ class DwooTemplateFile extends DwooTemplateString
 		if($policy = $dwoo->getSecurityPolicy())
 		{
 			$resourceId = realpath($resourceId);
-			if($resourceId === $dwoo->getCurrentTemplate()->getResourceIdentifier())
+			// TODO check for getTemplate() not returning null
+			if($resourceId === $dwoo->getTemplate()->getResourceIdentifier())
 				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
 		}
 

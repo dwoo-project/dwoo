@@ -1,12 +1,12 @@
 <?php
 
 set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
-// TODO move those in Dwoo/Interface, ...
-include 'DwooInterfaces.php';
-include 'DwooPlugin.php';
-include 'DwooTemplateString.php';
-include 'DwooTemplateFile.php';
-include 'DwooData.php';
+
+include 'Dwoo/Interfaces.php';
+include 'Dwoo/Plugin.php';
+include 'Dwoo/Template/String.php';
+include 'Dwoo/Template/File.php';
+include 'Dwoo/Data.php';
 
 define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
 if(defined('DWOO_CACHE_DIRECTORY') === false)
@@ -686,11 +686,11 @@ class Dwoo
 	}
 
 	/**
-	 * returns the current template being rendered, if applicable, or null
+	 * returns the current template being rendered, when applicable, or null
 	 *
 	 * @return DwooITemplate|null
 	 */
-	public function getCurrentTemplate()
+	public function getTemplate()
 	{
 		return $this->template;
 	}
@@ -788,7 +788,7 @@ class Dwoo
 	 * @param string $compileId the unique compiler identifier
 	 * @return DwooITemplate
 	 */
-	public function getTemplate($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
+	public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		if(isset($this->resources[$resourceName]))
 			return call_user_func(array($this->resources[$resourceName]['class'], 'templateFactory'), $this, $resourceId, $cacheTime, $cacheId, $compileId);

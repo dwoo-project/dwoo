@@ -300,7 +300,7 @@ class DwooTemplateString implements DwooITemplate
 				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
 				{
 					if(class_exists('DwooCompiler', false) === false)
-						include DWOO_DIRECTORY . 'DwooCompiler.php';
+						include 'Dwoo/Compiler.php';
 					$compiler = DwooCompiler::compilerFactory();
 				}
 				else

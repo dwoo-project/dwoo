@@ -1,7 +1,7 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/DwooCompiler.php';
-require DWOO_DIRECTORY.'DwooSmartyAdapter.php';
+require_once 'Dwoo/Compiler.php';
+require 'Dwoo/Smarty/Adapter.php';
 
 class SmartyTests extends PHPUnit_Framework_TestCase
 {
@@ -19,10 +19,10 @@ class SmartyTests extends PHPUnit_Framework_TestCase
 		$this->compiler->addPreProcessor('smarty_compat', true);
 	}
 
-    public function testSmartyCompat()
-    {
-        $this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->fetch('smartytest.html'));
-    }
+	public function testSmartyCompat()
+	{
+		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->fetch('smartytest.html'));
+	}
 }
 
 ?>

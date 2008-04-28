@@ -29,9 +29,9 @@ function DwooPlugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
 		case 'html':
 			return htmlspecialchars((string) $value, ENT_QUOTES, $charset);
 		case 'htmlall':
-		    return htmlentities((string) $value, ENT_QUOTES, $charset);
+			return htmlentities((string) $value, ENT_QUOTES, $charset);
 		case 'url':
-		    return rawurlencode((string) $value);
+			return rawurlencode((string) $value);
 		case 'urlpathinfo':
 			return str_replace('%2F', '/', rawurlencode((string) $value));
 		case 'quotes':
@@ -40,15 +40,15 @@ function DwooPlugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
 			$out = '';
 			$cnt = strlen((string) $value);
 			for ($i=0; $i < $cnt; $i++) {
-			    $out .= '%' . bin2hex((string) $value[$i]);
-	    	}
-		    return $out;
+				$out .= '%' . bin2hex((string) $value[$i]);
+			}
+			return $out;
 		case 'hexentity':
 			$out = '';
 			$cnt = strlen((string) $value);
 			for($i=0; $i < $cnt; $i++)
-			    $out .= '&#x' . bin2hex((string) $value[$i]) . ';';
-		    return $out;
+				$out .= '&#x' . bin2hex((string) $value[$i]) . ';';
+			return $out;
 		case 'javascript':
 			return strtr((string) $value, array('\\'=>'\\\\',"'"=>"\\'",'"'=>'\\"',"\r"=>'\\r',"\n"=>'\\n','</'=>'<\/'));
 		case 'mail':

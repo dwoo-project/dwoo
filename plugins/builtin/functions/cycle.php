@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TOCOM
  *
@@ -48,7 +49,7 @@ class DwooPlugin_cycle extends DwooPlugin
 			$out = null;
 
 		if($advance)
-	    {
+		{
 			if($this->cycles[$name]['index'] >= count($values)-1)
 				$this->cycles[$name]['index'] = 0;
 			else

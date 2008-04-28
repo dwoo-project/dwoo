@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/DwooCompiler.php';
+require_once 'Dwoo/Compiler.php';
 
 class DataTests extends PHPUnit_Framework_TestCase
 {

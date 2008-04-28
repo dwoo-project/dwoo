@@ -27,7 +27,7 @@ function DwooPlugin_extendsCheck_compile(DwooCompiler $compiler, $file, $uid)
 
 	return '// check for modification in '.$resource.':'.$identifier.'
 try {
-	$tpl = $this->getTemplate("'.$resource.'", "'.$identifier.'");
+	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
 } catch (DwooException $e) {
 	$this->triggerError(\'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>\', E_USER_WARNING);
 }

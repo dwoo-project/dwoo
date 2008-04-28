@@ -55,23 +55,23 @@ function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $enc
 			$len = strlen($str);
 
 			$out = '';
-	        for ($i=0; $i<$len; $i++)
-	            $out .= '%'.bin2hex($str[$i]);
+			for ($i=0; $i<$len; $i++)
+				$out .= '%'.bin2hex($str[$i]);
 
-	        return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
+			return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
 
 			break;
 		case 'javascript_charcode':
 		case 'js_charcode':
 		case 'jscharcode':
 		case 'jschar':
-	        $str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
+			$str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
 			$len = strlen($str);
 
-	        $out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
-	        for ($i=0; $i<$len; $i++)
-	            $out .= ord($str[$i]).',';
-	        return rtrim($out, ',') . "));\n-->\n</script>\n";
+			$out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
+			for ($i=0; $i<$len; $i++)
+				$out .= ord($str[$i]).',';
+			return rtrim($out, ',') . "));\n-->\n</script>\n";
 
 			break;
 
@@ -81,7 +81,7 @@ function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $enc
 
 			$out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
 			$len = strlen($address);
-	        for ($i=0; $i<$len; $i++)
+			for ($i=0; $i<$len; $i++)
 			{
 				if(preg_match('#\w#', $address[$i]))
 					$out .= '%'.bin2hex($address[$i]);
@@ -90,7 +90,7 @@ function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $enc
 			}
 			$out .= '" '.$extra.'>';
 			$len = strlen($text);
-	        for ($i=0; $i<$len; $i++)
+			for ($i=0; $i<$len; $i++)
 				$out .= '&#x'.bin2hex($text[$i]);
 			return $out.'</a>';
 

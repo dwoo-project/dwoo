@@ -77,7 +77,7 @@ class DwooPlugin_extends extends DwooPlugin implements DwooICompilable
 			}
 
 			try {
-				$parent = $compiler->getDwoo()->getTemplate($resource, $identifier);
+				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier);
 			} catch (DwooException $e) {
 				$compiler->triggerError('Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_ERROR);
 			}

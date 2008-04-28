@@ -21,40 +21,40 @@
  */
 class DwooFilter_html_format extends DwooFilter
 {
-    /**
-     * tab count to auto-indent the source
-     *
-     * @var int
-     */
-    protected static $tabCount = -1;
+	/**
+	 * tab count to auto-indent the source
+	 *
+	 * @var int
+	 */
+	protected static $tabCount = -1;
 
-    /**
-     * stores the additional data (following a tag) of the last call to open/close/singleTag
-     *
-     * @var string
-     */
+	/**
+	 * stores the additional data (following a tag) of the last call to open/close/singleTag
+	 *
+	 * @var string
+	 */
 	protected static $lastCallAdd = '';
 
-    /**
-     * formats the input using the singleTag/closeTag/openTag functions
-     *
-     * It is auto indenting the whole code, excluding <textarea>, <code> and <pre> tags that must be kept intact.
-     * Those tags must however contain only htmlentities-escaped text for everything to work properly.
-     * Inline tags are presented on a single line with their content
-     *
-     * @param Dwoo $dwoo the dwoo instance rendering this
-     * @param string $input the xhtml to format
-     * @return string formatted xhtml
-     */
-    public function process($input)
-    {
-    	self::$tabCount = -1;
+	/**
+	 * formats the input using the singleTag/closeTag/openTag functions
+	 *
+	 * It is auto indenting the whole code, excluding <textarea>, <code> and <pre> tags that must be kept intact.
+	 * Those tags must however contain only htmlentities-escaped text for everything to work properly.
+	 * Inline tags are presented on a single line with their content
+	 *
+	 * @param Dwoo $dwoo the dwoo instance rendering this
+	 * @param string $input the xhtml to format
+	 * @return string formatted xhtml
+	 */
+	public function process($input)
+	{
+		self::$tabCount = -1;
 
-        // auto indent all but textareas & pre (or we have weird tabs inside)
-        $input = preg_replace_callback("#(<[^>]+>)(\s*)([^<]*)#", array('self', 'tagDispatcher'), $input);
+		// auto indent all but textareas & pre (or we have weird tabs inside)
+		$input = preg_replace_callback("#(<[^>]+>)(\s*)([^<]*)#", array('self', 'tagDispatcher'), $input);
 
-        return $input;
-    }
+		return $input;
+	}
 
 	/**
 	 * helper function for format()'s preg_replace call
@@ -69,35 +69,35 @@ class DwooFilter_html_format extends DwooFilter
 			return $input[1] . $input[3];
 		}
 		// closing textarea, code and pre tags and self-closed tags (i.e. <br />) are printed as singleTags because we didn't use openTag for the formers and the latter is a single tag
-        if(substr($input[1],0,10) == "</textarea" || substr($input[1],0,5) == "</pre" || substr($input[1],0,6) == "</code" || substr($input[1],-2) == "/>") {
-            return self::singleTag($input[1],$input[3],$input[2]);
-        }
-        // it's the closing tag
-        if($input[0][1]=="/"){
-            return self::closeTag($input[1],$input[3],$input[2]);
-        }
-        // opening tag
+		if(substr($input[1],0,10) == "</textarea" || substr($input[1],0,5) == "</pre" || substr($input[1],0,6) == "</code" || substr($input[1],-2) == "/>") {
+			return self::singleTag($input[1],$input[3],$input[2]);
+		}
+		// it's the closing tag
+		if($input[0][1]=="/"){
+			return self::closeTag($input[1],$input[3],$input[2]);
+		}
+		// opening tag
 		return self::openTag($input[1],$input[3],$input[2]);
 	}
 
-    /**
-     * returns an open tag and adds a tab into the auto indenting
-     *
-     * @param string $tag content of the tag
-     * @param string $add additional data (anything before the following tag)
-     * @param string $whitespace white space between the tag and the additional data
-     * @return string
-     */
-    protected static function openTag($tag,$add,$whitespace)
-    {
-        $tabs = str_pad('',self::$tabCount++,"\t");
+	/**
+	 * returns an open tag and adds a tab into the auto indenting
+	 *
+	 * @param string $tag content of the tag
+	 * @param string $add additional data (anything before the following tag)
+	 * @param string $whitespace white space between the tag and the additional data
+	 * @return string
+	 */
+	protected static function openTag($tag,$add,$whitespace)
+	{
+		$tabs = str_pad('',self::$tabCount++,"\t");
 
 		// if it's one of those tag it's inline so it does not require a leading line break
 		if(preg_match('#^<(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)(?: [^>]*|)>#', $tag))
 		{
 			$result = $tag . $whitespace . str_replace("\n","\n".$tabs,$add);
-    	}
-    	// it's the doctype declaration so no line break here either
+		}
+		// it's the doctype declaration so no line break here either
 		elseif(substr($tag,0,9) == '<!DOCTYPE')
 		{
 			$result = $tabs . $tag;
@@ -105,61 +105,61 @@ class DwooFilter_html_format extends DwooFilter
 		// normal block tag
 		else
 		{
-    	    $result = "\n".$tabs . $tag;
+			$result = "\n".$tabs . $tag;
 
-	        if(!empty($add))
-	        {
-	            $result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
-	        }
+			if(!empty($add))
+			{
+				$result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
+			}
 		}
 
-        self::$lastCallAdd = $add;
+		self::$lastCallAdd = $add;
 
-        return $result;
-    }
+		return $result;
+	}
 
-    /**
-     * returns a closing tag and removes a tab from the auto indenting
-     *
-     * @param string $tag content of the tag
-     * @param string $add additional data (anything before the following tag)
-     * @param string $whitespace white space between the tag and the additional data
-     * @return string
-     */
-    protected static function closeTag($tag,$add,$whitespace)
-    {
-        $tabs = str_pad('',--self::$tabCount,"\t");
+	/**
+	 * returns a closing tag and removes a tab from the auto indenting
+	 *
+	 * @param string $tag content of the tag
+	 * @param string $add additional data (anything before the following tag)
+	 * @param string $whitespace white space between the tag and the additional data
+	 * @return string
+	 */
+	protected static function closeTag($tag,$add,$whitespace)
+	{
+		$tabs = str_pad('',--self::$tabCount,"\t");
 
 		// if it's one of those tag it's inline so it does not require a leading line break
 		if(preg_match('#^</(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)>#', $tag))
 		{
 			$result = $tag . $whitespace . str_replace("\n","\n".$tabs,$add);
-    	}
+		}
 		else
 		{
-    	    $result = "\n".$tabs.$tag;
+			$result = "\n".$tabs.$tag;
 
-	        if(!empty($add))
-	        {
-	            $result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
-	        }
+			if(!empty($add))
+			{
+				$result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
+			}
 		}
 
-        self::$lastCallAdd = $add;
+		self::$lastCallAdd = $add;
 
-        return $result;
-    }
+		return $result;
+	}
 
-    /**
-     * returns a single tag with auto indenting
-     *
-     * @param string $tag content of the tag
-     * @param string $add additional data (anything before the following tag)
-     * @return string
-     */
-    protected static function singleTag($tag,$add,$whitespace)
-    {
-        $tabs = str_pad('',self::$tabCount,"\t");
+	/**
+	 * returns a single tag with auto indenting
+	 *
+	 * @param string $tag content of the tag
+	 * @param string $add additional data (anything before the following tag)
+	 * @return string
+	 */
+	protected static function singleTag($tag,$add,$whitespace)
+	{
+		$tabs = str_pad('',self::$tabCount,"\t");
 
 		// if it's img, br it's inline so it does not require a leading line break
 		// if it's a closing textarea, code or pre tag, it does not require a leading line break either or it creates whitespace at the end of those blocks
@@ -167,25 +167,25 @@ class DwooFilter_html_format extends DwooFilter
 		{
 			$result = $tag.$whitespace;
 
-	        if(!empty($add))
-	        {
-	            $result .= str_replace("\n","\n".$tabs,$add);
-	        }
+			if(!empty($add))
+			{
+				$result .= str_replace("\n","\n".$tabs,$add);
+			}
 		}
 		else
 		{
-	        $result = "\n".$tabs.$tag;
+			$result = "\n".$tabs.$tag;
 
-	        if(!empty($add))
-	        {
-	            $result .= "\n".$tabs.str_replace("\n","\n".$tabs,$add);
-	        }
+			if(!empty($add))
+			{
+				$result .= "\n".$tabs.str_replace("\n","\n".$tabs,$add);
+			}
 		}
 
-        self::$lastCallAdd = $add;
+		self::$lastCallAdd = $add;
 
-        return $result;
-    }
+		return $result;
+	}
 }
 
 ?>

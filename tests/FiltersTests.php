@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/DwooCompiler.php';
+require_once 'Dwoo/Compiler.php';
 
 class FiltersTests extends PHPUnit_Framework_TestCase
 {
@@ -14,15 +14,15 @@ class FiltersTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo();
 	}
 
-    public function testHtmlFormat()
-    {
+	public function testHtmlFormat()
+	{
 		$tpl = new DwooTemplateString("<html><body><div><p>a<em>b</em>c<hr /></p><textarea>a\n  b</textarea></div></body><html>");
 		$tpl->forceCompilation();
 
 		$dwoo = new Dwoo();
 		$dwoo->addFilter('html_format', true);
 
-        $this->assertEquals(str_replace("\r", '', <<<SNIPPET
+		$this->assertEquals(str_replace("\r", '', <<<SNIPPET
 
 <html>
 <body>
@@ -37,17 +37,17 @@ class FiltersTests extends PHPUnit_Framework_TestCase
 <html>
 SNIPPET
 ), $dwoo->get($tpl, array(), $this->compiler));
-    }
+	}
 
-    public function testSmartyCompat()
-    {
-    	$tpl = new DwooTemplateString('{ldelim}{$smarty.version}{rdelim}');
+	public function testSmartyCompat()
+	{
+		$tpl = new DwooTemplateString('{ldelim}{$smarty.version}{rdelim}');
 		$tpl->forceCompilation();
 		$cmp = new DwooCompiler();
 		$cmp->addPreProcessor('smarty_compat', true);
 
-        $this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
-    }
+		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
+	}
 }
 
 ?>

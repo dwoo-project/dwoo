@@ -25,11 +25,11 @@ function DwooPlugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
 	if(($pos = strpos($search,"\0")) !== false)
 		$search = substr($search,0,$pos);
 
-    if(preg_match('#([a-z\s]+)$#i', $search, $m) && strpos($m[0], 'e') !== false) {
-        $search = substr($search, 0, -strlen($m[0])) . str_replace('e', '', $m[0]);
-    }
+	if(preg_match('#([a-z\s]+)$#i', $search, $m) && strpos($m[0], 'e') !== false) {
+		$search = substr($search, 0, -strlen($m[0])) . str_replace('e', '', $m[0]);
+	}
 
-    return preg_replace($search, $replace, $value);
+	return preg_replace($search, $replace, $value);
 }
 
 ?>

@@ -957,19 +957,19 @@ class DwooCompiler implements DwooICompiler
 
 		if($first==='$') // var
 		{
-			return $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$out = $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
 		elseif($first==='%' && preg_match('#^%[a-z]#i', $substr)) // const
 		{
-			return $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
 		elseif($first==='"' || $first==="'") // string
 		{
-			return $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
 		elseif(preg_match('#^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':' |').'\(|$)#i', $substr)) // func
 		{
-			return $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
 		elseif(is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) // named parameter
 		{
@@ -987,12 +987,19 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition')) // unquoted string, bool or number
 		{
-			return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$out = $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		}
 		else // parse error
 		{
 			$this->triggerError('Parse error in <em>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em> @ '.$from, E_USER_ERROR);
 		}
+
+		if(empty($out))
+			return '';
+		if($curBlock === 'root' && substr($out, 0, strlen(self::PHP_OPEN)) !== self::PHP_OPEN)
+			return self::PHP_OPEN .'echo '.$out.';'. self::PHP_CLOSE;
+		else
+			return $out;
 	}
 
 	/**
@@ -1043,8 +1050,7 @@ class DwooCompiler implements DwooICompiler
 				$func = $cmdstr;
 			$params = array();
 
-			if($curBlock === 'namedparam' || $curBlock === 'modifier' || $curBlock === 'function' || $curBlock === 'condition') /* smarty supports unquoted strings so they're supported for named param (smarty syntax),
-											   any [a-z0-9_]+ without parenthesis/arguments after it is considered to be a string */
+			if($curBlock !== 'root')
 			{
 				return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			}
@@ -1286,10 +1292,8 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($curBlock === 'namedparam')
 			return array($output, $output);
-		elseif($curBlock === 'method')
-			return $output;
 		else
-			return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
+			return $output;
 	}
 
 	/**
@@ -1359,8 +1363,6 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($curBlock === 'namedparam')
 			return array($output, substr($srcOutput,1,-1));
-		elseif($curBlock === 'root')
-			return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
 		else
 			return $output;
 	}
@@ -1395,8 +1397,6 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($curBlock === 'namedparam')
 			return array($output, $m[1]);
-		elseif($curBlock === 'root')
-			return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
 		else
 			return $output;
 	}
@@ -1626,12 +1626,10 @@ class DwooCompiler implements DwooICompiler
 				return array($matchedLength, $output);
 			elseif($curBlock === 'expression' || $curBlock === 'variable')
 				return $output;
-			elseif(substr($output, 0, strlen(self::PHP_OPEN)) === self::PHP_OPEN)
-				return $output;
 			elseif(isset($assign))
 				return self::PHP_OPEN.$output.';'.self::PHP_CLOSE;
 			else
-				return self::PHP_OPEN.'echo '.$output.';'.self::PHP_CLOSE;
+				return $output;
 		}
 		else
 		{
@@ -1935,6 +1933,8 @@ class DwooCompiler implements DwooICompiler
 		}
 		elseif($curBlock === 'namedparam')
 			return array($substr, $src);
+		else
+			throw new Exception('Something went wrong');
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(dirname(__FILE__)).'/DwooCompiler.php';
+require_once 'Dwoo/Compiler.php';
 
 class HelperTests extends PHPUnit_Framework_TestCase
 {
@@ -14,21 +14,21 @@ class HelperTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo();
 	}
 
-    public function testArray()
-    {
+	public function testArray()
+	{
 		$tpl = new DwooTemplateString('{if array(3,foo, "bar",$baz|upper) === $test}true{/if}');
 		$tpl->forceCompilation();
 
-        $this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array(3, "foo", "bar", "BAZ"), 'baz'=>'baz'), $this->compiler));
-    }
+		$this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array(3, "foo", "bar", "BAZ"), 'baz'=>'baz'), $this->compiler));
+	}
 
-    public function testAssociativeArray()
-    {
+	public function testAssociativeArray()
+	{
 		$tpl = new DwooTemplateString('{if array(hoy=3,5="foo",bar=moo) === $test}true{/if}');
 		$tpl->forceCompilation();
 
-        $this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array("hoy"=>3, 5=>"foo", "bar"=>"moo"), 'baz'=>'baz'), $this->compiler));
-    }
+		$this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array("hoy"=>3, 5=>"foo", "bar"=>"moo"), 'baz'=>'baz'), $this->compiler));
+	}
 }
 
 ?>

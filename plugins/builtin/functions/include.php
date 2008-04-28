@@ -32,7 +32,7 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 	else
 	{
 		// get the current template's resource
-		$resource = $dwoo->getCurrentTemplate()->getResourceName();
+		$resource = $dwoo->getTemplate()->getResourceName();
 		$identifier = $file;
 	}
 
@@ -55,7 +55,7 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 	}
 
 	try {
-		$include = $dwoo->getTemplate($resource, $identifier, $cache_time, $cache_id, $compile_id);
+		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (DwooException $e) {
 		$dwoo->triggerError('Include : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_WARNING);
 	}
