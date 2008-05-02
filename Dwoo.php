@@ -1397,7 +1397,7 @@ class Dwoo
 		if(is_array($scope)===false)
 			$scope = explode('.', $scope);
 
-		while($bit = array_shift($scope))
+		while(($bit = array_shift($scope)) !== null)
 		{
 			if($bit === '_parent')
 			{
