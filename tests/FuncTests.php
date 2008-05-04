@@ -206,7 +206,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 	public function testFetch()
 	{
-		$tpl = new Dwoo_Template_String('{fetch file="'.DWOO_DIRECTORY.'tests/resources/test.html"}');
+		$tpl = new Dwoo_Template_String('{fetch file="'.TEST_DIRECTORY.'/resources/test.html"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('{$foo}{$bar}', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -214,12 +214,12 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 	public function testInclude()
 	{
-		$tpl = new Dwoo_Template_String('{include file=\'file:'.DWOO_DIRECTORY.'tests/resources/test.html\' foo=$a bar=$b}');
+		$tpl = new Dwoo_Template_String('{include file=\'file:'.TEST_DIRECTORY.'/resources/test.html\' foo=$a bar=$b}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("AB", $this->dwoo->get($tpl, array('a'=>'A', 'b'=>'B')));
 
-		$tpl = new Dwoo_Template_String('{include file=\'file:'.DWOO_DIRECTORY.'tests/resources/test.html\'}');
+		$tpl = new Dwoo_Template_String('{include file=\'file:'.TEST_DIRECTORY.'/resources/test.html\'}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("ab", $this->dwoo->get($tpl, array('foo'=>'a', 'bar'=>'b'), $this->compiler));
@@ -229,7 +229,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("", $this->dwoo->get($tpl, array('foo'=>'a', 'bar'=>'b'), $this->compiler));
 
-		$tpl = new Dwoo_Template_File(DWOO_DIRECTORY.'tests/resources/inctest.html');
+		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/inctest.html');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("34", $this->dwoo->get($tpl, array(), $this->compiler));

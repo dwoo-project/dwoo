@@ -118,7 +118,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testDwoo_GetFilename()
 	{
-		$this->assertEquals('44BAR', $this->dwoo->get(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'test.html', array('foo'=>44, 'bar'=>'BAR')));
+		$this->assertEquals('44BAR', $this->dwoo->get(TEST_DIRECTORY.'/resources/test.html', array('foo'=>44, 'bar'=>'BAR')));
 	}
 
 	public function testAssignVarInScope()
@@ -189,21 +189,21 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	public function testAddAndRemoveResource()
 	{
 		$this->dwoo->addResource('news', 'Dwoo_Template_File', array('Dwoo_Compiler', 'compilerFactory'));
-		$tpl = new Dwoo_Template_String('{include file="news:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
+		$tpl = new Dwoo_Template_String('{include file="news:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 		$this->dwoo->removeResource('news');
 
 		$this->dwoo->addResource('file', 'Dwoo_Template_String', 'Fake');
 		$this->dwoo->removeResource('file');
-		$tpl = new Dwoo_Template_String('{include file="file:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
+		$tpl = new Dwoo_Template_String('{include file="file:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 	}
 
 	public function testTemplateFile()
 	{
-		$tpl = new Dwoo_Template_File(DWOO_DIRECTORY.'tests/resources/test.html');
+		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/test.html');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("12", $this->dwoo->get($tpl, array('foo'=>1, 'bar'=>2)));

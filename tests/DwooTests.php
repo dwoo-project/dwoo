@@ -5,7 +5,8 @@ if(!ini_get('date.timezone'))
 	date_default_timezone_set('CET');
 define('DWOO_CACHE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
-require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'Dwoo.php';
+require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'Dwoo.php';
+define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests {
 	public static function suite() {
