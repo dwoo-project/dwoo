@@ -8,13 +8,14 @@ define('DWOO_COMPILE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DI
 require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'Dwoo.php';
 define('TEST_DIRECTORY', dirname(__FILE__));
 
-class DwooTests {
+class DwooTests extends PHPUnit_Framework_TestSuite {
+
 	public static function suite() {
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'plugins/builtin');
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'Dwoo');
 		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'Dwoo.php');
 
-		$suite = new PHPUnit_Framework_TestSuite('Dwoo - Unit Tests Report');
+		$suite = new self('Dwoo - Unit Tests Report');
 
 		foreach(new DirectoryIterator(dirname(__FILE__)) as $file) {
 			if(!$file->isDot() && !$file->isDir() && (string) $file !== 'DwooTests.php' && substr((string) $file, -4) === '.php')
@@ -26,6 +27,14 @@ class DwooTests {
 
 		return $suite;
 	}
+
+    protected function tearDown()
+    {
+		foreach(new DirectoryIterator(TEST_DIRECTORY.'/temp/compiled') as $file) {
+			if(!$file->isDot() && !$file->isDir())
+				unlink(TEST_DIRECTORY.'/temp/compiled/'.(string)$file);
+		}
+    }
 }
 
 // Evaluates two strings and ignores differences in line endings (\r\n == \n == \r)
