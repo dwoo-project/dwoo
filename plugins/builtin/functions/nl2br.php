@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_nl2br_compile(DwooCompiler $compiler, $value)
+function Dwoo_Plugin_nl2br_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'nl2br((string) '.$value.')';
 }

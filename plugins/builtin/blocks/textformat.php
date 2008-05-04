@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_textformat extends DwooBlockPlugin
+class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 {
 	protected $wrap;
 	protected $wrapChar;

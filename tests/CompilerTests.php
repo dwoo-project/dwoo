@@ -10,13 +10,13 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		// extend this class and override this in your constructor to test a modded compiler
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
 	}
 
 	public function testVarReplacement()
 	{
-		$tpl = new DwooTemplateString('{$foo}');
+		$tpl = new Dwoo_Template_String('{$foo}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('bar', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -24,7 +24,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testModifier()
 	{
-		$tpl = new DwooTemplateString('{$foo|upper}');
+		$tpl = new Dwoo_Template_String('{$foo|upper}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -32,7 +32,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testModifierArgs()
 	{
-		$tpl = new DwooTemplateString('{$foo|spacify:"-"|upper}');
+		$tpl = new Dwoo_Template_String('{$foo|spacify:"-"|upper}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('B-A-R', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -40,23 +40,23 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testModifierWithModifier()
 	{
-		$tpl = new DwooTemplateString('{$foo.0}{assign $foo|reverse foo}{$foo.0}{assign $foo|@reverse foo}{$foo.0}');
+		$tpl = new Dwoo_Template_String('{$foo.0}{assign $foo|reverse foo}{$foo.0}{assign $foo|@reverse foo}{$foo.0}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('barbazzab', $this->dwoo->get($tpl, array('foo'=>array('bar','baz')), $this->compiler));
 	}
 
-	public function testDwooFunc()
+	public function testDwoo_Func()
 	{
-		$tpl = new DwooTemplateString('{upper($foo)}');
+		$tpl = new Dwoo_Template_String('{upper($foo)}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 	}
 
-	public function testDwooLoose()
+	public function testDwoo_Loose()
 	{
-		$tpl = new DwooTemplateString('{upper $foo}');
+		$tpl = new Dwoo_Template_String('{upper $foo}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -64,7 +64,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testNamedParameter()
 	{
-		$tpl = new DwooTemplateString('{upper value=$foo}');
+		$tpl = new Dwoo_Template_String('{upper value=$foo}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -72,7 +72,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testNamedParameter2()
 	{
-		$tpl = new DwooTemplateString('{replace value=$foo search="BAR"|lower replace="BAR"}');
+		$tpl = new Dwoo_Template_String('{replace value=$foo search="BAR"|lower replace="BAR"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -80,7 +80,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testNamedParameter3()
 	{
-		$tpl = new DwooTemplateString('{assign value=reverse(array(foo=3,boo=5, 3=4), true) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
+		$tpl = new Dwoo_Template_String('{assign value=reverse(array(foo=3,boo=5, 3=4), true) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('34boo5foo3', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -88,7 +88,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testRecursiveCall()
 	{
-		$tpl = new DwooTemplateString('{lower(reverse(upper($foo)))}');
+		$tpl = new Dwoo_Template_String('{lower(reverse(upper($foo)))}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('rab', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
@@ -96,7 +96,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testComplexRecursiveCall()
 	{
-		$tpl = new DwooTemplateString('{lower reverse($foo|reverse|upper)}');
+		$tpl = new Dwoo_Template_String('{lower reverse($foo|reverse|upper)}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('bar', $this->dwoo->get($tpl, array('foo'=>'BaR'), $this->compiler));
@@ -104,54 +104,54 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testComplexRecursiveCall2()
 	{
-		$tpl = new DwooTemplateString('{str_repeat "AB`$foo|reverse|spacify:o`CD" 3}');
+		$tpl = new Dwoo_Template_String('{str_repeat "AB`$foo|reverse|spacify:o`CD" 3}');
 		$tpl->forceCompilation();
 		$this->assertEquals('AB3o2o1CDAB3o2o1CDAB3o2o1CD', $this->dwoo->get($tpl, array('foo'=>'123'), $this->compiler));
 	}
 
 	public function testStrip()
 	{
-		$tpl = new DwooTemplateString("{strip}a\nb\nc{/strip}a\nb\nc");
+		$tpl = new Dwoo_Template_String("{strip}a\nb\nc{/strip}a\nb\nc");
 		$tpl->forceCompilation();
 		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testWhitespace()
 	{
-		$tpl = new DwooTemplateString("{\$foo}{\$foo}\n{\$foo}\n\n{\$foo}\n\n\n{\$foo}");
+		$tpl = new Dwoo_Template_String("{\$foo}{\$foo}\n{\$foo}\n\n{\$foo}\n\n\n{\$foo}");
 		$tpl->forceCompilation();
 		$this->assertEquals("aa\na\n\na\n\n\na", $this->dwoo->get($tpl, array('foo'=>'a'), $this->compiler));
 	}
 
 	public function testLiteral()
 	{
-		$tpl = new DwooTemplateString('{literal}{$foo}{hurray}{/literal}');
+		$tpl = new Dwoo_Template_String('{literal}{$foo}{hurray}{/literal}');
 		$tpl->forceCompilation();
 		$this->assertEquals('{$foo}{hurray}', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testEscaping()
 	{
-		$tpl = new DwooTemplateString('\{foo\{bar\\\\{$var}}{"tes\}t"}{"foo\"lol\"bar"}');
+		$tpl = new Dwoo_Template_String('\{foo\{bar\\\\{$var}}{"tes\}t"}{"foo\"lol\"bar"}');
 		$tpl->forceCompilation();
 		$this->assertEquals('{foo{bar\\1}tes}tfoo"lol"bar', $this->dwoo->get($tpl, array('var'=>1), $this->compiler));
 	}
 
 	public function testFunctions()
 	{
-		$tpl = new DwooTemplateString('{dump()}{dump( )}{dump}');
+		$tpl = new Dwoo_Template_String('{dump()}{dump( )}{dump}');
 		$tpl->forceCompilation();
-		$this->assertEquals('<div style="background:#aaa; padding:5px; margin:5px;">data (current scope): <div style="background:#ccc;"></div></div><div style="background:#aaa; padding:5px; margin:5px;">data (current scope): <div style="background:#ccc;"></div></div><div style="background:#aaa; padding:5px; margin:5px;">data (current scope): <div style="background:#ccc;"></div></div>', $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals('<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data (current scope): <div style="background:#ccc;"></div></div><div style="background:#aaa; padding:5px; margin:5px; color:#000;">data (current scope): <div style="background:#ccc;"></div></div><div style="background:#aaa; padding:5px; margin:5px; color:#000;">data (current scope): <div style="background:#ccc;"></div></div>', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testExpressions()
 	{
-		$tpl = new DwooTemplateString('{$foo+5} {$foo+$foo} {$foo+3*$foo} {$foo*$foo+4*$foo} {$foo*2/2|number_format} {$foo*2/3|number_format:1} {number_format $foo*2/3 1} {if $foo+5>9 && $foo < 7 && $foo+$foo==$foo*2}win{/if} {$arr[$foo+3]}');
+		$tpl = new Dwoo_Template_String('{$foo+5} {$foo+$foo} {$foo+3*$foo} {$foo*$foo+4*$foo} {$foo*2/2|number_format} {$foo*2/3|number_format:1} {number_format $foo*2/3 1} {if $foo+5>9 && $foo < 7 && $foo+$foo==$foo*2}win{/if} {$arr[$foo+3]}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("10 10 40 145 5 3.3 3.3 win win", $this->dwoo->get($tpl, array('foo'=>5, 'arr'=>array(8=>'win')), $this->compiler));
 
-		$tpl = new DwooTemplateString('{"$foo/$foo"}');
+		$tpl = new Dwoo_Template_String('{"$foo/$foo"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("1", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));
@@ -159,7 +159,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testNonExpressions()
 	{
-		$tpl = new DwooTemplateString('{"`$foo`/`$foo`"}');
+		$tpl = new Dwoo_Template_String('{"`$foo`/`$foo`"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("5/5", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));
@@ -169,7 +169,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	{
 		if(!defined('TEST'))
 			define('TEST', 'Test');
-		$tpl = new DwooTemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*$dwoo.const.Dwoo::BLOCK_PLUGIN}');
+		$tpl = new Dwoo_Template_String('{$dwoo.const.TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*$dwoo.const.Dwoo::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
@@ -179,7 +179,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	{
 		if(!defined('TEST'))
 			define('TEST', 'Test');
-		$tpl = new DwooTemplateString('{%TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*%Dwoo::BLOCK_PLUGIN}');
+		$tpl = new Dwoo_Template_String('{%TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*%Dwoo::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
@@ -187,17 +187,17 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testAltDelimiters()
 	{
-		$tpl = new DwooTemplateString('{"test"} <%"test"%> <%"foo{lol}\%>"%>');
+		$tpl = new Dwoo_Template_String('{"test"} <%"test"%> <%"foo{lol}\%>"%>');
 		$tpl->forceCompilation();
 		$this->compiler->setDelimiters('<%', '%>');
 		$this->assertEquals('{"test"} test foo{lol}%>', $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$tpl = new DwooTemplateString('d"O"b');
+		$tpl = new Dwoo_Template_String('d"O"b');
 		$tpl->forceCompilation();
 		$this->compiler->setDelimiters('d', 'b');
 		$this->assertEquals('O', $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$tpl = new DwooTemplateString('<!-- "O" --> \<!-- ');
+		$tpl = new Dwoo_Template_String('<!-- "O" --> \<!-- ');
 		$tpl->forceCompilation();
 		$this->compiler->setDelimiters('<!-- ', ' -->');
 		$this->assertEquals('O <!-- ', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -207,7 +207,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testNumberedIndexes()
 	{
-		$tpl = new DwooTemplateString('{$100}-{$150}-{if $0}FAIL{/if}');
+		$tpl = new Dwoo_Template_String('{$100}-{$150}-{if $0}FAIL{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('bar-foo-', $this->dwoo->get($tpl, array('100'=>'bar', 150=>'foo'), $this->compiler));
@@ -215,7 +215,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testParseBool()
 	{
-		$tpl = new DwooTemplateString('{if (true === yes && true === on) && (false===off && false===no)}okay{/if}');
+		$tpl = new Dwoo_Template_String('{if (true === yes && true === on) && (false===off && false===no)}okay{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('okay', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -223,7 +223,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testMethodCalls()
 	{
-		$tpl = new DwooTemplateString('{$a} {$a->foo()} {$b[$c]->foo()} {$a->bar()+$a->bar()} {$a->baz(5, $foo)} {$a->make(5)->getInt()} {$a->make(5)->getInt()/2}');
+		$tpl = new Dwoo_Template_String('{$a} {$a->foo()} {$b[$c]->foo()} {$a->bar()+$a->bar()} {$a->baz(5, $foo)} {$a->make(5)->getInt()} {$a->make(5)->getInt()/2}');
 		$tpl->forceCompilation();
 
 		$a = new MethodCallsHelper();
@@ -235,21 +235,21 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->compiler->setLooseOpeningHandling(true);
 		$this->assertEquals($this->compiler->getLooseOpeningHandling(), true);
 
-		$tpl = new DwooTemplateString('{     $a      }{$a     }{     $a}{$a}');
+		$tpl = new Dwoo_Template_String('{     $a      }{$a     }{     $a}{$a}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('moomoomoomoo', $this->dwoo->get($tpl, array('a'=>'moo'), $this->compiler));
 
 	   	$this->compiler->setLooseOpeningHandling(false);
-		$tpl = new DwooTemplateString('{     $a      }{$a     }{     $a}{$a}');
+		$tpl = new Dwoo_Template_String('{     $a      }{$a     }{     $a}{$a}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('{     $a      }moo{     $a}moo', $this->dwoo->get($tpl, array('a'=>'moo'), $this->compiler));
 	}
 
-	public function testDwooDotShortcut()
+	public function testDwoo_DotShortcut()
 	{
-		$tpl = new DwooTemplateString('{$.server.SCRIPT_NAME}{foreach $a item}{$.foreach.default.iteration}{$item}{$.foreach.$b.$c}{/foreach}');
+		$tpl = new Dwoo_Template_String('{$.server.SCRIPT_NAME}{foreach $a item}{$.foreach.default.iteration}{$item}{$.foreach.$b.$c}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals($_SERVER['SCRIPT_NAME'].'1a12b2', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default', 'c'=>'iteration'), $this->compiler));
@@ -257,7 +257,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testAssignAndIncrement()
 	{
-		$tpl = new DwooTemplateString('{$foo}{$foo+=3}{$foo}
+		$tpl = new Dwoo_Template_String('{$foo}{$foo+=3}{$foo}
 {$foo}{$foo-=3}{$foo}
 {$foo++}{$foo++}{$foo}{$foo*=$foo}{$foo}
 {$foo--}{$foo=5}{$foo}');
@@ -265,7 +265,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("03\n30\n0124\n45", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
 
-		$tpl = new DwooTemplateString('{$foo="moo"}{$foo}{$foo=math("3+5")}{$foo}');
+		$tpl = new Dwoo_Template_String('{$foo="moo"}{$foo}{$foo=math("3+5")}{$foo}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("moo8", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
@@ -274,7 +274,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	public function testSetStringValToTrueWhenUsingNamedParams()
 	{
 		$this->dwoo->addPlugin('test', create_function('Dwoo $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
-		$tpl = new DwooTemplateString('{test name="Name"}{test name="Name" bool}');
+		$tpl = new Dwoo_Template_String('{test name="Name"}{test name="Name" bool}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("Name?Name!", $this->dwoo->get($tpl, array(), $this->compiler));

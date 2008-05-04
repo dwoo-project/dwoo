@@ -18,11 +18,11 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_if extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public function init(array $rest) {}
 
-	public static function replaceKeywords($params, DwooCompiler $compiler)
+	public static function replaceKeywords($params, Dwoo_Compiler $compiler)
 	{
 		$params = $compiler->getCompiledParams($params);
 
@@ -157,15 +157,15 @@ class DwooPlugin_if extends DwooBlockPlugin implements DwooICompilableBlock
 		return $p;
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n}".DwooCompiler::PHP_CLOSE;
+		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
-		return DwooCompiler::PHP_OPEN.'if('.implode(' ', self::replaceKeywords($params, $compiler)).") {\n".DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.'if('.implode(' ', self::replaceKeywords($params, $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return $params['postOutput'];
 	}

@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_cycle extends DwooPlugin
+class Dwoo_Plugin_cycle extends Dwoo_Plugin
 {
 	protected $cycles = array();
 

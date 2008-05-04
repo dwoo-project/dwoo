@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooCompiler implements DwooICompiler
+class Dwoo_Compiler implements Dwoo_ICompiler
 {
 	/**
 	 * constant that represents a php opening tag
@@ -86,7 +86,7 @@ class DwooCompiler implements DwooICompiler
 	/**
 	 * security policy object
 	 *
-	 * @var DwooSecurityPolicy
+	 * @var Dwoo_Security_Policy
 	 */
 	protected $securityPolicy;
 
@@ -183,7 +183,7 @@ class DwooCompiler implements DwooICompiler
 	 *
 	 * @see getCurrentBlock
 	 *
-	 * @var DwooBlockPlugin
+	 * @var Dwoo_Block_Plugin
 	 */
 	protected $curBlock;
 
@@ -191,7 +191,7 @@ class DwooCompiler implements DwooICompiler
 	 * holds an instance of this class, used by getInstance when you don't
 	 * provide a custom compiler in order to save resources
 	 *
-	 * @var DwooCompiler
+	 * @var Dwoo_Compiler
 	 */
 	protected static $instance;
 
@@ -259,18 +259,18 @@ class DwooCompiler implements DwooICompiler
 	{
 		if($autoload)
 		{
-			$name = str_replace('DwooProcessor_', '', $callback);
-			$class = 'DwooProcessor_'.$name;
+			$name = str_replace('Dwoo_Processor_', '', $callback);
+			$class = 'Dwoo_Processor_'.$name;
 
 			if(!class_exists($class, false) && !function_exists($class))
-				DwooLoader::loadPlugin($name);
+				Dwoo_Loader::loadPlugin($name);
 
 			if(class_exists($class, false))
 				$callback = array(new $class($this), 'process');
 			elseif(function_exists($class))
 				$callback = $class;
 			else
-				$this->triggerError('Wrong pre-processor name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "DwooProcessor_name"', E_USER_ERROR);
+				$this->triggerError('Wrong pre-processor name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"', E_USER_ERROR);
 
 			$this->processors['pre'][] = $callback;
 		}
@@ -289,11 +289,11 @@ class DwooCompiler implements DwooICompiler
 	{
 		if(($index = array_search($callback, $this->processors['pre'], true)) !== false)
 			unset($this->processors['pre'][$index]);
-		elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['pre'], true)) !== false)
+		elseif(($index = array_search('Dwoo_Processor_'.str_replace('Dwoo_Processor_', '', $callback), $this->processors['pre'], true)) !== false)
 			unset($this->processors['pre'][$index]);
 		else
 		{
-			$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
+			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach($this->processors['pre'] as $index=>$proc)
 			{
 				if(is_array($proc) && $proc[0] instanceof $class)
@@ -316,18 +316,18 @@ class DwooCompiler implements DwooICompiler
 	{
 		if($autoload)
 		{
-			$name = str_replace('DwooProcessor_', '', $callback);
-			$class = 'DwooProcessor_'.$name;
+			$name = str_replace('Dwoo_Processor_', '', $callback);
+			$class = 'Dwoo_Processor_'.$name;
 
 			if(!class_exists($class, false) && !function_exists($class))
-				DwooLoader::loadPlugin($name);
+				Dwoo_Loader::loadPlugin($name);
 
 			if(class_exists($class, false))
 				$callback = array(new $class($this), 'process');
 			elseif(function_exists($class))
 				$callback = $class;
 			else
-				$this->triggerError('Wrong post-processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "DwooProcessor_name"', E_USER_ERROR);
+				$this->triggerError('Wrong post-processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"', E_USER_ERROR);
 
 			$this->processors['post'][] = $callback;
 		}
@@ -346,11 +346,11 @@ class DwooCompiler implements DwooICompiler
 	{
 		if(($index = array_search($callback, $this->processors['post'], true)) !== false)
 			unset($this->processors['post'][$index]);
-		elseif(($index = array_search('DwooProcessor_'.str_replace('DwooProcessor_', '', $callback), $this->processors['post'], true)) !== false)
+		elseif(($index = array_search('Dwoo_Processor_'.str_replace('Dwoo_Processor_', '', $callback), $this->processors['post'], true)) !== false)
 			unset($this->processors['post'][$index]);
 		else
 		{
-			$class = 'DwooProcessor_' . str_replace('DwooProcessor_', '', $callback);
+			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach($this->processors['post'] as $index=>$proc)
 			{
 				if(is_array($proc) && $proc[0] instanceof $class)
@@ -379,9 +379,9 @@ class DwooCompiler implements DwooICompiler
 	 * use this if untrusted persons can modify templates,
 	 * set it on the Dwoo object as it will be passed onto the compiler automatically
 	 *
-	 * @param DwooSecurityPolicy $policy the security policy object
+	 * @param Dwoo_Security_Policy $policy the security policy object
 	 */
-	public function setSecurityPolicy(DwooSecurityPolicy $policy = null)
+	public function setSecurityPolicy(Dwoo_Security_Policy $policy = null)
 	{
 		$this->securityPolicy = $policy;
 	}
@@ -389,7 +389,7 @@ class DwooCompiler implements DwooICompiler
 	/**
 	 * returns the current security policy object or null by default
 	 *
-	 * @return DwooSecurityPolicy|null the security policy object if any
+	 * @return Dwoo_Security_Policy|null the security policy object if any
 	 */
 	public function getSecurityPolicy()
 	{
@@ -465,7 +465,7 @@ class DwooCompiler implements DwooICompiler
 	 * @param string $tpl the template to compile
 	 * @return string a compiled php string
 	 */
-	public function compile(Dwoo $dwoo, DwooITemplate $template)
+	public function compile(Dwoo $dwoo, Dwoo_ITemplate $template)
 	{
 		// init vars
 		$tpl = $template->getSource();
@@ -480,7 +480,7 @@ class DwooCompiler implements DwooICompiler
 		// runs preprocessors
 		foreach($this->processors['pre'] as $preProc)
 		{
-			if(is_array($preProc) && $preProc[0] instanceof DwooProcessor)
+			if(is_array($preProc) && $preProc[0] instanceof Dwoo_Processor)
 				$tpl = call_user_func($preProc, $tpl);
 			else
 				$tpl = call_user_func($preProc, $this, $tpl);
@@ -501,12 +501,12 @@ class DwooCompiler implements DwooICompiler
 				$search = array('{<\?.*?\?>}', '{<%.*?%>}');
 			switch($this->securityPolicy->getPhpHandling())
 			{
-				case DwooSecurityPolicy::PHP_ALLOW:
+				case Dwoo_Security_Policy::PHP_ALLOW:
 					break;
-				case DwooSecurityPolicy::PHP_ENCODE:
+				case Dwoo_Security_Policy::PHP_ENCODE:
 					$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
 					break;
-				case DwooSecurityPolicy::PHP_REMOVE:
+				case Dwoo_Security_Policy::PHP_REMOVE:
 					$tpl = preg_replace($search, '', $tpl);
 			}
 		}
@@ -616,7 +616,7 @@ class DwooCompiler implements DwooICompiler
 
 		foreach($this->processors['post'] as $postProc)
 		{
-			if(is_array($postProc) && $postProc[0] instanceof DwooProcessor)
+			if(is_array($postProc) && $postProc[0] instanceof Dwoo_Processor)
 				$compiled = call_user_func($postProc, $compiled);
 			else
 				$compiled = call_user_func($postProc, $this, $compiled);
@@ -636,19 +636,19 @@ class DwooCompiler implements DwooICompiler
 			{
 				case Dwoo::BLOCK_PLUGIN:
 				case Dwoo::CLASS_PLUGIN:
-					$output .= "if(class_exists('DwooPlugin_$plugin', false)===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
+					$output .= "if(class_exists('Dwoo_Plugin_$plugin', false)===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
 					break;
 				case Dwoo::FUNC_PLUGIN:
-					$output .= "if(function_exists('DwooPlugin_$plugin')===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
+					$output .= "if(function_exists('Dwoo_Plugin_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
 					break;
 				case Dwoo::SMARTY_MODIFIER:
-					$output .= "if(function_exists('smarty_modifier_$plugin')===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
+					$output .= "if(function_exists('smarty_modifier_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
 					break;
 				case Dwoo::SMARTY_FUNCTION:
-					$output .= "if(function_exists('smarty_function_$plugin')===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
+					$output .= "if(function_exists('smarty_function_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
 					break;
 				case Dwoo::SMARTY_BLOCK:
-					$output .= "if(function_exists('smarty_block_$plugin')===false)\n\tDwooLoader::loadPlugin('$plugin');\n";
+					$output .= "if(function_exists('smarty_block_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
 					break;
 				default:
 					$this->triggerError('Type error for '.$plugin.' with type'.$type, E_USER_ERROR);
@@ -754,9 +754,9 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function addBlock($type, array $params, $paramtype)
 	{
-		$class = 'DwooPlugin_'.$type;
+		$class = 'Dwoo_Plugin_'.$type;
 		if(class_exists($class, false) === false)
-			DwooLoader::loadPlugin($type);
+			Dwoo_Loader::loadPlugin($type);
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
@@ -798,9 +798,9 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function injectBlock($type, array $params)
 	{
-		$class = 'DwooPlugin_'.$type;
+		$class = 'Dwoo_Plugin_'.$type;
 		if(class_exists($class, false) === false)
-			DwooLoader::loadPlugin($type);
+			Dwoo_Loader::loadPlugin($type);
 		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 	}
@@ -826,7 +826,7 @@ class DwooCompiler implements DwooICompiler
 				if($top['custom'])
 					$class = $top['class'];
 				else
-					$class = 'DwooPlugin_'.$top['type'];
+					$class = 'Dwoo_Plugin_'.$top['type'];
 				$output .= call_user_func(array($class, 'postProcessing'), $this, $top['params']);
 				if($top['type'] === $type)
 					break 2;
@@ -902,7 +902,7 @@ class DwooCompiler implements DwooICompiler
 		if($o['custom'])
 			$class = $o['class'];
 		else
-			$class = 'DwooPlugin_'.$o['type'];
+			$class = 'Dwoo_Plugin_'.$o['type'];
 
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 
@@ -1171,14 +1171,14 @@ class DwooCompiler implements DwooICompiler
 			if($pluginType & Dwoo::CUSTOM_PLUGIN)
 				$params = $this->mapParams($params, array($this->customPlugins[$func]['class'], $this->customPlugins[$func]['function']), $state);
 			else
-				$params = $this->mapParams($params, array('DwooPlugin_'.$func, ($pluginType & Dwoo::COMPILABLE_PLUGIN) ? 'compile' : 'process'), $state);
+				$params = $this->mapParams($params, array('Dwoo_Plugin_'.$func, ($pluginType & Dwoo::COMPILABLE_PLUGIN) ? 'compile' : 'process'), $state);
 		}
 		elseif($pluginType & Dwoo::FUNC_PLUGIN)
 		{
 			if($pluginType & Dwoo::CUSTOM_PLUGIN)
 				$params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
 			else
-				$params = $this->mapParams($params, 'DwooPlugin_'.$func.(($pluginType & Dwoo::COMPILABLE_PLUGIN) ? '_compile' : ''), $state);
+				$params = $this->mapParams($params, 'Dwoo_Plugin_'.$func.(($pluginType & Dwoo::COMPILABLE_PLUGIN) ? '_compile' : ''), $state);
 		}
 		elseif($pluginType & Dwoo::SMARTY_MODIFIER)
 		{
@@ -1214,7 +1214,7 @@ class DwooCompiler implements DwooICompiler
 		{
 			if($pluginType & Dwoo::COMPILABLE_PLUGIN)
 			{
-				$funcCompiler = 'DwooPlugin_'.$func.'_compile';
+				$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
 				array_unshift($params, $this);
 				$output = call_user_func_array($funcCompiler, $params);
 			}
@@ -1229,14 +1229,14 @@ class DwooCompiler implements DwooICompiler
 					$output = 'call_user_func(\''.$callback.'\', '.$params.')';
 				}
 				else
-					$output = 'DwooPlugin_'.$func.'('.$params.')';
+					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
 			}
 		}
 		elseif($pluginType & Dwoo::CLASS_PLUGIN)
 		{
 			if($pluginType & Dwoo::COMPILABLE_PLUGIN)
 			{
-				$funcCompiler = array('DwooPlugin_'.$func, 'compile');
+				$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
 				array_unshift($params, $this);
 				$output = call_user_func_array($funcCompiler, $params);
 			}
@@ -1410,7 +1410,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	protected function parseConstKey($key, $curBlock)
 	{
-		if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === DwooSecurityPolicy::CONST_DISALLOW)
+		if($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === Dwoo_Security_Policy::CONST_DISALLOW)
 			return 'null';
 
 		if($curBlock !== 'root')
@@ -1598,12 +1598,12 @@ class DwooCompiler implements DwooICompiler
 				// load if plugin
 				try {
 					$this->getPluginType('if');
-				} catch (DwooException $e) {
+				} catch (Dwoo_Exception $e) {
 					$this->triggerError('Assignments require the "if" plugin to be accessible', E_USER_ERROR);
 				}
 
-				$parts = $this->mapParams($parts, array('DwooPlugin_if', 'init'), 1);
-				$value = DwooPlugin_if::replaceKeywords($parts, $this);
+				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
+				$value = Dwoo_Plugin_if::replaceKeywords($parts, $this);
 
 				$output .= '='.implode(' ',$value);
 				$assign = true;
@@ -2138,7 +2138,7 @@ class DwooCompiler implements DwooICompiler
 				}
 				else
 				{
-					$pluginName = 'DwooPlugin_'.$func;
+					$pluginName = 'Dwoo_Plugin_'.$func;
 
 					if($pluginType & Dwoo::CLASS_PLUGIN)
 					{
@@ -2161,7 +2161,7 @@ class DwooCompiler implements DwooICompiler
 					{
 						if($mapped)
 							$this->triggerError('The @ operator can not be used on compiled plugins.', E_USER_ERROR);
-						$funcCompiler = 'DwooPlugin_'.$func.'_compile';
+						$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
 						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
 					}
@@ -2182,7 +2182,7 @@ class DwooCompiler implements DwooICompiler
 					{
 						if($mapped)
 							$this->triggerError('The @ operator can not be used on compiled plugins.', E_USER_ERROR);
-						$funcCompiler = array('DwooPlugin_'.$func, 'compile');
+						$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
 						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
 					}
@@ -2198,7 +2198,7 @@ class DwooCompiler implements DwooICompiler
 								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array(\''.$callback[0].'\', \''.$callback[1].'\'), array('.$params.'))';
 						}
 						elseif($mapped)
-							$output = '$this->arrayMap(array($this->getObjectPlugin(\'DwooPlugin_'.$func.'\'), \'process\'), array('.$params.'))';
+							$output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo_Plugin_'.$func.'\'), \'process\'), array('.$params.'))';
 						else
 							$output = '$this->classCall(\''.$func.'\', array('.$params.'))';
 					}
@@ -2263,19 +2263,19 @@ class DwooCompiler implements DwooICompiler
 		{
 			if(isset($this->customPlugins[$name]))
 				$pluginType = $this->customPlugins[$name]['type'] | Dwoo::CUSTOM_PLUGIN;
-			elseif(class_exists('DwooPlugin_'.$name, false) !== false)
+			elseif(class_exists('Dwoo_Plugin_'.$name, false) !== false)
 			{
-				if(is_subclass_of('DwooPlugin_'.$name, 'DwooBlockPlugin'))
+				if(is_subclass_of('Dwoo_Plugin_'.$name, 'Dwoo_Block_Plugin'))
 					$pluginType = Dwoo::BLOCK_PLUGIN;
 				else
 					$pluginType = Dwoo::CLASS_PLUGIN;
-				$interfaces = class_implements('DwooPlugin_'.$name, false);
-				if(in_array('DwooICompilable', $interfaces) !== false || in_array('DwooICompilableBlock', $interfaces) !== false)
+				$interfaces = class_implements('Dwoo_Plugin_'.$name, false);
+				if(in_array('Dwoo_ICompilable', $interfaces) !== false || in_array('Dwoo_ICompilable_Block', $interfaces) !== false)
 					$pluginType |= Dwoo::COMPILABLE_PLUGIN;
 			}
-			elseif(function_exists('DwooPlugin_'.$name) !== false)
+			elseif(function_exists('Dwoo_Plugin_'.$name) !== false)
 				$pluginType = Dwoo::FUNC_PLUGIN;
-			elseif(function_exists('DwooPlugin_'.$name.'_compile'))
+			elseif(function_exists('Dwoo_Plugin_'.$name.'_compile'))
 				$pluginType = Dwoo::FUNC_PLUGIN | Dwoo::COMPILABLE_PLUGIN;
 			elseif(function_exists('smarty_modifier_'.$name) !== false)
 				$pluginType = Dwoo::SMARTY_MODIFIER;
@@ -2288,7 +2288,7 @@ class DwooCompiler implements DwooICompiler
 				if($pluginType===-1)
 				{
 					try {
-						DwooLoader::loadPlugin($name);
+						Dwoo_Loader::loadPlugin($name);
 					} catch (Exception $e) {
 						if(isset($phpFunc))
 							$pluginType = Dwoo::NATIVE_PLUGIN;
@@ -2362,7 +2362,7 @@ class DwooCompiler implements DwooICompiler
 					if(count($ps) === 0)
 					{
 						if($v[1]===false)
-							$this->triggerError('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
+							$this->triggerError('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 						else
 							break;
 					}
@@ -2385,7 +2385,7 @@ class DwooCompiler implements DwooICompiler
 				}
 				// parameter is not defined and not optional, throw error
 				elseif($v[1]===false)
-					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
+					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				elseif($v[2]===null)
 					$paramlist[$v[0]] = array('null', null);
@@ -2406,7 +2406,7 @@ class DwooCompiler implements DwooICompiler
 					if(count($params) === 0)
 					{
 						if($v[1]===false)
-							$this->triggerError('Rest argument missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
+							$this->triggerError('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 						else
 							break;
 					}
@@ -2429,7 +2429,7 @@ class DwooCompiler implements DwooICompiler
 				}
 				// parameter is not defined and not optional, throw error
 				elseif($v[1]===false)
-					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('DwooPlugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
+					$this->triggerError('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)), E_USER_ERROR);
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				elseif($v[2]===null)
 					$paramlist[$v[0]] = array('null', null);
@@ -2446,7 +2446,7 @@ class DwooCompiler implements DwooICompiler
 	}
 
 	/**
-	 * returns the parameter map of the given callback, it filters out entries typed as Dwoo and DwooCompiler and turns the rest parameter into a "*"
+	 * returns the parameter map of the given callback, it filters out entries typed as Dwoo and Dwoo_Compiler and turns the rest parameter into a "*"
 	 *
 	 * @param callback $callback the function/method to reflect on
 	 * @return array processed parameter map
@@ -2465,7 +2465,7 @@ class DwooCompiler implements DwooICompiler
 		{
 			if(($class = $param->getClass()) !== null && $class->name === 'Dwoo')
 				continue;
-			if(($class = $param->getClass()) !== null && $class->name === 'DwooCompiler')
+			if(($class = $param->getClass()) !== null && $class->name === 'Dwoo_Compiler')
 				continue;
 			if($param->getName() === 'rest' && $param->isArray() === true)
 				$out[] = array('*', $param->isOptional(), null);
@@ -2480,7 +2480,7 @@ class DwooCompiler implements DwooICompiler
 	 * specific compiler assigned and when you do not override the default compiler factory function
 	 *
 	 * @see Dwoo::setDefaultCompilerFactory()
-	 * @return DwooCompiler
+	 * @return Dwoo_Compiler
 	 */
 	public static function compilerFactory()
 	{
@@ -2497,7 +2497,7 @@ class DwooCompiler implements DwooICompiler
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('DwooCompiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->templateSource, max(0, $this->pointer-30), 130)), $level);
+		trigger_error('Dwoo_Compiler error : '.$message."<br />\r\nNear : ".htmlentities(substr($this->templateSource, max(0, $this->pointer-30), 130)), $level);
 	}
 }
 
@@ -2521,7 +2521,7 @@ class DwooCompiler implements DwooICompiler
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooCompilationException extends DwooException
+class Dwoo_Compilation_Exception extends Dwoo_Exception
 {
 }
 

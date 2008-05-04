@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_array_compile(DwooCompiler $compiler, array $rest=array())
+function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest=array())
 {
 	$out = array();
 	foreach($rest as $k=>$v)

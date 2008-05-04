@@ -1,4 +1,7 @@
 [2008-04-] 0.4.0 (Happy Getty)
+! BC Break: changed all class names to be PEAR compliant (aka use underscores
+  to separate words/paths), sorry about that but I better do it now than in
+  six months
 ! BC Break: $dwoo->output() and get() have been swapped internally, but it
   doesn't change anything for you unless you called output(*, *, *, true)
   directly to emulate get(). This was done to reduce some overhead
@@ -20,10 +23,10 @@
 + Syntax: Added support for {$foo+=5}, {$foo="a"}, {$foo++} and {$foo--}
 + Syntax: Added shortcut for $dwoo.*, you can now use {$.foreach.foo} instead
   of {$dwoo.foreach.foo} for example, applies to all $dwoo.* vars
-+ API: Added getSource(), getUid() and getResourceIdentifier() to DwooITemplate
-+ API: Added setSecurityPolicy() too DwooICompiler and modified the arguments
++ API: Added getSource(), getUid() and getResourceIdentifier() to Dwoo_ITemplate
++ API: Added setSecurityPolicy() too Dwoo_ICompiler and modified the arguments
   of its compile() method
-+ API: Added a bunch of utility functions to DwooCompiler, allowing compiled
++ API: Added a bunch of utility functions to Dwoo_Compiler, allowing compiled
   plugins to access more of the compiler internals
 * Moved all files to Dwoo/Class.php excepted for the core Dwoo.php file
 * Fixed a classpath rebuilding bug that occured on some UNIX platforms due to
@@ -33,18 +36,19 @@
   doing {foreach $foo}..{/foreach} will not however, that way you don't have
   to do {if isset($foo)} before the foreach, but automated isset() calls don't
   impact performance as much as they did before.
-* API: DwooITemplate->clearCache now requires a Dwoo instance as its first arg,
+* API: Dwoo_ITemplate->clearCache now requires a Dwoo instance as its first arg,
   should not affect you unless you built a custom template class from scratch
 * Reworked Dwoo template rendering to avoid variable conflicts with plugins
 * {include} now uses the current resource if none is provided instead of using
   file as it did before
 * Dwoo uses include path instead of absolute includes
 * Fixed a regression in the handling of custom class plugins
-* Fixed a bug in DwooSecurityPolicy->getAllowedDirectories(), no security
+* Fixed a bug in Dwoo_Security_Policy->getAllowedDirectories(), no security
   issue though
 * Changed all line endings to Unix (line feed only) and all spaces left have
   been converted to tabs (tabspace 4)
 * TestFest happened early for Dwoo, lots of new tests and more code covered
+* Fixed a bug in Dwoo::setScope affecting {loop} and {with}
 
 [2008-04-09] 0.3.4
 ! BC Break: DWOO_PATH constant changed to DWOO_DIRECTORY

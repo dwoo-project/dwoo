@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_count_characters_compile(DwooCompiler $compiler, $value, $count_spaces=false)
+function Dwoo_Plugin_count_characters_compile(Dwoo_Compiler $compiler, $value, $count_spaces=false)
 {
 	if($count_spaces==='false')
 		return 'preg_match_all(\'#[^\s\pZ]#u\', '.$value.', $tmp)';

@@ -9,25 +9,25 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function __construct()
 	{
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
 	}
 
 	public function testCoverConstructorsEtc()
 	{
 		// extend this class and override this in your constructor to test a modded compiler
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
-		DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
+		Dwoo_Loader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
 
 		// fixes the init call not being called (which is normal)
-		$fixCall = new DwooPlugin_topLevelBlock($this->dwoo);
+		$fixCall = new Dwoo_Plugin_topLevelBlock($this->dwoo);
 		$fixCall->init('');
 	}
 
 	public function testReadVar()
 	{
-		$tpl = new DwooTemplateString('{$foo.$bar[$baz->qux][moo]}{with $foo}{$a.b.moo}{/with}{$baz->qux}');
+		$tpl = new Dwoo_Template_String('{$foo.$bar[$baz->qux][moo]}{with $foo}{$a.b.moo}{/with}{$baz->qux}');
 		$tpl->forceCompilation();
 
 		$Obj = new stdClass;
@@ -47,7 +47,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testReadParentVar()
 	{
-		$tpl = new DwooTemplateString('{assign "Yay!" a.b->qux}{$a.b->qux}');
+		$tpl = new Dwoo_Template_String('{assign "Yay!" a.b->qux}{$a.b->qux}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("Yay!", $this->dwoo->get($tpl, array('bar'=>'a'), $this->compiler));
@@ -55,9 +55,9 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('a', $this->dwoo->readParentVar(2, 'bar'));
 	}
 
-	public function testDwooOutput()
+	public function testDwoo_Output()
 	{
-		$tpl = new DwooTemplateString('a');
+		$tpl = new Dwoo_Template_String('a');
 		$tpl->forceCompilation();
 
 		ob_start();
@@ -67,34 +67,34 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException DwooException
+	 * @expectedException Dwoo_Exception
 	 */
-	public function testDwooGetNonTemplate()
+	public function testDwoo_GetNonTemplate()
 	{
 		$this->dwoo->output(null, array());
 	}
 
 	/**
-	 * @expectedException DwooException
+	 * @expectedException Dwoo_Exception
 	 */
-	public function testDwooGetNonData()
+	public function testDwoo_GetNonData()
 	{
-		$tpl = new DwooTemplateString('a');
+		$tpl = new Dwoo_Template_String('a');
 		$this->dwoo->get($tpl, null);
 	}
 
 	public function testGetSetSecurityPolicy()
 	{
 		$dwoo = new Dwoo();
-		$policy = new DwooSecurityPolicy();
-		$policy->setConstantHandling(DwooSecurityPolicy::CONST_ALLOW);
+		$policy = new Dwoo_Security_Policy();
+		$policy->setConstantHandling(Dwoo_Security_Policy::CONST_ALLOW);
 		$dwoo->setSecurityPolicy($policy);
 		$this->assertEquals($policy, $dwoo->getSecurityPolicy());
 		$this->assertEquals($policy->getConstantHandling(), $dwoo->getSecurityPolicy()->getConstantHandling());
 	}
 
 	/**
-	 * @expectedException DwooException
+	 * @expectedException Dwoo_Exception
 	 */
 	public function testWrongResourceName()
 	{
@@ -103,7 +103,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testIsCached()
 	{
-		$tpl = new DwooTemplateString('foo');
+		$tpl = new Dwoo_Template_String('foo');
 		$this->assertEquals(false, $this->dwoo->isCached($tpl));
 	}
 
@@ -116,14 +116,14 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->dwoo->clearCache());
 	}
 
-	public function testDwooGetFilename()
+	public function testDwoo_GetFilename()
 	{
 		$this->assertEquals('44BAR', $this->dwoo->get(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'test.html', array('foo'=>44, 'bar'=>'BAR')));
 	}
 
 	public function testAssignVarInScope()
 	{
-		$tpl = new DwooTemplateString('{assign "Yay!" a.b->qux}{$a.b->qux}');
+		$tpl = new Dwoo_Template_String('{assign "Yay!" a.b->qux}{$a.b->qux}');
 		$tpl->forceCompilation();
 
 		$Obj = new stdClass;
@@ -131,7 +131,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("Yay!", $this->dwoo->get($tpl, array('a'=>array('b'=>$Obj)), $this->compiler));
 
-		$tpl = new DwooTemplateString('{assign "Yay!" a->b.qux}{$a->b.qux}');
+		$tpl = new Dwoo_Template_String('{assign "Yay!" a->b.qux}{$a->b.qux}');
 		$tpl->forceCompilation();
 
 		$Obj = new stdClass;
@@ -142,12 +142,12 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testPhpCall()
 	{
-		$tpl = new DwooTemplateString('{"foo"|strtoupper}');
+		$tpl = new Dwoo_Template_String('{"foo"|strtoupper}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("FOO", $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$tpl = new DwooTemplateString('{foreach $foo|@count subitems}{$subitems}{/foreach}');
+		$tpl = new Dwoo_Template_String('{foreach $foo|@count subitems}{$subitems}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("21", $this->dwoo->get($tpl, array('foo'=>array('a'=>array(1,2), 'b'=>array(2))), $this->compiler));
@@ -155,7 +155,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testClassCall()
 	{
-		$tpl = new DwooTemplateString('{dump $foo.b.0}');
+		$tpl = new Dwoo_Template_String('{dump $foo.b.0}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("2<br />", $this->dwoo->get($tpl, array('foo'=>array('a'=>array(1,2), 'b'=>array(2))), $this->compiler));
@@ -164,7 +164,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	public function testSuperGlobals()
 	{
 		$_GET[5] = 'Yay';
-		$tpl = new DwooTemplateString('{$dwoo.get.5} {$dwoo.get.$foo}');
+		$tpl = new Dwoo_Template_String('{$dwoo.get.5} {$dwoo.get.$foo}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("Yay Yay", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));
@@ -182,28 +182,28 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 		$this->dwoo->setDefaultCompilerFactory('file', 'Moo');
 		$this->assertEquals('Moo', $this->dwoo->getDefaultCompilerFactory('file'));
-		$this->dwoo->setDefaultCompilerFactory('file', array('DwooCompiler', 'compilerFactory'));
+		$this->dwoo->setDefaultCompilerFactory('file', array('Dwoo_Compiler', 'compilerFactory'));
 
 	}
 
 	public function testAddAndRemoveResource()
 	{
-		$this->dwoo->addResource('news', 'DwooTemplateFile', array('DwooCompiler', 'compilerFactory'));
-		$tpl = new DwooTemplateString('{include file="news:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
+		$this->dwoo->addResource('news', 'Dwoo_Template_File', array('Dwoo_Compiler', 'compilerFactory'));
+		$tpl = new Dwoo_Template_String('{include file="news:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 		$this->dwoo->removeResource('news');
 
-		$this->dwoo->addResource('file', 'DwooTemplateString', 'Fake');
+		$this->dwoo->addResource('file', 'Dwoo_Template_String', 'Fake');
 		$this->dwoo->removeResource('file');
-		$tpl = new DwooTemplateString('{include file="file:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
+		$tpl = new Dwoo_Template_String('{include file="file:'.DWOO_DIRECTORY.'tests/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
 		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
 	}
 
 	public function testTemplateFile()
 	{
-		$tpl = new DwooTemplateFile(DWOO_DIRECTORY.'tests/resources/test.html');
+		$tpl = new Dwoo_Template_File(DWOO_DIRECTORY.'tests/resources/test.html');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("12", $this->dwoo->get($tpl, array('foo'=>1, 'bar'=>2)));
@@ -211,16 +211,16 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testTemplateString()
 	{
-		$tpl = new DwooTemplateString('foo', 13);
+		$tpl = new Dwoo_Template_String('foo', 13);
 
 		$this->assertEquals("13", $tpl->getCacheTime());
 		$this->assertEquals(null, $tpl->getCompiler());
-		$this->assertEquals(false, DwooTemplateString::templateFactory($this->dwoo, 'foo', 5));
+		$this->assertEquals(false, Dwoo_Template_String::templateFactory($this->dwoo, 'foo', 5));
 	}
 
 	public function testCachedTemplateAndClearCache()
 	{
-		$tpl = new DwooTemplateString('foo{$foo}', 10, 'cachetest');
+		$tpl = new Dwoo_Template_String('foo{$foo}', 10, 'cachetest');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("foo1", $this->dwoo->get($tpl, array('foo'=>1)));
@@ -232,7 +232,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testCachedTemplateAndOutput()
 	{
-		$tpl = new DwooTemplateString('foo{$foo}', 10, 'cachetest');
+		$tpl = new Dwoo_Template_String('foo{$foo}', 10, 'cachetest');
 		$tpl->forceCompilation();
 
 		ob_start();
@@ -247,11 +247,11 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->dwoo->clearCache(-11));
 	}
 
-	public function testCachedTemplateWithDwooCache()
+	public function testCachedTemplateWithDwoo_Cache()
 	{
 		$dwoo = new Dwoo();
 		$dwoo->setCacheTime(10);
-		$tpl = new DwooTemplateString('foo{$foo}bar', null, 'cachetest2');
+		$tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
@@ -265,7 +265,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	{
 		$dwoo = new Dwoo();
 		$dwoo->setCacheTime(10);
-		$tpl = new DwooTemplateString('foo{$foo}bar', null, 'cachetest2');
+		$tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("foo1bar", $dwoo->get($tpl, array('foo'=>1)));
@@ -280,8 +280,8 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	{
 		$dwoo = new Dwoo();
 		$dwoo->setCacheTime(10);
-		$tpl = new DwooTemplateString('foo');
-		$tpl2 = new DwooTemplateFile('./resources/test.html');
+		$tpl = new Dwoo_Template_String('foo');
+		$tpl2 = new Dwoo_Template_File('./resources/test.html');
 
 		$this->assertEquals(false, $tpl->getResourceIdentifier());
 		$this->assertEquals('string', $tpl->getResourceName());

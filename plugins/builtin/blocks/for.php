@@ -18,7 +18,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public static $cnt=0;
 
@@ -26,7 +26,7 @@ class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$tpl = $compiler->getTemplateSource(true);
@@ -53,7 +53,7 @@ class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
 		$cnt = self::$cnt++;
 
 		// builds pre processing output for
-		$out = DwooCompiler::PHP_OPEN . "\n".'$_for'.$cnt.'_from = $_for'.$cnt.'_src = '.$from.';'.
+		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_for'.$cnt.'_from = $_for'.$cnt.'_src = '.$from.';'.
 										"\n".'$_for'.$cnt.'_to = '.$to.';'.
 										"\n".'$_for'.$cnt.'_step = abs('.$step.');'.
 										"\n".'$_for'.$cnt.'_skip = abs('.$skip.');'.
@@ -93,11 +93,11 @@ class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
 			$out .= "\n\t\t".'$_for'.$cnt.'_glob["first"] = (string) ($_for'.$cnt.'_glob["iteration"] === 1);';
 		if($usesLast)
 			$out .= "\n\t\t".'$_for'.$cnt.'_glob["last"] = (string) ($_for'.$cnt.'_glob["iteration"] === $_for'.$cnt.'_glob["total"]);';
-		$out .= "\n// -- for start output\n".DwooCompiler::PHP_CLOSE;
+		$out .= "\n// -- for start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 
 		// build post processing output and cache it
-		$postOut = DwooCompiler::PHP_OPEN . '// -- for end output';
+		$postOut = Dwoo_Compiler::PHP_OPEN . '// -- for end output';
 		// update properties
 		if($usesIteration)
 			$postOut.="\n\t\t".'$_for'.$cnt.'_glob["iteration"]+=1;';
@@ -106,12 +106,12 @@ class DwooPlugin_for extends DwooBlockPlugin implements DwooICompilableBlock
 
 		// get block params and save the post-processing output already
 		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = $postOut . DwooCompiler::PHP_CLOSE;
+		$currentBlock['params']['postOutput'] = $postOut . Dwoo_Compiler::PHP_CLOSE;
 
 		return $out;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return $params['postOutput'];
 	}

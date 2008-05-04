@@ -10,13 +10,13 @@ class FiltersTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		// extend this class and override this in your constructor to test a modded compiler
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
 	}
 
 	public function testHtmlFormat()
 	{
-		$tpl = new DwooTemplateString("<html><body><div><p>a<em>b</em>c<hr /></p><textarea>a\n  b</textarea></div></body><html>");
+		$tpl = new Dwoo_Template_String("<html><body><div><p>a<em>b</em>c<hr /></p><textarea>a\n  b</textarea></div></body><html>");
 		$tpl->forceCompilation();
 
 		$dwoo = new Dwoo();
@@ -41,9 +41,9 @@ SNIPPET
 
 	public function testSmartyCompat()
 	{
-		$tpl = new DwooTemplateString('{ldelim}{$smarty.version}{rdelim}');
+		$tpl = new Dwoo_Template_String('{ldelim}{$smarty.version}{rdelim}');
 		$tpl->forceCompilation();
-		$cmp = new DwooCompiler();
+		$cmp = new Dwoo_Compiler();
 		$cmp->addPreProcessor('smarty_compat', true);
 
 		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));

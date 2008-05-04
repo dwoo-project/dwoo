@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-interface DwooIDataProvider
+interface Dwoo_IDataProvider
 {
 	/**
 	 * returns the data as an associative array that will be used in the template
@@ -48,7 +48,7 @@ interface DwooIDataProvider
  * @date       2008-04-09
  * @package    Dwoo
  */
-interface DwooITemplate
+interface Dwoo_ITemplate
 {
 	/**
 	 * returns the cache duration for this template
@@ -89,10 +89,10 @@ interface DwooITemplate
 	 * returns the compiled template file name
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param DwooICompiler $compiler the compiler that must be used
+	 * @param Dwoo_ICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null);
+	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null);
 
 	/**
 	 * returns the template name
@@ -133,7 +133,7 @@ interface DwooITemplate
 	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
 	 *
-	 * @return DwooICompiler
+	 * @return Dwoo_ICompiler
 	 */
 	public function getCompiler();
 
@@ -150,7 +150,7 @@ interface DwooITemplate
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
 	 * 							template from others, if null it defaults to the filename+bits of the path
-	 * @return DwooITemplate|null|false
+	 * @return Dwoo_ITemplate|null|false
 	 */
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null);
 }
@@ -158,8 +158,8 @@ interface DwooITemplate
 /**
  * interface that represents a dwoo compiler
  *
- * while implementing this is enough to interact with Dwoo/DwooTemplates, it is not
- * sufficient to interact with DwooPlugins, however the main purpose of creating a
+ * while implementing this is enough to interact with Dwoo/Dwoo_Templates, it is not
+ * sufficient to interact with Dwoo_Plugins, however the main purpose of creating a
  * new compiler would be to interact with other/different plugins, that is why this
  * interface has been left with the minimum requirements.
  *
@@ -179,7 +179,7 @@ interface DwooITemplate
  * @date       2008-04-09
  * @package    Dwoo
  */
-interface DwooICompiler
+interface Dwoo_ICompiler
 {
 	/**
 	 * compiles the provided string down to php code
@@ -187,7 +187,7 @@ interface DwooICompiler
 	 * @param string $templateStr the template to compile
 	 * @return string a compiled php code string
 	 */
-	public function compile(Dwoo $dwoo, DwooITemplate $template);
+	public function compile(Dwoo $dwoo, Dwoo_ITemplate $template);
 
 	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
@@ -203,9 +203,9 @@ interface DwooICompiler
 	 * use this if untrusted persons can modify templates,
 	 * set it on the Dwoo object as it will be passed onto the compiler automatically
 	 *
-	 * @param DwooSecurityPolicy $policy the security policy object
+	 * @param Dwoo_Security_Policy $policy the security policy object
 	 */
-	public function setSecurityPolicy(DwooSecurityPolicy $policy = null);
+	public function setSecurityPolicy(Dwoo_Security_Policy $policy = null);
 }
 
 ?>

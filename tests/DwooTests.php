@@ -10,14 +10,8 @@ require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'Dwoo.php';
 class DwooTests {
 	public static function suite() {
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'plugins/builtin');
+		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'Dwoo');
 		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'Dwoo.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooCompiler.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooData.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooInterfaces.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooPlugin.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooSmartyAdapter.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooTemplateFile.php');
-		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'DwooTemplateString.php');
 
 		$suite = new PHPUnit_Framework_TestSuite('Dwoo - Unit Tests Report');
 

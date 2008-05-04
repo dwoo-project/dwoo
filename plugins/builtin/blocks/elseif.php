@@ -19,13 +19,13 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_elseif extends DwooPlugin_if implements DwooICompilableBlock
+class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Block
 {
 	public function init(array $rest)
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$if =& $compiler->findBlock('if', true);
 		$out = $if['params']['postOutput'];
@@ -33,17 +33,17 @@ class DwooPlugin_elseif extends DwooPlugin_if implements DwooICompilableBlock
 
 		$compiler->injectBlock($type, $params, 1);
 		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n}".DwooCompiler::PHP_CLOSE;
+		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
 		if($out === '')
-			$out = DwooCompiler::PHP_OPEN."\n}";
+			$out = Dwoo_Compiler::PHP_OPEN."\n}";
 		else
-			$out = substr($out, 0, -strlen(DwooCompiler::PHP_CLOSE));
+			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
 
-		return $out . " elseif(".implode(' ', self::replaceKeywords($params, $compiler)).") {\n" . DwooCompiler::PHP_CLOSE;
+		return $out . " elseif(".implode(' ', self::replaceKeywords($params, $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		if(isset($params['postOutput']))
 			return $params['postOutput'];

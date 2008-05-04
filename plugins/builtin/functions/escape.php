@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
+function Dwoo_Plugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
 {
 	if($charset === null)
 		$charset = $dwoo->getCharset();

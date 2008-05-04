@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_replace_compile(DwooCompiler $compiler, $value, $search, $replace)
+function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $replace)
 {
 	return 'str_replace('.$search.', '.$replace.', '.$value.')';
 }

@@ -19,18 +19,18 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_block extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_block extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public function init($name='')
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		return '';
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return '';
 	}

@@ -18,13 +18,13 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_forelse extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_forelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public function init()
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$foreach =& $compiler->findBlock('for', true);
 		$out = $foreach['params']['postOutput'];
@@ -32,17 +32,17 @@ class DwooPlugin_forelse extends DwooBlockPlugin implements DwooICompilableBlock
 
 		$compiler->injectBlock($type, $params, 1);
 
-		if(substr($out, -strlen(DwooCompiler::PHP_CLOSE)) === DwooCompiler::PHP_CLOSE)
-			$out = substr($out, 0, -strlen(DwooCompiler::PHP_CLOSE));
+		if(substr($out, -strlen(Dwoo_Compiler::PHP_CLOSE)) === Dwoo_Compiler::PHP_CLOSE)
+			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
 		else
-			$out .= DwooCompiler::PHP_OPEN;
+			$out .= Dwoo_Compiler::PHP_OPEN;
 
-		return $out . "else\n{" . DwooCompiler::PHP_CLOSE;
+		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
-		return DwooCompiler::PHP_OPEN.'}'.DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
 	}
 }
 

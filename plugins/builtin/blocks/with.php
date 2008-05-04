@@ -18,7 +18,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_with extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_with extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	protected static $cnt=0;
 
@@ -26,7 +26,7 @@ class DwooPlugin_with extends DwooBlockPlugin implements DwooICompilableBlock
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$rparams = $compiler->getRealParams($params);
 		$cparams = $compiler->getCompiledParams($params);
@@ -34,12 +34,12 @@ class DwooPlugin_with extends DwooBlockPlugin implements DwooICompilableBlock
 		$compiler->setScope($rparams['var']);
 
 		$params =& $compiler->getCurrentBlock();
-		$params['params']['postOutput'] = DwooCompiler::PHP_OPEN."\n// -- end with output\n".'$this->forceScope($_with'.(self::$cnt).');'."\n}\n".DwooCompiler::PHP_CLOSE;
+		$params['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n// -- end with output\n".'$this->forceScope($_with'.(self::$cnt).');'."\n}\n".Dwoo_Compiler::PHP_CLOSE;
 
-		return DwooCompiler::PHP_OPEN.'if('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$rparams['var'].'");'."\n// -- start with output\n".DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.'if('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$rparams['var'].'");'."\n// -- start with output\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return $params['postOutput'];
 	}

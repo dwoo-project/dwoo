@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_math_compile(DwooCompiler $compiler, $equation, $format='', $assign='', array $rest=array())
+function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format='', $assign='', array $rest=array())
 {
 	/**
 	 * Holds the allowed function, characters, operators and constants

@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_counter extends DwooPlugin
+class Dwoo_Plugin_counter extends Dwoo_Plugin
 {
 	protected $counters = array();
 

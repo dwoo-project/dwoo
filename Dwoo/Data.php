@@ -20,7 +20,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooData implements DwooIDataProvider
+class Dwoo_Data implements Dwoo_IDataProvider
 {
 	/**
 	 * data array

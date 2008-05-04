@@ -18,20 +18,20 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-final class DwooPlugin_topLevelBlock extends DwooBlockPlugin
+final class Dwoo_Plugin_topLevelBlock extends Dwoo_Block_Plugin
 {
 	public function init()
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
-		return 'ob_start(); '.DwooCompiler::PHP_CLOSE;
+		return 'ob_start(); '.Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
-		return DwooCompiler::PHP_OPEN.'return $this->buffer . ob_get_clean();';
+		return Dwoo_Compiler::PHP_OPEN.'return $this->buffer . ob_get_clean();';
 	}
 }
 

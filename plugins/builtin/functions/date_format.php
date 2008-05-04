@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $default=null)
+function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $default=null)
 {
 	if(!empty($value))
 	{

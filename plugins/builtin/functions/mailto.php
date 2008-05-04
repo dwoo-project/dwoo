@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $encode=null, $cc=null, $bcc=null, $newsgroups=null, $followupto=null, $extra=null)
+function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $encode=null, $cc=null, $bcc=null, $newsgroups=null, $followupto=null, $extra=null)
 {
 	if(empty($address))
 		return '';

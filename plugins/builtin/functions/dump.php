@@ -19,15 +19,15 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_dump extends DwooPlugin
+class Dwoo_Plugin_dump extends Dwoo_Plugin
 {
 	public function process($var = '$')
 	{
 		if ($var === '$') {
 			$var = $this->dwoo->getData();
-			$out = '<div style="background:#aaa; padding:5px; margin:5px;">data';
+			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
 		} else {
-			$out = '<div style="background:#aaa; padding:5px; margin:5px;">dump';
+			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
 		}
 
 		if(!is_array($var)) {

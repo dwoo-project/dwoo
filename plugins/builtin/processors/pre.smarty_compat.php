@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooProcessor_smarty_compat extends DwooProcessor
+class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 {
 	public function process($input)
 	{

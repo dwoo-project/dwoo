@@ -12,22 +12,22 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 
 	public function __construct()
 	{
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
-		$this->policy = new DwooSecurityPolicy();
+		$this->policy = new Dwoo_Security_Policy();
 		$this->dwoo->setSecurityPolicy($this->policy);
 	}
 
 	public function testConstantHandling()
 	{
-		$tpl = new DwooTemplateString('{$dwoo.const.DWOO_DIRECTORY}');
+		$tpl = new Dwoo_Template_String('{$dwoo.const.DWOO_DIRECTORY}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("", $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$this->policy->setConstantHandling(DwooSecurityPolicy::CONST_ALLOW);
+		$this->policy->setConstantHandling(Dwoo_Security_Policy::CONST_ALLOW);
 
-		$tpl = new DwooTemplateString('{$dwoo.const.DWOO_DIRECTORY}');
+		$tpl = new Dwoo_Template_String('{$dwoo.const.DWOO_DIRECTORY}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals(DWOO_DIRECTORY, $this->dwoo->get($tpl, array(), $this->compiler));
@@ -35,25 +35,25 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 
 	public function testPhpHandling()
 	{
-		$this->policy->setPhpHandling(DwooSecurityPolicy::PHP_ALLOW);
+		$this->policy->setPhpHandling(Dwoo_Security_Policy::PHP_ALLOW);
 
-		$tpl = new DwooTemplateString('<?php echo "moo"; ?>');
+		$tpl = new Dwoo_Template_String('<?php echo "moo"; ?>');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("moo", $this->dwoo->get($tpl, array(), $this->compiler));
 
 
-		$this->policy->setPhpHandling(DwooSecurityPolicy::PHP_ENCODE);
+		$this->policy->setPhpHandling(Dwoo_Security_Policy::PHP_ENCODE);
 
-		$tpl = new DwooTemplateString('<?php echo "moo"; ?>');
+		$tpl = new Dwoo_Template_String('<?php echo "moo"; ?>');
 		$tpl->forceCompilation();
 
 		$this->assertEquals(htmlspecialchars('<?php echo "moo"; ?>'), $this->dwoo->get($tpl, array(), $this->compiler));
 
 
-		$this->policy->setPhpHandling(DwooSecurityPolicy::PHP_REMOVE);
+		$this->policy->setPhpHandling(Dwoo_Security_Policy::PHP_REMOVE);
 
-		$tpl = new DwooTemplateString('<?php echo "moo"; ?>');
+		$tpl = new Dwoo_Template_String('<?php echo "moo"; ?>');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -63,7 +63,7 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 	{
 		$this->policy->allowPhpFunction('testphpfunc');
 
-		$tpl = new DwooTemplateString('{testphpfunc("foo")}');
+		$tpl = new Dwoo_Template_String('{testphpfunc("foo")}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array(), $this->compiler));

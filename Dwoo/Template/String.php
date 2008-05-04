@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooTemplateString implements DwooITemplate
+class Dwoo_Template_String implements Dwoo_ITemplate
 {
 	/**
 	 * template name
@@ -76,7 +76,7 @@ class DwooTemplateString implements DwooITemplate
 	/**
 	 * holds the compiler that built this template
 	 *
-	 * @var DwooICompiler
+	 * @var Dwoo_ICompiler
 	 */
 	protected $compiler;
 
@@ -183,7 +183,7 @@ class DwooTemplateString implements DwooITemplate
 	/**
 	 * returns the compiler used by this template, if it was just compiled, or null
 	 *
-	 * @return DwooICompiler
+	 * @return Dwoo_ICompiler
 	 */
 	public function getCompiler()
 	{
@@ -246,12 +246,36 @@ class DwooTemplateString implements DwooITemplate
 	 */
 	public function cache(Dwoo $dwoo, $output)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
+		$cacheDir = $dwoo->getCacheDir();
+		$cachedFile = $cacheDir . $this->cacheId.'.html';
 
-		file_put_contents($cachedFile, $output);
-		touch($cachedFile, $_SERVER['REQUEST_TIME']);
+		// the code below is courtesy of Rasmus Schultz,
+		// thanks for his help on avoiding concurency issues
+		$temp = tempnam($cacheDir, 'temp');
+		if(!($file = @fopen($temp, 'wb')))
+		{
+			$temp = $cacheDir . DIRECTORY_SEPARATOR . uniqid('temp');
+			if(!($file = @fopen($temp, 'wb')))
+			{
+				trigger_error('Error writing temporary file \''.$temp.'\'', E_USER_WARNING);
+				return false;
+			}
+		}
+
+		fwrite($file, $output);
+		fclose($file);
+
+		if(!@rename($temp, $cachedFile))
+		{
+			@unlink($cachedFile);
+			@rename($temp, $cachedFile);
+		}
+
+		@chmod($cachedFile, 0777);
 
 		self::$cache['cached'][$this->cacheId] = true;
+
+		return true;
 	}
 
 	/**
@@ -272,10 +296,10 @@ class DwooTemplateString implements DwooITemplate
 	 * returns the compiled template file name
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param DwooICompiler $compiler the compiler that must be used
+	 * @param Dwoo_ICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null)
+	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
 	{
 		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
 
@@ -297,11 +321,11 @@ class DwooTemplateString implements DwooITemplate
 			{
 				$compiler = $dwoo->getDefaultCompilerFactory('string');
 
-				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
+				if($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory'))
 				{
-					if(class_exists('DwooCompiler', false) === false)
+					if(class_exists('Dwoo_Compiler', false) === false)
 						include 'Dwoo/Compiler.php';
-					$compiler = DwooCompiler::compilerFactory();
+					$compiler = Dwoo_Compiler::compilerFactory();
 				}
 				else
 					$compiler = call_user_func($compiler);

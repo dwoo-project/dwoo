@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_assign_compile(DwooCompiler $compiler, $value, $var)
+function Dwoo_Plugin_assign_compile(Dwoo_Compiler $compiler, $value, $var)
 {
 	return '$this->assignInScope('.$value.', '.$var.')';
 }

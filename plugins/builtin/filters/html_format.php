@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooFilter_html_format extends DwooFilter
+class Dwoo_Filter_html_format extends Dwoo_Filter
 {
 	/**
 	 * tab count to auto-indent the source

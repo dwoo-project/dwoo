@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_fetch(Dwoo $dwoo, $file, $assign = null)
+function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 {
 	if($file === '')
 		return;

@@ -10,15 +10,15 @@ class DataTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		// extend this class and override this in your constructor to test a modded compiler
-		$this->compiler = new DwooCompiler();
+		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo();
-		$this->tpl = new DwooTemplateString('{$var}{$var2}{$var3}{$var4}');
+		$this->tpl = new Dwoo_Template_String('{$var}{$var2}{$var3}{$var4}');
 		$this->tpl->forceCompilation();
 	}
 
 	public function testSetMergeAndClear()
 	{
-		$data = new DwooData();
+		$data = new Dwoo_Data();
 
 		$data->setData(array('foo'));
 		$this->assertEquals(array('foo'), $data->getData());
@@ -33,7 +33,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
 	public function testAssign()
 	{
-		$data = new DwooData();
+		$data = new Dwoo_Data();
 
 		$data->assign('var', '1');
 		$data->assign(array('var2'=>'1', 'var3'=>1));
@@ -46,7 +46,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
 	public function testClear()
 	{
-		$data = new DwooData();
+		$data = new Dwoo_Data();
 
 		$data->assign(array('var2'=>'1', 'var3'=>1, 'var4'=>5));
 		$data->clear(array('var2', 'var4'));
@@ -61,7 +61,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
 	public function testAppend()
 	{
-		$data = new DwooData();
+		$data = new Dwoo_Data();
 
 		$data->assign('var', 'val');
 		$data->append('var', 'moo');

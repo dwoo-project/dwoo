@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_strip_compile(DwooCompiler $compiler, $value, $with=' ')
+function Dwoo_Plugin_strip_compile(Dwoo_Compiler $compiler, $value, $with=' ')
 {
 	return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
 }

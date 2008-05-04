@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_capitalize(Dwoo $dwoo, $value, $numwords=false)
+function Dwoo_Plugin_capitalize(Dwoo $dwoo, $value, $numwords=false)
 {
 	if($numwords || preg_match('#^[^0-9]+$#',$value))
 	{

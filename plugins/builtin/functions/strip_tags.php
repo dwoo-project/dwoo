@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_strip_tags_compile(DwooCompiler $compiler, $value, $addspace=true)
+function Dwoo_Plugin_strip_tags_compile(Dwoo_Compiler $compiler, $value, $addspace=true)
 {
 	if($addspace==='true')
 		return "preg_replace('#<[^>]*>#', ' ', $value)";

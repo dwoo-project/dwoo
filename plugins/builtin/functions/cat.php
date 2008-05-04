@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_cat_compile(DwooCompiler $compiler, $value, array $rest)
+function Dwoo_Plugin_cat_compile(Dwoo_Compiler $compiler, $value, array $rest)
 {
 	return '('.$value.').('.implode(').(', $rest).')';
 }

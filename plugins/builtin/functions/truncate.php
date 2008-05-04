@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_truncate(Dwoo $dwoo, $value, $length=80, $etc='...', $break=false, $middle=false)
+function Dwoo_Plugin_truncate(Dwoo $dwoo, $value, $length=80, $etc='...', $break=false, $middle=false)
 {
 	if($length == 0)
 		return '';

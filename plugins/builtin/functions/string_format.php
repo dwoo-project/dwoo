@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_string_format_compile(DwooCompiler $compiler, $value, $format)
+function Dwoo_Plugin_string_format_compile(Dwoo_Compiler $compiler, $value, $format)
 {
 	return 'sprintf('.$format.','.$value.')';
 }

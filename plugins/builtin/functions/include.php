@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $assign = null, array $rest = array())
+function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $assign = null, array $rest = array())
 {
 	if($file === '')
 		return;
@@ -56,7 +56,7 @@ function DwooPlugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = n
 
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
-	} catch (DwooException $e) {
+	} catch (Dwoo_Exception $e) {
 		$dwoo->triggerError('Include : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_WARNING);
 	}
 

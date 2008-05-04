@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooTemplateFile extends DwooTemplateString
+class Dwoo_Template_File extends Dwoo_Template_String
 {
 	/**
 	 * template filename
@@ -72,10 +72,10 @@ class DwooTemplateFile extends DwooTemplateString
 	 * returns the compiled template file name
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param DwooICompiler $compiler the compiler that must be used
+	 * @param Dwoo_ICompiler $compiler the compiler that must be used
 	 * @return string
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, DwooICompiler $compiler = null)
+	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
 	{
 		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
 
@@ -97,11 +97,11 @@ class DwooTemplateFile extends DwooTemplateString
 			{
 				$compiler = $dwoo->getDefaultCompilerFactory('string');
 
-				if($compiler === null || $compiler === array('DwooCompiler', 'compilerFactory'))
+				if($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory'))
 				{
-					if(class_exists('DwooCompiler', false) === false)
+					if(class_exists('Dwoo_Compiler', false) === false)
 						include 'Dwoo/Compiler.php';
-					$compiler = DwooCompiler::compilerFactory();
+					$compiler = Dwoo_Compiler::compilerFactory();
 				}
 				else
 					$compiler = call_user_func($compiler);
@@ -175,7 +175,7 @@ class DwooTemplateFile extends DwooTemplateString
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
 	 * 							template from others, if null it defaults to the filename+bits of the path
-	 * @return DwooTemplateFile|null
+	 * @return Dwoo_Template_File|null
 	 */
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
@@ -183,7 +183,7 @@ class DwooTemplateFile extends DwooTemplateString
 		if(file_exists($resourceId) === false)
 		{
 			$tpl = $dwoo->getTemplate();
-			if($tpl instanceof DwooTemplateFile)
+			if($tpl instanceof Dwoo_Template_File)
 			{
 				$resourceId = dirname($tpl->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
 				if(file_exists($resourceId) === false)
@@ -201,7 +201,7 @@ class DwooTemplateFile extends DwooTemplateString
 				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
 		}
 
-		return new DwooTemplateFile($resourceId, $cacheTime, $cacheId, $compileId);
+		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId);
 	}
 }
 

@@ -22,7 +22,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-abstract class DwooPlugin
+abstract class Dwoo_Plugin
 {
 	/**
 	 * the dwoo instance that runs this plugin
@@ -75,7 +75,7 @@ abstract class DwooPlugin
  * @date       2008-04-09
  * @package    Dwoo
  */
-abstract class DwooBlockPlugin extends DwooPlugin
+abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 {
 	/**
 	 * stores the contents of the block while it runs
@@ -123,7 +123,7 @@ abstract class DwooBlockPlugin extends DwooPlugin
 	 *
 	 * basically this will replace the {block arg arg arg} tag in the template
 	 *
-	 * @param DwooCompiler $compiler the compiler instance that calls this function
+	 * @param Dwoo_Compiler $compiler the compiler instance that calls this function
 	 * @param array $params an array containing original and compiled parameters
 	 * @param string $prepend that is just meant to allow a child class to call
 	 * 						  parent::postProcessing($compiler, $params, "foo();") to add a command before the
@@ -133,9 +133,9 @@ abstract class DwooBlockPlugin extends DwooPlugin
 	 * 						 default commands are executed
 	 * @param string $type the type is the plugin class name used
 	 */
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
-		return DwooCompiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.implode(', ', $compiler->getCompiledParams($params)).'));'.$append.DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.implode(', ', $compiler->getCompiledParams($params)).'));'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	/**
@@ -144,7 +144,7 @@ abstract class DwooBlockPlugin extends DwooPlugin
 	 * basically this will replace the {/block} tag in the template
 	 *
 	 * @see preProcessing
-	 * @param DwooCompiler $compiler the compiler instance that calls this function
+	 * @param Dwoo_Compiler $compiler the compiler instance that calls this function
 	 * @param array $params an array containing original and compiled parameters, see preProcessing() for more details
 	 * @param string $prepend that is just meant to allow a child class to call
 	 * 						  parent::postProcessing($compiler, $params, "foo();") to add a command before the
@@ -153,9 +153,9 @@ abstract class DwooBlockPlugin extends DwooPlugin
 	 * 						 parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
 	 * 						 default commands are executed
 	 */
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
-		return DwooCompiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 }
 
@@ -178,7 +178,7 @@ abstract class DwooBlockPlugin extends DwooPlugin
  * @date       2008-04-09
  * @package    Dwoo
  */
-abstract class DwooFilter
+abstract class Dwoo_Filter
 {
 	/**
 	 * the dwoo instance that runs this filter
@@ -226,7 +226,7 @@ abstract class DwooFilter
  * @date       2008-04-09
  * @package    Dwoo
  */
-abstract class DwooProcessor
+abstract class Dwoo_Processor
 {
 	/**
 	 * the compiler instance that runs this processor
@@ -241,7 +241,7 @@ abstract class DwooProcessor
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that runs this plugin
 	 */
-	public function __construct(DwooCompiler $compiler)
+	public function __construct(Dwoo_Compiler $compiler)
 	{
 		$this->compiler = $compiler;
 	}
@@ -260,7 +260,7 @@ abstract class DwooProcessor
  *
  * implement this to notify the compiler that this plugin does not need to be loaded at runtime.
  *
- * to implement it right, you must implement <em>public static function compile(DwooCompiler $compiler, $arg, $arg, ...)</em>,
+ * to implement it right, you must implement <em>public static function compile(Dwoo_Compiler $compiler, $arg, $arg, ...)</em>,
  * which replaces the <em>process()</em> method (that means <em>compile()</em> should have all arguments it requires).
  *
  * This software is provided 'as-is', without any express or implied warranty.
@@ -279,10 +279,10 @@ abstract class DwooProcessor
  * @date       2008-04-09
  * @package    Dwoo
  */
-interface DwooICompilable
+interface Dwoo_ICompilable
 {
 	// this replaces the process function
-	//public static function compile(DwooCompiler $compiler, $arg, $arg, ...);
+	//public static function compile(Dwoo_Compiler $compiler, $arg, $arg, ...);
 }
 
 /**
@@ -306,7 +306,7 @@ interface DwooICompilable
  * @date       2008-04-09
  * @package    Dwoo
  */
-interface DwooICompilableBlock
+interface Dwoo_ICompilable_Block
 {
 }
 

@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_upper_compile(DwooCompiler $compiler, $value)
+function Dwoo_Plugin_upper_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'mb_strtoupper((string) '.$value.', $this->charset)';
 }

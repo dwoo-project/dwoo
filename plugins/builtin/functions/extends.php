@@ -19,14 +19,14 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_extends extends DwooPlugin implements DwooICompilable
+class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 {
 	protected static $childSource;
 	protected static $l;
 	protected static $r;
 	protected static $lastReplacement;
 
-	public static function compile(DwooCompiler $compiler, $file)
+	public static function compile(Dwoo_Compiler $compiler, $file)
 	{
 		list($l, $r) = $compiler->getDelimiters();
 		self::$l = preg_quote($l);
@@ -78,7 +78,7 @@ class DwooPlugin_extends extends DwooPlugin implements DwooICompilable
 
 			try {
 				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier);
-			} catch (DwooException $e) {
+			} catch (Dwoo_Exception $e) {
 				$compiler->triggerError('Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_ERROR);
 			}
 
@@ -109,7 +109,7 @@ class DwooPlugin_extends extends DwooPlugin implements DwooICompilable
 			self::$lastReplacement = count($inheritanceTree) === 1;
 			if(!isset($newSource))
 				$newSource = $parent['source'];
-			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('DwooPlugin_extends', 'replaceBlock'), $newSource);
+			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
 
 			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'" "'.str_replace('"', '\\"', $parent['uid']).'")'.$r.$newSource;
 

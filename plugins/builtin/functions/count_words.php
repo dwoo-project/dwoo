@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_count_words_compile(DwooCompiler $compiler, $value)
+function Dwoo_Plugin_count_words_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'preg_match_all(strcasecmp($this->charset, \'utf-8\')===0 ? \'#[\w\pL]+#u\' : \'#\w+#\', '.$value.', $tmp)';
 }

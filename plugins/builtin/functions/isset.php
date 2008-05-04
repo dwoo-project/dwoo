@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_isset_compile(DwooCompiler $compiler, $var)
+function Dwoo_Plugin_isset_compile(Dwoo_Compiler $compiler, $var)
 {
 	return '('.$var.' !== null)';
 }

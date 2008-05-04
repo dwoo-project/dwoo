@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
+function Dwoo_Plugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
 {
 	// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
 	if(($pos = strpos($search,"\0")) !== false)

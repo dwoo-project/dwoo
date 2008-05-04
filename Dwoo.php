@@ -14,15 +14,15 @@ if(defined('DWOO_CACHE_DIRECTORY') === false)
 if(defined('DWOO_COMPILE_DIRECTORY') === false)
 	define('DWOO_COMPILE_DIRECTORY', DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR);
 if(is_writable(DWOO_CACHE_DIRECTORY) === false)
-	throw new DwooException('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHE_DIRECTORY.'" to make it writable or define DWOO_CACHE_DIRECTORY to a writable directory before including Dwoo.php');
+	throw new Dwoo_Exception('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHE_DIRECTORY.'" to make it writable or define DWOO_CACHE_DIRECTORY to a writable directory before including Dwoo.php');
 if(is_writable(DWOO_COMPILE_DIRECTORY) === false)
-	throw new DwooException('Dwoo compile directory must be writable, either chmod "'.DWOO_COMPILE_DIRECTORY.'" to make it writable or define DWOO_COMPILE_DIRECTORY to a writable directory before including Dwoo.php');
+	throw new Dwoo_Exception('Dwoo compile directory must be writable, either chmod "'.DWOO_COMPILE_DIRECTORY.'" to make it writable or define DWOO_COMPILE_DIRECTORY to a writable directory before including Dwoo.php');
 
 // include class paths or rebuild paths if the cache file isn't there
 if((file_exists(DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') && include DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') === false)
-	DwooLoader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
+	Dwoo_Loader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
 
-DwooLoader::loadPlugin('topLevelBlock');
+Dwoo_Loader::loadPlugin('topLevelBlock');
 
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
@@ -30,7 +30,7 @@ DwooLoader::loadPlugin('topLevelBlock');
  * requirements :
  *  php 5.2.0 or above
  *  php's mbstring extension for some plugins
- *  php's hash extension to use DwooTemplateString class
+ *  php's hash extension to use Dwoo_Template_String class
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -148,7 +148,7 @@ class Dwoo
 	/**
 	 * security policy object
 	 *
-	 * @var DwooSecurityPolicy
+	 * @var Dwoo_Security_Policy
 	 */
 	protected $securityPolicy = null;
 
@@ -180,12 +180,12 @@ class Dwoo
 	(
 		'file'		=>	array
 		(
-			'class'		=>	'DwooTemplateFile',
+			'class'		=>	'Dwoo_Template_File',
 			'compiler'	=>	null
 		),
 		'string'	=>	array
 		(
-			'class'		=>	'DwooTemplateString',
+			'class'		=>	'Dwoo_Template_String',
 			'compiler'	=>	null
 		)
 	);
@@ -193,7 +193,7 @@ class Dwoo
 	/**
 	 * currently rendered template, set to null when not-rendering
 	 *
-	 * @var DwooITemplate
+	 * @var Dwoo_ITemplate
 	 */
 	protected $template = null;
 
@@ -235,7 +235,7 @@ class Dwoo
 	/**
 	 * stores the current block plugin at the top of the stack during template runtime
 	 *
-	 * @var DwooBlockPlugin
+	 * @var Dwoo_Block_Plugin
 	 */
 	protected $curBlock;
 
@@ -269,7 +269,7 @@ class Dwoo
 	 * outputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true)
 	 * @see get
 	 */
-	public function output($tpl, $data = array(), DwooICompiler $compiler = null)
+	public function output($tpl, $data = array(), Dwoo_ICompiler $compiler = null)
 	{
 		return $this->get($tpl, $data, $compiler, true);
 	}
@@ -277,46 +277,46 @@ class Dwoo
 	/**
 	 * returns the given template rendered using the provided data and optional compiler
 	 *
-	 * @param mixed $tpl template, can either be a DwooITemplate object (i.e. DwooTemplateFile), a valid path to a template, or
-	 * 					 a template as a string it is recommended to provide a DwooITemplate as it will probably make things faster,
+	 * @param mixed $tpl template, can either be a Dwoo_ITemplate object (i.e. Dwoo_Template_File), a valid path to a template, or
+	 * 					 a template as a string it is recommended to provide a Dwoo_ITemplate as it will probably make things faster,
 	 * 					 especially if you render a template multiple times
-	 * @param mixed $data the data to use, can either be a DwooIDataProvider object (i.e. DwooData) or an associative array. if you're
+	 * @param mixed $data the data to use, can either be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array. if you're
 	 * 					  rendering the template from cache, it can be left null
-	 * @param DwooICompiler $compiler the compiler that must be used to compile the template, if left empty a default
-	 * 								  DwooCompiler will be used.
+	 * @param Dwoo_ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
+	 * 								  Dwoo_Compiler will be used.
 	 * @param bool $output flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
 	 * @return string nothing or the template output if $output is true
 	 */
 	public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
 	{
 		// a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
-		if($this->template instanceof DwooITemplate)
+		if($this->template instanceof Dwoo_ITemplate)
 		{
 			$proxy = clone $this;
 			return $proxy->get($_tpl, $data, $_compiler, $_output);
 		}
 
 		// auto-create template if required
-		if($_tpl instanceof DwooITemplate)
+		if($_tpl instanceof Dwoo_ITemplate)
 		{}
 		elseif(is_string($_tpl) && file_exists($_tpl))
-			$_tpl = new DwooTemplateFile($_tpl);
+			$_tpl = new Dwoo_Template_File($_tpl);
 		elseif(is_string($_tpl))
-			$_tpl = new DwooTemplateString($_tpl);
+			$_tpl = new Dwoo_Template_String($_tpl);
 		else
-			throw new DwooException('Dwoo->get/Dwoo->output\'s first argument must be a DwooITemplate (i.e. DwooTemplateFile) or a valid path to a template file', E_USER_NOTICE);
+			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s first argument must be a Dwoo_ITemplate (i.e. Dwoo_Template_File) or a valid path to a template file', E_USER_NOTICE);
 
 		// save the current template, enters render mode at the same time
 		// if another rendering is requested it will be proxied to a new Dwoo instance
 		$this->template = $_tpl;
 
 		// load data
-		if($data instanceof DwooIDataProvider)
+		if($data instanceof Dwoo_IDataProvider)
 			$this->data = $data->getData();
 		elseif(is_array($data))
 			$this->data = $data;
 		else
-			throw new DwooException('Dwoo->get/Dwoo->output\'s data argument must be a DwooIDataProvider object (i.e. DwooData) or an associative array', E_USER_NOTICE);
+			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s data argument must be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array', E_USER_NOTICE);
 
 		$this->initGlobals($_tpl);
 		$this->initRuntimeVars($_tpl);
@@ -358,7 +358,7 @@ class Dwoo
 			// process filters
 			foreach($this->filters as $filter)
 			{
-				if(is_array($filter) && $filter[0] instanceof DwooFilter)
+				if(is_array($filter) && $filter[0] instanceof Dwoo_Filter)
 					$out = call_user_func($filter, $out);
 				else
 					$out = call_user_func($filter, $this, $out);
@@ -390,9 +390,9 @@ class Dwoo
 	/**
 	 * re-initializes the globals array before each template run
 	 *
-	 * @param DwooITemplate $tpl the template that is going to be rendered
+	 * @param Dwoo_ITemplate $tpl the template that is going to be rendered
 	 */
-	protected function initGlobals(DwooITemplate $tpl)
+	protected function initGlobals(Dwoo_ITemplate $tpl)
 	{
 		$this->globals = array
 		(
@@ -401,16 +401,15 @@ class Dwoo
 			'now'		=>	$_SERVER['REQUEST_TIME'],
 			'template'	=>	$tpl->getName(),
 			'charset'	=>	$this->charset,
-			//'config'	=>	$this->config,
 		);
 	}
 
 	/**
 	 * re-initializes the runtime variables before each template run
 	 *
-	 * @param DwooITemplate $tpl the template that is going to be rendered
+	 * @param Dwoo_ITemplate $tpl the template that is going to be rendered
 	 */
-	protected function initRuntimeVars(DwooITemplate $tpl)
+	protected function initRuntimeVars(Dwoo_ITemplate $tpl)
 	{
 		$this->runtimePlugins = array();
 		$this->scope =& $this->data;
@@ -436,14 +435,14 @@ class Dwoo
 	{
 		if(is_array($callback))
 		{
-			if(is_subclass_of(is_object($callback[0]) ? get_class($callback[0]) : $callback[0], 'DwooBlockPlugin'))
+			if(is_subclass_of(is_object($callback[0]) ? get_class($callback[0]) : $callback[0], 'Dwoo_Block_Plugin'))
 				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]));
 			else
 				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function'=>$callback[1]);
 		}
 		elseif(class_exists($callback, false))
 		{
-			 if(is_subclass_of($callback, 'DwooBlockPlugin'))
+			 if(is_subclass_of($callback, 'Dwoo_Block_Plugin'))
 				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN, 'callback'=>$callback, 'class'=>$callback);
 			else
 				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN, 'callback'=>$callback, 'class'=>$callback, 'function'=>'process');
@@ -454,7 +453,7 @@ class Dwoo
 		}
 		else
 		{
-			throw new DwooException('Callback could not be processed correctly, please check that the function/class you used exists');
+			throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
 		}
 	}
 
@@ -479,18 +478,18 @@ class Dwoo
 	{
 		if($autoload)
 		{
-			$name = str_replace('DwooFilter_', '', $callback);
-			$class = 'DwooFilter_'.$name;
+			$name = str_replace('Dwoo_Filter_', '', $callback);
+			$class = 'Dwoo_Filter_'.$name;
 
 			if(!class_exists($class, false) && !function_exists($class))
-				DwooLoader::loadPlugin($name);
+				Dwoo_Loader::loadPlugin($name);
 
 			if(class_exists($class, false))
 				$callback = array(new $class($this), 'process');
 			elseif(function_exists($class))
 				$callback = $class;
 			else
-				$this->triggerError('Wrong filter name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "DwooFilter_name"', E_USER_ERROR);
+				$this->triggerError('Wrong filter name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"', E_USER_ERROR);
 
 			$this->filters[] = $callback;
 		}
@@ -509,11 +508,11 @@ class Dwoo
 	{
 		if(($index = array_search($callback, $this->filters, true)) !== false)
 			unset($this->filters[$index]);
-		elseif(($index = array_search('DwooFilter_'.str_replace('DwooFilter_', '', $callback), $this->filters, true)) !== false)
+		elseif(($index = array_search('Dwoo_Filter_'.str_replace('Dwoo_Filter_', '', $callback), $this->filters, true)) !== false)
 			unset($this->filters[$index]);
 		else
 		{
-			$class = 'DwooFilter_' . str_replace('DwooFilter_', '', $callback);
+			$class = 'Dwoo_Filter_' . str_replace('Dwoo_Filter_', '', $callback);
 			foreach($this->filters as $index=>$filter)
 			{
 				if(is_array($filter) && $filter[0] instanceof $class)
@@ -529,17 +528,17 @@ class Dwoo
 	 * adds a resource or overrides a default one
 	 *
 	 * @param string $name the resource name
-	 * @param string $class the resource class (which must implement DwooITemplate)
-	 * @param callback $compilerFactory the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a DwooCompiler object
+	 * @param string $class the resource class (which must implement Dwoo_ITemplate)
+	 * @param callback $compilerFactory the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a Dwoo_Compiler object
 	 */
 	public function addResource($name, $class, $compilerFactory = null)
 	{
 		if(strlen($name) < 2)
-			throw new DwooException('Resource names must be at least two-character long to avoid conflicts with Windows paths');
+			throw new Dwoo_Exception('Resource names must be at least two-character long to avoid conflicts with Windows paths');
 
 		$interfaces = class_implements($class, false);
-		if(in_array('DwooITemplate', $interfaces) === false)
-			throw new DwooException('Resource class must implement DwooITemplate');
+		if(in_array('Dwoo_ITemplate', $interfaces) === false)
+			throw new Dwoo_Exception('Resource class must implement Dwoo_ITemplate');
 
 		$this->resources[$name] = array('class'=>$class, 'compiler'=>$compilerFactory);
 	}
@@ -553,39 +552,8 @@ class Dwoo
 	{
 		unset($this->resources[$name]);
 		if($name==='file')
-			$this->resources['file'] = array('class'=>'DwooTemplateFile', 'compiler'=>null);
+			$this->resources['file'] = array('class'=>'Dwoo_Template_File', 'compiler'=>null);
 	}
-
-/*    public function addConfig(array $config)
-	{
-		// TODO build
-	}
-
-	public function loadConfig($name, $section = null, $scope = 'global')
-	{
-		// TODO check
-		$config = parse_ini_file($this->configDir . $name .'.conf', true);
-
-		switch($scope)
-		{
-			case 'global':
-				$this->config = array_merge($config, $this->config);
-				if($this->template !== null)
-					$this->globals['config'] = array_merge($config, $this->globals['config']);
-				break;
-			case 'local':
-				$this->config = array_merge($config, $this->config);
-				$this->globals['config'] = array_merge($config, $this->globals['config']);
-				break;
-			case 'parent':
-				$this->config = array_merge($config, $this->config);
-				if($this->parent !== null)
-					$this->parent->addConfig($config);
-				break;
-			default:
-				$this->triggerError('scope must be "global", "parent" or "local", '.$scope.' provided.', E_USER_ERROR);
-		}
-	}*/
 
 	/*
 	 * --------- getters and setters ---------
@@ -594,7 +562,7 @@ class Dwoo
 	/**
 	 * returns the custom plugins loaded
 	 *
-	 * used by the DwooITemplate classes to pass the custom plugins to their DwooICompiler instance
+	 * used by the Dwoo_ITemplate classes to pass the custom plugins to their Dwoo_ICompiler instance
 	 *
 	 * @return array
 	 */
@@ -688,7 +656,7 @@ class Dwoo
 	/**
 	 * returns the current template being rendered, when applicable, or null
 	 *
-	 * @return DwooITemplate|null
+	 * @return Dwoo_ITemplate|null
 	 */
 	public function getTemplate()
 	{
@@ -698,7 +666,7 @@ class Dwoo
 	/**
 	 * sets the default compiler factory function for the given resource name
 	 *
-	 * a compiler factory must return a DwooICompiler object pre-configured to fit your needs
+	 * a compiler factory must return a Dwoo_ICompiler object pre-configured to fit your needs
 	 *
 	 * @param string $resourceName the resource name (i.e. file, string)
 	 * @param callback $compilerFactory the compiler factory callback
@@ -724,9 +692,9 @@ class Dwoo
 	 *
 	 * use this if untrusted persons can modify templates
 	 *
-	 * @param DwooSecurityPolicy $policy the security policy object
+	 * @param Dwoo_Security_Policy $policy the security policy object
 	 */
-	public function setSecurityPolicy(DwooSecurityPolicy $policy = null)
+	public function setSecurityPolicy(Dwoo_Security_Policy $policy = null)
 	{
 		$this->securityPolicy = $policy;
 	}
@@ -734,7 +702,7 @@ class Dwoo
 	/**
 	 * returns the current security policy object or null by default
 	 *
-	 * @return DwooSecurityPolicy|null the security policy object if any
+	 * @return Dwoo_Security_Policy|null the security policy object if any
 	 */
 	public function getSecurityPolicy()
 	{
@@ -748,10 +716,10 @@ class Dwoo
 	/**
 	 * [util function] checks whether the given template is cached or not
 	 *
-	 * @param DwooITemplate $tpl the template object
+	 * @param Dwoo_ITemplate $tpl the template object
 	 * @return bool
 	 */
-	public function isCached(DwooITemplate $tpl)
+	public function isCached(Dwoo_ITemplate $tpl)
 	{
 		return is_string($tpl->getCachedTemplate($this));
 	}
@@ -786,14 +754,14 @@ class Dwoo
 	 * @param int $cacheTime the cache time setting for this resource
 	 * @param string $cacheId the unique cache identifier
 	 * @param string $compileId the unique compiler identifier
-	 * @return DwooITemplate
+	 * @return Dwoo_ITemplate
 	 */
 	public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		if(isset($this->resources[$resourceName]))
 			return call_user_func(array($this->resources[$resourceName]['class'], 'templateFactory'), $this, $resourceId, $cacheTime, $cacheId, $compileId);
 		else
-			throw new DwooException('Unknown resource type : '.$resourceName);
+			throw new Dwoo_Exception('Unknown resource type : '.$resourceName);
 	}
 
 	/**
@@ -855,16 +823,16 @@ class Dwoo
 	/**
 	 * [runtime function] adds a block to the block stack
 	 *
-	 * @param string $blockName the block name (without DwooPlugin_ prefix)
+	 * @param string $blockName the block name (without Dwoo_Plugin_ prefix)
 	 * @param array $args the arguments to be passed to the block's init() function
-	 * @return DwooBlockPlugin the newly created block
+	 * @return Dwoo_Block_Plugin the newly created block
 	 */
 	public function addStack($blockName, array $args=array())
 	{
 		if(isset($this->plugins[$blockName]))
 			$class = $this->plugins[$blockName]['class'];
 		else
-			$class = 'DwooPlugin_'.$blockName;
+			$class = 'Dwoo_Plugin_'.$blockName;
 
 		if($this->curBlock !== null)
 		{
@@ -942,10 +910,10 @@ class Dwoo
 	/**
 	 * [runtime function] returns the parent block of the given block
 	 *
-	 * @param DwooBlockPlugin $block
-	 * @return DwooBlockPlugin or false if the given block isn't in the stack
+	 * @param Dwoo_Block_Plugin $block
+	 * @return Dwoo_Block_Plugin or false if the given block isn't in the stack
 	 */
-	public function getParentBlock(DwooBlockPlugin $block)
+	public function getParentBlock(Dwoo_Block_Plugin $block)
 	{
 		$index = array_search($block, $this->stack, true);
 		if($index !== false && $index > 0)
@@ -959,14 +927,14 @@ class Dwoo
 	 * [runtime function] finds the closest block of the given type, starting at the top of the stack
 	 *
 	 * @param string $type the type of plugin you want to find
-	 * @return DwooBlockPlugin or false if no plugin of such type is in the stack
+	 * @return Dwoo_Block_Plugin or false if no plugin of such type is in the stack
 	 */
 	public function findBlock($type)
 	{
 		if(isset($this->plugins[$type]))
 			$type = $this->plugins[$type]['class'];
 		else
-			$type = 'DwooPlugin_'.str_replace('DwooPlugin_','',$type);
+			$type = 'Dwoo_Plugin_'.str_replace('Dwoo_Plugin_','',$type);
 
 		$keys = array_keys($this->stack);
 		while(($key = array_pop($keys)) !== false)
@@ -976,7 +944,7 @@ class Dwoo
 	}
 
 	/**
-	 * [runtime function] returns a DwooPlugin of the given class
+	 * [runtime function] returns a Dwoo_Plugin of the given class
 	 *
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
@@ -994,13 +962,13 @@ class Dwoo
 	/**
 	 * [runtime function] calls the process() method of the given class-plugin name
 	 *
-	 * @param string $plugName the class plugin name (without DwooPlugin_ prefix)
+	 * @param string $plugName the class plugin name (without Dwoo_Plugin_ prefix)
 	 * @param array $params an array of parameters to send to the process() method
 	 * @return string the process() return value
 	 */
 	public function classCall($plugName, array $params = array())
 	{
-		$class = 'DwooPlugin_'.$plugName;
+		$class = 'Dwoo_Plugin_'.$plugName;
 
 		$plugin = $this->getObjectPlugin($class);
 
@@ -1482,7 +1450,7 @@ class Dwoo
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooLoader
+class Dwoo_Loader
 {
 	/**
 	 * stores the plugin directories
@@ -1531,8 +1499,8 @@ class DwooLoader
 		// save in file if it's the first call (not recursed)
 		if($cacheFile!==false)
 		{
-			if(!file_put_contents($cacheFile, '<?php DwooLoader::$classpath = '.var_export(self::$classpath, true).' + DwooLoader::$classpath; ?>'))
-				throw new DwooException('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php)');
+			if(!file_put_contents($cacheFile, '<?php Dwoo_Loader::$classpath = '.var_export(self::$classpath, true).' + Dwoo_Loader::$classpath; ?>'))
+				throw new Dwoo_Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php)');
 			self::$classpath += $tmp;
 		}
 	}
@@ -1540,7 +1508,7 @@ class DwooLoader
 	/**
 	 * loads a plugin file
 	 *
-	 * @param string $class the plugin name, without the DwooPlugin_ prefix
+	 * @param string $class the plugin name, without the Dwoo_Plugin_ prefix
 	 */
 	public static function loadPlugin($class)
 	{
@@ -1553,7 +1521,7 @@ class DwooLoader
 			if(isset(self::$classpath[$class]))
 				include self::$classpath[$class];
 			else
-				throw new DwooException('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+				throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 		}
 	}
 
@@ -1569,7 +1537,7 @@ class DwooLoader
 		if(file_exists($cacheFile))
 			include $cacheFile;
 		else
-			DwooLoader::rebuildClassPathCache($pluginDir, $cacheFile);
+			Dwoo_Loader::rebuildClassPathCache($pluginDir, $cacheFile);
 	}
 }
 
@@ -1592,7 +1560,7 @@ class DwooLoader
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooException extends Exception
+class Dwoo_Exception extends Exception
 {
 }
 
@@ -1615,7 +1583,7 @@ class DwooException extends Exception
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooSecurityPolicy
+class Dwoo_Security_Policy
 {
 	/**#@+
 	 * php handling constants, defaults to PHP_REMOVE
@@ -1662,7 +1630,7 @@ class DwooSecurityPolicy
 	/**
 	 * stores the php handling level
 	 *
-	 * defaults to DwooSecurityPolicy::PHP_REMOVE
+	 * defaults to Dwoo_Security_Policy::PHP_REMOVE
 	 *
 	 * @var int
 	 */
@@ -1671,7 +1639,7 @@ class DwooSecurityPolicy
 	/**
 	 * stores the constant handling level
 	 *
-	 * defaults to DwooSecurityPolicy::CONST_DISALLOW
+	 * defaults to Dwoo_Security_Policy::CONST_DISALLOW
 	 *
 	 * @var bool
 	 */
@@ -1758,7 +1726,7 @@ class DwooSecurityPolicy
 	/**
 	 * sets the php handling level, defaults to REMOVE
 	 *
-	 * @param int $level one of the DwooSecurityPolicy::PHP_* constants
+	 * @param int $level one of the Dwoo_Security_Policy::PHP_* constants
 	 */
 	public function setPhpHandling($level = self::PHP_REMOVE)
 	{
@@ -1768,7 +1736,7 @@ class DwooSecurityPolicy
 	/**
 	 * returns the php handling level
 	 *
-	 * @return int the current level, one of the DwooSecurityPolicy::PHP_* constants
+	 * @return int the current level, one of the Dwoo_Security_Policy::PHP_* constants
 	 */
 	public function getPhpHandling()
 	{
@@ -1778,7 +1746,7 @@ class DwooSecurityPolicy
 	/**
 	 * sets the constant handling level, defaults to CONST_DISALLOW
 	 *
-	 * @param bool $level one of the DwooSecurityPolicy::CONST_* constants
+	 * @param bool $level one of the Dwoo_Security_Policy::CONST_* constants
 	 */
 	public function setConstantHandling($level = self::CONST_DISALLOW)
 	{
@@ -1788,7 +1756,7 @@ class DwooSecurityPolicy
 	/**
 	 * returns the constant handling level
 	 *
-	 * @return bool the current level, one of the DwooSecurityPolicy::CONST_* constants
+	 * @return bool the current level, one of the Dwoo_Security_Policy::CONST_* constants
 	 */
 	public function getConstantHandling()
 	{

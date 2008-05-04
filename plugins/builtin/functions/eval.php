@@ -19,13 +19,13 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_eval(Dwoo $dwoo, $var, $assign = null)
+function Dwoo_Plugin_eval(Dwoo $dwoo, $var, $assign = null)
 {
-	// TOCOM eval is bad, warn people that they should not use it as a full template for DB-templates, they better extend DwooITemplate for that
+	// TOCOM eval is bad, warn people that they should not use it as a full template for DB-templates, they better extend Dwoo_ITemplate for that
 	if($var == '')
 		return;
 
-	$tpl = new DwooTemplateString($var);
+	$tpl = new Dwoo_Template_String($var);
 	$out = $dwoo->get($var, $dwoo->readVar('_parent'));
 
 	if($assign !== null)

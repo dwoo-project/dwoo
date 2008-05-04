@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function DwooPlugin_extendsCheck_compile(DwooCompiler $compiler, $file, $uid)
+function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file, $uid)
 {
 	preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m);
 	$resource = $m[1];
@@ -28,7 +28,7 @@ function DwooPlugin_extendsCheck_compile(DwooCompiler $compiler, $file, $uid)
 	return '// check for modification in '.$resource.':'.$identifier.'
 try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
-} catch (DwooException $e) {
+} catch (Dwoo_Exception $e) {
 	$this->triggerError(\'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>\', E_USER_WARNING);
 }
 if($tpl === null)

@@ -19,11 +19,11 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_smartyinterface extends DwooPlugin
+class Dwoo_Plugin_smartyinterface extends Dwoo_Plugin
 {
 	public function init($__funcname, $__functype, array $rest=array()) {}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$func = $params['__funcname'];
@@ -46,12 +46,12 @@ class DwooPlugin_smartyinterface extends DwooPlugin
 		else
 			$callback = 'smarty_block_'.$func.'(';
 
-		$compiler->curBlock['params']['postOut'] = DwooCompiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.DwooCompiler::PHP_CLOSE;
+		$compiler->curBlock['params']['postOut'] = Dwoo_Compiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.Dwoo_Compiler::PHP_CLOSE;
 
-		return DwooCompiler::PHP_OPEN.$prepend.' if(!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = '.var_export($params,true).'; $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.DwooCompiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.$prepend.' if(!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = '.var_export($params,true).'; $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return $params['postOut'];
 	}

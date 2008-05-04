@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class DwooPlugin_loop extends DwooBlockPlugin implements DwooICompilableBlock
+class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public static $cnt=0;
 
@@ -27,7 +27,7 @@ class DwooPlugin_loop extends DwooBlockPlugin implements DwooICompilableBlock
 	{
 	}
 
-	public static function preProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$tpl = $compiler->getTemplateSource(true);
@@ -51,7 +51,7 @@ class DwooPlugin_loop extends DwooBlockPlugin implements DwooICompilableBlock
 		$cnt = self::$cnt++;
 
 		// builds pre processing output
-		$out = DwooCompiler::PHP_OPEN . "\n".'$_loop'.$cnt.'_data = '.$src.';';
+		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_loop'.$cnt.'_data = '.$src.';';
 		// adds foreach properties
 		if($usesAny)
 		{
@@ -73,10 +73,10 @@ class DwooPlugin_loop extends DwooBlockPlugin implements DwooICompilableBlock
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["first"] = (string) ($_loop'.$cnt.'_glob["index"] === 0);';
 		if($usesLast)
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["last"] = (string) ($_loop'.$cnt.'_glob["iteration"] === $_loop'.$cnt.'_glob["total"]);';
-		$out .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope("-loop-");'."\n// -- loop start output\n".DwooCompiler::PHP_CLOSE;
+		$out .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope("-loop-");'."\n// -- loop start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
-		$postOut = DwooCompiler::PHP_OPEN . "\n".'// -- loop end output'."\n\t\t".'$this->forceScope($_loop'.$cnt.'_scope);';
+		$postOut = Dwoo_Compiler::PHP_OPEN . "\n".'// -- loop end output'."\n\t\t".'$this->forceScope($_loop'.$cnt.'_scope);';
 		// update properties
 		if($usesIndex)
 			$postOut.="\n\t\t".'$_loop'.$cnt.'_glob["index"]+=1;';
@@ -87,12 +87,12 @@ class DwooPlugin_loop extends DwooBlockPlugin implements DwooICompilableBlock
 
 		// get block params and save the post-processing output already
 		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = $postOut . DwooCompiler::PHP_CLOSE;
+		$currentBlock['params']['postOutput'] = $postOut . Dwoo_Compiler::PHP_CLOSE;
 
 		return $out;
 	}
 
-	public static function postProcessing(DwooCompiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
 		return $params['postOutput'];
 	}
