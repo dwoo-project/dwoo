@@ -32,7 +32,8 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Plugin
 
 		if($pluginType & Dwoo::CUSTOM_PLUGIN)
 		{
-			$callback = $compiler->customPlugins[$func]['callback'];
+			$customPlugins = $compiler->getDwoo()->getCustomPlugins();
+			$callback = $customPlugins[$func]['callback'];
 			if(is_array($callback))
 			{
 				if(is_object($callback[0]))
