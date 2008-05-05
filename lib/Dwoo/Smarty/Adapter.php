@@ -431,7 +431,30 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 		$hash = bin2hex(md5($file.$cacheId.$compileId, true));
 		if(!isset(self::$tplCache[$hash]))
-			self::$tplCache[$hash] = new Dwoo_Template_File($this->template_dir.DIRECTORY_SEPARATOR.$file, null, $cacheId, $compileId);
+		{
+			// abs path
+			if(substr($file, 0, 1) === '/' || substr($file, 1, 1) === ':')
+			{
+				self::$tplCache[$hash] = new Dwoo_Template_File($file, null, $cacheId, $compileId);
+			}
+			elseif(is_string($this->template_dir))
+			{
+				self::$tplCache[$hash] = new Dwoo_Template_File($this->template_dir.DIRECTORY_SEPARATOR.$file, null, $cacheId, $compileId);
+			}
+			elseif(is_array($this->template_dir))
+			{
+				foreach($this->template_dir as $dir)
+				{
+					if(file_exists($dir.DIRECTORY_SEPARATOR.$file))
+					{
+						self::$tplCache[$hash] = new Dwoo_Template_File($this->template_dir.DIRECTORY_SEPARATOR.$file, null, $cacheId, $compileId);
+						break;
+					}
+				}
+			}
+			else
+				throw new Exception('Unable to load "'.$file.'", check the template_dir');
+		}
 		return self::$tplCache[$hash];
 	}
 }
