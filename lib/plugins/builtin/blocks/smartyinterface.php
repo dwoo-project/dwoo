@@ -47,7 +47,8 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Plugin
 		else
 			$callback = 'smarty_block_'.$func.'(';
 
-		$compiler->curBlock['params']['postOut'] = Dwoo_Compiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.Dwoo_Compiler::PHP_CLOSE;
+		$curBlock =& $compiler->getCurrentBlock();
+		$curBlock['params']['postOut'] = Dwoo_Compiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.Dwoo_Compiler::PHP_CLOSE;
 
 		return Dwoo_Compiler::PHP_OPEN.$prepend.' if(!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = '.var_export($params,true).'; $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.Dwoo_Compiler::PHP_CLOSE;
 	}
