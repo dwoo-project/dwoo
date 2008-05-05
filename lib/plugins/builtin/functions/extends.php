@@ -142,5 +142,3 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		}
 	}
 }
-
-?>

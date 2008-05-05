@@ -23,5 +23,3 @@ function Dwoo_Plugin_cat_compile(Dwoo_Compiler $compiler, $value, array $rest)
 {
 	return '('.$value.').('.implode(').(', $rest).')';
 }
-
-?>

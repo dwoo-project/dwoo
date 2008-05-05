@@ -26,5 +26,3 @@ function Dwoo_Plugin_reverse(Dwoo $dwoo, $value, $preserve_keys=false)
 	else
 		return implode('',array_reverse(str_split((string) $value,1)));
 }
-
-?>

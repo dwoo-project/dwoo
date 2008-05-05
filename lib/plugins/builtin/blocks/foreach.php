@@ -115,5 +115,3 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		return $params['postOutput'];
 	}
 }
-
-?>

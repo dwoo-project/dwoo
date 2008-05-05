@@ -23,5 +23,3 @@ function Dwoo_Plugin_upper_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'mb_strtoupper((string) '.$value.', $this->charset)';
 }
-
-?>

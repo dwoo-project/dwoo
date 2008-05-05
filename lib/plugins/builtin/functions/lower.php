@@ -23,5 +23,3 @@ function Dwoo_Plugin_lower_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'mb_strtolower((string) '.$value.', $this->charset)';
 }
-
-?>

@@ -23,5 +23,3 @@ function Dwoo_Plugin_string_format_compile(Dwoo_Compiler $compiler, $value, $for
 {
 	return 'sprintf('.$format.','.$value.')';
 }
-
-?>

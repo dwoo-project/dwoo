@@ -58,5 +58,3 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Plugin
 		return $params['postOut'];
 	}
 }
-
-?>

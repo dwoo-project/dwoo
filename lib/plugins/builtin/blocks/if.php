@@ -170,5 +170,3 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 		return $params['postOutput'];
 	}
 }
-
-?>

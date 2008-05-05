@@ -30,5 +30,3 @@ function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest=array())
 
 	return 'array('.implode(', ', $out).')';
 }
-
-?>

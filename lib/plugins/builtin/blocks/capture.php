@@ -44,5 +44,3 @@ class Dwoo_Plugin_capture extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		return $out . "\n".'$this->globals[\'capture\']['.$params['name'].'] = $tmp;'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 }
-
-?>

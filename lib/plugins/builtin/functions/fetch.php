@@ -50,5 +50,3 @@ function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 	else
 		return $out;
 }
-
-?>

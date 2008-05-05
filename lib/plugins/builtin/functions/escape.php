@@ -57,5 +57,3 @@ function Dwoo_Plugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null
 			$dwoo->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "'.$format.'" given.', E_USER_WARNING);
 	}
 }
-
-?>

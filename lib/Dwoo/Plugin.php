@@ -309,5 +309,3 @@ interface Dwoo_ICompilable
 interface Dwoo_ICompilable_Block
 {
 }
-
-?>

@@ -23,5 +23,3 @@ function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $
 {
 	return 'str_replace('.$search.', '.$replace.', '.$value.')';
 }
-
-?>

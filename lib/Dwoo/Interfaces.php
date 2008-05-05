@@ -207,5 +207,3 @@ interface Dwoo_ICompiler
 	 */
 	public function setSecurityPolicy(Dwoo_Security_Policy $policy = null);
 }
-
-?>

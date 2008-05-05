@@ -23,5 +23,3 @@ function Dwoo_Plugin_strip_compile(Dwoo_Compiler $compiler, $value, $with=' ')
 {
 	return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
 }
-
-?>

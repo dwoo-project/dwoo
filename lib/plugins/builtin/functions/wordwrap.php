@@ -23,5 +23,3 @@ function Dwoo_Plugin_wordwrap_compile(Dwoo_Compiler $compiler, $value, $length=8
 {
 	return 'wordwrap('.$value.','.$length.','.$break.','.$cut.')';
 }
-
-?>

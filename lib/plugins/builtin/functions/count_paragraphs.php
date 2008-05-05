@@ -23,5 +23,3 @@ function Dwoo_Plugin_count_paragraphs_compile(Dwoo_Compiler $compiler, $value)
 {
 	return '(preg_match_all(\'#[\r\n]+#\', '.$value.', $tmp)+1)';
 }
-
-?>

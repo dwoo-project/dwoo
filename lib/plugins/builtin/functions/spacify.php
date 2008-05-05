@@ -23,5 +23,3 @@ function Dwoo_Plugin_spacify_compile(Dwoo_Compiler $compiler, $value, $space_cha
 {
 	return 'implode('.$space_char.', str_split('.$value.', 1))';
 }
-
-?>

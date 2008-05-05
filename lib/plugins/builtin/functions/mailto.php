@@ -98,5 +98,3 @@ function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $en
 			$dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
 	}
 }
-
-?>

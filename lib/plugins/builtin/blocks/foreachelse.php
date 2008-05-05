@@ -45,5 +45,3 @@ class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompila
 		return Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
 	}
 }
-
-?>

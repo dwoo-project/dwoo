@@ -128,5 +128,3 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 		return $output;
 	}
 }
-
-?>

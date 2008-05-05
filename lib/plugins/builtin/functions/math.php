@@ -125,5 +125,3 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 		return '($this->assignInScope('.$out.', '.$assign.'))';
 	return '('.$out.')';
 }
-
-?>

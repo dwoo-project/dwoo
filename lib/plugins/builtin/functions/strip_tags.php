@@ -26,5 +26,3 @@ function Dwoo_Plugin_strip_tags_compile(Dwoo_Compiler $compiler, $value, $addspa
 	else
 		return "strip_tags($value)";
 }
-
-?>

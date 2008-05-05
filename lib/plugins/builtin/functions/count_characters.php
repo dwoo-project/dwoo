@@ -26,5 +26,3 @@ function Dwoo_Plugin_count_characters_compile(Dwoo_Compiler $compiler, $value, $
 	else
 		return 'mb_strlen('.$value.', $this->charset)';
 }
-
-?>

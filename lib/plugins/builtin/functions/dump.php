@@ -80,5 +80,3 @@ class Dwoo_Plugin_dump extends Dwoo_Plugin
 		}
 	}
 }
-
-?>

@@ -31,5 +31,3 @@ function Dwoo_Plugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
 
 	return preg_replace($search, $replace, $value);
 }
-
-?>

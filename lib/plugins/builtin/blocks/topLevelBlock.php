@@ -34,5 +34,3 @@ final class Dwoo_Plugin_topLevelBlock extends Dwoo_Block_Plugin
 		return Dwoo_Compiler::PHP_OPEN.'return $this->buffer . ob_get_clean();';
 	}
 }
-
-?>

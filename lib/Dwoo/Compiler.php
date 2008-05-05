@@ -2501,7 +2501,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 }
 
-
 /**
  * dwoo compilation exception class
  *
@@ -2524,5 +2523,3 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 class Dwoo_Compilation_Exception extends Dwoo_Exception
 {
 }
-
-?>

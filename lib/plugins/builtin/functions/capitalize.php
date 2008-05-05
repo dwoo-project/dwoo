@@ -40,5 +40,3 @@ function Dwoo_Plugin_capitalize(Dwoo $dwoo, $value, $numwords=false)
 		return substr($out, 1);
 	}
 }
-
-?>

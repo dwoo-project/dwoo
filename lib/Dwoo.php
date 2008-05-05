@@ -1763,5 +1763,3 @@ class Dwoo_Security_Policy
 		return $this->constHandling;
 	}
 }
-
-?>

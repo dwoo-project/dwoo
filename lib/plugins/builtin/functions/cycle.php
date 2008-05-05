@@ -62,5 +62,3 @@ class Dwoo_Plugin_cycle extends Dwoo_Plugin
 			return $out;
 	}
 }
-
-?>

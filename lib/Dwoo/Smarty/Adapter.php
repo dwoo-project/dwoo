@@ -499,5 +499,3 @@ else
 {
 	class Dwoo_Smarty_Adapter extends Dwoo_Smarty__Adapter {}
 }
-
-?>

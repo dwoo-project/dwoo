@@ -67,5 +67,3 @@ class Dwoo_Plugin_counter extends Dwoo_Plugin
 			return $out;
 	}
 }
-
-?>

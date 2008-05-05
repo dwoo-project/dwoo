@@ -81,5 +81,3 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 	else
 		return $out;
 }
-
-?>

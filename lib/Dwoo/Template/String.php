@@ -363,5 +363,3 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		return false;
 	}
 }
-
-?>

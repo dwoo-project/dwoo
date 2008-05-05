@@ -23,5 +23,3 @@ function Dwoo_Plugin_default_compile(Dwoo_Compiler $compiler, $value, $default='
 {
 	return '(($tmp = '.$value.')===null||$tmp===\'\' ? '.$default.' : $tmp)';
 }
-
-?>

@@ -23,5 +23,3 @@ function Dwoo_Plugin_nl2br_compile(Dwoo_Compiler $compiler, $value)
 {
 	return 'nl2br((string) '.$value.')';
 }
-
-?>

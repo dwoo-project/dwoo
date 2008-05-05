@@ -174,5 +174,3 @@ class Dwoo_Data implements Dwoo_IDataProvider
    			$this->data[$name][] =& $val;
    	}
 }
-
-?>

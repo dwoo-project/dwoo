@@ -78,12 +78,9 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 					);
 		}
 
-
 		if($this->assign !== '')
 			$this->dwoo->assignInScope(implode($this->wrapChar . $this->wrapChar, $pgs), $this->assign);
 		else
 			return implode($this->wrapChar . $this->wrapChar, $pgs);
 	}
 }
-
-?>

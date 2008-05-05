@@ -33,5 +33,3 @@ function Dwoo_Plugin_eval(Dwoo $dwoo, $var, $assign = null)
 	else
 		return $out;
 }
-
-?>

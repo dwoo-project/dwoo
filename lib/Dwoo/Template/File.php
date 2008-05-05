@@ -204,5 +204,3 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId);
 	}
 }
-
-?>

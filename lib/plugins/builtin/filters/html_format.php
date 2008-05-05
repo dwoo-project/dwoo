@@ -187,5 +187,3 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 		return $result;
 	}
 }
-
-?>

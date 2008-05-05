@@ -35,5 +35,3 @@ class Dwoo_Plugin_block extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 		return '';
 	}
 }
-
-?>

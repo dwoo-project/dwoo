@@ -38,5 +38,3 @@ function Dwoo_Plugin_truncate(Dwoo $dwoo, $value, $length=80, $etc='...', $break
 		return substr($value, 0, $length) . $etc;
 	return substr($value, 0, ceil($length/2)) . $etc . substr($value, -floor($length/2));
 }
-
-?>

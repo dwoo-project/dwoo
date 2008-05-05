@@ -49,5 +49,3 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Bloc
 			return $params['postOutput'];
 	}
 }
-
-?>

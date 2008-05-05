@@ -45,5 +45,3 @@ class Dwoo_Plugin_withelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 		return Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
 	}
 }
-
-?>

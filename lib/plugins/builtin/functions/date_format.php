@@ -55,5 +55,3 @@ function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $defau
 	}
 	return strftime($format, $value);
 }
-
-?>
