@@ -261,8 +261,6 @@ class Dwoo
 	public function __clone()
 	{
 		$this->template = null;
-		unset($this->scope);
-		unset($this->data);
 	}
 
 	/**
