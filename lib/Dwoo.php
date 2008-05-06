@@ -1490,7 +1490,7 @@ class Dwoo_Loader
 			{
 				if(is_dir($f))
 					self::rebuildClassPathCache($f, false);
-				elseif(basename($f) !== 'classpath.cache')
+				else
 					self::$classpath[str_replace(array('function.','block.','modifier.','outputfilter.','filter.','prefilter.','postfilter.','pre.','post.','output.','shared.','helper.'), '', basename($f,'.php'))] = $f;
 			}
 
@@ -1514,8 +1514,8 @@ class Dwoo_Loader
 		if(!isset(self::$classpath[$class]) || !include self::$classpath[$class])
 		{
 			self::rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath.cache.php');
-			foreach(self::$paths as $path)
-				self::rebuildClassPathCache($path[0], $path[1]);
+			foreach(self::$paths as $path=>$file)
+				self::rebuildClassPathCache($path, $file);
 			if(isset(self::$classpath[$class]))
 				include self::$classpath[$class];
 			else
@@ -1530,12 +1530,15 @@ class Dwoo_Loader
 	 */
 	public static function addDirectory($pluginDir)
 	{
-		$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
-		self::$paths[] = array($pluginDir, $cacheFile);
-		if(file_exists($cacheFile))
-			include $cacheFile;
-		else
-			Dwoo_Loader::rebuildClassPathCache($pluginDir, $cacheFile);
+		if(!isset(self::$paths[$pluginDir]))
+		{
+			$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
+			self::$paths[$pluginDir] = $cacheFile;
+			if(file_exists($cacheFile))
+				include $cacheFile;
+			else
+				Dwoo_Loader::rebuildClassPathCache($pluginDir, $cacheFile);
+		}
 	}
 }
 
