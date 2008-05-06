@@ -1,4 +1,4 @@
-[2008-04-] 0.4.0 (Happy Getty)
+[2008-05-10] 0.9.0
 ! BC Break: changed all class names to be PEAR compliant (aka use underscores
   to separate words/paths), sorry about that but I better do it now than in
   six months

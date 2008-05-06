@@ -43,7 +43,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
-		$this->file = realpath($file);
+		$this->file = $file;
 		$this->name = basename($file);
 		$this->cacheTime = $cacheTime;
 
@@ -193,11 +193,11 @@ class Dwoo_Template_File extends Dwoo_Template_String
 				return null;
 		}
 
+		// prevent template recursion if security is in effect
 		if($policy = $dwoo->getSecurityPolicy())
 		{
-			$resourceId = realpath($resourceId);
-			// TODO check for getTemplate() not returning null
-			if($resourceId === $dwoo->getTemplate()->getResourceIdentifier())
+			$tpl = $dwoo->getTemplate();
+			if($tpl instanceof Dwoo_Template_File && $resourceId === $tpl->getResourceIdentifier())
 				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
 		}
 

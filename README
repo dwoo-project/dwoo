@@ -1,16 +1,16 @@
 -----------------------------------------------------------------------------
--- WHAT IS DWOO?                                      readme - version 0.3.2
+-- WHAT IS DWOO?                                      readme - version 0.9.0
 -----------------------------------------------------------------------------
-Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came 
+Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
-older. It carries the weight of it's age, having old features that are 
-inconsistent compared to newer ones, being written for PHP4 its Object 
-Oriented aspect doesn't take advantage of PHP5's more advanced features in 
-the area, etc. Hence Dwoo was born, hoping to provide a more up to date and 
-stronger engine. 
+older. It carries the weight of it's age, having old features that are
+inconsistent compared to newer ones, being written for PHP4 its Object
+Oriented aspect doesn't take advantage of PHP5's more advanced features in
+the area, etc. Hence Dwoo was born, hoping to provide a more up to date and
+stronger engine.
 
-So far it has proven to be faster than Smarty in many areas, and it provides 
-a compatibility layer to allow developers that have been using Smarty for 
+So far it has proven to be faster than Smarty in many areas, and it provides
+a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
 -----------------------------------------------------------------------------
@@ -41,11 +41,11 @@ $dwoo = new Dwoo();
 
 // Load a template file (name it as you please), this is reusable
 // if you want to render multiple times the same template with different data
-$tpl = new DwooTemplateFile('path/to/index.tpl');
+$tpl = new Dwoo_Template_File('path/to/index.tpl');
 
 // Create a data set, if you don't like this you can directly input an
 // associative array in $dwoo->output()
-$data = new DwooData();
+$data = new Dwoo_Data();
 // Fill it with some data
 $data->assign('foo', 'BAR');
 $data->assign('bar', 'BAZ');
@@ -62,14 +62,14 @@ $dwoo->get($tpl, $data);
 include 'path/to/Dwoo.php';
 
 $dwoo = new Dwoo();
-$tpl = new DwooTemplateFile('path/to/article.tpl');
+$tpl = new Dwoo_Template_File('path/to/article.tpl');
 
 $pageContent = '';
 
 // Loop over articles that have been retrieved from the DB
 foreach($articles as $article) {
     // Either associate variables one by one
-    $data = new DwooData();
+    $data = new Dwoo_Data();
     $data->assign('title', $article['title'];
     $data->assign('content', $article['content']);
     $pageContent .= $dwoo->get($tpl, $data);
