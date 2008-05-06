@@ -2293,7 +2293,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if($pluginType===-1)
 				{
 					try {
-						Dwoo_Loader::loadPlugin($name);
+						Dwoo_Loader::loadPlugin($name, isset($phpFunc)===false);
 					} catch (Exception $e) {
 						if(isset($phpFunc))
 							$pluginType = Dwoo::NATIVE_PLUGIN;

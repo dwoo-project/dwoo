@@ -1507,17 +1507,23 @@ class Dwoo_Loader
 	 * loads a plugin file
 	 *
 	 * @param string $class the plugin name, without the Dwoo_Plugin_ prefix
+	 * @param bool $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
 	 */
-	public static function loadPlugin($class)
+	public static function loadPlugin($class, $forceRehash = true)
 	{
 		// a new class was added or the include failed so we rebuild the cache
 		if(!isset(self::$classpath[$class]) || !include self::$classpath[$class])
 		{
-			self::rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath.cache.php');
-			foreach(self::$paths as $path=>$file)
-				self::rebuildClassPathCache($path, $file);
-			if(isset(self::$classpath[$class]))
-				include self::$classpath[$class];
+			if($forceRehash)
+			{
+				self::rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath.cache.php');
+				foreach(self::$paths as $path=>$file)
+					self::rebuildClassPathCache($path, $file);
+				if(isset(self::$classpath[$class]))
+					include self::$classpath[$class];
+				else
+					throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+			}
 			else
 				throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 		}
