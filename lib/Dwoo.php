@@ -1530,7 +1530,14 @@ class Dwoo_Loader
 	}
 
 	/**
-	 * adds a plugin directory
+	 * adds a plugin directory, the plugins found in the new plugin directory
+	 * will take precedence over the other directories (including the default
+	 * dwoo plugin directory), you can use this for example to override plugins
+	 * in a specific directory for a specific application while keeping all your
+	 * usual plugins in the same place for all applications.
+	 *
+	 * TOCOM don't forget that php functions overrides are not rehashed so you
+	 * need to clear the classpath caches by hand when adding those
 	 *
 	 * @param string $pluginDir the plugin path to scan
 	 */
