@@ -38,6 +38,30 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('B-A-R', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 	}
 
+	public function testModifierArgsVars()
+	{
+		$tpl = new Dwoo_Template_String('{$foo|spacify:$bar|upper}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('B-A-R', $this->dwoo->get($tpl, array('foo'=>'bar', 'bar'=>'-'), $this->compiler));
+	}
+
+	public function testModifierOnString()
+	{
+		$tpl = new Dwoo_Template_String('{"bar"|spacify:"-"|upper}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('B-A-R', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testModifierOnStringWithVar()
+	{
+		$tpl = new Dwoo_Template_String('{"bar"|spacify:$bar|upper}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('B-A-R', $this->dwoo->get($tpl, array('bar'=>'-'), $this->compiler));
+	}
+
 	public function testModifierWithModifier()
 	{
 		$tpl = new Dwoo_Template_String('{$foo.0}{assign $foo|reverse foo}{$foo.0}{assign $foo|@reverse foo}{$foo.0}');

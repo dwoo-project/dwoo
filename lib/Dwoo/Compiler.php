@@ -1330,6 +1330,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 		if($curBlock !== 'modifier' && substr($in, $strend+1, 1)==='|')
 		{
+			if($strend !== false)
+				$realend = $strend-$from+1;
 			$strend = strpos($in, ' ', $strend+1);
 			if($strend===false)
 				$strend = strlen($in)-1;
@@ -1339,7 +1341,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if($pointer !== null)
 			$pointer += strlen($srcOutput);
 
-		$output = $this->replaceStringVars($srcOutput, $first);
+		if(isset($realend))
+			$output = $this->replaceStringVars(substr($srcOutput, 0, $realend), $first) . substr($srcOutput, $realend);
+		else
+			$output = $this->replaceStringVars($srcOutput, $first);
 
 		// handle modifiers
 		if($curBlock !== 'modifier' && preg_match('#(.+?)((?:\|(?:@?[a-z0-9_]+(?::[^\s]*)*))+)#i', $output, $match))
