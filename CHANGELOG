@@ -14,6 +14,7 @@
   http://wiki.dwoo.org/index.php/Block:loop for details
 + Plugins: Added {do} that executes whatever you feed it whitout echoing the
   result, used internally for extends but you can use it if required
++ Plugins: Added {eol} that prints an end of line character (OS-specific)
 + Syntax: Added shortcut for {$dwoo.const.*} using '%', for example you can use
   {%FOO} instead of {$dwoo.const.FOO}
 + Syntax: When using named parameters, typing a parameter name without any
@@ -23,11 +24,14 @@
 + Syntax: Added support for {$foo+=5}, {$foo="a"}, {$foo++} and {$foo--}
 + Syntax: Added shortcut for $dwoo.*, you can now use {$.foreach.foo} instead
   of {$dwoo.foreach.foo} for example, applies to all $dwoo.* vars
++ Syntax: Added $ as a shortcut for current scope, $_ for $_parent and $__ for
+  $_root
 + API: Added getSource(), getUid() and getResourceIdentifier() to Dwoo_ITemplate
 + API: Added setSecurityPolicy() too Dwoo_ICompiler and modified the arguments
   of its compile() method
 + API: Added a bunch of utility functions to Dwoo_Compiler, allowing compiled
   plugins to access more of the compiler internals
++ Added a 'data' argument to {include} to be able to feed data directly into it
 * Fixed a potential concurrency issue (thanks to Rasmus Schultz for the patch)
 * Moved all files to Dwoo/Class.php excepted for the core Dwoo.php file
 * Various performance improvements, including the removal of a lot of isset()

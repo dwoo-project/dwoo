@@ -143,6 +143,14 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("", $this->dwoo->get($tpl, array('foo'=>"moo"), $this->compiler));
 	}
 
+	public function testEol()
+	{
+		$tpl = new Dwoo_Template_String('{eol}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals(PHP_EOL, $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testEscape()
 	{
 		$tpl = new Dwoo_Template_String('{escape $foo}');
