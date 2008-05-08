@@ -110,11 +110,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		if($cacheId === null)
 		{
 			if(isset($_SERVER['REQUEST_URI']) === true)
-				$cacheId = strtr($_SERVER['REQUEST_URI'], '\\/%?=!:;*"<>|', '-------------');
+				$cacheId = $_SERVER['REQUEST_URI'];
 			elseif(isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv']))
-				$cacheId = strtr($_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']), '\\/%?=!:;', '--------');
+				$cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
 		}
-		$this->cacheId = $this->compileId . $cacheId;
+		$this->cacheId = $this->compileId . strtr($cacheId, '\\/%?=!:;', '--------');
 	}
 
 	/**
@@ -336,7 +336,6 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
 			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
-			touch($compiledFile, $_SERVER['REQUEST_TIME']);
 
 			self::$cache['compiled'][$this->compileId] = true;
 		}
