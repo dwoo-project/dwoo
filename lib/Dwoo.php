@@ -322,7 +322,7 @@ class Dwoo
 		// try to get cached template
 		$file = $_tpl->getCachedTemplate($this);
 		$doCache = $file === true;
-		$cacheLoaded = $doCache === false && is_string($file);
+		$cacheLoaded = is_string($file);
 
 		// cache is present, run it
 		if($cacheLoaded === true)
@@ -366,7 +366,7 @@ class Dwoo
 			$this->template = null;
 
 			// building cache
-			if($doCache)
+			if($doCache === true)
 			{
 				$_tpl->cache($this, $out);
 				if($_output === true)
@@ -777,16 +777,24 @@ class Dwoo
 	{
 		if(is_array($value) === true)
 		{
-			if($checkIsEmpty)
-				return count($value) > 0;
-			else
+			if($checkIsEmpty === false)
 				return true;
+			else
+				return count($value) > 0;
 		}
 		elseif($value instanceof Iterator)
 		{
-			if($checkIsEmpty)
+			if($checkIsEmpty === false)
 			{
-				if($allowNonCountable)
+				return true;
+			}
+			else
+			{
+				if($allowNonCountable === false)
+				{
+					return count($value) > 0;
+				}
+				else
 				{
 					if($value instanceof Countable)
 						return count($value) > 0;
@@ -796,11 +804,7 @@ class Dwoo
 						return $value->valid();
 					}
 				}
-				else
-					return count($value) > 0;
 			}
-			else
-				return true;
 		}
 		return false;
 	}
