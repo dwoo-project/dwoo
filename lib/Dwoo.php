@@ -767,8 +767,10 @@ class Dwoo
 	 *
 	 * @param mixed $value the variable to check
 	 * @param bool $checkIsEmpty if true, the function will also check if the array is empty
-	 * @param bool $allowNonCountable if true, the function will return true if an object is not empty but does not
-	 * 			   implement Countable, by default a non-countable object is considered empty
+	 * @param bool $allowNonCountable if true, the function will return true if
+	 * an object is not empty but does not implement Countable, by default a
+	 * non- countable object is considered empty, this setting is only used if
+	 * $checkIsEmpty is true
 	 * @return bool true if it's an array (and not empty) or false if it's not an array (or if it's empty)
 	 */
 	public function isArray($value, $checkIsEmpty=false, $allowNonCountable=false)
@@ -1084,7 +1086,7 @@ class Dwoo
 		{
 			if($sep === '.' || $sep === '[' || $sep === '')
 			{
-				if((is_array($data) || ($data instanceof Iterator && $data instanceof ArrayAccess)) && isset($data[$m[2][$k]]))
+				if((is_array($data) || $data instanceof ArrayAccess) && isset($data[$m[2][$k]]))
 					$data = $data[$m[2][$k]];
 				else
 					return null;
@@ -1153,12 +1155,12 @@ class Dwoo
 				{
 					return $this->globals;
 				}
-				elseif($varstr === '_root')
+				elseif($varstr === '_root' || $varstr === '__')
 				{
 					return $this->data;
 					$varstr = substr($varstr, 6);
 				}
-				elseif($varstr === '_parent')
+				elseif($varstr === '_parent' || $varstr === '_')
 				{
 					$varstr = '.'.$varstr;
 					$tree = $this->scopeTree;
@@ -1233,13 +1235,13 @@ class Dwoo
 				array_shift($m[1]);
 			}
 		}
-		elseif($i === '_root')
+		elseif($i === '_root' || $i === '__')
 		{
 			$cur = $this->data;
 			array_shift($m[2]);
 			array_shift($m[1]);
 		}
-		elseif($i === '_parent')
+		elseif($i === '_parent' || $i === '_')
 		{
 			$tree = $this->scopeTree;
 			$cur = $this->data;
@@ -1249,7 +1251,7 @@ class Dwoo
 				array_pop($tree);
 				array_shift($m[2]);
 				array_shift($m[1]);
-				if(current($m[2]) === '_parent')
+				if(current($m[2]) === '_parent' || current($m[2]) === '_')
 					continue;
 
 				while(($i = array_shift($tree)) !== null)
@@ -1269,7 +1271,7 @@ class Dwoo
 		{
 			if($sep === '.' || $sep === '[' || $sep === '')
 			{
-				if((is_array($cur) || ($cur instanceof Iterator && $cur instanceof ArrayAccess)) && isset($cur[$m[2][$k]]))
+				if((is_array($cur) || $cur instanceof ArrayAccess) && isset($cur[$m[2][$k]]))
 					$cur = $cur[$m[2][$k]];
 				else
 					return null;
@@ -1365,7 +1367,7 @@ class Dwoo
 
 		while(($bit = array_shift($scope)) !== null)
 		{
-			if($bit === '_parent')
+			if($bit === '_parent' || $bit === '_')
 			{
 				array_pop($this->scopeTree);
 				reset($this->scopeTree);
@@ -1374,7 +1376,7 @@ class Dwoo
 				for($i=0;$i<$cnt;$i++)
 					$this->scope =& $this->scope[$this->scopeTree[$i]];
 			}
-			elseif($bit === '_root')
+			elseif($bit === '_root' || $bit === '__')
 			{
 				$this->scope =& $this->data;
 				$this->scopeTree = array();

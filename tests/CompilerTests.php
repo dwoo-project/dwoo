@@ -70,7 +70,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('barbazzab', $this->dwoo->get($tpl, array('foo'=>array('bar','baz')), $this->compiler));
 	}
 
-	public function testDwoo_Func()
+	public function testDwooFunc()
 	{
 		$tpl = new Dwoo_Template_String('{upper($foo)}');
 		$tpl->forceCompilation();
@@ -78,7 +78,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 	}
 
-	public function testDwoo_Loose()
+	public function testDwooLoose()
 	{
 		$tpl = new Dwoo_Template_String('{upper $foo}');
 		$tpl->forceCompilation();
@@ -271,12 +271,33 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('{     $a      }moo{     $a}moo', $this->dwoo->get($tpl, array('a'=>'moo'), $this->compiler));
 	}
 
-	public function testDwoo_DotShortcut()
+	public function testDwooDotShortcut()
 	{
 		$tpl = new Dwoo_Template_String('{$.server.SCRIPT_NAME}{foreach $a item}{$.foreach.default.iteration}{$item}{$.foreach.$b.$c}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals($_SERVER['SCRIPT_NAME'].'1a12b2', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default', 'c'=>'iteration'), $this->compiler));
+	}
+
+	public function testRootAndParentShortcut()
+	{
+		$tpl = new Dwoo_Template_String('{with $a}{$__.b}{$_.b}{$0}{/with}{$__.b}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('defaultdefaultadefault', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default'), $this->compiler));
+	}
+
+	public function testCurrentScopeShortcut()
+	{
+		$tpl = new Dwoo_Template_String('{loop $}{$_key} > {loop $}{$}{/loop}{/loop}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('1 > ab2 > cd', $this->dwoo->get($tpl, array('1'=>array('a','b'), '2'=>array('c','d')), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{with $a}{$1}{/with}{loop $a}{$}{/loop}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('bab', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default', 'c'=>'iteration'), $this->compiler));
 	}
 
 	public function testAssignAndIncrement()

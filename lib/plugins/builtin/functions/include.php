@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $assign = null, array $rest = array())
+function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
 	if($file === '')
 		return;
@@ -65,13 +65,16 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 	elseif($include === false)
 		$dwoo->triggerError('Include : Including "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
 
+	if($dwoo->isArray($data))
+		$vars = $data;
+	elseif($dwoo->isArray($cache_time))
+		$vars = $cache_time;
+	else
+		$vars = $dwoo->readVar($data);
+
 	if(count($rest))
 	{
-		$vars = $rest;
-	}
-	else
-	{
-		$vars = $dwoo->readVar('_parent');
+		$vars = $rest + $vars;
 	}
 
 	$out = $dwoo->get($include, $vars);

@@ -1441,7 +1441,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$substr = substr($in, $from, $to-$from);
 
-		if(preg_match('#(\$?\.?[a-z0-9_:]+(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
+		if(preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
@@ -1656,6 +1656,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function parseVarKey($key, $curBlock)
 	{
+		if($key === '')
+		{
+			return '$this->scope';
+		}
 		if(substr($key, 0, 1) === '.')
 			$key = 'dwoo'.$key;
 		if(preg_match('#dwoo\.(get|post|server|cookies|session|env|request)((?:\.[a-z0-9_-]+)+)#i', $key, $m))
@@ -1683,13 +1687,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				{
 					$output = '$this->globals';
 				}
-				elseif($key === '_root')
+				elseif($key === '_root' || $key === '__')
 				{
 					$output = '$this->data';
 				}
-				elseif($key === '_parent')
+				elseif($key === '_parent' || $key === '_')
 				{
 					$output = '$this->readParentVar(1)';
+				}
+				elseif($key === '_key')
+				{
+					$output = '$tmp_key';
 				}
 				else
 				{
@@ -1704,7 +1712,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $key, $m);
 
 				$i = $m[2][0];
-				if($i === '_parent')
+				if($i === '_parent' || $i === '_')
 				{
 					$parentCnt = 0;
 
@@ -1728,11 +1736,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						array_shift($m[2]);
 						array_shift($m[1]);
 					}
-					elseif($i === '_root')
+					elseif($i === '_root' || $i === '__')
 					{
 						$output = '$this->data';
 						array_shift($m[2]);
 						array_shift($m[1]);
+					}
+					elseif($i === '_key')
+					{
+						$output = '$tmp_key';
 					}
 					else
 					{

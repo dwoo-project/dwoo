@@ -67,13 +67,13 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		// checks if foreach must be looped
 		$out .= "\n".'if($this->isArray($_loop'.$cnt.'_data, true, true) === true)'."\n{";
 		// iterates over keys
-		$out .= "\n\t".'foreach($_loop'.$cnt.'_data as $this->scope["-loop-"])'."\n\t{";
+		$out .= "\n\t".'foreach($_loop'.$cnt.'_data as $tmp_key => $this->scope["-loop-"])'."\n\t{";
 		// updates properties
 		if($usesFirst)
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["first"] = (string) ($_loop'.$cnt.'_glob["index"] === 0);';
 		if($usesLast)
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["last"] = (string) ($_loop'.$cnt.'_glob["iteration"] === $_loop'.$cnt.'_glob["total"]);';
-		$out .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope("-loop-");'."\n// -- loop start output\n".Dwoo_Compiler::PHP_CLOSE;
+		$out .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope("-loop-");' . "\n// -- loop start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
 		$postOut = Dwoo_Compiler::PHP_OPEN . "\n".'// -- loop end output'."\n\t\t".'$this->forceScope($_loop'.$cnt.'_scope);';
