@@ -2075,7 +2075,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				$cmdstrsrc = substr($cmdstrsrc, strlen($func)+1+$ptr);
 				$paramstr = substr($paramstr, 0, $ptr);
-				foreach($params as $p)
+				foreach($params as $k=>$p)
 				{
 					if(is_array($p) && is_array($p[1]))
 						$state |= 2;
