@@ -433,5 +433,3 @@ a"}');
 		$this->assertEquals("abcdefgh\nijklmnop\nqrstuvwx\nyz", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 }
-
-?>

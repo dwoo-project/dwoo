@@ -73,5 +73,3 @@ class DataTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('var'=>array('val','moo'), 'var2'=>array('bar')), $data->getData());
 	}
 }
-
-?>

@@ -24,5 +24,3 @@ class SmartyTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->fetch('smartytest.html'));
 	}
 }
-
-?>

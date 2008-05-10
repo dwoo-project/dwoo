@@ -349,5 +349,3 @@ works.bb', $this->dwoo->get($tpl, array(), $this->compiler));
 		$fixCall->init('');
 	}
 }
-
-?>

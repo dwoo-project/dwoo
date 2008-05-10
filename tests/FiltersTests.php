@@ -49,5 +49,3 @@ SNIPPET
 		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
 	}
 }
-
-?>

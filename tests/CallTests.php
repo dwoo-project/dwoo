@@ -127,5 +127,3 @@ class blockplugin_custom extends Dwoo_Block_Plugin
 		return $this->foo.$this->bar.$this->buffer;
 	}
 }
-
-?>

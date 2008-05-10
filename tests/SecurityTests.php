@@ -93,5 +93,3 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals($old, $this->policy->getAllowedPhpFunctions());
 	}
 }
-
-?>

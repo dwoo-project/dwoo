@@ -30,5 +30,3 @@ class HelperTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array("hoy"=>3, 5=>"foo", "bar"=>"moo"), 'baz'=>'baz'), $this->compiler));
 	}
 }
-
-?>

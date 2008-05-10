@@ -68,5 +68,3 @@ class DwooConstraintStringEquals extends PHPUnit_Framework_Constraint
 		return 'equals "'.$this->target.'" / "'.$this->other.'"';
 	}
 }
-
-?>

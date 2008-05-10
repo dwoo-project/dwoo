@@ -350,5 +350,3 @@ class MethodCallsHelper {
 	}
 	public function __toString() { return 'obj'; }
 }
-
-?>
