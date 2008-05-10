@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>File Source for Plugin.php</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+						<h1>Source for file Plugin.php</h1>
+<p>Documentation is available at <a href="../Dwoo/_Dwoo---Block---Plugin.php.html">Plugin.php</a></p>
+<div class="src-code">
+<div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
+<li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a3"></a><span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-doc">&nbsp;*&nbsp;base&nbsp;class&nbsp;for&nbsp;block&nbsp;plugins</span></div></li>
+<li><div class="src-line"><a name="a5"></a><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a6"></a><span class="src-doc">&nbsp;*&nbsp;you&nbsp;have&nbsp;to&nbsp;implement&nbsp;the&nbsp;&lt;em&gt;init()&lt;/em&gt;&nbsp;method,&nbsp;it&nbsp;will&nbsp;receive&nbsp;the&nbsp;parameters&nbsp;that</span></div></li>
+<li><div class="src-line"><a name="a7"></a><span class="src-doc">&nbsp;*&nbsp;are&nbsp;in&nbsp;the&nbsp;template&nbsp;code&nbsp;and&nbsp;is&nbsp;called&nbsp;when&nbsp;the&nbsp;block&nbsp;starts</span></div></li>
+<li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;This&nbsp;software&nbsp;is&nbsp;provided&nbsp;'as-is',&nbsp;without&nbsp;any&nbsp;express&nbsp;or&nbsp;implied&nbsp;warranty.</span></div></li>
+<li><div class="src-line"><a name="a10"></a><span class="src-doc">&nbsp;*&nbsp;In&nbsp;no&nbsp;event&nbsp;will&nbsp;the&nbsp;authors&nbsp;be&nbsp;held&nbsp;liable&nbsp;for&nbsp;any&nbsp;damages&nbsp;arising&nbsp;from&nbsp;the&nbsp;use&nbsp;of&nbsp;this&nbsp;software.</span></div></li>
+<li><div class="src-line"><a name="a11"></a><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a12"></a><span class="src-doc">&nbsp;*&nbsp;This&nbsp;file&nbsp;is&nbsp;released&nbsp;under&nbsp;the&nbsp;LGPL</span></div></li>
+<li><div class="src-line"><a name="a13"></a><span class="src-doc">&nbsp;*&nbsp;&quot;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License&quot;</span></div></li>
+<li><div class="src-line"><a name="a14"></a><span class="src-doc">&nbsp;*&nbsp;More&nbsp;information&nbsp;can&nbsp;be&nbsp;found&nbsp;here:</span></div></li>
+<li><div class="src-line"><a name="a15"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-inlinetag">{@link&nbsp;http://www.gnu.org/copyleft/lesser.html}</span></div></li>
+<li><div class="src-line"><a name="a16"></a><span class="src-doc">&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a17"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@author</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jordi&nbsp;Boggiano&nbsp;&lt;j.boggiano@seld.be&gt;</span></div></li>
+<li><div class="src-line"><a name="a18"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@copyright</span><span class="src-doc">&nbsp;&nbsp;Copyright&nbsp;(c)&nbsp;2008,&nbsp;Jordi&nbsp;Boggiano</span></div></li>
+<li><div class="src-line"><a name="a19"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@license</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;http://www.gnu.org/copyleft/lesser.html&nbsp;&nbsp;GNU&nbsp;Lesser&nbsp;General&nbsp;Public&nbsp;License</span></div></li>
+<li><div class="src-line"><a name="a20"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@link</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://dwoo.org/</span></div></li>
+<li><div class="src-line"><a name="a21"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@version</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;0.9.0</span></div></li>
+<li><div class="src-line"><a name="a22"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-tag">@date</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2008-05-10</span></div></li>
+<li><div class="src-line"><a name="a23"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;Dwoo</span></div></li>
+<li><div class="src-line"><a name="a24"></a><span class="src-doc">&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a25"></a><span class="src-key">abstract&nbsp;</span><span class="src-key">class&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a>&nbsp;<span class="src-key">extends&nbsp;</span><a href="../Dwoo/Dwoo_Plugin.html">Dwoo_Plugin</a></div></li>
+<li><div class="src-line"><a name="a26"></a><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a27"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a28"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;stores&nbsp;the&nbsp;contents&nbsp;of&nbsp;the&nbsp;block&nbsp;while&nbsp;it&nbsp;runs</span></div></li>
+<li><div class="src-line"><a name="a29"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a30"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@var&nbsp;</span><span class="src-doc-type">string&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a31"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a32"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">protected&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#var$buffer">$buffer</a>&nbsp;=&nbsp;<span class="src-str">''</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a33"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a34"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a35"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;buffers&nbsp;input,&nbsp;override&nbsp;only&nbsp;if&nbsp;necessary</span></div></li>
+<li><div class="src-line"><a name="a36"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a37"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@var&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$input&nbsp;</span><span class="src-doc">the&nbsp;content&nbsp;that&nbsp;must&nbsp;be&nbsp;buffered</span></div></li>
+<li><div class="src-line"><a name="a38"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a39"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#methodbuffer">buffer</a><span class="src-sym">(</span><span class="src-var">$input</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a40"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a41"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$this</span><span class="src-sym">-&gt;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#var$buffer">buffer</a>&nbsp;.=&nbsp;<span class="src-var">$input</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a42"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a43"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a44"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-comm">//&nbsp;initialization&nbsp;code,&nbsp;receives&nbsp;the&nbsp;parameters&nbsp;from&nbsp;{block&nbsp;param1,&nbsp;param2}</span></div></li>
+<li><div class="src-line"><a name="a45"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-comm">//&nbsp;public&nbsp;function&nbsp;init($arg,&nbsp;$arg,&nbsp;...);</span></div></li>
+<li><div class="src-line"><a name="a46"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a47"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a48"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;called&nbsp;when&nbsp;the&nbsp;block&nbsp;ends,&nbsp;this&nbsp;is&nbsp;most&nbsp;of&nbsp;the&nbsp;time&nbsp;followed&nbsp;right&nbsp;away&nbsp;by&nbsp;a&nbsp;call</span></div></li>
+<li><div class="src-line"><a name="a49"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;of&nbsp;&lt;em&gt;process()&lt;/em&gt;&nbsp;but&nbsp;not&nbsp;always,&nbsp;so&nbsp;this&nbsp;should&nbsp;be&nbsp;used&nbsp;to&nbsp;do&nbsp;any&nbsp;shutdown&nbsp;operations&nbsp;on&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a50"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;block&nbsp;object,&nbsp;if&nbsp;required.</span></div></li>
+<li><div class="src-line"><a name="a51"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a52"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#methodend">end</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a53"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a54"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a55"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a56"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a57"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;called&nbsp;when&nbsp;the&nbsp;block&nbsp;output&nbsp;is&nbsp;required&nbsp;by&nbsp;a&nbsp;parent&nbsp;block</span></div></li>
+<li><div class="src-line"><a name="a58"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a59"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;this&nbsp;must&nbsp;read&nbsp;$this-&gt;buffer&nbsp;and&nbsp;return&nbsp;it&nbsp;processed</span></div></li>
+<li><div class="src-line"><a name="a60"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a61"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@return&nbsp;</span><span class="src-doc-type">string&nbsp;</span></div></li>
+<li><div class="src-line"><a name="a62"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a63"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#methodprocess">process</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a64"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a65"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$this</span><span class="src-sym">-&gt;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#var$buffer">buffer</a><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a66"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a67"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a68"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a69"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;called&nbsp;at&nbsp;compile&nbsp;time&nbsp;to&nbsp;define&nbsp;what&nbsp;the&nbsp;block&nbsp;should&nbsp;output&nbsp;in&nbsp;the&nbsp;compiled&nbsp;template&nbsp;code,&nbsp;happens&nbsp;when&nbsp;the&nbsp;block&nbsp;is&nbsp;declared</span></div></li>
+<li><div class="src-line"><a name="a70"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a71"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;basically&nbsp;this&nbsp;will&nbsp;replace&nbsp;the&nbsp;{block&nbsp;arg&nbsp;arg&nbsp;arg}&nbsp;tag&nbsp;in&nbsp;the&nbsp;template</span></div></li>
+<li><div class="src-line"><a name="a72"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a73"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">Dwoo_Compiler&nbsp;</span><span class="src-doc-var">$compiler&nbsp;</span><span class="src-doc">the&nbsp;compiler&nbsp;instance&nbsp;that&nbsp;calls&nbsp;this&nbsp;function</span></div></li>
+<li><div class="src-line"><a name="a74"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">array&nbsp;</span><span class="src-doc-var">$params&nbsp;</span><span class="src-doc">an&nbsp;array&nbsp;containing&nbsp;original&nbsp;and&nbsp;compiled&nbsp;parameters</span></div></li>
+<li><div class="src-line"><a name="a75"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$prepend&nbsp;</span><span class="src-doc">that&nbsp;is&nbsp;just&nbsp;meant&nbsp;to&nbsp;allow&nbsp;a&nbsp;child&nbsp;class&nbsp;to&nbsp;call</span></div></li>
+<li><div class="src-line"><a name="a76"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent::postProcessing($compiler,&nbsp;$params,&nbsp;&quot;foo();&quot;)&nbsp;to&nbsp;add&nbsp;a&nbsp;command&nbsp;before&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a77"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;commands&nbsp;are&nbsp;executed</span></div></li>
+<li><div class="src-line"><a name="a78"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$append&nbsp;</span><span class="src-doc">that&nbsp;is&nbsp;just&nbsp;meant&nbsp;to&nbsp;allow&nbsp;a&nbsp;child&nbsp;class&nbsp;to&nbsp;call</span></div></li>
+<li><div class="src-line"><a name="a79"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent::postProcessing($compiler,&nbsp;$params,&nbsp;null,&nbsp;&quot;foo();&quot;)&nbsp;to&nbsp;add&nbsp;a&nbsp;command&nbsp;after&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a80"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;commands&nbsp;are&nbsp;executed</span></div></li>
+<li><div class="src-line"><a name="a81"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$type&nbsp;</span><span class="src-doc">the&nbsp;type&nbsp;is&nbsp;the&nbsp;plugin&nbsp;class&nbsp;name&nbsp;used</span></div></li>
+<li><div class="src-line"><a name="a82"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a83"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">static&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#methodpreProcessing">preProcessing</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-key">array&nbsp;</span><span class="src-var">$params</span><span class="src-sym">,&nbsp;</span><span class="src-var">$prepend</span>=<span class="src-str">''</span><span class="src-sym">,&nbsp;</span><span class="src-var">$append</span>=<span class="src-str">''</span><span class="src-sym">,&nbsp;</span><span class="src-var">$type</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a84"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a85"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_OPEN</span>.<span class="src-var">$prepend</span>.<span class="src-str">'$this-&gt;addStack(&quot;'</span>.<span class="src-var">$type</span>.<span class="src-str">'&quot;,&nbsp;array('</span>.<span class="src-id">implode</span><span class="src-sym">(</span><span class="src-str">',&nbsp;'</span><span class="src-sym">,&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">-&gt;</span><span class="src-id">getCompiledParams</span><span class="src-sym">(</span><span class="src-var">$params</span><span class="src-sym">))</span>.<span class="src-str">'));'</span>.<span class="src-var">$append</span>.<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_CLOSE</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a86"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a87"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a88"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-doc">/**</span></div></li>
+<li><div class="src-line"><a name="a89"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;called&nbsp;at&nbsp;compile&nbsp;time&nbsp;to&nbsp;define&nbsp;what&nbsp;the&nbsp;block&nbsp;should&nbsp;output&nbsp;in&nbsp;the&nbsp;compiled&nbsp;template&nbsp;code,&nbsp;happens&nbsp;when&nbsp;the&nbsp;block&nbsp;is&nbsp;ended</span></div></li>
+<li><div class="src-line"><a name="a90"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a91"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;basically&nbsp;this&nbsp;will&nbsp;replace&nbsp;the&nbsp;{/block}&nbsp;tag&nbsp;in&nbsp;the&nbsp;template</span></div></li>
+<li><div class="src-line"><a name="a92"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></div></li>
+<li><div class="src-line"><a name="a93"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@see</span><span class="src-doc">&nbsp;preProcessing</span></div></li>
+<li><div class="src-line"><a name="a94"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">Dwoo_Compiler&nbsp;</span><span class="src-doc-var">$compiler&nbsp;</span><span class="src-doc">the&nbsp;compiler&nbsp;instance&nbsp;that&nbsp;calls&nbsp;this&nbsp;function</span></div></li>
+<li><div class="src-line"><a name="a95"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">array&nbsp;</span><span class="src-doc-var">$params&nbsp;</span><span class="src-doc">an&nbsp;array&nbsp;containing&nbsp;original&nbsp;and&nbsp;compiled&nbsp;parameters,&nbsp;see&nbsp;preProcessing()&nbsp;for&nbsp;more&nbsp;details</span></div></li>
+<li><div class="src-line"><a name="a96"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$prepend&nbsp;</span><span class="src-doc">that&nbsp;is&nbsp;just&nbsp;meant&nbsp;to&nbsp;allow&nbsp;a&nbsp;child&nbsp;class&nbsp;to&nbsp;call</span></div></li>
+<li><div class="src-line"><a name="a97"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent::postProcessing($compiler,&nbsp;$params,&nbsp;&quot;foo();&quot;)&nbsp;to&nbsp;add&nbsp;a&nbsp;command&nbsp;before&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a98"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;commands&nbsp;are&nbsp;executed</span></div></li>
+<li><div class="src-line"><a name="a99"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;</span><span class="src-doc-coretag">@param&nbsp;</span><span class="src-doc-type">string&nbsp;</span><span class="src-doc-var">$append&nbsp;</span><span class="src-doc">that&nbsp;is&nbsp;just&nbsp;meant&nbsp;to&nbsp;allow&nbsp;a&nbsp;child&nbsp;class&nbsp;to&nbsp;call</span></div></li>
+<li><div class="src-line"><a name="a100"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;parent::postProcessing($compiler,&nbsp;$params,&nbsp;null,&nbsp;&quot;foo();&quot;)&nbsp;to&nbsp;add&nbsp;a&nbsp;command&nbsp;after&nbsp;the</span></div></li>
+<li><div class="src-line"><a name="a101"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;default&nbsp;commands&nbsp;are&nbsp;executed</span></div></li>
+<li><div class="src-line"><a name="a102"></a><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></div></li>
+<li><div class="src-line"><a name="a103"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">static&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html#methodpostProcessing">postProcessing</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-key">array&nbsp;</span><span class="src-var">$params</span><span class="src-sym">,&nbsp;</span><span class="src-var">$prepend</span>=<span class="src-str">''</span><span class="src-sym">,&nbsp;</span><span class="src-var">$append</span>=<span class="src-str">''</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a104"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a105"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_OPEN</span>.<span class="src-var">$prepend</span>.<span class="src-str">'$this-&gt;delStack();'</span>.<span class="src-var">$append</span>.<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_CLOSE</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a106"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a107"></a><span class="src-sym">}</span></div></li>
+</ol></div>
+</div>
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 10 May 2008 07:46:06 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</body>
+</html>

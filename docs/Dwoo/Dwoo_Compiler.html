@@ -1,0 +1,2558 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Dwoo_Compiler</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Dwoo_Compiler</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+                <p class="implements">
+            Implements interfaces:
+            <ul>
+                <li><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></li>            </ul>
+        </p>
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">default dwoo compiler class, compiles dwoo templates into php</p>
+<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
+				<li><span class="field">version:</span> 0.9.0</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
+				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
+				<li><span class="field">date:</span> 2008-05-10</li>
+				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Dwoo---Compiler.php.html">/Dwoo/Compiler.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a24">24</a></span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#PHP_CLOSE" title="details" class="const-name">PHP_CLOSE</a> = 					<span class="var-type"> &quot;?&gt;&quot;</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#PHP_OPEN" title="details" class="const-name">PHP_OPEN</a> = 					<span class="var-type"> &quot;&lt;?php &quot;</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																												<div class="var-title">
+					static <span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>
+					<a href="#$instance" title="details" class="var-name">$instance</a>
+				</div>
+																																																																																																																				<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$allowLooseOpenings" title="details" class="var-name">$allowLooseOpenings</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
+					<a href="#$curBlock" title="details" class="var-name">$curBlock</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$customPlugins" title="details" class="var-name">$customPlugins</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$data" title="details" class="var-name">$data</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">bool</span>
+					<a href="#$debug" title="details" class="var-name">$debug</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$errors" title="details" class="var-name">$errors</a>
+				</div>
+																								<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$ld" title="details" class="var-name">$ld</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$ldr" title="details" class="var-name">$ldr</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int</span>
+					<a href="#$pointer" title="details" class="var-name">$pointer</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$processors" title="details" class="var-name">$processors</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$rd" title="details" class="var-name">$rd</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$rdr" title="details" class="var-name">$rdr</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$scope" title="details" class="var-name">$scope</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$scopeTree" title="details" class="var-name">$scopeTree</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>
+					<a href="#$securityPolicy" title="details" class="var-name">$securityPolicy</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$stack" title="details" class="var-name">$stack</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$template" title="details" class="var-name">$template</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$usedPlugins" title="details" class="var-name">$usedPlugins</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																		
+				<div class="method-definition">
+					static 						<span class="method-result"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>
+										<a href="#compilerFactory" title="details" class="method-name">compilerFactory</a>
+										()
+									</div>
+																																																																																																																																																																																																																																																																																																																																																										
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#addBlock" title="details" class="method-name">addBlock</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$paramtype</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#addCustomBlock" title="details" class="method-name">addCustomBlock</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$paramtype</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addPostProcessor" title="details" class="method-name">addPostProcessor</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addPreProcessor" title="details" class="method-name">addPreProcessor</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#compile" title="details" class="method-name">compile</a>
+											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$template</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$tpl</span>)
+									</div>
+																						
+				<div class="method-definition">
+											<span class="method-result">&array</span>
+										<a href="#findBlock" title="details" class="method-name">&amp;findBlock</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$closeAlong</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#flattenVarTree" title="details" class="method-name">flattenVarTree</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$tree</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$recursed</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#forceScope" title="details" class="method-name">forceScope</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getCompiledParams" title="details" class="method-name">getCompiledParams</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">&array</span>
+										<a href="#getCurrentBlock" title="details" class="method-name">&amp;getCurrentBlock</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getDelimiters" title="details" class="method-name">getDelimiters</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
+										<a href="#getDwoo" title="details" class="method-name">getDwoo</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#getLooseOpeningHandling" title="details" class="method-name">getLooseOpeningHandling</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getParamMap" title="details" class="method-name">getParamMap</a>
+											(<span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getPluginType" title="details" class="method-name">getPluginType</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getPointer" title="details" class="method-name">getPointer</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getRealParams" title="details" class="method-name">getRealParams</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a>|null</span>
+										<a href="#getSecurityPolicy" title="details" class="method-name">getSecurityPolicy</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getTemplateSource" title="details" class="method-name">getTemplateSource</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$fromPointer</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#implode_r" title="details" class="method-name">implode_r</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$recursiveCall</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#injectBlock" title="details" class="method-name">injectBlock</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#mapParams" title="details" class="method-name">mapParams</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$callType</span> = <span class="var-default">2</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parse" title="details" class="method-name">parse</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseConst" title="details" class="method-name">parseConst</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseConstKey" title="details" class="method-name">parseConstKey</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseFunction" title="details" class="method-name">parseFunction</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseOthers" title="details" class="method-name">parseOthers</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseString" title="details" class="method-name">parseString</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseVar" title="details" class="method-name">parseVar</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#parseVarKey" title="details" class="method-name">parseVarKey</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#phpTagEncodingHelper" title="details" class="method-name">phpTagEncodingHelper</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$match</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#removeBlock" title="details" class="method-name">removeBlock</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removePostProcessor" title="details" class="method-name">removePostProcessor</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removePreProcessor" title="details" class="method-name">removePreProcessor</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#removeTopBlock" title="details" class="method-name">removeTopBlock</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#replaceModifiers" title="details" class="method-name">replaceModifiers</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$m</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#replaceStringVars" title="details" class="method-name">replaceStringVars</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$string</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$first</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#replaceVarKeyHelper" title="details" class="method-name">replaceVarKeyHelper</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$match</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCustomPlugins" title="details" class="method-name">setCustomPlugins</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$customPlugins</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setDelimiters" title="details" class="method-name">setDelimiters</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$left</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$right</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setLooseOpeningHandling" title="details" class="method-name">setLooseOpeningHandling</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$allow</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPointer" title="details" class="method-name">setPointer</a>
+											(<span class="var-type">int</span>&nbsp;<span class="var-name">$position</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$isOffset</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#setScope" title="details" class="method-name">setScope</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setSecurityPolicy" title="details" class="method-name">setSecurityPolicy</a>
+											([<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>&nbsp;<span class="var-name">$policy</span> = <span class="var-default">null</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#setTemplateSource" title="details" class="method-name">setTemplateSource</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$newSource</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$fromPointer</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#stripPreprocessorHelper" title="details" class="method-name">stripPreprocessorHelper</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$matches</span>)
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="var$instance" id="$instance"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>
+			<span class="var-name">$instance</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a198">198</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">holds an instance of this class, used by getInstance when you don't  provide a custom compiler in order to save resources</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+
+<a name="var$allowLooseOpenings" id="$allowLooseOpenings"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$allowLooseOpenings</span>
+			 = <span class="var-default"> false</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a86">86</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">defines whether opening and closing tags can contain spaces before valid data or not</p>
+<p class="description"><p>turn to true if you want to be sloppy with the syntax, but when set to false it allows  to skip javascript and css tags as long as they are in the form &quot;{ something&quot;, which is  nice. default is false.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$curBlock" id="$curBlock"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
+			<span class="var-name">$curBlock</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a190">190</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">current block at the top of the block plugins stack,  accessible through getCurrentBlock</p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodgetCurrentBlock">Dwoo_Compiler::getCurrentBlock()</a></li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$customPlugins" id="$customPlugins"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$customPlugins</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a109">109</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the custom plugins registered with this compiler</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$data" id="$data"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$data</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a148">148</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the data within which the scope moves</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$debug" id="$debug"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">bool</span>
+			<span class="var-name">$debug</span>
+			 = <span class="var-default"> false</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a49">49</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">boolean flag to enable or disable debugging output</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$errors" id="$errors"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$errors</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a102">102</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">storage for parse errors/warnings</p>
+<p class="description"><p>will be deprecated when proper exceptions are added</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$ld" id="$ld"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$ld</span>
+			 = <span class="var-default"> '{'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a56">56</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">left script delimiter</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$ldr" id="$ldr"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$ldr</span>
+			 = <span class="var-default"> '\\{'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a63">63</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">left script delimiter with escaped regex meta characters</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$pointer" id="$pointer"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int</span>
+			<span class="var-name">$pointer</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a141">141</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the current pointer position inside the template</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$processors" id="$processors"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$processors</span>
+			 = <span class="var-default">array('pre'=&gt;array(),'post'=&gt;array())</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a116">116</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the pre- and post-processors callbacks</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$rd" id="$rd"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$rd</span>
+			 = <span class="var-default"> '}'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a70">70</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">right script delimiter</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$rdr" id="$rdr"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$rdr</span>
+			 = <span class="var-default"> '\\}'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a77">77</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">right script delimiter with escaped regex meta characters</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$scope" id="$scope"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$scope</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a157">157</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">variable scope of the compiler, set to null if  it can not be resolved to a static string (i.e. if some  plugin defines a new scope based on a variable array key)</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$scopeTree" id="$scopeTree"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$scopeTree</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a165">165</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">variable scope tree, that allows to rebuild the current  scope if required, i.e. when going to a parent level</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$securityPolicy" id="$securityPolicy"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>
+			<span class="var-name">$securityPolicy</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a93">93</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">security policy object</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$stack" id="$stack"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$stack</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a180">180</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">block plugins stack, accessible through some methods</p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodremoveBlock">Dwoo_Compiler::removeBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodremoveTopBlock">Dwoo_Compiler::removeTopBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodinjectBlock">Dwoo_Compiler::injectBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodaddCustomBlock">Dwoo_Compiler::addCustomBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodgetCurrentBlock">Dwoo_Compiler::getCurrentBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodaddBlock">Dwoo_Compiler::addBlock()</a></li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodfindBlock">Dwoo_Compiler::findBlock()</a></li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$template" id="$template"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$template</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a134">134</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the template undergoing compilation</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$usedPlugins" id="$usedPlugins"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$usedPlugins</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a127">127</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores a list of plugins that are used in the currently compiled  template, and that are not compilable. these plugins will be loaded  during the template's runtime if required.</p>
+<p class="description"><p>it is a 1D array formatted as key:pluginName value:pluginType</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																			<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodcompilerFactory" id="compilerFactory"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static compilerFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2504">2504</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns a default instance of this compiler, used by default by all Dwoo templates that do not have a  specific compiler assigned and when you do not override the default compiler factory function</p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo.html#methodsetDefaultCompilerFactory">Dwoo::setDefaultCompilerFactory()</a></li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>
+		<span class="method-name">
+			compilerFactory
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodaddBlock" id="addBlock"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a757">757</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a block to the top of the block stack</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the preProcessing() method's output</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			addBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$paramtype</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: block type (name)</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: the parameters array</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$paramtype</span><span class="var-description">: the parameters type (see mapParams), 0, 1 or 2</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddCustomBlock" id="addCustomBlock"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addCustomBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a778">778</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a custom block to the top of the block stack</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the preProcessing() method's output</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			addCustomBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$paramtype</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: block type (name)</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: the parameters array</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$paramtype</span><span class="var-description">: the parameters type (see mapParams), 0, 1 or 2</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddPostProcessor" id="addPostProcessor"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addPostProcessor</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a317">317</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a postprocessor to the compiler, it will be called  before the template is compiled</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addPostProcessor
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$callback</span><span class="var-description">: either a valid callback to the postprocessor or a simple name if the autoload is set to true</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$autoload</span><span class="var-description">: if set to true, the postprocessor is auto-loaded from one of the plugin directories, else you must provide a valid callback</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddPreProcessor" id="addPreProcessor"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addPreProcessor</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a260">260</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a preprocessor to the compiler, it will be called  before the template is compiled</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addPreProcessor
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$callback</span><span class="var-description">: either a valid callback to the preprocessor or a simple name if the autoload is set to true</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$autoload</span><span class="var-description">: if set to true, the preprocessor is auto-loaded from one of the plugin directories, else you must provide a valid callback</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcompile" id="compile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">compile</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a470">470</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">compiles the provided string down to php code</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> a compiled php string</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			compile
+		</span>
+					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$template</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$tpl</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$tpl</span><span class="var-description">: the template to compile</span>			</li>
+					<li>
+				<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
+				<span class="var-name">$dwoo</span>			</li>
+					<li>
+				<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>
+				<span class="var-name">$template</span>			</li>
+				</ul>
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Dwoo/Dwoo_ICompiler.html#methodcompile">Dwoo_ICompiler::compile()</a></dt>
+						<dd>compiles the provided string down to php code</dd>
+					</dl>
+			
+	</div>
+<a name="methodfindBlock" id="findBlock"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">findBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a858">858</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns a reference to the first block of the given type encountered and  optionally closes all blocks until it finds it</p>
+<p class="description"><p>this is mainly used by {else} plugins to close everything that was opened  between their parent and themselves</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the array is as such: array('type'=&gt;pluginName, 'params'=&gt;parameter array,                    'custom'=&gt;bool defining whether it's a custom plugin or not, for internal use)</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">&array</span>
+		<span class="method-name">
+			&amp;findBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$closeAlong</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: the block type (name)</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$closeAlong</span><span class="var-description">: whether to close all blocks encountered while going down the block stack or not</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodflattenVarTree" id="flattenVarTree"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">flattenVarTree</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1792">1792</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">flattens a variable tree, this helps in parsing very complex variables such as $var.foo[$foo.bar-&gt;baz].baz,  it computes the contents of the brackets first and works out from there</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> flattened tree</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			flattenVarTree
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$tree</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$recursed</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$tree</span><span class="var-description">: the variable tree parsed by he parseVar() method that must be flattened</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$recursed</span><span class="var-description">: leave that to false by default, it is only for internal use</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodforceScope" id="forceScope"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">forceScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a742">742</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">forces an absolute scope</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the previous scope</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			forceScope
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$scope</span><span class="var-description">: the absolute scope string to use</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCompiledParams" id="getCompiledParams"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCompiledParams</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a920">920</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the compiled parameters (for example a variable's compiled parameter will be &quot;$this-&gt;scope['key']&quot;) out of the given parameter array</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> filtered parameters</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getCompiledParams
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: parameter array</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCurrentBlock" id="getCurrentBlock"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCurrentBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a889">889</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns a reference to the current block array</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the array is as such: array('type'=&gt;pluginName, 'params'=&gt;parameter array,                    'custom'=&gt;bool defining whether it's a custom plugin or not, for internal use)</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">&array</span>
+		<span class="method-name">
+			&amp;getCurrentBlock
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetDelimiters" id="getDelimiters"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getDelimiters</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a222">222</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the left and right template delimiters</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> containing the left and the right delimiters</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getDelimiters
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetDwoo" id="getDwoo"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getDwoo</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a430">430</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the dwoo object that initiated this template compilation, only available during compilation of a template</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
+		<span class="method-name">
+			getDwoo
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetLooseOpeningHandling" id="getLooseOpeningHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getLooseOpeningHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a248">248</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the tag openings handling strictness setting</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true if loose tags are allowed</li>
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Compiler.html#methodsetLooseOpeningHandling">Dwoo_Compiler::setLooseOpeningHandling()</a></li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			getLooseOpeningHandling
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetParamMap" id="getParamMap"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getParamMap</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2473">2473</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the parameter map of the given callback, it filters out entries typed as Dwoo and Dwoo_Compiler and turns the rest parameter into a &quot;*&quot;</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> processed parameter map</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getParamMap
+		</span>
+					(<span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">callback</span>
+				<span class="var-name">$callback</span><span class="var-description">: the function/method to reflect on</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPluginType" id="getPluginType"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPluginType</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2271">2271</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the plugin type of a plugin and adds it to the used plugins array if required</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> type as a multi bit flag composed of the Dwoo plugin types constants</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getPluginType
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: plugin name, as found in the template</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetPointer" id="getPointer"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPointer</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a420">420</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the current pointer position, only available during compilation of a template</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getPointer
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetRealParams" id="getRealParams"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getRealParams</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a933">933</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the real parameters (for example a variable's real parameter will be its key, etc) out of the given parameter array</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> filtered parameters</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getRealParams
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: parameter array</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetSecurityPolicy" id="getSecurityPolicy"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a396">396</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the current security policy object or null by default</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the security policy object if any</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a>|null</span>
+		<span class="method-name">
+			getSecurityPolicy
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetTemplateSource" id="getTemplateSource"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getTemplateSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a456">456</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the template that is being compiled</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the template or partial template</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getTemplateSource
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$fromPointer</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$fromPointer</span><span class="var-description">: if set to true, only the source from the current pointer position is returned</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodimplode_r" id="implode_r"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">implode_r</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2245">2245</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">recursively implodes an array in a similar manner as var_export() does but with some tweaks  to handle pre-compiled values and the fact that we do not need to enclose everything with  &quot;array&quot; and do not require top-level keys to be displayed</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the imploded array</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			implode_r
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$recursiveCall</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: the array to implode</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$recursiveCall</span><span class="var-description">: if set to true, the function outputs key names for the top level</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodinjectBlock" id="injectBlock"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">injectBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a801">801</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">injects a block at the top of the plugin stack without calling its preProcessing method</p>
+<p class="description"><p>used by {else} blocks to re-add themselves after having closed everything up to their parent</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			injectBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: block type (name)</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: parameters array</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodmapParams" id="mapParams"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">mapParams</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2361">2361</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">maps the parameters received from the template onto the parameters required by the given callback</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parameters sorted in the correct order with missing optional parameters filled</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			mapParams
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$callType</span> = <span class="var-default">2</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: the array of parameters</span>			</li>
+					<li>
+				<span class="var-type">callback</span>
+				<span class="var-name">$callback</span><span class="var-description">: the function or method to reflect on to find out the required parameters</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$callType</span><span class="var-description">: the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparse" id="parse"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parse</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a951">951</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">entry point of the parser, it redirects calls to other parse* functions</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parse
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseConst" id="parseConst"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseConst</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1388">1388</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a constant</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseConst
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseConstKey" id="parseConstKey"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseConstKey</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1418">1418</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a constant</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed constant</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseConstKey
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span><span class="var-description">: the constant to parse</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseFunction" id="parseFunction"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseFunction</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1018">1018</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a function call</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseFunction
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseOthers" id="parseOthers"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseOthers</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1868">1868</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses various constants, operators or non-quoted strings</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseOthers
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseString" id="parseString"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseString</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1312">1312</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a string</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseString
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseVar" id="parseVar"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseVar</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1442">1442</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a variable</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed values</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseVar
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$in</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$from</span>, <span class="var-type">int</span>&nbsp;<span class="var-name">$to</span>, [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$parsingParams</span> = <span class="var-default">false</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">&$pointer</span> = <span class="var-default">null</span>], <span class="var-type">mixed</span>&nbsp;<span class="var-name">$pointer</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$in</span><span class="var-description">: the string within which we must parse something</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$from</span><span class="var-description">: the starting offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$to</span><span class="var-description">: the ending offset of the parsed area</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$parsingParams</span><span class="var-description">: must be an array if we are parsing a function or modifier's parameters, or false by default</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$pointer</span><span class="var-description">: a reference to a pointer that will be increased by the amount of characters parsed, or null by default</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">&$pointer</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodparseVarKey" id="parseVarKey"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">parseVarKey</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1659">1659</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">parses a constant variable (a variable that doesn't contain another variable) and preprocesses it to save runtime processing time</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed variable</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			parseVarKey
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$key</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$key</span><span class="var-description">: the variable to parse</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodphpTagEncodingHelper" id="phpTagEncodingHelper"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">phpTagEncodingHelper</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2348">2348</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">runs htmlentities over the matched &lt;?php ?&gt; blocks when the security policy enforces that</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the htmlentities-converted string</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			phpTagEncodingHelper
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$match</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$match</span><span class="var-description">: matched php block</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveBlock" id="removeBlock"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a817">817</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes the closest-to-top block of the given type and all other  blocks encountered while going down the block stack</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the output of all postProcessing() method's return values of the closed blocks</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			removeBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: block type (name)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremovePostProcessor" id="removePostProcessor"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">removePostProcessor</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a347">347</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes a postprocessor from the compiler</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removePostProcessor
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$callback</span><span class="var-description">: either a valid callback to the postprocessor or a simple name if it was autoloaded</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremovePreProcessor" id="removePreProcessor"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">removePreProcessor</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a290">290</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes a preprocessor from the compiler</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removePreProcessor
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$callback</span><span class="var-description">: either a valid callback to the preprocessor or a simple name if it was autoloaded</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveTopBlock" id="removeTopBlock"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeTopBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a899">899</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes the block at the top of the stack and calls its postProcessing() method</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the postProcessing() method's output</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			removeTopBlock
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodreplaceModifiers" id="replaceModifiers"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">replaceModifiers</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2012">2012</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">replaces the modifiers applied to a string or a variable</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the input enclosed with various function calls according to the modifiers found</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			replaceModifiers
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$m</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$m</span><span class="var-description">: the regex matches that must be array(1=&gt;&quot;double or single quotes enclosing a string, when applicable&quot;, 2=&gt;&quot;the string or var&quot;, 3=&gt;&quot;the modifiers matched&quot;)</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodreplaceStringVars" id="replaceStringVars"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">replaceStringVars</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1967">1967</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">replaces variables within a parsed string</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the original string with variables replaced</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			replaceStringVars
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$string</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$first</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$curBlock</span> = <span class="var-default">''</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$string</span><span class="var-description">: the parsed string</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$first</span><span class="var-description">: the first character parsed in the string, which is the string delimiter (' or &quot;)</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$curBlock</span><span class="var-description">: the current parser-block being processed</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodreplaceVarKeyHelper" id="replaceVarKeyHelper"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">replaceVarKeyHelper</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a1852">1852</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">helper function that parses a variable</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> parsed variable</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			replaceVarKeyHelper
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$match</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$match</span><span class="var-description">: the matched variable, array(1=&gt;&quot;string match&quot;)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetCustomPlugins" id="setCustomPlugins"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCustomPlugins</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a373">373</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds the custom plugins loaded into Dwoo to the compiler so it can load them</p>
+	<ul class="tags">
+				<li><span class="field">see:</span> Dwoo::addPlugin</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCustomPlugins
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$customPlugins</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$customPlugins</span><span class="var-description">: an array of custom plugins</span>			</li>
+				</ul>
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Dwoo/Dwoo_ICompiler.html#methodsetCustomPlugins">Dwoo_ICompiler::setCustomPlugins()</a></dt>
+						<dd>adds the custom plugins loaded into Dwoo to the compiler so it can load them</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetDelimiters" id="setDelimiters"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setDelimiters</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a209">209</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the delimiters to use in the templates</p>
+<p class="description"><p>delimiters can be multi-character strings but should not be one of those as they will  make it very hard to work with templates or might even break the compiler entirely : &quot;\&quot;, &quot;$&quot;, &quot;|&quot;, &quot;:&quot; and finally &quot;#&quot; only if you intend to use config-vars with the #var# syntax.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setDelimiters
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$left</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$right</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$left</span><span class="var-description">: left delimiter</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$right</span><span class="var-description">: right delimiter</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetLooseOpeningHandling" id="setLooseOpeningHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setLooseOpeningHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a237">237</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the tag openings handling strictness, if set to true, template tags can  contain spaces before the first function/string/variable such as { $foo} is valid.</p>
+<p class="description"><p>if set to false (default setting), { $foo} is invalid but that is however a good thing  as it allows css (i.e. #foo { color:red; }) to be parsed silently without triggering  an error, same goes for javascript.</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setLooseOpeningHandling
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$allow</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$allow</span><span class="var-description">: true to allow loose handling, false to restore default setting</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPointer" id="setPointer"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPointer</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a407">407</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the pointer position</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPointer
+		</span>
+					(<span class="var-type">int</span>&nbsp;<span class="var-name">$position</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$isOffset</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$position</span><span class="var-description">: the new pointer position</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$isOffset</span><span class="var-description">: if set to true, the position acts as an offset and not an absolute position</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetScope" id="setScope"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a690">690</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the scope</p>
+<p class="description"><p>set to null if the scope becomes &quot;unstable&quot; (i.e. too variable or unknown) so that  variables are compiled in a more evaluative way than just $this-&gt;scope['key']</p></p>
+	<ul class="tags">
+				<li><span class="field">return:</span> old scope</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			setScope
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$scope</span><span class="var-description">: scope string that must be set (i.e. foo.bar.baz)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetSecurityPolicy" id="setSecurityPolicy"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a386">386</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the security policy object to enforce some php security settings</p>
+<p class="description"><p>use this if untrusted persons can modify templates,  set it on the Dwoo object as it will be passed onto the compiler automatically</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setSecurityPolicy
+		</span>
+					([<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>&nbsp;<span class="var-name">$policy</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>
+				<span class="var-name">$policy</span><span class="var-description">: the security policy object</span>			</li>
+				</ul>
+		
+				<hr class="separator" />
+		<div class="notes">Implementation of:</div>
+			<dl>
+			<dt><a href="../Dwoo/Dwoo_ICompiler.html#methodsetSecurityPolicy">Dwoo_ICompiler::setSecurityPolicy()</a></dt>
+						<dd>sets the security policy object to enforce some php security settings</dd>
+					</dl>
+			
+	</div>
+<a name="methodsetTemplateSource" id="setTemplateSource"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setTemplateSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a442">442</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">overwrites the template that is being compiled</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the template or partial template</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			setTemplateSource
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$newSource</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$fromPointer</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$newSource</span><span class="var-description">: the template source that must replace the current one</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$fromPointer</span><span class="var-description">: if set to true, only the source from the current pointer position is replaced</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodstripPreprocessorHelper" id="stripPreprocessorHelper"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">stripPreprocessorHelper</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a2336">2336</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">handles the {strip} blocks regex replacement, do not rely on it as it will eventually be moved into it's own plugin</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> processed string</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			stripPreprocessorHelper
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$matches</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$matches</span><span class="var-description">: the regex matches with the &quot;1&quot; index being the contents of the {strip} block</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+														| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constPHP_CLOSE" id="PHP_CLOSE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">PHP_CLOSE</span>
+			 = <span class="const-default"> &quot;?&gt;&quot;</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a42">42</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">constant that represents a php closing tag</p>
+<p class="description"><p>use it in case it needs to be adjusted</p></p>
+	
+	
+</div>
+<a name="constPHP_OPEN" id="PHP_OPEN"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">PHP_OPEN</span>
+			 = <span class="const-default"> &quot;&lt;?php &quot;</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooCompiler.php.html#a33">33</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">constant that represents a php opening tag</p>
+<p class="description"><p>use it in case it needs to be adjusted</p></p>
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 10 May 2008 07:45:49 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>
