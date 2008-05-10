@@ -46,13 +46,13 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 			$val = $params['key'];
 		}
 		else
-			$compiler->triggerError('Foreach <em>item</em> parameter missing', E_USER_ERROR);
+			throw new Dwoo_Compilation_Exception('Foreach <em>item</em> parameter missing');
 		$name = $params['name'];
 
 		if(substr($val,0,1) !== '"' && substr($val,0,1) !== '\'')
-			$compiler->triggerError('Foreach <em>item</em> parameter must be of type string', E_USER_ERROR);
+			throw new Dwoo_Compilation_Exception('Foreach <em>item</em> parameter must be of type string');
 		if(isset($key) && substr($val,0,1) !== '"' && substr($val,0,1) !== '\'')
-			$compiler->triggerError('Foreach <em>key</em> parameter must be of type string', E_USER_ERROR);
+			throw new Dwoo_Compilation_Exception('Foreach <em>key</em> parameter must be of type string');
 
 		// evaluates which global variables have to be computed
 		$varName = '$dwoo.foreach.'.trim($name, '"\'').'.';

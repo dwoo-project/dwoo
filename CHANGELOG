@@ -8,6 +8,12 @@
 ! BC Break: $dwoo->getTemplate() changed to $dwoo->templateFactory() and
   $dwoo->getCurrentTemplate() changed to $dwoo->getTemplate() for consistency
   among all classes and factory functions
++ Added a compiled version of Dwoo that loads faster (especially with opcode
+  caches such as APC), include Dwoo.compiled.php instead of Dwoo.php on
+  production but if you want to file a bug use Dwoo.php please as it allows
+  you to get the proper file/line number where an error occurs. Do not remove
+  all other files however since they are not all included in the compiled
+  package
 + Plugins: Added {extends} and {block} to handle template inheritance, read
   more about it at http://wiki.dwoo.org/index.php/TemplateInheritance
 + Plugins: Added {loop} that combines {foreach} and {with}, see
@@ -37,6 +43,10 @@
   to define the file mode of all the file/directories Dwoo will write, defaults
   to 0777
 + Added a 'data' argument to {include} to be able to feed data directly into it
+* The compiler now throws Dwoo_Compilation_Exception exceptions upon failure
+  and security problems lead to a Dwoo_Security_Exception being thrown. Runtime
+  plugin errors and such trigger simple php errors to allow the template
+  execution to complete
 * Fixed a potential concurrency issue (thanks to Rasmus Schultz for the patch)
 * Moved all files to Dwoo/Class.php excepted for the core Dwoo.php file
 * Various performance improvements, including the removal of a lot of isset()

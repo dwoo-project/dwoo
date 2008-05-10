@@ -43,7 +43,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		{
 			if($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '"'))
 			{
-				$compiler->triggerError('Extends : The file name must be a non-empty string', E_USER_ERROR);
+				throw new Dwoo_Compilation_Exception('Extends : The file name must be a non-empty string');
 				return;
 			}
 
@@ -63,7 +63,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 				while(true)
 				{
 					if(preg_match('{^([a-z]+?)://}i', $identifier))
-						return $compiler->triggerError('The security policy prevents you to read files from external sources.', E_USER_ERROR);
+						throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources.');
 
 					$identifier = realpath($identifier);
 					$dirs = $policy->getAllowedDirectories();
@@ -72,25 +72,25 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 						if(strpos($identifier, $dir) === 0)
 							break 2;
 					}
-					return $compiler->triggerError('The security policy prevents you to read <em>'.$identifier.'</em>', E_USER_ERROR);
+					throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$identifier.'</em>');
 				}
 			}
 
 			try {
 				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier);
 			} catch (Dwoo_Exception $e) {
-				$compiler->triggerError('Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_ERROR);
+				throw new Dwoo_Compilation_Exception('Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>');
 			}
 
 			if($parent === null)
-				$compiler->triggerError('Extends : Resource "'.$resource.':'.$identifier.'" was not found.', E_USER_ERROR);
+				throw new Dwoo_Compilation_Exception('Extends : Resource "'.$resource.':'.$identifier.'" was not found.');
 			elseif($parent === false)
-				$compiler->triggerError('Extends : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.', E_USER_ERROR);
+				throw new Dwoo_Compilation_Exception('Extends : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.');
 
 			$newParent = array('source'=>$parent->getSource(), 'resource'=>$resource, 'identifier'=>$identifier, 'uid'=>$parent->getUid());
 			if(array_search($newParent, $inheritanceTree, true) !== false)
 			{
-				$compiler->triggerError('Extends : Recursive template inheritance detected', E_USER_ERROR);
+				throw new Dwoo_Compilation_Exception('Extends : Recursive template inheritance detected');
 			}
 
 			$inheritanceTree[] = $newParent;

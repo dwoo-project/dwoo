@@ -5,6 +5,7 @@ set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
 include 'Dwoo/Loader.php';
 include 'Dwoo/Exception.php';
 include 'Dwoo/Security/Policy.php';
+include 'Dwoo/Security/Exception.php';
 include 'Dwoo/ICompilable.php';
 include 'Dwoo/ICompiler.php';
 include 'Dwoo/IDataProvider.php';
@@ -499,7 +500,7 @@ class Dwoo
 			elseif(function_exists($class))
 				$callback = $class;
 			else
-				$this->triggerError('Wrong filter name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"', E_USER_ERROR);
+				throw new Dwoo_Exception('Wrong filter name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
 
 			$this->filters[] = $callback;
 		}
@@ -829,7 +830,7 @@ class Dwoo
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('Dwoo error: '.$message, $level);
+		trigger_error('Dwoo error (in '.$this->template->getResourceIdentifier().') : '.$message, $level);
 	}
 
 	/*

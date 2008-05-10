@@ -54,7 +54,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 		);
 
 		if(preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches))
-			$this->compiler->triggerError('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
+			trigger_error('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
 
 		return preg_replace($smarty, $dwoo, $input);
 	}
@@ -73,7 +73,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			$params['altcontent'] = $matches[14];
 
 		if(empty($params['name']))
-			$this->compiler->triggerError('Missing parameter <em>name</em> for section tag');
+			throw new Dwoo_Compilation_Exception('Missing parameter <em>name</em> for section tag');
 		$name = $params['name'];
 
 		if(isset($params['loop']))

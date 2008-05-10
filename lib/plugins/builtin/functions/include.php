@@ -41,7 +41,7 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		while(true)
 		{
 			if(preg_match('{^([a-z]+?)://}i', $identifier))
-				return $dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
+				throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources : <em>'.$identifier.'</em>.');
 
 			$identifier = realpath($identifier);
 			$dirs = $policy->getAllowedDirectories();
@@ -50,7 +50,7 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 				if(strpos($identifier, $dir) === 0)
 					break 2;
 			}
-			return $dwoo->triggerError('The security policy prevents you to read <em>'.$identifier.'</em>', E_USER_WARNING);
+			throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$identifier.'</em>');
 		}
 	}
 
