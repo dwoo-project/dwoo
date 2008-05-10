@@ -43,7 +43,7 @@ Dwoo_Loader::loadPlugin('topLevelBlock');
  * requirements :
  *  php 5.2.0 or above
  *  php's mbstring extension for some plugins
- *  php's hash extension to use Dwoo_Template_String class
+ *  php's hash extension to use the Dwoo_Template_String class
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -57,8 +57,8 @@ Dwoo_Loader::loadPlugin('topLevelBlock');
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.4
- * @date       2008-04-09
+ * @version    0.9.0
+ * @date       2008-05-10
  * @package    Dwoo
  */
 class Dwoo
@@ -68,7 +68,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = "0.3.4";
+	const VERSION = "0.9.0";
 
 	/**
 	 * unique number of this dwoo release
@@ -77,7 +77,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 8;
+	const RELEASE_TAG = 9;
 
 	/**#@+
 	 * constants that represents all plugin types

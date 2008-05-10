@@ -15,8 +15,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.3.4
- * @date       2008-04-09
+ * @version    0.9.0
+ * @date       2008-05-10
  * @package    Dwoo
  */
 function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $replace)
