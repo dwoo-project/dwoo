@@ -47,25 +47,15 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		$this->name = basename($file);
 		$this->cacheTime = $cacheTime;
 
-		// no compile id provided, generate a kind of unique kind of readable one from the filename
-		if($compileId === null)
+		if($compileId !== null)
 		{
-			$parts = explode('/', strtr($file, '\\.', '/_'));
-			$compileId = array_pop($parts);
-			$compileId = substr(array_pop($parts), 0, 5) .'_'. $compileId;
-			$compileId = substr(array_pop($parts), 0, 5) .'_'. $compileId;
+			$this->compileId = strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
-		$this->compileId = $compileId;
 
-		// no cache id provided, use request_uri if available
-		if($cacheId === null)
+		if($cacheId !== null)
 		{
-			if(isset($_SERVER['REQUEST_URI']) === true)
-				$cacheId = $_SERVER['REQUEST_URI'];
-			elseif(isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv']))
-				$cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
+			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
-		$this->cacheId = $this->compileId . strtr($cacheId, '\\/%?=!:;', '--------');
 	}
 
 	/**
@@ -77,7 +67,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
 	{
-		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
+		$compiledFile = $this->getCompiledFilename($dwoo);
 
 		// already checked, return compiled file
 		if($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true)
@@ -111,7 +101,9 @@ class Dwoo_Template_File extends Dwoo_Template_String
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
+			$this->makeDirectory(dirname($compiledFile));
 			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
+			chmod($compiledFile, DWOO_CHMOD);
 
 			self::$cache['compiled'][$this->compileId] = true;
 		}
@@ -201,5 +193,22 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		}
 
 		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId);
+	}
+
+	/**
+	 * returns the full compiled file name and assigns a default value to it if
+	 * required
+	 *
+	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @return string the full path to the compiled file
+	 */
+	protected function getCompiledFilename(Dwoo $dwoo)
+	{
+		// no compile id was provided, set default
+		if($this->compileId===null)
+		{
+			$this->compileId = implode('/', array_slice(explode('/', strtr($this->file, '\\', '/')), -3));
+		}
+		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
 	}
 }

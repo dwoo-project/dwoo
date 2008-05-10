@@ -60,6 +60,18 @@ interface Dwoo_ITemplate
 	public function getCacheTime();
 
 	/**
+	 * sets the cache duration for this template
+	 *
+	 * can be used to set it after the object is created if you did not provide
+	 * it in the constructor
+	 *
+	 * @param int $seconds duration of the cache validity for this template, if
+	 * null it defaults to the Dwoo instance's cache time. 0 = disable and
+	 * -1 = infinite cache
+	 */
+	public function setCacheTime($seconds = null);
+
+	/**
 	 * returns the cached template output file name, true if it's cache-able but not cached
 	 * or false if it's not cached
 	 *

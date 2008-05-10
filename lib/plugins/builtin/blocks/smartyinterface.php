@@ -19,7 +19,7 @@
  * @date       2008-04-09
  * @package    Dwoo
  */
-class Dwoo_Plugin_smartyinterface extends Dwoo_Plugin
+class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin
 {
 	public function init($__funcname, $__functype, array $rest=array()) {}
 

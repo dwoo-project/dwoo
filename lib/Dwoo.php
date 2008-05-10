@@ -13,6 +13,8 @@ if(defined('DWOO_CACHE_DIRECTORY') === false)
 	define('DWOO_CACHE_DIRECTORY', DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR);
 if(defined('DWOO_COMPILE_DIRECTORY') === false)
 	define('DWOO_COMPILE_DIRECTORY', DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR);
+if(defined('DWOO_CHMOD') === false)
+	define('DWOO_CHMOD', 0777);
 if(is_writable(DWOO_CACHE_DIRECTORY) === false)
 	throw new Dwoo_Exception('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHE_DIRECTORY.'" to make it writable or define DWOO_CACHE_DIRECTORY to a writable directory before including Dwoo.php');
 if(is_writable(DWOO_COMPILE_DIRECTORY) === false)

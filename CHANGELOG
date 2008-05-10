@@ -31,6 +31,11 @@
   of its compile() method
 + API: Added a bunch of utility functions to Dwoo_Compiler, allowing compiled
   plugins to access more of the compiler internals
++ Both cache and compile IDs can now have slashes in them to create subfolders
+  in the cache/compile dirs
++ Added a DWOO_CHMOD constant that, if set before you include Dwoo, allows you
+  to define the file mode of all the file/directories Dwoo will write, defaults
+  to 0777
 + Added a 'data' argument to {include} to be able to feed data directly into it
 * Fixed a potential concurrency issue (thanks to Rasmus Schultz for the patch)
 * Moved all files to Dwoo/Class.php excepted for the core Dwoo.php file

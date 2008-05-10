@@ -99,22 +99,15 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		$this->name = hash('md4', $templateString);
 		$this->cacheTime = $cacheTime;
 
-		// no compile id provided, set it to an md5 hash of the template
-		if($compileId === null)
+		if($compileId !== null)
 		{
-			$compileId = $this->name;
+			$this->compileId = strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
-		$this->compileId = $compileId;
 
-		// no cache id provided, use request_uri
-		if($cacheId === null)
+		if($cacheId !== null)
 		{
-			if(isset($_SERVER['REQUEST_URI']) === true)
-				$cacheId = $_SERVER['REQUEST_URI'];
-			elseif(isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv']))
-				$cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
+			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
-		$this->cacheId = $this->compileId . strtr($cacheId, '\\/%?=!:;', '--------');
 	}
 
 	/**
@@ -127,6 +120,21 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	public function getCacheTime()
 	{
 		return $this->cacheTime;
+	}
+
+	/**
+	 * sets the cache duration for this template
+	 *
+	 * can be used to set it after the object is created if you did not provide
+	 * it in the constructor
+	 *
+	 * @param int $seconds duration of the cache validity for this template, if
+	 * null it defaults to the Dwoo instance's cache time. 0 = disable and
+	 * -1 = infinite cache
+	 */
+	public function setCacheTime($seconds = null)
+	{
+		$this->cacheTime = $seconds;
 	}
 
 	/**
@@ -209,7 +217,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	public function getCachedTemplate(Dwoo $dwoo)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
+		$cachedFile = $this->getCacheFilename($dwoo);
 		if($this->cacheTime !== null)
 			$cacheLength = $this->cacheTime;
 		else
@@ -247,7 +255,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	public function cache(Dwoo $dwoo, $output)
 	{
 		$cacheDir = $dwoo->getCacheDir();
-		$cachedFile = $cacheDir . $this->cacheId.'.html';
+		$cachedFile = $this->getCacheFilename($dwoo);
 
 		// the code below is courtesy of Rasmus Schultz,
 		// thanks for his help on avoiding concurency issues
@@ -265,13 +273,14 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		fwrite($file, $output);
 		fclose($file);
 
+		$this->makeDirectory(dirname($cachedFile));
 		if(!@rename($temp, $cachedFile))
 		{
 			@unlink($cachedFile);
 			@rename($temp, $cachedFile);
 		}
 
-		@chmod($cachedFile, 0777);
+		chmod($cachedFile, DWOO_CHMOD);
 
 		self::$cache['cached'][$this->cacheId] = true;
 
@@ -287,7 +296,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	public function clearCache(Dwoo $dwoo, $olderThan = -1)
 	{
-		$cachedFile = $dwoo->getCacheDir() . $this->cacheId.'.html';
+		$cachedFile = $this->getCacheFilename($dwoo);
 
 		return !file_exists($cachedFile) || (filectime($cachedFile) < (time() - $olderThan) && unlink($cachedFile));
 	}
@@ -301,7 +310,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
 	{
-		$compiledFile = $dwoo->getCompileDir() . $this->compileId.'.dwoo'.Dwoo::RELEASE_TAG.'.php';
+		$compiledFile = $this->getCompiledFilename($dwoo);
 
 		// already checked, return compiled file
 		if($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true)
@@ -335,7 +344,9 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
+			$this->makeDirectory(dirname($compiledFile));
 			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
+			chmod($compiledFile, DWOO_CHMOD);
 
 			self::$cache['compiled'][$this->compileId] = true;
 		}
@@ -360,5 +371,56 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		return false;
+	}
+
+	/**
+	 * returns the full compiled file name and assigns a default value to it if
+	 * required
+	 *
+	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @return string the full path to the compiled file
+	 */
+	protected function getCompiledFilename(Dwoo $dwoo)
+	{
+		// no compile id was provided, set default
+		if($this->compileId===null)
+		{
+			$this->compileId = $this->name;
+		}
+		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
+	}
+
+	/**
+	 * returns the full cached file name and assigns a default value to it if
+	 * required
+	 *
+	 * @param Dwoo $dwoo the dwoo instance that requests the file name
+	 * @return string the full path to the cached file
+	 */
+	protected function getCacheFilename(Dwoo $dwoo)
+	{
+		// no cache id provided, use request_uri as default
+		if($this->cacheId === null)
+		{
+			if(isset($_SERVER['REQUEST_URI']) === true)
+				$cacheId = $_SERVER['REQUEST_URI'];
+			elseif(isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv']))
+				$cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
+			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+		}
+		return $dwoo->getCacheDir() . $this->cacheId.'.html';
+	}
+
+	/**
+	 * ensures the given path exists
+	 *
+	 * @param string $path any path
+	 */
+	protected function makeDirectory($path)
+	{
+		if(is_dir($path) === true)
+			return;
+
+		mkdir($path, DWOO_CHMOD, true);
 	}
 }

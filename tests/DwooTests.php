@@ -28,13 +28,23 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		return $suite;
 	}
 
-    protected function tearDown()
-    {
-		foreach(new DirectoryIterator(TEST_DIRECTORY.'/temp/compiled') as $file) {
-			if(!$file->isDot() && !$file->isDir())
-				unlink(TEST_DIRECTORY.'/temp/compiled/'.(string)$file);
-		}
-    }
+		protected function tearDown()
+		{
+			$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
+	}
+
+	protected function clearDir($path, $emptyOnly=false)
+	{
+			if(is_dir($path))
+			{
+					foreach(glob($path.'/*') as $f)
+							$this->clearDir($f);
+					if(!$emptyOnly)
+						rmdir($path);
+			}
+			else
+					unlink($path);
+	}
 }
 
 // Evaluates two strings and ignores differences in line endings (\r\n == \n == \r)
