@@ -684,12 +684,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * set to null if the scope becomes "unstable" (i.e. too variable or unknown) so that
 	 * variables are compiled in a more evaluative way than just $this->scope['key']
 	 *
-	 * @param string $scope scope string that must be set (i.e. foo.bar.baz)
-	 * @return string old scope
+	 * @param mixed $scope a string i.e. "level1.level2" or an array i.e. array("level1", "level2")
+	 * @param bool $absolute if true, the scope is set from the top level scope and not from the current scope
+	 * @return array the current scope tree
 	 */
-	public function setScope($scope)
+	public function setScope($scope, $absolute = false)
 	{
-		$old = implode('.', $this->scopeTree);
+		$old = $this->scopeTree;
 
 		if($scope===null)
 		{
@@ -697,14 +698,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$this->scope = null;
 		}
 
-		if(empty($scope))
-			return $old;
+		if(is_array($scope)===false)
+			$scope = explode('.', $scope);
 
-		$bits = explode('.', $scope);
-
-		while($bit = array_shift($bits))
+		if($absolute===true)
 		{
-			if($bit === '_parent')
+			$this->scope =& $this->data;
+			$this->scopeTree = array();
+		}
+
+		while(($bit = array_shift($scope)) !== null)
+		{
+			if($bit === '_parent' || $bit === '_')
 			{
 				array_pop($this->scopeTree);
 				reset($this->scopeTree);
@@ -713,7 +718,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				for($i=0;$i<$cnt;$i++)
 					$this->scope =& $this->scope[$this->scopeTree[$i]];
 			}
-			elseif($bit === '_root')
+			elseif($bit === '_root' || $bit === '__')
 			{
 				$this->scope =& $this->data;
 				$this->scopeTree = array();
@@ -730,20 +735,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$this->scopeTree[] = $bit;
 			}
 		}
+
 		return $old;
 	}
 
 	/**
 	 * forces an absolute scope
 	 *
-	 * @param string $scope the absolute scope string to use
-	 * @return string the previous scope
+	 * @deprecated
+	 * @param mixed $scope a scope as a string or array
+	 * @return array the current scope tree
 	 */
 	public function forceScope($scope)
 	{
-		$prev = $this->setScope('_root');
-		$this->setScope($scope);
-		return $prev;
+		return $this->setScope($scope, true);
 	}
 
 	/**

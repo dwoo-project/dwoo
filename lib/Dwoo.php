@@ -1367,20 +1367,24 @@ class Dwoo
 	}
 
 	/**
-	 * [runtime function] sets the scope to the given scope string
+	 * [runtime function] sets the scope to the given scope string or array
 	 *
 	 * @param mixed $scope a string i.e. "level1.level2" or an array i.e. array("level1", "level2")
-	 * @return array the current scope
+	 * @param bool $absolute if true, the scope is set from the top level scope and not from the current scope
+	 * @return array the current scope tree
 	 */
-	public function setScope($scope)
+	public function setScope($scope, $absolute = false)
 	{
 		$old = $this->scopeTree;
 
-		if(empty($scope))
-			return $old;
-
 		if(is_array($scope)===false)
 			$scope = explode('.', $scope);
+
+		if($absolute===true)
+		{
+			$this->scope =& $this->data;
+			$this->scopeTree = array();
+		}
 
 		while(($bit = array_shift($scope)) !== null)
 		{
@@ -1436,14 +1440,13 @@ class Dwoo
 	/**
 	 * [runtime function] forces an absolute scope
 	 *
+	 * @deprecated
 	 * @see setScope
 	 * @param mixed $scope a scope as a string or array
 	 * @return array the current scope tree
 	 */
 	public function forceScope($scope)
 	{
-		$prev = $this->setScope(array('_root'));
-		$this->setScope($scope);
-		return $prev;
+		return $this->setScope($scope, true);
 	}
 }

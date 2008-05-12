@@ -1,3 +1,6 @@
+[2008--] 0.9.1
+* Optimized scope-handling functions, {loop} and {with} are now slightly faster
+
 [2008-05-10] 0.9.0
 ! BC Break: changed all class names to be PEAR compliant (aka use underscores
   to separate words/paths), sorry about that but I better do it now than in
