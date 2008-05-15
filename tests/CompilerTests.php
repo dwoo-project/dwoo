@@ -300,6 +300,22 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bab', $this->dwoo->get($tpl, array('a'=>array('a','b'), 'b'=>'default', 'c'=>'iteration'), $this->compiler));
 	}
 
+	public function testCloseBlockShortcut()
+	{
+		$tpl = new Dwoo_Template_String('{loop $}{$_key} > {loop $}{$}{/}{/}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('1 > ab2 > cd', $this->dwoo->get($tpl, array('1'=>array('a','b'), '2'=>array('c','d')), $this->compiler));
+	}
+
+	public function testImplicitCloseBlock()
+	{
+		$tpl = new Dwoo_Template_String('{loop $}{$_key} > {loop $}{$}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('1 > ab2 > cd', $this->dwoo->get($tpl, array('1'=>array('a','b'), '2'=>array('c','d')), $this->compiler));
+	}
+
 	public function testAssignAndIncrement()
 	{
 		$tpl = new Dwoo_Template_String('{$foo}{$foo+=3}{$foo}

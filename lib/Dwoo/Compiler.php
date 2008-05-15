@@ -591,7 +591,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$ptr = $endpos+strlen($this->rd);
 
 				if(substr($tpl, $pos, 1)==='/')
-					$compiled .= $this->removeBlock(substr($tpl, $pos+1, $endpos-$pos-1));
+				{
+					if(substr($tpl, $pos, $endpos-$pos) === '/')
+						$compiled .= $this->removeTopBlock();
+					else
+						$compiled .= $this->removeBlock(substr($tpl, $pos+1, $endpos-$pos-1));
+				}
 				else
 					$compiled .= $this->parse($tpl, $pos, $endpos, false, 'root');
 
