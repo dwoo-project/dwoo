@@ -24,14 +24,16 @@ function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $defau
 	if(!empty($value))
 	{
 		// don't convert if it's a valid unix timestamp
-		if(preg_match('#^\d{10}$#', $value)===false)
+		if(preg_match('#^\d{10}$#', $value)===0)
 			$value = strtotime($value);
 	}
 	elseif(!empty($default))
 	{
 		// don't convert if it's a valid unix timestamp
-		if(preg_match('#^\d{10}$#', $default)===false)
+		if(preg_match('#^\d{10}$#', $default)===0)
 			$value = strtotime($default);
+		else
+			$value = $default;
 	}
 	else
 		return '';
@@ -39,7 +41,7 @@ function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $defau
 	// Credits for that windows compat block to Monte Ohrt who made smarty's date_format plugin
 	if(DIRECTORY_SEPARATOR == '\\')
 	{
-		$_win_from = array('%D', '%h', '%n', '%r', '%R', '%t', '%T');
+		$_win_from = array('%D',       '%h', '%n', '%r',          '%R',    '%t', '%T');
 		$_win_to   = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');
 		if(strpos($format, '%e') !== false)
 		{

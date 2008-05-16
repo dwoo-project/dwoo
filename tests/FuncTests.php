@@ -116,7 +116,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl = new Dwoo_Template_String('{date_format $dwoo.now "%Y%H:%M:%S"}{date_format $foo "%Y%H:%M:%S" "one hour ago"}{date_format ""}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals(strftime("%Y%H:%M:%S", $_SERVER['REQUEST_TIME']).strftime('%Y%H:%M:%S', strtotime("one hour ago")), $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals(strftime("%Y%H:%M:%S", $_SERVER['REQUEST_TIME']).strftime('%Y%H:%M:%S', strtotime("one hour ago")), $this->dwoo->get($tpl, array('foo'=>''), $this->compiler));
 	}
 
 	public function testDefault()
