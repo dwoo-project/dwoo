@@ -23,13 +23,13 @@ function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $defau
 {
 	if(!empty($value))
 	{
-		// don't convert if it's a valid unix timestamp
+		// convert if it's not a valid unix timestamp
 		if(preg_match('#^\d{10}$#', $value)===0)
 			$value = strtotime($value);
 	}
 	elseif(!empty($default))
 	{
-		// don't convert if it's a valid unix timestamp
+		// convert if it's not a valid unix timestamp
 		if(preg_match('#^\d{10}$#', $default)===0)
 			$value = strtotime($default);
 		else
