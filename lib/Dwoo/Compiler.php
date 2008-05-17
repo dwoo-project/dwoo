@@ -514,8 +514,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// handles the built-in strip function
-		if(($pos = strpos($tpl, $this->ld.'strip'.$this->rd)) !== false && substr($tpl, $pos-1, 1) !== '\\')
-			$tpl = preg_replace_callback('{'.$this->ldr.'strip'.$this->rdr.'(.+?)'.$this->ldr.'/strip'.$this->rdr.'}s', array($this, 'stripPreprocessorHelper'), $tpl);
+		if(preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . 'strip' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl, $pos, PREG_OFFSET_CAPTURE) && substr($tpl, $pos[0][1]-1, 1) !== '\\')
+		{
+			if(!preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . '\/strip' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl))
+				throw new Dwoo_Compilation_Exception('The {strip} blocks must be closed explicitly');
+			$tpl = preg_replace_callback('/'.$this->ldr.($this->allowLooseOpenings ? '\s*' : '').'strip'.($this->allowLooseOpenings ? '\s*' : '').$this->rdr.'(.+?)'.$this->ldr.($this->allowLooseOpenings ? '\s*' : '').'\/strip'.($this->allowLooseOpenings ? '\s*' : '').$this->rdr.'/s', array($this, 'stripPreprocessorHelper'), $tpl);
+		}
 
 		while(true)
 		{
@@ -544,12 +548,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$compiled .= substr($tpl, $ptr, $pos-$ptr-1).$this->ld;
 				$ptr = $pos+strlen($this->ld);
 			}
-			elseif(strpos($tpl, $this->ld.'literal'.$this->rd, $pos) === $pos)
+			elseif(preg_match('/^'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . 'literal' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', substr($tpl, $pos), $litOpen))
 			{
-				$endpos = strpos($tpl, $this->ld.'/literal'.$this->rd, $pos);
-				$compiled .= substr($tpl, $ptr, $pos-$ptr);
-				$compiled .= substr($tpl, $pos + strlen($this->ld.'literal'.$this->rd), $endpos-$pos-strlen($this->ld.'literal'.$this->rd));
-				$ptr = $endpos+strlen($this->ld.'/literal'.$this->rd);
+				if(!preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . '\/literal' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl, $litClose, PREG_OFFSET_CAPTURE, $pos))
+					throw new Dwoo_Compilation_Exception('The {literal} blocks must be closed explicitly');
+				$endpos = $litClose[0][1];
+				$compiled .= substr($tpl, $ptr, $pos-$ptr) . substr($tpl, $pos + strlen($litOpen[0]), $endpos-$pos-strlen($litOpen[0]));
+				$ptr = $endpos+strlen($litClose[0][0]);
 			}
 			else
 			{

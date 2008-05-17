@@ -140,6 +140,16 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testUnclosedStrip()
+	{
+		$tpl = new Dwoo_Template_String("{strip}a\nb\nca\nb\nc");
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
 	public function testWhitespace()
 	{
 		$tpl = new Dwoo_Template_String("{\$foo}{\$foo}\n{\$foo}\n\n{\$foo}\n\n\n{\$foo}");
@@ -152,6 +162,16 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$tpl = new Dwoo_Template_String('{literal}{$foo}{hurray}{/literal}');
 		$tpl->forceCompilation();
 		$this->assertEquals('{$foo}{hurray}', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testUnclosedLiteral()
+	{
+		$tpl = new Dwoo_Template_String('{literal}{$foo}{hurray}');
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $this->compiler);
 	}
 
 	public function testEscaping()
