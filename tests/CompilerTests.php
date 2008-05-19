@@ -22,6 +22,14 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bar', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 	}
 
+	public function testComplexVarReplacement()
+	{
+		$tpl = new Dwoo_Template_String('{$_root[$a].0}{$_[$a][0]}{$_[$c.d].0}{$_.$a.0}{$_[$c[$x.0]].0}{$_[$c.$y.0].0}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('cccccc', $this->dwoo->get($tpl, array('a'=>'b', 'x'=>array('d'), 'y'=>'e', 'b'=>array('c','d'),'c'=>array('d'=>'b','e'=>array('b'))), $this->compiler));
+	}
+
 	public function testModifier()
 	{
 		$tpl = new Dwoo_Template_String('{$foo|upper}');
@@ -360,6 +368,79 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("Name?Name!", $this->dwoo->get($tpl, array(), $this->compiler));
 		$this->dwoo->removePlugin('test');
+	}
+
+	/**
+	 * @expectedException Dwoo_Exception
+	 */
+	public function testAddPreProcessorWithBadName()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->addPreProcessor('__BAAAAD__', true);
+	}
+
+	/**
+	 * @expectedException Dwoo_Exception
+	 */
+	public function testAddPostProcessorWithBadName()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->addPostProcessor('__BAAAAD__', true);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testCloseUnopenedBlock()
+	{
+		$tpl = new Dwoo_Template_String('{/foreach}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testParseError()
+	{
+		$tpl = new Dwoo_Template_String('{++}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testUnfinishedStringException()
+	{
+		$tpl = new Dwoo_Template_String('{"fooo}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testMissingArgumentException()
+	{
+		$tpl = new Dwoo_Template_String('{upper()}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array('foo'=>0), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testMissingArgumentExceptionVariation2()
+	{
+		$tpl = new Dwoo_Template_String('{upper foo=bar}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array('foo'=>0), $this->compiler);
 	}
 }
 

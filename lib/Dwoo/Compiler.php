@@ -1481,7 +1481,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer += $matchedLength;
 
 			// replace useless brackets by dot accessed vars
-			$key = preg_replace('#\[([^\[.->]+)\]#', '.$1', $key);
+			$key = preg_replace('#\[([^$%\[.>-]+)\]#', '.$1', $key);
 
 			// prevent $foo->$bar calls because it doesn't seem worth the trouble
 			if(strpos($key, '->$') !== false)
@@ -1506,29 +1506,59 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$curTxt =& $parsed[$uid++];
 				$tree = array();
 				$chars = str_split($key, 1);
+				$inSplittedVar = false;
+				$bracketCount = 0;
+
 				while(($char = array_shift($chars)) !== null)
 				{
 					if($char === '[')
 					{
-						$tree[] =& $current;
-						$current[$uid] = array($uid+1 => '');
-						$current =& $current[$uid++];
-						$curTxt =& $current[$uid++];
+						if(count($tree) > 0)
+						{
+							$bracketCount++;
+						}
+						else
+						{
+							$tree[] =& $current;
+							$current[$uid] = array($uid+1 => '');
+							$current =& $current[$uid++];
+							$curTxt =& $current[$uid++];
+							continue;
+						}
 					}
 					elseif($char === ']')
 					{
-						$current =& $tree[count($tree)-1];
-						array_pop($tree);
-						if(current($chars) !== '[' && current($chars) !== false && current($chars) !== ']')
+						if($bracketCount > 0)
 						{
-							$current[$uid] = '';
-							$curTxt =& $current[$uid++];
+							$bracketCount--;
+						}
+						else
+						{
+							$current =& $tree[count($tree)-1];
+							array_pop($tree);
+							if(current($chars) !== '[' && current($chars) !== false && current($chars) !== ']')
+							{
+								$current[$uid] = '';
+								$curTxt =& $current[$uid++];
+							}
+							continue;
 						}
 					}
-					else
+					elseif($char === '$')
 					{
-						$curTxt .= $char;
+						if(count($tree) == 0)
+						{
+							$curTxt =& $current[$uid++];
+							$inSplittedVar = true;
+						}
 					}
+					elseif(($char === '.' || $char === '-') && count($tree) == 0 && $inSplittedVar)
+					{
+						$curTxt =& $current[$uid++];
+						$inSplittedVar = false;
+					}
+
+					$curTxt .= $char;
 				}
 				unset($uid, $current, $curTxt, $tree, $chars);
 
@@ -1814,43 +1844,52 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			else
 			{
 				$key = str_replace('"','\\"',$bit);
-				$cnt = substr_count($key, '$');
 
-				if($this->debug) echo 'PARSING SUBVARS IN : '.$key.'<br>';
-				if($cnt > 0)
+				if(substr($key,0,1)==='$')
 				{
-					while(--$cnt >= 0)
-					{
-						if(isset($last))
-						{
-							$last = strrpos($key, '$', - (strlen($key) - $last + 1));
-						}
-						else
-						{
-							$last = strrpos($key, '$');
-						}
-						preg_match('#\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*'.
-								  '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', substr($key, $last), $submatch);
-
-						$len = strlen($submatch[0]);
-						$key = substr_replace(
-							$key,
-							preg_replace_callback(
-								'#(\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)'.
-								'((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i',
-								array($this, 'replaceVarKeyHelper'), substr($key, $last, $len)
-							),
-							$last,
-							$len
-						);
-						if($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key.'<br>';
-					}
-
-					$out .= $key;
+					$out .= '".'.$this->parseVar($key, 0, strlen($key), false, 'variable').'."';
 				}
 				else
 				{
-					$out .= $key;
+					$cnt = substr_count($key, '$');
+
+					if($this->debug) echo 'PARSING SUBVARS IN : '.$key.'<br>';
+					if($cnt > 0)
+					{
+						while(--$cnt >= 0)
+						{
+							if(isset($last))
+							{
+								$last = strrpos($key, '$', - (strlen($key) - $last + 1));
+							}
+							else
+							{
+								$last = strrpos($key, '$');
+							}
+							preg_match('#\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*'.
+									  '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', substr($key, $last), $submatch);
+
+							$len = strlen($submatch[0]);
+							$key = substr_replace(
+								$key,
+								preg_replace_callback(
+									'#(\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)'.
+									'((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i',
+									array($this, 'replaceVarKeyHelper'), substr($key, $last, $len)
+								),
+								$last,
+								$len
+							);
+							if($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key.'<br>';
+						}
+						unset($last);
+
+						$out .= $key;
+					}
+					else
+					{
+						$out .= $key;
+					}
 				}
 			}
 		}
