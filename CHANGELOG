@@ -1,5 +1,7 @@
 [2008--] 0.9.1
-+ Added {/} shortcut that closes the last opened block
++ Syntax: Mixing named and unnamed parameters is now allowed, as long as the
+  unnamed ones appear first
++ Syntax: Added {/} shortcut that closes the last opened block
 * Optimized scope-handling functions, {loop} and {with} are now slightly faster
 * Fixed a bug in {date_format} that prevented anything but unix timestamps to
   work

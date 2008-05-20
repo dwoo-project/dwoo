@@ -118,6 +118,24 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('34boo5foo3', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testMixedParameters()
+	{
+		$tpl = new Dwoo_Template_String('{assign value=array(3, boo=5, 3=4) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('03boo534', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testMixedParametersWrongOrder()
+	{
+		$tpl = new Dwoo_Template_String("{array(boo=5, 3)}");
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
 	public function testRecursiveCall()
 	{
 		$tpl = new Dwoo_Template_String('{lower(reverse(upper($foo)))}');

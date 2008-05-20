@@ -1124,14 +1124,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$state |= 2;
 					else
 					{
-						if($state === 2 && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
+						if(($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
 							$params[$k] = array($m[2], array('true', 'true'));
 						else
+						{
+							if($state & 2)
+								throw new Dwoo_Compilation_Exception('You can not use an unnamed parameter after a named one');
 							$state |= 1;
+						}
 					}
 				}
-				if($state === 3)
-					throw new Dwoo_Compilation_Exception('Function calls can not have both named and un-named parameters');
 			}
 		}
 
@@ -1164,7 +1166,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if($curBlock !== 'root' || is_array($parsingParams))
 					throw new Dwoo_Compilation_Exception('Block plugins can not be used as other plugin\'s arguments');
 
-				if($state===2)
+				if($state & 2)
 				{
 					array_unshift($params, array('__functype', array($pluginType, $pluginType)));
 					array_unshift($params, array('__funcname', array($func, $func)));
@@ -1202,7 +1204,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$output = 'smarty_modifier_'.$func.'('.implode(', ', $params).')';
 		}
 
-		// keep php-syntax-safe values for non-block plugins
+		// only keep php-syntax-safe values for non-block plugins
 		foreach($params as &$p)
 			$p = $p[0];
 		if($pluginType & Dwoo::NATIVE_PLUGIN)
@@ -2137,14 +2139,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$state |= 2;
 					else
 					{
-						if($state === 2 && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
+						if(($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m))
 							$params[$k] = array($m[2], array('true', 'true'));
 						else
+						{
+							if($state & 2)
+								throw new Dwoo_Compilation_Exception('You can not use an unnamed parameter after a named one');
 							$state |= 1;
+						}
 					}
 				}
-				if($state === 3)
-					$this->errors[] = 'A function can not have named AND un-named parameters in : '.$cmdstr;
 			}
 
 			// check if we must use array_map with this plugin or not
@@ -2157,7 +2161,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			$pluginType = $this->getPluginType($func);
 
-			if($state===2)
+			if($state & 2)
 				array_unshift($params, array('value', array($output, $output)));
 			else
 				array_unshift($params, array($output, $output));
@@ -2418,102 +2422,61 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$paramlist = array();
 
-		// named parameters call
-		if($callType===2)
+		// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
+		$ps = array();
+		foreach($params as $p)
 		{
-			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
-			$ps = array();
-			foreach($params as $p)
+			if(is_array($p[1]))
 				$ps[$p[0]] = $p[1];
+			else
+				$ps[] = $p;
+		}
 
-			// loops over the param map and assigns values from the template or default value for unset optional params
-			while(list($k,$v) = each($map))
-			{
-				// "rest" array parameter, fill every remaining params in it and then break
-				if($v[0] === '*')
-				{
-					if(count($ps) === 0)
-					{
-						if($v[1]===false)
-							throw new Dwoo_Compilation_Exception('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
-						else
-							break;
-					}
-					$tmp = array();
-					$tmp2 = array();
-					foreach($ps as $i=>$p)
-					{
-						$tmp[$i] = $p[0];
-						$tmp2[$i] = $p[1];
-					}
-					$paramlist[$v[0]] = array($tmp, $tmp2);
-					unset($tmp, $tmp2, $i, $p);
-					break;
-				}
-				// parameter is defined
-				elseif(isset($ps[$v[0]]))
-				{
-					$paramlist[$v[0]] = $ps[$v[0]];
-					unset($ps[$v[0]]);
-				}
-				// parameter is not defined and not optional, throw error
-				elseif($v[1]===false)
-					throw new Dwoo_Compilation_Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
-				// enforce lowercased null if default value is null (php outputs NULL with var export)
-				elseif($v[2]===null)
-					$paramlist[$v[0]] = array('null', null);
-				// outputs default value with var_export
-				else
-					$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
-			}
-		}
-		// php call or no parameter call
-		elseif($callType===1||$callType===0)
+		// loops over the param map and assigns values from the template or default value for unset optional params
+		while(list($k,$v) = each($map))
 		{
-			// loops over the param map and assigns values from the template or default value for unset optional params
-			while(list($k,$v) = each($map))
+			// "rest" array parameter, fill every remaining params in it and then break
+			if($v[0] === '*')
 			{
-				// "rest" array parameter, fill every remaining params in it and then break
-				if($v[0] === '*')
+				if(count($ps) === 0)
 				{
-					if(count($params) === 0)
-					{
-						if($v[1]===false)
-							throw new Dwoo_Compilation_Exception('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
-						else
-							break;
-					}
-					$tmp = array();
-					$tmp2 = array();
-					$i = 0;
-					foreach($params as $p)
-					{
-						$tmp[$i] = $p[0];
-						$tmp2[$i++] = $p[1];
-					}
-					$paramlist[$v[0]] = array($tmp, $tmp2);
-					unset($tmp, $tmp2, $i, $p);
-					break;
+					if($v[1]===false)
+						throw new Dwoo_Compilation_Exception('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
+					else
+						break;
 				}
-				// parameter is defined
-				elseif(empty($params)===false)
+				$tmp = array();
+				$tmp2 = array();
+				foreach($ps as $i=>$p)
 				{
-					$paramlist[$v[0]] = array_shift($params);
+					$tmp[$i] = $p[0];
+					$tmp2[$i] = $p[1];
 				}
-				// parameter is not defined and not optional, throw error
-				elseif($v[1]===false)
-					throw new Dwoo_Compilation_Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
-				// enforce lowercased null if default value is null (php outputs NULL with var export)
-				elseif($v[2]===null)
-					$paramlist[$v[0]] = array('null', null);
-				// outputs default value with var_export
-				else
-					$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
+				$paramlist[$v[0]] = array($tmp, $tmp2);
+				unset($tmp, $tmp2, $i, $p);
+				break;
 			}
+			// parameter is defined
+			elseif(isset($ps[$v[0]]))
+			{
+				$paramlist[$v[0]] = $ps[$v[0]];
+				unset($ps[$v[0]]);
+			}
+			elseif(isset($ps[$k]))
+			{
+				$paramlist[$v[0]] = $ps[$k];
+				unset($ps[$k]);
+			}
+			// parameter is not defined and not optional, throw error
+			elseif($v[1]===false)
+				throw new Dwoo_Compilation_Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
+			// enforce lowercased null if default value is null (php outputs NULL with var export)
+			elseif($v[2]===null)
+				$paramlist[$v[0]] = array('null', null);
+			// outputs default value with var_export
+			else
+				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
 		}
-		// parser failed miserably
-		else
-			throw new Dwoo_Compilation_Exception('This should not happen, please report it if you see this message');
 
 		return $paramlist;
 	}
