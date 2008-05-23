@@ -39,6 +39,11 @@ class Dwoo_Smarty__Adapter extends Dwoo
 	// magic get/set/call functions that handle unsupported features
 	public function __set($p, $v)
 	{
+		if($p==='scope')
+		{
+			$this->scope = $v;
+			return;
+		}
 		if(array_key_exists($p, $this->compat['properties']) !== false)
 		{
 			if($this->show_compat_errors)

@@ -547,7 +547,10 @@ class Dwoo
 		if(strlen($name) < 2)
 			throw new Dwoo_Exception('Resource names must be at least two-character long to avoid conflicts with Windows paths');
 
-		$interfaces = class_implements($class, false);
+		if(!class_exists($class))
+			throw new Dwoo_Exception('Resource class does not exist');
+
+		$interfaces = class_implements($class);
 		if(in_array('Dwoo_ITemplate', $interfaces) === false)
 			throw new Dwoo_Exception('Resource class must implement Dwoo_ITemplate');
 
