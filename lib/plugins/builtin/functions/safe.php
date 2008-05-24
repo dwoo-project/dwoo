@@ -1,14 +1,7 @@
 <?php
 
 /**
- * Builds an array with all the provided variables, use named parameters to make an associative array
- * 
- * Example :
- * 
- * <code>
- * {array(a, b, c)} results in array(0=>'a', 1=>'b', 2=>'c')
- * {array(a=foo, b=5, c=array(4,5))} results in array('a'=>'foo', 'b'=>5, 'c'=>array(0=>4, 1=>5))
- * </code>
+ * TOCOM
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -26,14 +19,7 @@
  * @date       2008-05-10
  * @package    Dwoo
  */
-function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest=array())
+function Dwoo_Plugin_safe_compile(Dwoo_Compiler $compiler, $var)
 {
-	$out = array();
-	foreach($rest as $k=>$v)
-		if(is_numeric($k))
-			$out[] = $k.'=>'.$v;
-		else
-			$out[] = '"'.$k.'"=>'.$v;
-
-	return 'array('.implode(', ', $out).')';
+	return preg_replace('#htmlspecialchars\((.+?), ENT_QUOTES, \$this->charset\)#', '$1', $var);
 }

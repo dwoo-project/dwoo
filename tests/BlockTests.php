@@ -14,6 +14,37 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo();
 	}
 
+	public function testAutoEscape()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->setAutoEscape(true);
+		
+		$tpl = new Dwoo_Template_String('{$foo}{auto_escape off}{$foo}{/}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
+
+		$tpl = new Dwoo_Template_String('{$foo}{auto_escape true}{$foo}{/}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("a<b>ca&lt;b&gt;c", $this->dwoo->get($tpl, array('foo'=>'a<b>c')));
+		
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_auto_escape($this->dwoo);
+		$fixCall->init('');
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testAutoEscapeWrongParam()
+	{
+		$tpl = new Dwoo_Template_String('{$foo}{auto_escape slkfjsl}{$foo}{/}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array('foo'=>'a<b>c'));
+	}
+
 	public function testCapture()
 	{
 		$tpl = new Dwoo_Template_String('{capture name="foo" assign="foo"}BAR{/capture}{$dwoo.capture.foo}-{$foo}');

@@ -460,6 +460,18 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 		$this->dwoo->get($tpl, array('foo'=>0), $this->compiler);
 	}
+	
+	public function testAutoEscape()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->setAutoEscape(true);
+		$this->assertEquals(true, $cmp->getAutoEscape());
+		
+		$tpl = new Dwoo_Template_String('{$foo}{$foo|safe}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
+	}
 }
 
 class MethodCallsHelper {

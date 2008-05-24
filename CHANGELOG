@@ -1,4 +1,9 @@
 [2008--] 0.9.1
++ API: Added Dwoo_Compiler->setAutoEscape() and getAutoEscape() to modify the
+  automatic html entity escaping setting. This is disabled by default, and when
+  enabled can be overriden with the {safe $var} plugin or the 
+  {auto_escape disable} block plugin. The block plugin can also be used to 
+  enable this mode from within a template
 + Syntax: Mixing named and unnamed parameters is now allowed, as long as the
   unnamed ones appear first
 + Syntax: Added {/} shortcut that closes the last opened block

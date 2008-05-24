@@ -82,9 +82,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * turn to true if you want to be sloppy with the syntax, but when set to false it allows
 	 * to skip javascript and css tags as long as they are in the form "{ something", which is
 	 * nice. default is false.
+	 * 
+	 * @var bool
 	 */
 	protected $allowLooseOpenings = false;
-
+	
+	/**
+	 * defines whether the compiler will automatically html-escape variables or not
+	 * 
+	 * default is false
+	 * 
+	 * @var bool
+	 */
+	protected $autoEscape = false;
+	
 	/**
 	 * security policy object
 	 *
@@ -248,6 +259,34 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	public function getLooseOpeningHandling()
 	{
 		return $this->allowLooseOpenings;
+	}
+	
+	/**
+	 * changes the auto escape setting
+	 * 
+	 * if enabled, the compiler will automatically html-escape variables, 
+	 * unless they are passed through the safe function such as {$var|safe} 
+	 * or {safe $var}
+	 * 
+	 * default setting is disabled/false
+	 * 
+	 * @param bool $enabled set to true to enable, false to disable
+	 */
+	public function setAutoEscape($enabled)
+	{
+		$this->autoEscape = $enabled;
+	}
+
+	/**
+	 * returns the auto escape setting
+	 * 
+	 * default setting is disabled/false
+	 * 
+	 * @return bool
+	 */
+	public function getAutoEscape()
+	{
+		return $this->autoEscape;
 	}
 
 	/**
@@ -1663,6 +1702,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$assign = true;
 			}
 
+			if($this->autoEscape === true)
+			{	
+				$output = 'htmlspecialchars('.$output.', ENT_QUOTES, $this->charset)';
+			}
+			
 			// handle modifiers
 			if($curBlock !== 'modifier' && $hasModifiers)
 			{

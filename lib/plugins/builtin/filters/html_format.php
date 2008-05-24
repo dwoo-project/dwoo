@@ -1,7 +1,13 @@
 <?php
 
 /**
- * TOCOM
+ * Formats any html output (must be valid xml where every tag opened is closed) 
+ * using a single tab for indenting. 'pre' and other whitespace sensitive
+ * tags should not be affected.
+ * 
+ * It is not recommended to use this on every template if you render multiple 
+ * templates per page, you should only use it once on the main page template so that 
+ * everything is formatted in one pass.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

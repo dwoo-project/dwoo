@@ -1,7 +1,21 @@
 <?php
+
 /**
- * TOCOM
- *
+ * Conditional block, the syntax is very similar to the php one, allowing () || && and 
+ * other php operators. Additional operators and their equivalent php syntax are as follow :
+ * 
+ * eq -> ==
+ * neq or ne -> !=
+ * gte or ge -> >=
+ * lte or le -> <=
+ * gt -> >
+ * lt -> <
+ * mod -> %
+ * not -> !
+ * X is [not] div by Y -> (X % Y) == 0 
+ * X is [not] even [by Y] -> (X % 2) == 0 or ((X/Y) % 2) == 0
+ * X is [not] odd [by Y] -> (X % 2) != 0 or ((X/Y) % 2) != 0 
+ * 
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

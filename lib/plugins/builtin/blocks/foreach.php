@@ -1,7 +1,17 @@
 <?php
 
 /**
- * TOCOM
+ * Similar to the php foreach block, loops over an array
+ * 
+ * Note that if you don't provide the item parameter, the key will act as item
+ * 
+ * Example :
+ * 
+ * <code>
+ * {foreach $array val}
+ *   {$val.something}
+ * {/foreach}
+ * </code>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

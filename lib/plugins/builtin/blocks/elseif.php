@@ -1,7 +1,8 @@
 <?php
 
 /**
- * TOCOM
+ * Acts as a php elseif block, allowing you to add one more condition 
+ * if the previous one(s) didn't match. See the {if} plugin for syntax details
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

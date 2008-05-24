@@ -1,7 +1,30 @@
 <?php
+
 /**
- * TOCOM
- *
+ * Moves the scope down into the provided variable, allowing you to use shorter
+ * variable names if you repeatedly access values into a single array
+ * 
+ * The with block won't display anything at all if the provided scope is empty, 
+ * so in effect it acts as {if $var}*content*{/if}
+ * 
+ * Example :
+ * 
+ * instead of the following :
+ * 
+ * <code>
+ * {if $long.boring.prefix}
+ *   {$long.boring.prefix.val} - {$long.boring.prefix.secondVal} - {$long.boring.prefix.thirdVal}
+ * {/if}
+ * </code>
+ *  
+ * you can use :
+ * 
+ * <code>
+ * {with $long.boring.prefix}
+ *   {$val} - {$secondVal} - {$thirdVal}
+ * {/with}
+ * </code>
+ * 
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

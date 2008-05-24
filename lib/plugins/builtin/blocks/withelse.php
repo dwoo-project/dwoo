@@ -1,7 +1,8 @@
 <?php
+
 /**
- * TOCOM
- *
+ * This plugin serves as a {else} block specifically for the {with} plugin.
+ * 
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

@@ -1,7 +1,18 @@
 <?php
 
 /**
- * TOCOM
+ * Captures all the output within this block and saves it into {$.capture.default} by default, 
+ * or {$.capture.name} if you provide another name. If the cat parameter is true, the content 
+ * will be appended to the existing content
+ * 
+ * Example :
+ * 
+ * <code>
+ * {capture "foo"}
+ *   Anything in here won't show, it will be saved for later use..
+ * {/capture}
+ * Output was : {$.capture.foo}
+ * </code>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
