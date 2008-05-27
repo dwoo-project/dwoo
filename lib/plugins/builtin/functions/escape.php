@@ -1,7 +1,11 @@
 <?php
 
 /**
- * TOCOM
+ * Applies various escaping schemes on the given string
+ * 
+ *  * value : the string to process
+ *  * format : escaping format to use, valid formats are : html, htmlall, url, urlpathinfo, quotes, hex, hexentity, javascript and mail
+ *  * charset : character set to use for the conversion (applies to some formats only), defaults to the current Dwoo charset
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

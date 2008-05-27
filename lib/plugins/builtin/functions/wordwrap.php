@@ -1,7 +1,12 @@
 <?php
 
 /**
- * TOCOM
+ * Wraps a text at the given line length
+ * 
+ *  * value : the text to wrap
+ *  * length : maximum line length
+ *  * break : the character(s) to use to break the line
+ *  * cut : if true, the line is cut at the exact length instead of breaking at the nearest space
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

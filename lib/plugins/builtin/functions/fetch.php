@@ -1,7 +1,10 @@
 <?php
 
 /**
- * TOCOM
+ * Reads a file
+ * 
+ *  * file : path or URI of the file to read (however reading from another website is not recommended for performance reasons)
+ *  * assign : if set, the file will be saved in this variable instead of being output
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

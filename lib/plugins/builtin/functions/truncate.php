@@ -1,7 +1,13 @@
 <?php
 
 /**
- * TOCOM
+ * Truncates a string at the given length
+ * 
+ *  * value : text to truncate
+ *  * length : the maximum length for the string
+ *  * etc : the characters that are added to show that the string was cut off
+ *  * break : if true, the string will be cut off at the exact length, instead of cutting at the nearest space
+ *  * middle : if true, the string will contain the beginning and the end, and the extra characters will be removed from the middle
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

@@ -1,7 +1,21 @@
 <?php
 
 /**
- * TOCOM
+ * Computes a mathematical equation
+ * 
+ *  * equation : the equation to compute, it can include normal variables with $foo or special math variables without the dollar sign 
+ *  * format : output format, see {@link http://php.net/sprintf} for details
+ *  * assign : if set, the output is assigned into the given variable name instead of being output
+ *  * rest : all math specific variables that you use must be defined, see the example
+ * 
+ * Example :
+ * 
+ * <code>
+ * {$c=2}
+ * {math "(a+b)*$c/4" a=3 b=5}
+ * 
+ * output is : 4 ( = (3+5)*2/4)
+ * </code>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

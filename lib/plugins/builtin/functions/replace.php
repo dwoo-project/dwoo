@@ -1,7 +1,11 @@
 <?php
 
 /**
- * TOCOM
+ * Replaces the search string by the replace string
+ * 
+ *  * value : the string to search into
+ *  * search : the string to search for
+ *  * replace : the string to use as a replacement
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

@@ -1,7 +1,20 @@
 <?php
 
 /**
- * TOCOM
+ * Replaces all white-space characters with the given string
+ * 
+ *  * value : the text to process
+ *  * with : the replacement string, note that any number of consecutive white-space characters will be replaced by a single replacement string
+ * 
+ * Example :
+ * 
+ * <code>
+ * {"a    b  c		d
+ * 
+ * e"|strip}
+ * 
+ * results in : a b c d e
+ * </code>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

@@ -1,7 +1,11 @@
 <?php
 
 /**
- * TOCOM
+ * Indents every line of a text by the given amount of characters
+ * 
+ *  * value : the string to indent
+ *  * by : how many characters should be inserted before each line
+ *  * char : the character(s) to insert
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.

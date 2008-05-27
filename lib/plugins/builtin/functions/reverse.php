@@ -1,8 +1,11 @@
 <?php
 
 /**
- * TOCOM
- *
+ * Reverses a string or an array 
+ * 
+ *  * value : the string or array to reverse
+ *  * preserve_keys : if value is an array and this is true, then the array keys are left intact
+ * 
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -21,7 +24,7 @@
  */
 function Dwoo_Plugin_reverse(Dwoo $dwoo, $value, $preserve_keys=false)
 {
-	if(is_array($value) || ($value instanceof Iterator && $value instanceof ArrayAccess))
+	if(is_array($value))
 		return array_reverse($value, $preserve_keys);
 	else
 		return implode('',array_reverse(str_split((string) $value,1)));
