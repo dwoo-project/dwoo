@@ -2,7 +2,13 @@
 
 /**
  * Similar to the php for block
- *
+ * <pre>
+ *  * name : foreach name to access it's iterator variables through {$.foreach.name.var} see {@link http://wiki.dwoo.org/index.php/IteratorVariables} for details
+ *  * from : array to iterate from (which equals 0) or a number as a start value
+ *  * to : value to stop iterating at (equals count($array) by default if you set an array in from)
+ *  * step : defines the incrementation of the pointer at each iteration
+ *  * skip : allows you to skip some entries at the start, mostly useless excepted for smarty compatibility
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

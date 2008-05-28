@@ -2,7 +2,7 @@
 
 /**
  * Cycles between several values and returns one of them on each call
- * 
+ * <pre>
  *  * name : the cycler name, specify if you need to have multiple concurrent cycles running
  *  * values : an array of values or a string of values delimited by $delimiter
  *  * print : if false, the pointer will go to the next one but not print anything
@@ -10,7 +10,7 @@
  *  * delimiter : the delimiter used to split values if they are provided as a string
  *  * assign : if set, the value is saved in that variable instead of being output
  *  * reset : if true, the pointer is reset to the first value
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

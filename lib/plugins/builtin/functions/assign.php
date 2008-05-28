@@ -1,8 +1,11 @@
 <?php
 
 /**
- * TOCOM
- *
+ * Assigns a value to a variable
+ * <pre>
+ *  * value : the value that you want to save
+ *  * var : the variable name (without the leading $)
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

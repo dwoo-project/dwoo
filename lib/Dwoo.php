@@ -603,6 +603,8 @@ class Dwoo
 	public function setCacheDir($dir)
 	{
 		$this->cacheDir = rtrim($dir, '/\\').DIRECTORY_SEPARATOR;
+		if(is_writable($this->cacheDir) === false)
+			throw new Dwoo_Exception('The cache directory must be writable, chmod "'.$this->cacheDir.'" to make it writable');
 	}
 
 	/**
@@ -623,6 +625,8 @@ class Dwoo
 	public function setCompileDir($dir)
 	{
 		$this->compileDir = rtrim($dir, '/\\').DIRECTORY_SEPARATOR;
+		if(is_writable($this->compileDir) === false)
+			throw new Dwoo_Exception('The compile directory must be writable, chmod "'.$this->compileDir.'" to make it writable');
 	}
 
 	/**
@@ -1175,12 +1179,12 @@ class Dwoo
 				{
 					return $this->globals;
 				}
-				elseif($varstr === '_root' || $varstr === '__')
+				elseif($varstr === '__' || $varstr === '_root' )
 				{
 					return $this->data;
 					$varstr = substr($varstr, 6);
 				}
-				elseif($varstr === '_parent' || $varstr === '_')
+				elseif($varstr === '_' || $varstr === '_parent')
 				{
 					$varstr = '.'.$varstr;
 					$tree = $this->scopeTree;
@@ -1255,13 +1259,13 @@ class Dwoo
 				array_shift($m[1]);
 			}
 		}
-		elseif($i === '_root' || $i === '__')
+		elseif($i === '__' || $i === '_root')
 		{
 			$cur = $this->data;
 			array_shift($m[2]);
 			array_shift($m[1]);
 		}
-		elseif($i === '_parent' || $i === '_')
+		elseif($i === '_' || $i === '_parent')
 		{
 			$tree = $this->scopeTree;
 			$cur = $this->data;
@@ -1271,7 +1275,7 @@ class Dwoo
 				array_pop($tree);
 				array_shift($m[2]);
 				array_shift($m[1]);
-				if(current($m[2]) === '_parent' || current($m[2]) === '_')
+				if(current($m[2]) === '_' || current($m[2]) === '_parent')
 					continue;
 
 				while(($i = array_shift($tree)) !== null)
@@ -1391,7 +1395,7 @@ class Dwoo
 
 		while(($bit = array_shift($scope)) !== null)
 		{
-			if($bit === '_parent' || $bit === '_')
+			if($bit === '_' || $bit === '_parent')
 			{
 				array_pop($this->scopeTree);
 				reset($this->scopeTree);
@@ -1400,7 +1404,7 @@ class Dwoo
 				for($i=0;$i<$cnt;$i++)
 					$this->scope =& $this->scope[$this->scopeTree[$i]];
 			}
-			elseif($bit === '_root' || $bit === '__')
+			elseif($bit === '__' || $bit === '_root')
 			{
 				$this->scope =& $this->data;
 				$this->scopeTree = array();

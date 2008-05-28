@@ -2,11 +2,11 @@
 
 /**
  * Formats a date
- * 
+ * <pre>
  *  * value : the date, as a unix timestamp, mysql datetime or whatever strtotime() can parse
  *  * format : output format, see {@link http://php.net/strftime} for details
  *  * default : a default timestamp value, if the first one is empty
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

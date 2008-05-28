@@ -2,9 +2,9 @@
 
 /**
  * Extends another template, read more about template inheritance at {@link http://wiki.dwoo.org/index.php/TemplateInheritance}
- * 
+ * <pre>
  *  * file : the template to extend
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

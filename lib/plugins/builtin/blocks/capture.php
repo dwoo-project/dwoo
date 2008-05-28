@@ -1,12 +1,18 @@
 <?php
 
 /**
- * Captures all the output within this block and saves it into {$.capture.default} by default, 
- * or {$.capture.name} if you provide another name. If the cat parameter is true, the content 
+ * Captures all the output within this block and saves it into {$.capture.default} by default,
+ * or {$.capture.name} if you provide another name.
+ * <pre>
+ *  * name : capture name, used to read the value afterwards
+ *  * assign : if set, the value is also saved in the given variable
+ *  * cat : if true, the value is appended to the previous one (if any) instead of overwriting it
+ * </pre>
+ * If the cat parameter is true, the content
  * will be appended to the existing content
- * 
+ *
  * Example :
- * 
+ *
  * <code>
  * {capture "foo"}
  *   Anything in here won't show, it will be saved for later use..

@@ -2,9 +2,9 @@
 
 /**
  * Outputs a mailto link with optional spam-proof (okay probably not) encoding
- * 
+ * <pre>
  *  * address : target email address
- *  * text : display text to show for the link, defaults to the address if not provided 
+ *  * text : display text to show for the link, defaults to the address if not provided
  *  * subject : the email subject
  *  * encode : one of the available encoding (none, js, jscharcode or hex)
  *  * cc : address(es) to carbon copy, comma separated
@@ -12,7 +12,7 @@
  *  * newsgroups : newsgroup(s) to post to, comma separated
  *  * followupto : address(es) to follow up, comma separated
  *  * extra : additional attributes to add to the &lt;a&gt; tag
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

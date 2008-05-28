@@ -1,9 +1,18 @@
 <?php
 
 /**
- * Formats a string to the given format, you can wrap lines at a certain 
+ * Formats a string to the given format, you can wrap lines at a certain
  * length and indent them
- * 
+ * <pre>
+ *  * wrap : maximum line length
+ *  * wrap_char : the character(s) to use to break the line
+ *  * wrap_cut : if true, the line is cut at the exact length instead of breaking at the nearest space
+ *  * indent : amount of $indent_char to insert before every line
+ *  * indent_char : character(s) to insert before every line
+ *  * indent_first : amount of additional $indent_char to insert before the first line of each paragraphs
+ *  * style : some predefined formatting styles that set up every required variables, can be "email" or "html"
+ *  * assign : if set, the formatted text is assigned to that variable instead of being output
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

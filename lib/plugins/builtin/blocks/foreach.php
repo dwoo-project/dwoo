@@ -2,11 +2,16 @@
 
 /**
  * Similar to the php foreach block, loops over an array
- * 
+ *
  * Note that if you don't provide the item parameter, the key will act as item
- * 
+ * <pre>
+ *  * from : the array that you want to iterate over
+ *  * key : variable name for the key (or for the item if item is not defined)
+ *  * item : variable name for each item
+ *  * name : foreach name to access it's iterator variables through {$.foreach.name.var} see {@link http://wiki.dwoo.org/index.php/IteratorVariables} for details
+ * </pre>
  * Example :
- * 
+ *
  * <code>
  * {foreach $array val}
  *   {$val.something}

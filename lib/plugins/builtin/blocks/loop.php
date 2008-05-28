@@ -2,28 +2,31 @@
 
 /**
  * Loops over an array and moves the scope into each value, allowing for shorter loop constructs
- * 
- * Note that to access the array key within a loop block, you have to use the {$_key} variable, 
+ *
+ * Note that to access the array key within a loop block, you have to use the {$_key} variable,
  * you can not specify it yourself.
- * 
+ * <pre>
+ *  * from : the array that you want to iterate over
+ *  * name : loop name to access it's iterator variables through {$.loop.name.var} see {@link http://wiki.dwoo.org/index.php/IteratorVariables} for details
+ * </pre>
  * Example :
- * 
+ *
  * instead of a foreach block such as :
- * 
+ *
  * <code>
  * {foreach $variable value}
  *   {$value.foo} {$value.bar}
  * {/foreach}
  * </code>
- * 
+ *
  * you can do :
- * 
+ *
  * <code>
  * {loop $variable}
  *   {$foo} {$bar}
  * {/loop}
  * </code>
- * 
+ *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

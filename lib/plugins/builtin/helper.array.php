@@ -2,9 +2,11 @@
 
 /**
  * Builds an array with all the provided variables, use named parameters to make an associative array
- * 
+ * <pre>
+ *  * rest : any number of variables, strings or anything that you want to store in the array
+ * </pre>
  * Example :
- * 
+ *
  * <code>
  * {array(a, b, c)} results in array(0=>'a', 1=>'b', 2=>'c')
  * {array(a=foo, b=5, c=array(4,5))} results in array('a'=>'foo', 'b'=>5, 'c'=>array(0=>4, 1=>5))

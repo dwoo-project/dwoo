@@ -2,7 +2,9 @@
 
 /**
  * Overrides the compiler auto-escape setting within the block
- *
+ * <pre>
+ *  * enabled : if set to "on", "enable", true or 1 then the compiler autoescaping is enabled inside this block. set to "off", "disable", false or 0 to disable it
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -49,7 +51,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
 			default:
 				throw new Dwoo_Compilation_Exception('Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
 		}
-		
+
 		self::$stack[] = $compiler->getAutoEscape();
 		$compiler->setAutoEscape($enable);
 		return '';

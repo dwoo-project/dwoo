@@ -1,8 +1,10 @@
 <?php
 
 /**
- * TOCOM
- *
+ * Concatenates any number of variables or strings fed into it
+ * <pre>
+ *  * rest : two or more strings that will be merged into one
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

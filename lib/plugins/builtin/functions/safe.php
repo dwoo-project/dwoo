@@ -2,9 +2,9 @@
 
 /**
  * Marks the variable as safe and removes the auto-escape function, only useful if you turned auto-escaping on
- * 
+ * <pre>
  *  * var : the variable to pass through untouched
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

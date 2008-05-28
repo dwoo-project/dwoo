@@ -1,8 +1,15 @@
 <?php
 
 /**
- * TOCOM
- *
+ * Initiates a counter that is incremented every time you call it
+ * <pre>
+ *  * name : the counter name, define it if you want to have multiple concurrent counters
+ *  * start : the start value, if it's set, it will reset the counter to this value, defaults to 1
+ *  * skip : the value to add to the counter at each call, defaults to 1
+ *  * direction : "up" (default) or "down" to define whether the counter increments or decrements
+ *  * print : if false, the counter will not output the current count, defaults to true
+ *  * assign : if set, the counter is saved into the given variable and does not output anything, overriding the print parameter
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

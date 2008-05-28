@@ -2,11 +2,11 @@
 
 /**
  * Replaces the search string by the replace string using regular expressions
- * 
+ * <pre>
  *  * value : the string to search into
  *  * search : the string to search for, must be a complete regular expression including delimiters
  *  * replace : the string to use as a replacement, must be a complete regular expression including delimiters
- *
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
