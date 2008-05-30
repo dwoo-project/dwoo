@@ -57,8 +57,8 @@ Dwoo_Loader::loadPlugin('topLevelBlock');
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.9.0
- * @date       2008-05-10
+ * @version    0.9.1
+ * @date       2008-05-30
  * @package    Dwoo
  */
 class Dwoo
@@ -68,7 +68,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = "0.9.0";
+	const VERSION = "0.9.1";
 
 	/**
 	 * unique number of this dwoo release
@@ -77,7 +77,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 9;
+	const RELEASE_TAG = 10;
 
 	/**#@+
 	 * constants that represents all plugin types

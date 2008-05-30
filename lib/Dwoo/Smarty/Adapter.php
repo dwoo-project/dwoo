@@ -30,8 +30,8 @@ if(class_exists('Dwoo_Compiler', false) === false)
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.9.0
- * @date       2008-05-10
+ * @version    0.9.1
+ * @date       2008-05-30
  * @package    Dwoo
  */
 class Dwoo_Smarty__Adapter extends Dwoo

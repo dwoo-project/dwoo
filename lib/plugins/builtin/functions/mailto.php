@@ -25,8 +25,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    0.9.0
- * @date       2008-05-10
+ * @version    0.9.1
+ * @date       2008-05-30
  * @package    Dwoo
  */
 function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $encode=null, $cc=null, $bcc=null, $newsgroups=null, $followupto=null, $extra=null)
