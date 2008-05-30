@@ -25,7 +25,7 @@ class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompila
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$foreach =& $compiler->findBlock('foreach', true);
 		$out = $foreach['params']['postOutput'];
@@ -37,7 +37,7 @@ class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompila
 			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
 		} else {
 			$out .= Dwoo_Compiler::PHP_OPEN;
-	}
+		}
 
 		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
 	}

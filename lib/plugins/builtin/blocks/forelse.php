@@ -25,7 +25,7 @@ class Dwoo_Plugin_forelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$foreach =& $compiler->findBlock('for', true);
 		$out = $foreach['params']['postOutput'];

@@ -331,8 +331,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			unset($this->processors['pre'][$index]);
 		} elseif (($index = array_search('Dwoo_Processor_'.str_replace('Dwoo_Processor_', '', $callback), $this->processors['pre'], true)) !== false) {
 			unset($this->processors['pre'][$index]);
-		} else
-		{
+		} else	{
 			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach ($this->processors['pre'] as $index=>$proc) {
 				if (is_array($proc) && $proc[0] instanceof $class) {
@@ -385,8 +384,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			unset($this->processors['post'][$index]);
 		} elseif (($index = array_search('Dwoo_Processor_'.str_replace('Dwoo_Processor_', '', $callback), $this->processors['post'], true)) !== false) {
 			unset($this->processors['post'][$index]);
-		} else
-		{
+		} else	{
 			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach ($this->processors['post'] as $index=>$proc) {
 				if (is_array($proc) && $proc[0] instanceof $class) {
@@ -539,13 +537,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$search = array('{<\?.*?\?>}', '{<%.*?%>}');
 			}
 			switch($this->securityPolicy->getPhpHandling()) {
-				case Dwoo_Security_Policy::PHP_ALLOW:
-					break;
-				case Dwoo_Security_Policy::PHP_ENCODE:
-					$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
-					break;
-				case Dwoo_Security_Policy::PHP_REMOVE:
-					$tpl = preg_replace($search, '', $tpl);
+
+			case Dwoo_Security_Policy::PHP_ALLOW:
+				break;
+			case Dwoo_Security_Policy::PHP_ENCODE:
+				$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
+				break;
+			case Dwoo_Security_Policy::PHP_REMOVE:
+				$tpl = preg_replace($search, '', $tpl);
+
 			}
 		}
 
@@ -663,24 +663,26 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		foreach ($this->usedPlugins as $plugin=>$type) {
 			if ($type & Dwoo::CUSTOM_PLUGIN) continue;
 			switch($type) {
-				case Dwoo::BLOCK_PLUGIN:
-				case Dwoo::CLASS_PLUGIN:
-					$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
-					break;
-				case Dwoo::FUNC_PLUGIN:
-					$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
-					break;
-				case Dwoo::SMARTY_MODIFIER:
-					$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
-					break;
-				case Dwoo::SMARTY_FUNCTION:
-					$output .= "if (function_exists('smarty_function_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
-					break;
-				case Dwoo::SMARTY_BLOCK:
-					$output .= "if (function_exists('smarty_block_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
-					break;
-				default:
-					throw new Dwoo_Compilation_Exception('Type error for '.$plugin.' with type'.$type);
+
+			case Dwoo::BLOCK_PLUGIN:
+			case Dwoo::CLASS_PLUGIN:
+				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				break;
+			case Dwoo::FUNC_PLUGIN:
+				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				break;
+			case Dwoo::SMARTY_MODIFIER:
+				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				break;
+			case Dwoo::SMARTY_FUNCTION:
+				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				break;
+			case Dwoo::SMARTY_BLOCK:
+				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				break;
+			default:
+				throw new Dwoo_Compilation_Exception('Type error for '.$plugin.' with type'.$type);
+
 			}
 		}
 
@@ -985,37 +987,38 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($this->debug) echo '<br />PARSE CALL : </pre>PARSING <b>'.htmlentities(substr($in, 0, $from)).'<u>'.htmlentities(substr($in, $from, $to-$from)).'</u>'.htmlentities(substr($in, $to)).'</b> @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
 
-		if ($first==='$') // var
-		{
+		if ($first==='$') {
+			// var
 			$out = $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif ($first==='%' && preg_match('#^%[a-z]#i', $substr)) // const
-		{
+		} elseif ($first==='%' && preg_match('#^%[a-z]#i', $substr)) {
+			// const
 			$out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif ($first==='"' || $first==="'") // string
-		{
+		} elseif ($first==='"' || $first==="'") {
+			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (preg_match('#^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':' |').'\(|$)#i', $substr)) // func
-		{
+		} elseif (preg_match('#^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':' |').'\(|$)#i', $substr)) {
+			// func
 			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) // named parameter
-		{
+		} elseif (is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) {
+			// named parameter
 			if ($this->debug) echo 'NAMED PARAM FOUND<br />';
 			$len = strlen($match[1]);
-			while (substr($in, $from+$len, 1)===' ')
+			while (substr($in, $from+$len, 1)===' ') {
 				$len++;
+			}
 			if ($pointer !== null) {
 				$pointer += $len;
 			}
 
-			$output = array(trim(substr(trim($match[1]),0,-1)), $this->parse($in, $from+$len, $to, false, 'namedparam', $pointer));
+			$output = array(trim(substr(trim($match[1]), 0, -1)), $this->parse($in, $from+$len, $to, false, 'namedparam', $pointer));
 
 			$parsingParams[] = $output;
 			return $parsingParams;
-		} elseif ($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition')) // unquoted string, bool or number
-		{
+		} elseif ($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition')) {
+			// unquoted string, bool or number
 			$out = $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} else // parse error
-		{
+		} else {
+			// parse error
 			throw new Dwoo_Compilation_Exception('Parse error in <em>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em> @ '.$from);
 		}
 
@@ -1061,8 +1064,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		} elseif ($ppos1 !== false) {
 			$paramspos = $ppos1;
-		} else
-		{
+		} else {
 			$paramspos = $ppos2;
 			$paramsep = ')';
 		}
@@ -1070,8 +1072,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$state = 0;
 
 		if ($paramspos === false) {
-			if (strpos($cmdstr,' ')) {
-				$func = substr($cmdstr, 0, strpos($cmdstr,' '));
+			if (strpos($cmdstr, ' ')) {
+				$func = substr($cmdstr, 0, strpos($cmdstr, ' '));
 			} else {
 				$func = $cmdstr;
 			}
@@ -1126,12 +1128,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				foreach ($params as $k=>$p) {
 					if (is_array($p) && is_array($p[1])) {
 						$state |= 2;
-					} else
-					{
+					} else {
 						if (($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m)) {
 							$params[$k] = array($m[2], array('true', 'true'));
-						} else
-						{
+						} else {
 							if ($state & 2) {
 								throw new Dwoo_Compilation_Exception('You can not use an unnamed parameter after a named one');
 							}
@@ -1358,10 +1358,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		if (is_array($parsingParams)) {
-			$parsingParams[] = array($output, substr($srcOutput,1,-1));
+			$parsingParams[] = array($output, substr($srcOutput, 1, -1));
 			return $parsingParams;
 		} elseif ($curBlock === 'namedparam') {
-			return array($output, substr($srcOutput,1,-1));
+			return array($output, substr($srcOutput, 1, -1));
 		} else {
 			return $output;
 		}
@@ -1444,7 +1444,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
-			$key = substr($match[1],1);
+			$key = substr($match[1], 1);
 
 			$matchedLength = strlen($match[0]);
 			$hasModifiers = isset($match[4]) && !empty($match[4]);
@@ -1476,7 +1476,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 			}
 
-			$key = str_replace('"','\\"',$key);
+			$key = str_replace('"', '\\"', $key);
 
 			$cnt=substr_count($key, '$');
 			if ($cnt > 0) {
@@ -1542,13 +1542,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				preg_match_all('{->([a-z0-9_]+)(\([^)]*\))?}i', $methodCall, $calls);
 				foreach ($calls[1] as $i=>$method) {
 					$args = $calls[2][$i];
-					// property
 					if ($args === '') {
+						// property
 						$output = '(property_exists($tmp = '.$output.', \''.$method.'\') ? $tmp->'.$method.' : null)';
-					}
-					// method
-					else
-					{
+					} else {
+						// method
 						if ($args === '()') {
 							$parsedCall = '->'.$method.$args;
 						} else {
@@ -1559,12 +1557,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 			}
 
-			// expressions
 			if ($hasExpression) {
+				// expressions
 				preg_match_all('#(?:([+/*%=-])(=?-?[%$][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[3], $expMatch);
 
 				foreach ($expMatch[1] as $k=>$operator) {
-					if (substr($expMatch[2][$k],0,1)==='=') {
+					if (substr($expMatch[2][$k], 0, 1)==='=') {
 						$assign = true;
 						if ($operator === '=') {
 							throw new Dwoo_Compilation_Exception('Invalid expression, <em>'.$substr.'</em>, can not use "==" in expressions');
@@ -1576,7 +1574,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$expMatch[2][$k] = substr($expMatch[2][$k], 1);
 					}
 
-					if (substr($expMatch[2][$k],0,1)==='-' && strlen($expMatch[2][$k]) > 1) {
+					if (substr($expMatch[2][$k], 0, 1)==='-' && strlen($expMatch[2][$k]) > 1) {
 						$operator .= '-';
 						$expMatch[2][$k] = substr($expMatch[2][$k], 1);
 					}
@@ -1593,9 +1591,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						throw new Dwoo_Compilation_Exception('Unfinished expression, <em>'.$substr.'</em>, missing var or number after math operator');
 					}
 				}
-			}
-			// var assignment
-			elseif ($curBlock === 'root' && substr(trim(substr($substr, $matchedLength)), 0, 1) === '=') {
+			} elseif ($curBlock === 'root' && substr(trim(substr($substr, $matchedLength)), 0, 1) === '=') {
+				// var assignment
 				$value = trim(substr(trim(substr($substr, $matchedLength)), 1));
 
 				$parts = array();
@@ -1611,7 +1608,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
 				$value = Dwoo_Plugin_if::replaceKeywords($parts, $this);
 
-				$output .= '='.implode(' ',$value);
+				$output .= '='.implode(' ', $value);
 				$assign = true;
 			}
 
@@ -1641,8 +1638,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} else {
 			if ($curBlock === 'string') {
 				return array(0, '');
-			} else
-			{
+			} else {
 				throw new Dwoo_Compilation_Exception('Invalid variable name <em>'.$substr.'</em>');
 			}
 		}
@@ -1767,11 +1763,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		foreach ($tree as $bit) {
 			if (is_array($bit)) {
 				$out.='.'.$this->flattenVarTree($bit, false);
-			} else
-			{
-				$key = str_replace('"','\\"',$bit);
+			} else {
+				$key = str_replace('"', '\\"', $bit);
 
-				if (substr($key,0,1)==='$') {
+				if (substr($key, 0, 1)==='$') {
 					$out .= '".'.$this->parseVar($key, 0, strlen($key), false, 'variable').'."';
 				} else {
 					$cnt = substr_count($key, '$');
@@ -1852,7 +1847,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$breaker = false;
 		while (list($k,$char) = each($breakChars)) {
-			$test = strpos($substr,$char);
+			$test = strpos($substr, $char);
 			if ($test !== false && $test < $end) {
 				$end = $test;
 				$breaker = $k;
@@ -1896,7 +1891,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} else {
 			if ($this->debug) echo 'BLABBER CASTED AS STRING<br />';
 
-			$substr = $this->replaceStringVars('"'.str_replace('"','\\"',$substr).'"', '"', $curBlock);
+			$substr = $this->replaceStringVars('"'.str_replace('"', '\\"', $substr).'"', '"', $curBlock);
 		}
 
 		if (is_array($parsingParams)) {
@@ -1948,7 +1943,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// remove backticks around strings if needed
-		$string = preg_replace('#`(("|\').+?\2)`#','$1',$string);
+		$string = preg_replace('#`(("|\').+?\2)`#', '$1', $string);
 
 		return $string;
 	}
@@ -1965,9 +1960,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($this->debug) echo 'PARSING MODIFIERS : '.$m[3].'<br />';
 
 		// remove first pipe
-		$cmdstrsrc = substr($m[3],1);
+		$cmdstrsrc = substr($m[3], 1);
 		// remove last quote if present
-		if (substr($cmdstrsrc,-1,1) === $m[1]) {
+		if (substr($cmdstrsrc, -1, 1) === $m[1]) {
 			$cmdstrsrc = substr($cmdstrsrc, 0, -1);
 			$add = $m[1];
 		}
@@ -2025,12 +2020,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				foreach ($params as $k=>$p) {
 					if (is_array($p) && is_array($p[1])) {
 						$state |= 2;
-					} else
-					{
+					} else {
 						if (($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m)) {
 							$params[$k] = array($m[2], array('true', 'true'));
-						} else
-						{
+						} else {
 							if ($state & 2) {
 								throw new Dwoo_Compilation_Exception('You can not use an unnamed parameter after a named one');
 							}
@@ -2228,8 +2221,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pluginType = Dwoo::SMARTY_FUNCTION;
 			} elseif (function_exists('smarty_block_'.$name) !== false) {
 				$pluginType = Dwoo::SMARTY_BLOCK;
-			} else
-			{
+			} else {
 				if ($pluginType===-1) {
 					try {
 						Dwoo_Loader::loadPlugin($name, isset($phpFunc)===false);
@@ -2303,8 +2295,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// loops over the param map and assigns values from the template or default value for unset optional params
 		while (list($k,$v) = each($map)) {
-			// "rest" array parameter, fill every remaining params in it and then break
 			if ($v[0] === '*') {
+				// "rest" array parameter, fill every remaining params in it and then break
 				if (count($ps) === 0) {
 					if ($v[1]===false) {
 						throw new Dwoo_Compilation_Exception('Rest argument missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
@@ -2321,25 +2313,22 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$paramlist[$v[0]] = array($tmp, $tmp2);
 				unset($tmp, $tmp2, $i, $p);
 				break;
-			}
-			// parameter is defined
-			elseif (isset($ps[$v[0]])) {
+			} elseif (isset($ps[$v[0]])) {
+				// parameter is defined as named param
 				$paramlist[$v[0]] = $ps[$v[0]];
 				unset($ps[$v[0]]);
 			} elseif (isset($ps[$k])) {
+				// parameter is defined as ordered param
 				$paramlist[$v[0]] = $ps[$k];
 				unset($ps[$k]);
-			}
-			// parameter is not defined and not optional, throw error
-			elseif ($v[1]===false) {
+			} elseif ($v[1]===false) {
+				// parameter is not defined and not optional, throw error
 				throw new Dwoo_Compilation_Exception('Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
-			}
-			// enforce lowercased null if default value is null (php outputs NULL with var export)
-			elseif ($v[2]===null) {
+			} elseif ($v[2]===null) {
+				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				$paramlist[$v[0]] = array('null', null);
-			}
-			// outputs default value with var_export
-			else {
+			} else {
+				// outputs default value with var_export
 				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
 			}
 		}

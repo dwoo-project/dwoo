@@ -25,7 +25,7 @@ class Dwoo_Plugin_withelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$foreach =& $compiler->findBlock('with', true);
 		$out = $foreach['params']['postOutput'];

@@ -33,19 +33,16 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		return;
 	}
 
-	if (preg_match('#^([a-z]{2,}):(.*)#i', $file, $m))
-	{
+	if (preg_match('#^([a-z]{2,}):(.*)#i', $file, $m)) {
 		$resource = $m[1];
 		$identifier = $m[2];
-	} else
-	{
+	} else {
 		// get the current template's resource
 		$resource = $dwoo->getTemplate()->getResourceName();
 		$identifier = $file;
 	}
 
-	if ($resource === 'file' && $policy = $dwoo->getSecurityPolicy())
-	{
+	if ($resource === 'file' && $policy = $dwoo->getSecurityPolicy()) {
 		while (true) {
 			if (preg_match('{^([a-z]+?)://}i', $identifier)) {
 				throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources : <em>'.$identifier.'</em>.');
@@ -82,8 +79,7 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		$vars = $dwoo->readVar($data);
 	}
 
-	if (count($rest))
-	{
+	if (count($rest)) {
 		$vars = $rest + $vars;
 	}
 

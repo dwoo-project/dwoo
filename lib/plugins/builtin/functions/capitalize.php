@@ -30,16 +30,16 @@ function Dwoo_Plugin_capitalize(Dwoo $dwoo, $value, $numwords=false)
 			return ucwords((string) $value);
 		}
 		return mb_convert_case((string) $value,MB_CASE_TITLE, $dwoo->getCharset());
-	} else
-	{
+	} else {
 		$bits = explode(' ', (string) $value);
 		$out = '';
-		while (list(,$v) = each($bits))
+		while (list(,$v) = each($bits)) {
 			if (preg_match('#^[^0-9]+$#', $v)) {
 				$out .=	' '.mb_convert_case($v, MB_CASE_TITLE, $dwoo->getCharset());
 			} else {
 				$out .=	' '.$v;
 			}
+		}
 
 		return substr($out, 1);
 	}

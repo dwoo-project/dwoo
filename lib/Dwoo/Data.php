@@ -76,10 +76,11 @@ class Dwoo_Data implements Dwoo_IDataProvider
 	public function mergeData(array $data)
 	{
 		$args = func_get_args();
-		while (list(,$v) = each($args))
+		while (list(,$v) = each($args)) {
 			if (is_array($v)) {
 				$this->data = array_merge($this->data, $v);
 			}
+		}
 	}
 
 	/**
@@ -124,8 +125,7 @@ class Dwoo_Data implements Dwoo_IDataProvider
 	 */
    	public function append($name, $val = null, $merge = false)
    	{
-   		if (is_array($name))
-   		{
+   		if (is_array($name)) {
 			foreach ($name as $key=>$val) {
 				if (isset($this->data[$key]) && !is_array($this->data[$key])) {
 					settype($this->data[$key], 'array');
@@ -137,9 +137,7 @@ class Dwoo_Data implements Dwoo_IDataProvider
 					$this->data[$key][] = $val;
 				}
 			}
-   		}
-   		elseif ($val !== null)
-   		{
+   		} elseif ($val !== null) {
 			if (isset($this->data[$name]) && !is_array($this->data[$name])) {
 				settype($this->data[$name], 'array');
 			}
@@ -166,12 +164,12 @@ class Dwoo_Data implements Dwoo_IDataProvider
 			settype($this->data[$name], 'array');
 		}
 
-   		if ($merge === true && is_array($val))
-   		{
-   			foreach ($val as $key => &$val)
+   		if ($merge === true && is_array($val)) {
+   			foreach ($val as $key => &$val) {
    				$this->data[$name][$key] =& $val;
-   		}
-   		else
+   			}
+   		} else {
    			$this->data[$name][] =& $val;
+   		}
    	}
 }

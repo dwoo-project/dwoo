@@ -33,7 +33,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$tpl = $compiler->getTemplateSource(true);

@@ -67,14 +67,13 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 	$allowcomma = 0;
 	while (strlen($equation) > 0) {
 		$substr = substr($equation, 0, $ptr);
-		// allowed string
 		if (array_search($substr, $allowed) !== false) {
+			// allowed string
 			$out.=$substr;
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
-		}
-		// allowed func
-		elseif (array_search($substr, $funcs) !== false) {
+		} elseif (array_search($substr, $funcs) !== false) {
+			// allowed func
 			$out.=$substr;
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
@@ -82,15 +81,13 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 			if ($allowcomma === 1) {
 				$allowed[] = ',';
 			}
-		}
-		// variable
-		elseif (isset($rest[$substr])) {
+		} elseif (isset($rest[$substr])) {
+			// variable
 			$out.=$rest[$substr];
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
-		}
-		// pre-replaced variable
-		elseif ($substr === $open) {
+		} elseif ($substr === $open) {
+			// pre-replaced variable
 			preg_match('#.*\((?:[^()]*?|(?R))\)'.str_replace('.', '\\.', $close).'#', substr($equation, 2), $m);
 			if (empty($m)) {
 				preg_match('#.*?'.str_replace('.', '\\.', $close).'#', substr($equation, 2), $m);
@@ -98,9 +95,8 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 			$out.=substr($m[0], 0, -2);
 			$equation = substr($equation, strlen($m[0])+2);
 			$ptr = 0;
-		}
-		// opening parenthesis
-		elseif ($substr==='(') {
+		} elseif ($substr==='(') {
+			// opening parenthesis
 			if ($allowcomma>0) {
 				$allowcomma++;
 			}
@@ -108,9 +104,8 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 			$out.=$substr;
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
-		}
-		// closing parenthesis
-		elseif ($substr===')') {
+		} elseif ($substr===')') {
+			// closing parenthesis
 			if ($allowcomma>0) {
 				$allowcomma--;
 				if ($allowcomma===0) {
@@ -121,12 +116,12 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 			$out.=$substr;
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
-		}
-		// parse error if we've consumed the entire equation without finding anything valid
-		elseif ($ptr >= strlen($equation)) {
+		} elseif ($ptr >= strlen($equation)) {
+			// parse error if we've consumed the entire equation without finding anything valid
 			throw new Dwoo_Compilation_Exception('Math : Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr);
 			return;
 		} else {
+			// nothing special, advance
 			$ptr++;
 		}
 	}

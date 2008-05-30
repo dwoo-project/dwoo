@@ -62,57 +62,61 @@ function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $en
 	// output
 	switch($encode)
 	{
-		case 'none':
-		case null:
-			return '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
 
-		case 'js':
-		case 'javascript':
-			$str = 'document.write(\'<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>\');';
-			$len = strlen($str);
+	case 'none':
+	case null:
+		return '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
 
-			$out = '';
-			for ($i=0; $i<$len; $i++)
-				$out .= '%'.bin2hex($str[$i]);
+	case 'js':
+	case 'javascript':
+		$str = 'document.write(\'<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>\');';
+		$len = strlen($str);
 
-			return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
+		$out = '';
+		for ($i=0; $i<$len; $i++) {
+			$out .= '%'.bin2hex($str[$i]);
+		}
+		return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
 
-			break;
-		case 'javascript_charcode':
-		case 'js_charcode':
-		case 'jscharcode':
-		case 'jschar':
-			$str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
-			$len = strlen($str);
+		break;
+	case 'javascript_charcode':
+	case 'js_charcode':
+	case 'jscharcode':
+	case 'jschar':
+		$str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
+		$len = strlen($str);
 
-			$out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
-			for ($i=0; $i<$len; $i++)
-				$out .= ord($str[$i]).',';
-			return rtrim($out, ',') . "));\n-->\n</script>\n";
+		$out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
+		for ($i=0; $i<$len; $i++) {
+			$out .= ord($str[$i]).',';
+		}
+		return rtrim($out, ',') . "));\n-->\n</script>\n";
 
-			break;
+		break;
 
-		case 'hex':
-			if (strpos($address, '?') !== false) {
-				$dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
+	case 'hex':
+		if (strpos($address, '?') !== false) {
+			$dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
+		}
+
+		$out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
+		$len = strlen($address);
+		for ($i=0; $i<$len; $i++) {
+			if (preg_match('#\w#', $address[$i])) {
+				$out .= '%'.bin2hex($address[$i]);
+			} else {
+				$out .= $address[$i];
 			}
+		}
+		$out .= '" '.$extra.'>';
+		$len = strlen($text);
+		for ($i=0; $i<$len; $i++) {
+			$out .= '&#x'.bin2hex($text[$i]);
+		}
+		return $out.'</a>';
 
-			$out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
-			$len = strlen($address);
-			for ($i=0; $i<$len; $i++) {
-				if (preg_match('#\w#', $address[$i])) {
-					$out .= '%'.bin2hex($address[$i]);
-				} else {
-					$out .= $address[$i];
-				}
-			}
-			$out .= '" '.$extra.'>';
-			$len = strlen($text);
-			for ($i=0; $i<$len; $i++)
-				$out .= '&#x'.bin2hex($text[$i]);
-			return $out.'</a>';
+	default:
+		$dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
 
-		default:
-			$dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
 	}
 }

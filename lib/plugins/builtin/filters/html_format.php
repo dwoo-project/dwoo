@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Formats any html output (must be valid xml where every tag opened is closed) 
+ * Formats any html output (must be valid xml where every tag opened is closed)
  * using a single tab for indenting. 'pre' and other whitespace sensitive
  * tags should not be affected.
- * 
- * It is not recommended to use this on every template if you render multiple 
- * templates per page, you should only use it once on the main page template so that 
+ *
+ * It is not recommended to use this on every template if you render multiple
+ * templates per page, you should only use it once on the main page template so that
  * everything is formatted in one pass.
  *
  * This software is provided 'as-is', without any express or implied warranty.
@@ -98,17 +98,14 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 	{
 		$tabs = str_pad('',self::$tabCount++,"\t");
 
-		// if it's one of those tag it's inline so it does not require a leading line break
 		if (preg_match('#^<(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)(?: [^>]*|)>#', $tag)) {
+			// if it's one of those tag it's inline so it does not require a leading line break
 			$result = $tag . $whitespace . str_replace("\n","\n".$tabs,$add);
-		}
-		// it's the doctype declaration so no line break here either
-		elseif (substr($tag,0,9) == '<!DOCTYPE') {
+		} elseif (substr($tag,0,9) == '<!DOCTYPE') {
+			// it's the doctype declaration so no line break here either
 			$result = $tabs . $tag;
-		}
-		// normal block tag
-		else
-		{
+		} else {
+			// normal block tag
 			$result = "\n".$tabs . $tag;
 
 			if (!empty($add)) {

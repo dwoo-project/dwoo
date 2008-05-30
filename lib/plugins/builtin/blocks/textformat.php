@@ -46,14 +46,16 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 		}
 
 		switch($style) {
-			case 'email':
-				$wrap = 72;
-				$indent_first = 0;
-				break;
-			case 'html':
-				$wrap_char = '<br />';
-				$indent_char = $indent_char == "\t" ? '&nbsp;&nbsp;&nbsp;&nbsp;':'&nbsp;';
-				break;
+
+		case 'email':
+			$wrap = 72;
+			$indent_first = 0;
+			break;
+		case 'html':
+			$wrap_char = '<br />';
+			$indent_char = $indent_char == "\t" ? '&nbsp;&nbsp;&nbsp;&nbsp;':'&nbsp;';
+			break;
+
 		}
 
 		$this->wrap = (int) $wrap;

@@ -25,7 +25,7 @@ final class Dwoo_Plugin_topLevelBlock extends Dwoo_Block_Plugin
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		return 'ob_start(); '.Dwoo_Compiler::PHP_CLOSE;
 	}

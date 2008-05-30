@@ -42,7 +42,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$tpl = $compiler->getTemplateSource(true);
@@ -62,10 +62,10 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		}
 		$name = $params['name'];
 
-		if (substr($val,0,1) !== '"' && substr($val,0,1) !== '\'') {
+		if (substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
 			throw new Dwoo_Compilation_Exception('Foreach <em>item</em> parameter must be of type string');
 		}
-		if (isset($key) && substr($val,0,1) !== '"' && substr($val,0,1) !== '\'') {
+		if (isset($key) && substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
 			throw new Dwoo_Compilation_Exception('Foreach <em>key</em> parameter must be of type string');
 		}
 

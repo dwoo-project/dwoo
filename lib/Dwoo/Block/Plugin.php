@@ -80,7 +80,7 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 	 * 						 default commands are executed
 	 * @param string $type the type is the plugin class name used
 	 */
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.implode(', ', $compiler->getCompiledParams($params)).'));'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}

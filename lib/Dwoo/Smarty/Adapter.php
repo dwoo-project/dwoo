@@ -4,16 +4,16 @@ if (!defined('DIR_SEP')) {
 	define('DIR_SEP', DIRECTORY_SEPARATOR);
 }
 
-if (!defined('SMARTY_PHP_PASSTHRU'))
-{
+if (!defined('SMARTY_PHP_PASSTHRU')) {
 	define('SMARTY_PHP_PASSTHRU',   0);
 	define('SMARTY_PHP_QUOTE',      1);
 	define('SMARTY_PHP_REMOVE',     2);
 	define('SMARTY_PHP_ALLOW',      3);
 }
 
-if (class_exists('Dwoo_Compiler', false) === false)
+if (class_exists('Dwoo_Compiler', false) === false) {
 	require 'Dwoo/Compiler.php';
+}
 
 /**
  * a Smarty compatibility layer for Dwoo

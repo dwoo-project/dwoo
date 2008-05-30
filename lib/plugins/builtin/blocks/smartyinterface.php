@@ -23,7 +23,7 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin implements Dwoo_ICom
 {
 	public function init($__funcname, $__functype, array $rest=array()) {}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$params = $compiler->getCompiledParams($params);
 		$func = $params['__funcname'];

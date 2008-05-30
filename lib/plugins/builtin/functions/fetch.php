@@ -28,8 +28,7 @@ function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 		return;
 	}
 
-	if ($policy = $dwoo->getSecurityPolicy())
-	{
+	if ($policy = $dwoo->getSecurityPolicy()) {
 		while (true) {
 			if (preg_match('{^([a-z]+?)://}i', $file)) {
 				return $dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);

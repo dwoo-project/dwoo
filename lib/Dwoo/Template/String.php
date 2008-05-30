@@ -226,18 +226,16 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		if ($cacheLength === 0) {
 			return false;
 		}
-		// already checked, return cache file
+
 		if (isset(self::$cache['cached'][$this->cacheId]) === true && file_exists($cachedFile)) {
+			// already checked, return cache file
 			return $cachedFile;
-		}
-		// cache is still valid and can be loaded
-		elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === -1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength))) {
+		} elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === -1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength))) {
+			// cache is still valid and can be loaded
 			self::$cache['cached'][$this->cacheId] = true;
 			return $cachedFile;
-		}
-		// file is cacheable
-		else
-		{
+		} else {
+			// file is cacheable
 			return true;
 		}
 	}
@@ -305,16 +303,13 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	{
 		$compiledFile = $this->getCompiledFilename($dwoo);
 
-		// already checked, return compiled file
 		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
-		}
-		// template is compiled
-		elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true) {
+			// already checked, return compiled file
+		} elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true) {
+			// template is compiled
 			self::$cache['compiled'][$this->compileId] = true;
-		}
-		// compiles the template
-		else
-		{
+		} else {
+			// compiles the template
 			$this->compilationEnforced = false;
 
 			if ($compiler === null) {

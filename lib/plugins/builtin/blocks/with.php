@@ -51,7 +51,7 @@ class Dwoo_Plugin_with extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 	{
 	}
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
+	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
 		$rparams = $compiler->getRealParams($params);
 		$cparams = $compiler->getCompiledParams($params);

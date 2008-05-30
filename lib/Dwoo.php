@@ -519,8 +519,7 @@ class Dwoo
 			unset($this->filters[$index]);
 		} elseif (($index = array_search('Dwoo_Filter_'.str_replace('Dwoo_Filter_', '', $callback), $this->filters, true)) !== false) {
 			unset($this->filters[$index]);
-		} else
-		{
+		} else	{
 			$class = 'Dwoo_Filter_' . str_replace('Dwoo_Filter_', '', $callback);
 			foreach ($this->filters as $index=>$filter) {
 				if (is_array($filter) && $filter[0] instanceof $class) {
@@ -950,14 +949,15 @@ class Dwoo
 		if (isset($this->plugins[$type])) {
 			$type = $this->plugins[$type]['class'];
 		} else {
-			$type = 'Dwoo_Plugin_'.str_replace('Dwoo_Plugin_','',$type);
+			$type = 'Dwoo_Plugin_'.str_replace('Dwoo_Plugin_', '', $type);
 		}
 
 		$keys = array_keys($this->stack);
-		while (($key = array_pop($keys)) !== false)
+		while (($key = array_pop($keys)) !== false) {
 			if ($this->stack[$key] instanceof $type) {
 				return $this->stack[$key];
 			}
+		}
 		return false;
 	}
 
@@ -1217,36 +1217,38 @@ class Dwoo
 			$cur = $this->globals;
 			array_shift($m[2]);
 			array_shift($m[1]);
-			switch($m[2][0]) {
-				case 'get':
-					$cur = $_GET;
-					break;
-				case 'post':
-					$cur = $_POST;
-					break;
-				case 'session':
-					$cur = $_SESSION;
-					break;
-				case 'cookies':
-				case 'cookie':
-					$cur = $_COOKIE;
-					break;
-				case 'server':
-					$cur = $_SERVER;
-					break;
-				case 'env':
-					$cur = $_ENV;
-					break;
-				case 'request':
-					$cur = $_REQUEST;
-					break;
-				case 'const':
-					array_shift($m[2]);
-					if (defined($m[2][0])) {
-						return constant($m[2][0]);
-					} else {
-						return null;
-					}
+			switch ($m[2][0]) {
+
+			case 'get':
+				$cur = $_GET;
+				break;
+			case 'post':
+				$cur = $_POST;
+				break;
+			case 'session':
+				$cur = $_SESSION;
+				break;
+			case 'cookies':
+			case 'cookie':
+				$cur = $_COOKIE;
+				break;
+			case 'server':
+				$cur = $_SERVER;
+				break;
+			case 'env':
+				$cur = $_ENV;
+				break;
+			case 'request':
+				$cur = $_REQUEST;
+				break;
+			case 'const':
+				array_shift($m[2]);
+				if (defined($m[2][0])) {
+					return constant($m[2][0]);
+				} else {
+					return null;
+				}
+
 			}
 			if ($cur !== $this->globals) {
 				array_shift($m[2]);
