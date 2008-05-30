@@ -1385,7 +1385,7 @@ class Dwoo
 	{
 		$old = $this->scopeTree;
 
-		if(is_array($scope)===false)
+		if(is_string($scope)===true)
 			$scope = explode('.', $scope);
 
 		if($absolute===true)
@@ -1399,7 +1399,6 @@ class Dwoo
 			if($bit === '_' || $bit === '_parent')
 			{
 				array_pop($this->scopeTree);
-				reset($this->scopeTree);
 				$this->scope =& $this->data;
 				$cnt = count($this->scopeTree);
 				for($i=0;$i<$cnt;$i++)
