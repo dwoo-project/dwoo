@@ -27,11 +27,11 @@
 <p class="description"><p>you have to implement the &lt;em&gt;init()&lt;/em&gt; method, it will receive the parameters that  are in the template code and is called when the block starts</p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.0</li>
+				<li><span class="field">version:</span> 0.9.1</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
 				<li><span class="field">abstract:</span> </li>
-				<li><span class="field">date:</span> 2008-05-10</li>
+				<li><span class="field">date:</span> 2008-05-30</li>
 				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
 			</ul>
 		<p class="notes">
@@ -63,87 +63,93 @@
 					<th class="class-table-header">Description</th>
 				</tr>
 								<tr>
+					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_auto_escape.html">Dwoo_Plugin_auto_escape</a></td>
+					<td>
+											Overrides the compiler auto-escape setting within the block
+										</td>
+				</tr>
+								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_block.html">Dwoo_Plugin_block</a></td>
 					<td>
-											TOCOM
+											This is used only when rendering a template that has blocks but is not extending anything,  it doesn't do anything by itself and should not be used outside of template inheritance context,  see <a href="http://wiki.dwoo.org/index.php/TemplateInheritance">http://wiki.dwoo.org/index.php/TemplateInheritance</a> to read more about it.
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_capture.html">Dwoo_Plugin_capture</a></td>
 					<td>
-											TOCOM
+											Captures all the output within this block and saves it into {$.capture.default} by default,  or {$.capture.name} if you provide another name.
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_else.html">Dwoo_Plugin_else</a></td>
 					<td>
-											TOCOM
+											Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_for.html">Dwoo_Plugin_for</a></td>
 					<td>
-											TOCOM
+											Similar to the php for block
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_foreach.html">Dwoo_Plugin_foreach</a></td>
 					<td>
-											TOCOM
+											Similar to the php foreach block, loops over an array
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_foreachelse.html">Dwoo_Plugin_foreachelse</a></td>
 					<td>
-											TOCOM
+											This plugin serves as a {else} block specifically for the {foreach} plugin.
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_forelse.html">Dwoo_Plugin_forelse</a></td>
 					<td>
-											TOCOM
+											This plugin serves as a {else} block specifically for the {for} plugin.
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_if.html">Dwoo_Plugin_if</a></td>
 					<td>
-											TOCOM
+											Conditional block, the syntax is very similar to the php one, allowing () || &amp;&amp; and  other php operators. Additional operators and their equivalent php syntax are as follow :
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_loop.html">Dwoo_Plugin_loop</a></td>
 					<td>
-											TOCOM
+											Loops over an array and moves the scope into each value, allowing for shorter loop constructs
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_smartyinterface.html">Dwoo_Plugin_smartyinterface</a></td>
 					<td>
-											TOCOM
+											Smarty compatibility layer for block plugins, this is used internally and you should not call it
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_textformat.html">Dwoo_Plugin_textformat</a></td>
 					<td>
-											TOCOM
+											Formats a string to the given format, you can wrap lines at a certain
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_topLevelBlock.html">Dwoo_Plugin_topLevelBlock</a></td>
 					<td>
-											TOCOM
+											Internal plugin used to wrap the template output, do not use in your templates as it will break them
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_with.html">Dwoo_Plugin_with</a></td>
 					<td>
-											TOCOM
+											Moves the scope down into the provided variable, allowing you to use shorter  variable names if you repeatedly access values into a single array
 										</td>
 				</tr>
 								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_withelse.html">Dwoo_Plugin_withelse</a></td>
 					<td>
-											TOCOM
+											This plugin serves as a {else} block specifically for the {with} plugin.
 										</td>
 				</tr>
 							</table>
@@ -235,7 +241,7 @@
 		<div class="info-box-body">
 			
 <a name="var$buffer" id="$buffer"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -281,7 +287,7 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodpostProcessing" id="postProcessing"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a103">103</a></span>)
@@ -322,6 +328,9 @@
 			<hr class="separator" />
 		<div class="notes">Redefined in descendants as:</div>
 		<ul class="redefinitions">
+					<li>
+				<a href="../Dwoo/Dwoo_Plugin_auto_escape.html#methodpostProcessing">Dwoo_Plugin_auto_escape::postProcessing()</a>
+							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_block.html#methodpostProcessing">Dwoo_Plugin_block::postProcessing()</a>
 							</li>
@@ -367,7 +376,7 @@
 				</ul>
 	</div>
 <a name="methodpreProcessing" id="preProcessing"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a83">83</a></span>)
@@ -410,6 +419,9 @@
 			<hr class="separator" />
 		<div class="notes">Redefined in descendants as:</div>
 		<ul class="redefinitions">
+					<li>
+				<a href="../Dwoo/Dwoo_Plugin_auto_escape.html#methodpreProcessing">Dwoo_Plugin_auto_escape::preProcessing()</a>
+							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_block.html#methodpreProcessing">Dwoo_Plugin_block::preProcessing()</a>
 							</li>
@@ -455,7 +467,7 @@
 				</ul>
 	</div>
 <a name="methodbuffer" id="buffer"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">buffer</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a39">39</a></span>)
@@ -485,7 +497,7 @@
 			
 	</div>
 <a name="methodend" id="end"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">end</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a52">52</a></span>)
@@ -509,7 +521,7 @@
 			
 	</div>
 <a name="methodprocess" id="process"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">process</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a63">63</a></span>)
@@ -553,7 +565,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 10 May 2008 07:46:06 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:46 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

@@ -27,18 +27,22 @@
                 <li><a href="../Dwoo/Dwoo_ICompilable_Block.html">Dwoo_ICompilable_Block</a></li>            </ul>
         </p>
         		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">TOCOM</p>
-<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="short-description">Similar to the php for block</p>
+<p class="description"><p><pre>  * name : foreach name to access it's iterator variables through {$.foreach.name.var} see <a href="http://wiki.dwoo.org/index.php/IteratorVariables">http://wiki.dwoo.org/index.php/IteratorVariables</a> for details
+  * from : array to iterate from (which equals 0) or a number as a start value
+  * to : value to stop iterating at (equals count($array) by default if you set an array in from)
+  * step : defines the incrementation of the pointer at each iteration
+  * skip : allows you to skip some entries at the start, mostly useless excepted for smarty compatibility</pre>  This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.0</li>
+				<li><span class="field">version:</span> 0.9.1</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-05-10</li>
+				<li><span class="field">date:</span> 2008-05-30</li>
 				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_plugins---builtin---blocks---for.php.html">/plugins/builtin/blocks/for.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a21">21</a></span>)
+			Located in <a class="field" href="_plugins---builtin---blocks---for.php.html">/plugins/builtin/blocks/for.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a28">28</a></span>)
 		</p>
 		
 				
@@ -121,13 +125,13 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$cnt" id="$cnt"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			static <span class="var-type">mixed</span>
 			<span class="var-name">$cnt</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a23">23</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a30">30</a></span>)
 		</span>
 	</div>
 
@@ -172,10 +176,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodpostProcessing" id="postProcessing"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a114">114</a></span>)
+		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a121">121</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -215,10 +219,10 @@
 			
 	</div>
 <a name="methodpreProcessing" id="preProcessing"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a29">29</a></span>)
+		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a36">36</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -261,10 +265,10 @@
 			
 	</div>
 <a name="methodinit" id="init"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a25">25</a></span>)
+		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksfor.php.html#a32">32</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -322,7 +326,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 10 May 2008 07:46:00 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:40 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

@@ -22,18 +22,18 @@
 					</div>
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">TOCOM</p>
-<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="short-description">Formats any html output (must be valid xml where every tag opened is closed)  using a single tab for indenting. 'pre' and other whitespace sensitive  tags should not be affected.</p>
+<p class="description"><p>It is not recommended to use this on every template if you render multiple  templates per page, you should only use it once on the main page template so that  everything is formatted in one pass.</p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.0</li>
+				<li><span class="field">version:</span> 0.9.1</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-05-10</li>
+				<li><span class="field">date:</span> 2008-05-30</li>
 				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_plugins---builtin---filters---html_format.php.html">/plugins/builtin/filters/html_format.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a22">22</a></span>)
+			Located in <a class="field" href="_plugins---builtin---filters---html_format.php.html">/plugins/builtin/filters/html_format.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a28">28</a></span>)
 		</p>
 		
 				
@@ -130,13 +130,13 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$lastCallAdd" id="$lastCallAdd"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			static <span class="var-type">string</span>
 			<span class="var-name">$lastCallAdd</span>
-			 = <span class="var-default"> ''</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a36">36</a></span>)
+			 = <span class="var-default"> ''</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a42">42</a></span>)
 		</span>
 	</div>
 
@@ -152,13 +152,13 @@
 
 </div>
 <a name="var$tabCount" id="$tabCount"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			static <span class="var-type">int</span>
 			<span class="var-name">$tabCount</span>
-			 = <span class="var-default"> -1</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a29">29</a></span>)
+			 = <span class="var-default"> -1</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a35">35</a></span>)
 		</span>
 	</div>
 
@@ -198,10 +198,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodcloseTag" id="closeTag"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static closeTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a129">129</a></span>)
+		<span class="method-title">static closeTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a135">135</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -233,10 +233,10 @@
 			
 	</div>
 <a name="methodopenTag" id="openTag"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static openTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a91">91</a></span>)
+		<span class="method-title">static openTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a97">97</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -268,10 +268,10 @@
 			
 	</div>
 <a name="methodsingleTag" id="singleTag"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static singleTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a160">160</a></span>)
+		<span class="method-title">static singleTag</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a166">166</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -303,10 +303,10 @@
 			
 	</div>
 <a name="methodtagDispatcher" id="tagDispatcher"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static tagDispatcher</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a65">65</a></span>)
+		<span class="method-title">static tagDispatcher</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a71">71</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -333,10 +333,10 @@
 			
 	</div>
 <a name="methodprocess" id="process"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">process</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a49">49</a></span>)
+		<span class="method-title">process</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinfiltershtml_format.php.html#a55">55</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -386,7 +386,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 10 May 2008 07:46:02 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:41 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

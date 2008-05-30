@@ -74,6 +74,13 @@
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html#var$assign">Dwoo_Plugin_textformat::$assign</a> in textformat.php</div>
 					</dd>
 			<dt class="field">
+						<span class="var-title">$autoEscape</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#var$autoEscape">Dwoo_Compiler::$autoEscape</a> in Compiler.php</div>
+							<div class="index-item-description">defines whether the compiler will automatically html-escape variables or not</div>
+					</dd>
+			<dt class="field">
 						<span class="method-title">addBlock</span>
 					</dt>
 		<dd class="index-item-body">
@@ -209,6 +216,12 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/_Dwoo---Smarty---Adapter.php.html">Adapter.php</a> in Adapter.php</div>
+					</dd>
+			<dt class="field">
+						<span class="include-title">auto_escape.php</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---blocks---auto_escape.php.html">auto_escape.php</a> in auto_escape.php</div>
 					</dd>
 			<dt class="field">
 						<span class="include-title">assign.php</span>
@@ -724,6 +737,13 @@
 						<span class="var-title">$data</span>
 					</dt>
 		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Data.html#var$data">Dwoo_Data::$data</a> in Data.php</div>
+							<div class="index-item-description">data array</div>
+					</dd>
+			<dt class="field">
+						<span class="var-title">$data</span>
+					</dt>
+		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#var$data">Dwoo_Compiler::$data</a> in Compiler.php</div>
 							<div class="index-item-description">stores the data within which the scope moves</div>
 					</dd>
@@ -733,13 +753,6 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo.html#var$data">Dwoo::$data</a> in Dwoo.php</div>
 							<div class="index-item-description">stores the data during template runtime</div>
-					</dd>
-			<dt class="field">
-						<span class="var-title">$data</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Data.html#var$data">Dwoo_Data::$data</a> in Data.php</div>
-							<div class="index-item-description">data array</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$dataProvider</span>
@@ -758,15 +771,15 @@
 						<span class="var-title">$dwoo</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Filter.html#var$dwoo">Dwoo_Filter::$dwoo</a> in Filter.php</div>
-							<div class="index-item-description">the dwoo instance that runs this filter</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin.html#var$dwoo">Dwoo_Plugin::$dwoo</a> in Plugin.php</div>
+							<div class="index-item-description">the dwoo instance that runs this plugin</div>
 					</dd>
 			<dt class="field">
 						<span class="var-title">$dwoo</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin.html#var$dwoo">Dwoo_Plugin::$dwoo</a> in Plugin.php</div>
-							<div class="index-item-description">the dwoo instance that runs this plugin</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Filter.html#var$dwoo">Dwoo_Filter::$dwoo</a> in Filter.php</div>
+							<div class="index-item-description">the dwoo instance that runs this filter</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">delStack</span>
@@ -891,7 +904,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Filter_html_format.html">Dwoo_Filter_html_format</a> in html_format.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Formats any html output (must be valid xml where every tag opened is closed)  using a single tab for indenting. 'pre' and other whitespace sensitive  tags should not be affected.</div>
 					</dd>
 			<dt class="field">
 						Dwoo_ICompilable
@@ -955,11 +968,18 @@
 			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---functions---assign.php.html#functionDwoo_Plugin_assign_compile">Dwoo_Plugin_assign_compile()</a> in assign.php</div>
 					</dd>
 			<dt class="field">
+						Dwoo_Plugin_auto_escape
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_auto_escape.html">Dwoo_Plugin_auto_escape</a> in auto_escape.php</div>
+							<div class="index-item-description">Overrides the compiler auto-escape setting within the block</div>
+					</dd>
+			<dt class="field">
 						Dwoo_Plugin_block
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_block.html">Dwoo_Plugin_block</a> in block.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">This is used only when rendering a template that has blocks but is not extending anything,  it doesn't do anything by itself and should not be used outside of template inheritance context,  see <a href="http://wiki.dwoo.org/index.php/TemplateInheritance">http://wiki.dwoo.org/index.php/TemplateInheritance</a> to read more about it.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_capitalize</span>
@@ -972,7 +992,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_capture.html">Dwoo_Plugin_capture</a> in capture.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Captures all the output within this block and saves it into {$.capture.default} by default,  or {$.capture.name} if you provide another name.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_cat_compile</span>
@@ -985,7 +1005,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_counter.html">Dwoo_Plugin_counter</a> in counter.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Initiates a counter that is incremented every time you call it</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_count_characters_compile</span>
@@ -1016,7 +1036,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_cycle.html">Dwoo_Plugin_cycle</a> in cycle.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Cycles between several values and returns one of them on each call</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_date_format</span>
@@ -1035,21 +1055,21 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_dump.html">Dwoo_Plugin_dump</a> in dump.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Dumps values of the given variable, or the entire data if nothing provided</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_else
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_else.html">Dwoo_Plugin_else</a> in else.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_elseif
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html">Dwoo_Plugin_elseif</a> in elseif.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Acts as a php elseif block, allowing you to add one more condition  if the previous one(s) didn't match. See the {if} plugin for syntax details</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_eol_compile</span>
@@ -1074,7 +1094,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_extends.html">Dwoo_Plugin_extends</a> in extends.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Extends another template, read more about template inheritance at <a href="http://wiki.dwoo.org/index.php/TemplateInheritance">http://wiki.dwoo.org/index.php/TemplateInheritance</a></div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_extendsCheck_compile</span>
@@ -1093,35 +1113,35 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html">Dwoo_Plugin_for</a> in for.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Similar to the php for block</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_foreach
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreach.html">Dwoo_Plugin_foreach</a> in foreach.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Similar to the php foreach block, loops over an array</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_foreachelse
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html">Dwoo_Plugin_foreachelse</a> in foreachelse.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">This plugin serves as a {else} block specifically for the {foreach} plugin.</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_forelse
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_forelse.html">Dwoo_Plugin_forelse</a> in forelse.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">This plugin serves as a {else} block specifically for the {for} plugin.</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_if
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html">Dwoo_Plugin_if</a> in if.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Conditional block, the syntax is very similar to the php one, allowing () || &amp;&amp; and  other php operators. Additional operators and their equivalent php syntax are as follow :</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_include</span>
@@ -1146,7 +1166,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_loop.html">Dwoo_Plugin_loop</a> in loop.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Loops over an array and moves the scope into each value, allowing for shorter loop constructs</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_lower_compile</span>
@@ -1191,11 +1211,17 @@
 			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---functions---reverse.php.html#functionDwoo_Plugin_reverse">Dwoo_Plugin_reverse()</a> in reverse.php</div>
 					</dd>
 			<dt class="field">
+						<span class="method-title">Dwoo_Plugin_safe_compile</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---functions---safe.php.html#functionDwoo_Plugin_safe_compile">Dwoo_Plugin_safe_compile()</a> in safe.php</div>
+					</dd>
+			<dt class="field">
 						Dwoo_Plugin_smartyinterface
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html">Dwoo_Plugin_smartyinterface</a> in smartyinterface.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Smarty compatibility layer for block plugins, this is used internally and you should not call it</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_spacify_compile</span>
@@ -1226,14 +1252,14 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html">Dwoo_Plugin_textformat</a> in textformat.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Formats a string to the given format, you can wrap lines at a certain</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_topLevelBlock
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_topLevelBlock.html">Dwoo_Plugin_topLevelBlock</a> in topLevelBlock.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Internal plugin used to wrap the template output, do not use in your templates as it will break them</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_truncate</span>
@@ -1252,14 +1278,14 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_with.html">Dwoo_Plugin_with</a> in with.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Moves the scope down into the provided variable, allowing you to use shorter  variable names if you repeatedly access values into a single array</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Plugin_withelse
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html">Dwoo_Plugin_withelse</a> in withelse.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">This plugin serves as a {else} block specifically for the {with} plugin.</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">Dwoo_Plugin_wordwrap_compile</span>
@@ -1279,7 +1305,7 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Processor_smarty_compat.html">Dwoo_Processor_smarty_compat</a> in pre.smarty_compat.php</div>
-							<div class="index-item-description">TOCOM</div>
+							<div class="index-item-description">Performs some template conversions to allow smarty templates to be used by  the Dwoo compiler.</div>
 					</dd>
 			<dt class="field">
 						Dwoo_Security_Exception
@@ -1611,6 +1637,13 @@
 							<div class="index-item-description">returns the list of php functions allowed to run, note that the function names  are stored in the array keys and not values</div>
 					</dd>
 			<dt class="field">
+						<span class="method-title">getAutoEscape</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#methodgetAutoEscape">Dwoo_Compiler::getAutoEscape()</a> in Compiler.php</div>
+							<div class="index-item-description">returns the auto escape setting</div>
+					</dd>
+			<dt class="field">
 						<span class="method-title">getCacheDir</span>
 					</dt>
 		<dd class="index-item-body">
@@ -1621,14 +1654,14 @@
 						<span class="method-title">getCachedTemplate</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetCachedTemplate">Dwoo_Template_String::getCachedTemplate()</a> in String.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetCachedTemplate">Dwoo_ITemplate::getCachedTemplate()</a> in ITemplate.php</div>
 							<div class="index-item-description">returns the cached template output file name, true if it's cache-able but not cached  or false if it's not cached</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getCachedTemplate</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetCachedTemplate">Dwoo_ITemplate::getCachedTemplate()</a> in ITemplate.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetCachedTemplate">Dwoo_Template_String::getCachedTemplate()</a> in String.php</div>
 							<div class="index-item-description">returns the cached template output file name, true if it's cache-able but not cached  or false if it's not cached</div>
 					</dd>
 			<dt class="field">
@@ -1698,6 +1731,13 @@
 						<span class="method-title">getCompiledTemplate</span>
 					</dt>
 		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetCompiledTemplate">Dwoo_Template_File::getCompiledTemplate()</a> in File.php</div>
+							<div class="index-item-description">returns the compiled template file name</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">getCompiledTemplate</span>
+					</dt>
+		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetCompiledTemplate">Dwoo_ITemplate::getCompiledTemplate()</a> in ITemplate.php</div>
 							<div class="index-item-description">returns the compiled template file name</div>
 					</dd>
@@ -1709,24 +1749,17 @@
 							<div class="index-item-description">returns the compiled template file name</div>
 					</dd>
 			<dt class="field">
-						<span class="method-title">getCompiledTemplate</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetCompiledTemplate">Dwoo_Template_File::getCompiledTemplate()</a> in File.php</div>
-							<div class="index-item-description">returns the compiled template file name</div>
-					</dd>
-			<dt class="field">
 						<span class="method-title">getCompiler</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetCompiler">Dwoo_Template_String::getCompiler()</a> in String.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetCompiler">Dwoo_ITemplate::getCompiler()</a> in ITemplate.php</div>
 							<div class="index-item-description">returns the compiler used by this template, if it was just compiled, or null</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getCompiler</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetCompiler">Dwoo_ITemplate::getCompiler()</a> in ITemplate.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetCompiler">Dwoo_Template_String::getCompiler()</a> in String.php</div>
 							<div class="index-item-description">returns the compiler used by this template, if it was just compiled, or null</div>
 					</dd>
 			<dt class="field">
@@ -1761,15 +1794,15 @@
 						<span class="method-title">getData</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Data.html#methodgetData">Dwoo_Data::getData()</a> in Data.php</div>
-							<div class="index-item-description">returns the data array</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo.html#methodgetData">Dwoo::getData()</a> in Dwoo.php</div>
+							<div class="index-item-description">[runtime function] returns the entire data array</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getData</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo.html#methodgetData">Dwoo::getData()</a> in Dwoo.php</div>
-							<div class="index-item-description">[runtime function] returns the entire data array</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Data.html#methodgetData">Dwoo_Data::getData()</a> in Data.php</div>
+							<div class="index-item-description">returns the data array</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getDefaultCompilerFactory</span>
@@ -1866,15 +1899,15 @@
 						<span class="method-title">getResourceIdentifier</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetResourceIdentifier">Dwoo_ITemplate::getResourceIdentifier()</a> in ITemplate.php</div>
-							<div class="index-item-description">returns the resource identifier for this template or false if it has no identifier</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetResourceIdentifier">Dwoo_Template_String::getResourceIdentifier()</a> in String.php</div>
+							<div class="index-item-description">returns the resource identifier for this template, false here as strings don't have identifiers</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getResourceIdentifier</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_String.html#methodgetResourceIdentifier">Dwoo_Template_String::getResourceIdentifier()</a> in String.php</div>
-							<div class="index-item-description">returns the resource identifier for this template, false here as strings don't have identifiers</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetResourceIdentifier">Dwoo_ITemplate::getResourceIdentifier()</a> in ITemplate.php</div>
+							<div class="index-item-description">returns the resource identifier for this template or false if it has no identifier</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getResourceIdentifier</span>
@@ -1887,7 +1920,7 @@
 						<span class="method-title">getResourceName</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetResourceName">Dwoo_Template_File::getResourceName()</a> in File.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetResourceName">Dwoo_ITemplate::getResourceName()</a> in ITemplate.php</div>
 							<div class="index-item-description">returns the resource name for this template class</div>
 					</dd>
 			<dt class="field">
@@ -1901,7 +1934,7 @@
 						<span class="method-title">getResourceName</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetResourceName">Dwoo_ITemplate::getResourceName()</a> in ITemplate.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetResourceName">Dwoo_Template_File::getResourceName()</a> in File.php</div>
 							<div class="index-item-description">returns the resource name for this template class</div>
 					</dd>
 			<dt class="field">
@@ -1936,14 +1969,14 @@
 						<span class="method-title">getSource</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetSource">Dwoo_ITemplate::getSource()</a> in ITemplate.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetSource">Dwoo_Template_File::getSource()</a> in File.php</div>
 							<div class="index-item-description">returns the template source of this template</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">getSource</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Template_File.html#methodgetSource">Dwoo_Template_File::getSource()</a> in File.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ITemplate.html#methodgetSource">Dwoo_ITemplate::getSource()</a> in ITemplate.php</div>
 							<div class="index-item-description">returns the template source of this template</div>
 					</dd>
 			<dt class="field">
@@ -2081,31 +2114,7 @@
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_with.html#methodinit">Dwoo_Plugin_with::init()</a> in with.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">init</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html#methodinit">Dwoo_Plugin_smartyinterface::init()</a> in smartyinterface.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">init</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodinit">Dwoo_Plugin_withelse::init()</a> in withelse.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">init</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_forelse.html#methodinit">Dwoo_Plugin_forelse::init()</a> in forelse.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">init</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_block.html#methodinit">Dwoo_Plugin_block::init()</a> in block.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_auto_escape.html#methodinit">Dwoo_Plugin_auto_escape::init()</a> in auto_escape.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
@@ -2117,19 +2126,13 @@
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodinit">Dwoo_Plugin_if::init()</a> in if.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodinit">Dwoo_Plugin_withelse::init()</a> in withelse.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodinit">Dwoo_Plugin_elseif::init()</a> in elseif.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">init</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_topLevelBlock.html#methodinit">Dwoo_Plugin_topLevelBlock::init()</a> in topLevelBlock.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_block.html#methodinit">Dwoo_Plugin_block::init()</a> in block.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
@@ -2141,13 +2144,19 @@
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html#methodinit">Dwoo_Plugin_foreachelse::init()</a> in foreachelse.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_forelse.html#methodinit">Dwoo_Plugin_forelse::init()</a> in forelse.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html#methodinit">Dwoo_Plugin_textformat::init()</a> in textformat.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html#methodinit">Dwoo_Plugin_smartyinterface::init()</a> in smartyinterface.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">init</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodinit">Dwoo_Plugin_if::init()</a> in if.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
@@ -2159,7 +2168,25 @@
 						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodinit">Dwoo_Plugin_for::init()</a> in for.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html#methodinit">Dwoo_Plugin_textformat::init()</a> in textformat.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">init</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_topLevelBlock.html#methodinit">Dwoo_Plugin_topLevelBlock::init()</a> in topLevelBlock.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">init</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_with.html#methodinit">Dwoo_Plugin_with::init()</a> in with.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">init</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodinit">Dwoo_Plugin_elseif::init()</a> in elseif.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">init</span>
@@ -2168,10 +2195,16 @@
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreach.html#methodinit">Dwoo_Plugin_foreach::init()</a> in foreach.php</div>
 					</dd>
 			<dt class="field">
-						<span class="method-title">initGlobals</span>
+						<span class="method-title">init</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Smarty__Adapter.html#methodinitGlobals">Dwoo_Smarty__Adapter::initGlobals()</a> in Adapter.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodinit">Dwoo_Plugin_for::init()</a> in for.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">init</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html#methodinit">Dwoo_Plugin_foreachelse::init()</a> in foreachelse.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">initGlobals</span>
@@ -2179,6 +2212,12 @@
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo.html#methodinitGlobals">Dwoo::initGlobals()</a> in Dwoo.php</div>
 							<div class="index-item-description">re-initializes the globals array before each template run</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">initGlobals</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Smarty__Adapter.html#methodinitGlobals">Dwoo_Smarty__Adapter::initGlobals()</a> in Adapter.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">initRuntimeVars</span>
@@ -2594,13 +2633,13 @@
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html#methodpostProcessing">Dwoo_Plugin_foreachelse::postProcessing()</a> in foreachelse.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodpostProcessing">Dwoo_Plugin_withelse::postProcessing()</a> in withelse.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_capture.html#methodpostProcessing">Dwoo_Plugin_capture::postProcessing()</a> in capture.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodpostProcessing">Dwoo_Plugin_if::postProcessing()</a> in if.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">postProcessing</span>
@@ -2612,7 +2651,7 @@
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodpostProcessing">Dwoo_Plugin_withelse::postProcessing()</a> in withelse.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_loop.html#methodpostProcessing">Dwoo_Plugin_loop::postProcessing()</a> in loop.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">postProcessing</span>
@@ -2625,49 +2664,19 @@
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodpostProcessing">Dwoo_Plugin_if::postProcessing()</a> in if.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_block.html#methodpostProcessing">Dwoo_Plugin_block::postProcessing()</a> in block.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreach.html#methodpostProcessing">Dwoo_Plugin_foreach::postProcessing()</a> in foreach.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_loop.html#methodpostProcessing">Dwoo_Plugin_loop::postProcessing()</a> in loop.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_else.html#methodpostProcessing">Dwoo_Plugin_else::postProcessing()</a> in else.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodpostProcessing">Dwoo_Plugin_elseif::postProcessing()</a> in elseif.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">postProcessing</span>
-					</dt>
-		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html#methodpostProcessing">Dwoo_Plugin_smartyinterface::postProcessing()</a> in smartyinterface.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodpostProcessing">Dwoo_Plugin_for::postProcessing()</a> in for.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_topLevelBlock.html#methodpostProcessing">Dwoo_Plugin_topLevelBlock::postProcessing()</a> in topLevelBlock.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html#methodpostProcessing">Dwoo_Plugin_foreachelse::postProcessing()</a> in foreachelse.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">postProcessing</span>
@@ -2679,7 +2688,49 @@
 						<span class="method-title">postProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_topLevelBlock.html#methodpostProcessing">Dwoo_Plugin_topLevelBlock::postProcessing()</a> in topLevelBlock.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreach.html#methodpostProcessing">Dwoo_Plugin_foreach::postProcessing()</a> in foreach.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_block.html#methodpostProcessing">Dwoo_Plugin_block::postProcessing()</a> in block.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_auto_escape.html#methodpostProcessing">Dwoo_Plugin_auto_escape::postProcessing()</a> in auto_escape.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_else.html#methodpostProcessing">Dwoo_Plugin_else::postProcessing()</a> in else.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_capture.html#methodpostProcessing">Dwoo_Plugin_capture::postProcessing()</a> in capture.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodpostProcessing">Dwoo_Plugin_for::postProcessing()</a> in for.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">postProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodpostProcessing">Dwoo_Plugin_elseif::postProcessing()</a> in elseif.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_auto_escape.html#methodpreProcessing">Dwoo_Plugin_auto_escape::preProcessing()</a> in auto_escape.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">preProcessing</span>
@@ -2691,38 +2742,7 @@
 						<span class="method-title">preProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodpreProcessing">Dwoo_Plugin_withelse::preProcessing()</a> in withelse.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_with.html#methodpreProcessing">Dwoo_Plugin_with::preProcessing()</a> in with.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Block_Plugin.html#methodpreProcessing">Dwoo_Block_Plugin::preProcessing()</a> in Plugin.php</div>
-							<div class="index-item-description">called at compile time to define what the block should output in the compiled template code, happens when the block is declared</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html#methodpreProcessing">Dwoo_Plugin_smartyinterface::preProcessing()</a> in smartyinterface.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreach.html#methodpreProcessing">Dwoo_Plugin_foreach::preProcessing()</a> in foreach.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodpreProcessing">Dwoo_Plugin_for::preProcessing()</a> in for.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">preProcessing</span>
@@ -2734,19 +2754,13 @@
 						<span class="method-title">preProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodpreProcessing">Dwoo_Plugin_elseif::preProcessing()</a> in elseif.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_else.html#methodpreProcessing">Dwoo_Plugin_else::preProcessing()</a> in else.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">preProcessing</span>
-					</dt>
-		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_foreachelse.html#methodpreProcessing">Dwoo_Plugin_foreachelse::preProcessing()</a> in foreachelse.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_smartyinterface.html#methodpreProcessing">Dwoo_Plugin_smartyinterface::preProcessing()</a> in smartyinterface.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">preProcessing</span>
@@ -2758,7 +2772,13 @@
 						<span class="method-title">preProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodpreProcessing">Dwoo_Plugin_if::preProcessing()</a> in if.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_withelse.html#methodpreProcessing">Dwoo_Plugin_withelse::preProcessing()</a> in withelse.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_else.html#methodpreProcessing">Dwoo_Plugin_else::preProcessing()</a> in else.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">preProcessing</span>
@@ -2770,19 +2790,44 @@
 						<span class="method-title">preProcessing</span>
 					</dt>
 		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_with.html#methodpreProcessing">Dwoo_Plugin_with::preProcessing()</a> in with.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_for.html#methodpreProcessing">Dwoo_Plugin_for::preProcessing()</a> in for.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_if.html#methodpreProcessing">Dwoo_Plugin_if::preProcessing()</a> in if.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_elseif.html#methodpreProcessing">Dwoo_Plugin_elseif::preProcessing()</a> in elseif.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">preProcessing</span>
+					</dt>
+		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_forelse.html#methodpreProcessing">Dwoo_Plugin_forelse::preProcessing()</a> in forelse.php</div>
 					</dd>
 			<dt class="field">
-						<span class="method-title">process</span>
+						<span class="method-title">preProcessing</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_cycle.html#methodprocess">Dwoo_Plugin_cycle::process()</a> in cycle.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Block_Plugin.html#methodpreProcessing">Dwoo_Block_Plugin::preProcessing()</a> in Plugin.php</div>
+							<div class="index-item-description">called at compile time to define what the block should output in the compiled template code, happens when the block is declared</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">process</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_counter.html#methodprocess">Dwoo_Plugin_counter::process()</a> in counter.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html#methodprocess">Dwoo_Plugin_textformat::process()</a> in textformat.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">process</span>
@@ -2807,12 +2852,6 @@
 						<span class="method-title">process</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Smarty_Filter_Adapter.html#methodprocess">Dwoo_Smarty_Filter_Adapter::process()</a> in Adapter.php</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">process</span>
-					</dt>
-		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Filter_html_format.html#methodprocess">Dwoo_Filter_html_format::process()</a> in html_format.php</div>
 							<div class="index-item-description">formats the input using the singleTag/closeTag/openTag functions</div>
 					</dd>
@@ -2820,7 +2859,7 @@
 						<span class="method-title">process</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Processor_smarty_compat.html#methodprocess">Dwoo_Processor_smarty_compat::process()</a> in pre.smarty_compat.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Smarty_Filter_Adapter.html#methodprocess">Dwoo_Smarty_Filter_Adapter::process()</a> in Adapter.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">process</span>
@@ -2833,14 +2872,26 @@
 						<span class="method-title">process</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Processor.html#methodprocess">Dwoo_Processor::process()</a> in Processor.php</div>
-							<div class="index-item-description">processes the input and returns it filtered</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_cycle.html#methodprocess">Dwoo_Plugin_cycle::process()</a> in cycle.php</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">process</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_textformat.html#methodprocess">Dwoo_Plugin_textformat::process()</a> in textformat.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Processor_smarty_compat.html#methodprocess">Dwoo_Processor_smarty_compat::process()</a> in pre.smarty_compat.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">process</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_counter.html#methodprocess">Dwoo_Plugin_counter::process()</a> in counter.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">process</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Processor.html#methodprocess">Dwoo_Processor::process()</a> in Processor.php</div>
+							<div class="index-item-description">processes the input and returns it filtered</div>
 					</dd>
 		</dl>
 	<a name="r"></a>
@@ -3168,6 +3219,12 @@
 							<div class="index-item-description">stores the block plugins stack during template runtime</div>
 					</dd>
 			<dt class="field">
+						<span class="var-title">$stack</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Plugin_auto_escape.html#var$stack">Dwoo_Plugin_auto_escape::$stack</a> in auto_escape.php</div>
+					</dd>
+			<dt class="field">
 						<span class="include-title">String.php</span>
 					</dt>
 		<dd class="index-item-body">
@@ -3178,6 +3235,12 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---blocks---smartyinterface.php.html">smartyinterface.php</a> in smartyinterface.php</div>
+					</dd>
+			<dt class="field">
+						<span class="include-title">safe.php</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---functions---safe.php.html">safe.php</a> in safe.php</div>
 					</dd>
 			<dt class="field">
 						<span class="include-title">spacify.php</span>
@@ -3202,6 +3265,13 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/_plugins---builtin---functions---strip_tags.php.html">strip_tags.php</a> in strip_tags.php</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setAutoEscape</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#methodsetAutoEscape">Dwoo_Compiler::setAutoEscape()</a> in Compiler.php</div>
+							<div class="index-item-description">changes the auto escape setting</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">setCacheDir</span>
@@ -3256,14 +3326,14 @@
 						<span class="method-title">setCustomPlugins</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ICompiler.html#methodsetCustomPlugins">Dwoo_ICompiler::setCustomPlugins()</a> in ICompiler.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#methodsetCustomPlugins">Dwoo_Compiler::setCustomPlugins()</a> in Compiler.php</div>
 							<div class="index-item-description">adds the custom plugins loaded into Dwoo to the compiler so it can load them</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">setCustomPlugins</span>
 					</dt>
 		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#methodsetCustomPlugins">Dwoo_Compiler::setCustomPlugins()</a> in Compiler.php</div>
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ICompiler.html#methodsetCustomPlugins">Dwoo_ICompiler::setCustomPlugins()</a> in ICompiler.php</div>
 							<div class="index-item-description">adds the custom plugins loaded into Dwoo to the compiler so it can load them</div>
 					</dd>
 			<dt class="field">
@@ -3320,20 +3390,20 @@
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo.html#methodsetScope">Dwoo::setScope()</a> in Dwoo.php</div>
-							<div class="index-item-description">[runtime function] sets the scope to the given scope string</div>
-					</dd>
-			<dt class="field">
-						<span class="method-title">setSecurityPolicy</span>
-					</dt>
-		<dd class="index-item-body">
-			<div class="index-item-details"><a href="Dwoo/Dwoo_ICompiler.html#methodsetSecurityPolicy">Dwoo_ICompiler::setSecurityPolicy()</a> in ICompiler.php</div>
-							<div class="index-item-description">sets the security policy object to enforce some php security settings</div>
+							<div class="index-item-description">[runtime function] sets the scope to the given scope string or array</div>
 					</dd>
 			<dt class="field">
 						<span class="method-title">setSecurityPolicy</span>
 					</dt>
 		<dd class="index-item-body">
 			<div class="index-item-details"><a href="Dwoo/Dwoo_Compiler.html#methodsetSecurityPolicy">Dwoo_Compiler::setSecurityPolicy()</a> in Compiler.php</div>
+							<div class="index-item-description">sets the security policy object to enforce some php security settings</div>
+					</dd>
+			<dt class="field">
+						<span class="method-title">setSecurityPolicy</span>
+					</dt>
+		<dd class="index-item-body">
+			<div class="index-item-details"><a href="Dwoo/Dwoo_ICompiler.html#methodsetSecurityPolicy">Dwoo_ICompiler::setSecurityPolicy()</a> in ICompiler.php</div>
 							<div class="index-item-description">sets the security policy object to enforce some php security settings</div>
 					</dd>
 			<dt class="field">

@@ -3,20 +3,20 @@
   <html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<!-- template designed by Marco Von Ballmoos -->
-			<title>File Source for cat.php</title>
+			<title>File Source for safe.php</title>
 			<link rel="stylesheet" href="../media/stylesheet.css" />
 			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
 		</head>
 		<body>
-						<h1>Source for file cat.php</h1>
-<p>Documentation is available at <a href="../Dwoo/_plugins---builtin---functions---cat.php.html">cat.php</a></p>
+						<h1>Source for file safe.php</h1>
+<p>Documentation is available at <a href="../Dwoo/_plugins---builtin---functions---safe.php.html">safe.php</a></p>
 <div class="src-code">
 <div class="src-code"><ol><li><div class="src-line"><a name="a1"></a><span class="src-php">&lt;?php</span></div></li>
 <li><div class="src-line"><a name="a2"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a3"></a><span class="src-doc">/**</span></div></li>
-<li><div class="src-line"><a name="a4"></a><span class="src-doc">&nbsp;*&nbsp;Concatenates&nbsp;any&nbsp;number&nbsp;of&nbsp;variables&nbsp;or&nbsp;strings&nbsp;fed&nbsp;into&nbsp;it</span></div></li>
+<li><div class="src-line"><a name="a4"></a><span class="src-doc">&nbsp;*&nbsp;Marks&nbsp;the&nbsp;variable&nbsp;as&nbsp;safe&nbsp;and&nbsp;removes&nbsp;the&nbsp;auto-escape&nbsp;function,&nbsp;only&nbsp;useful&nbsp;if&nbsp;you&nbsp;turned&nbsp;auto-escaping&nbsp;on</span></div></li>
 <li><div class="src-line"><a name="a5"></a><span class="src-doc">&nbsp;*&nbsp;&lt;pre&gt;</span></div></li>
-<li><div class="src-line"><a name="a6"></a><span class="src-doc">&nbsp;*&nbsp;&nbsp;*&nbsp;rest&nbsp;:&nbsp;two&nbsp;or&nbsp;more&nbsp;strings&nbsp;that&nbsp;will&nbsp;be&nbsp;merged&nbsp;into&nbsp;one</span></div></li>
+<li><div class="src-line"><a name="a6"></a><span class="src-doc">&nbsp;*&nbsp;&nbsp;*&nbsp;var&nbsp;:&nbsp;the&nbsp;variable&nbsp;to&nbsp;pass&nbsp;through&nbsp;untouched</span></div></li>
 <li><div class="src-line"><a name="a7"></a><span class="src-doc">&nbsp;*&nbsp;&lt;/pre&gt;</span></div></li>
 <li><div class="src-line"><a name="a8"></a><span class="src-doc">&nbsp;*&nbsp;This&nbsp;software&nbsp;is&nbsp;provided&nbsp;'as-is',&nbsp;without&nbsp;any&nbsp;express&nbsp;or&nbsp;implied&nbsp;warranty.</span></div></li>
 <li><div class="src-line"><a name="a9"></a><span class="src-doc">&nbsp;*&nbsp;In&nbsp;no&nbsp;event&nbsp;will&nbsp;the&nbsp;authors&nbsp;be&nbsp;held&nbsp;liable&nbsp;for&nbsp;any&nbsp;damages&nbsp;arising&nbsp;from&nbsp;the&nbsp;use&nbsp;of&nbsp;this&nbsp;software.</span></div></li>
@@ -34,13 +34,14 @@
 <li><div class="src-line"><a name="a21"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-tag">@date</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2008-05-30</span></div></li>
 <li><div class="src-line"><a name="a22"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;Dwoo</span></div></li>
 <li><div class="src-line"><a name="a23"></a><span class="src-doc">&nbsp;*/</span></div></li>
-<li><div class="src-line"><a name="a24"></a><span class="src-key">function&nbsp;</span><a href="../Dwoo/_plugins---builtin---functions---cat.php.html#functionDwoo_Plugin_cat_compile">Dwoo_Plugin_cat_compile</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-var">$value</span><span class="src-sym">,&nbsp;</span><span class="src-key">array&nbsp;</span><span class="src-var">$rest</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a24"></a><span class="src-key">function&nbsp;</span><a href="../Dwoo/_plugins---builtin---functions---safe.php.html#functionDwoo_Plugin_safe_compile">Dwoo_Plugin_safe_compile</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-var">$var</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a25"></a><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a26"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'('</span>.<span class="src-var">$value</span>.<span class="src-str">').('</span>.<span class="src-id">implode</span><span class="src-sym">(</span><span class="src-str">').('</span><span class="src-sym">,&nbsp;</span><span class="src-var">$rest</span><span class="src-sym">)</span>.<span class="src-str">')'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a26"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><a href="http://www.php.net/preg_replace">preg_replace</a><span class="src-sym">(</span><span class="src-str">'#htmlspecialchars\((.+?),&nbsp;ENT_QUOTES,&nbsp;\$this-&gt;charset\)#'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'$1'</span><span class="src-sym">,&nbsp;</span><span class="src-var">$var</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a27"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:25 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:48 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>

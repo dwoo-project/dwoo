@@ -27,18 +27,24 @@
                 <li><a href="../Dwoo/Dwoo_ICompilable_Block.html">Dwoo_ICompilable_Block</a></li>            </ul>
         </p>
         		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">TOCOM</p>
-<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="short-description">Similar to the php foreach block, loops over an array</p>
+<p class="description"><p>Note that if you don't provide the item parameter, the key will act as item  <pre>  * from : the array that you want to iterate over
+  * key : variable name for the key (or for the item if item is not defined)
+  * item : variable name for each item
+  * name : foreach name to access it's iterator variables through {$.foreach.name.var} see <a href="http://wiki.dwoo.org/index.php/IteratorVariables">http://wiki.dwoo.org/index.php/IteratorVariables</a> for details</pre>  Example :</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-sym">{</span><span class="src-key">foreach&nbsp;</span><span class="src-var">$array&nbsp;</span><span class="src-id">val</span><span class="src-sym">}</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span><span class="src-var">$val</span>.<span class="src-id">something</span><span class="src-sym">}</span></div></li>
+<li><div class="src-line">&nbsp;<span class="src-sym">{</span>/<span class="src-key">foreach</span><span class="src-sym">}</span></div></li>
+</ol></div></p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.0</li>
+				<li><span class="field">version:</span> 0.9.1</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-05-10</li>
+				<li><span class="field">date:</span> 2008-05-30</li>
 				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_plugins---builtin---blocks---foreach.php.html">/plugins/builtin/blocks/foreach.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a22">22</a></span>)
+			Located in <a class="field" href="_plugins---builtin---blocks---foreach.php.html">/plugins/builtin/blocks/foreach.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a37">37</a></span>)
 		</p>
 		
 				
@@ -121,13 +127,13 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$cnt" id="$cnt"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
 			static <span class="var-type">mixed</span>
 			<span class="var-name">$cnt</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a24">24</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a39">39</a></span>)
 		</span>
 	</div>
 
@@ -172,10 +178,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodpostProcessing" id="postProcessing"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a113">113</a></span>)
+		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a128">128</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -215,10 +221,10 @@
 			
 	</div>
 <a name="methodpreProcessing" id="preProcessing"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a30">30</a></span>)
+		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a45">45</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -261,10 +267,10 @@
 			
 	</div>
 <a name="methodinit" id="init"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a26">26</a></span>)
+		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforeach.php.html#a41">41</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -319,7 +325,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 10 May 2008 07:46:00 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:40 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

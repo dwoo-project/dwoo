@@ -3,20 +3,20 @@
   <html xmlns="http://www.w3.org/1999/xhtml">
 		<head>
 			<!-- template designed by Marco Von Ballmoos -->
-			<title>Docs For Class Dwoo_Plugin_forelse</title>
+			<title>Docs For Class Dwoo_Plugin_auto_escape</title>
 			<link rel="stylesheet" href="../media/stylesheet.css" />
 			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
 		</head>
 		<body>
 			<div class="page-body">			
-<h2 class="class-name">Class Dwoo_Plugin_forelse</h2>
+<h2 class="class-name">Class Dwoo_Plugin_auto_escape</h2>
 
 <a name="sec-description"></a>
 <div class="info-box">
 	<div class="info-box-title">Description</div>
 	<div class="nav-bar">
 					<span class="disabled">Description</span> |
-													<a href="#sec-vars">Vars</a>
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
 						
 					</div>
@@ -27,8 +27,8 @@
                 <li><a href="../Dwoo/Dwoo_ICompilable_Block.html">Dwoo_ICompilable_Block</a></li>            </ul>
         </p>
         		<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">This plugin serves as a {else} block specifically for the {for} plugin.</p>
-<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="short-description">Overrides the compiler auto-escape setting within the block</p>
+<p class="description"><p><pre>  * enabled : if set to "on", "enable", true or 1 then the compiler autoescaping is enabled inside this block. set to "off", "disable", false or 0 to disable it</pre>  This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
 				<li><span class="field">version:</span> 0.9.1</li>
@@ -38,7 +38,7 @@
 				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_plugins---builtin---blocks---forelse.php.html">/plugins/builtin/blocks/forelse.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforelse.php.html#a22">22</a></span>)
+			Located in <a class="field" href="_plugins---builtin---blocks---auto_escape.php.html">/plugins/builtin/blocks/auto_escape.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksauto_escape.php.html#a24">24</a></span>)
 		</p>
 		
 				
@@ -46,20 +46,39 @@
    |
    --<a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a>
       |
-      --Dwoo_Plugin_forelse</pre>
+      --Dwoo_Plugin_auto_escape</pre>
 	
 			</div>
 </div>
 
 
 
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+								</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+												<div class="var-title">
+					static <span class="var-type">mixed</span>
+					<a href="#$stack" title="details" class="var-name">$stack</a>
+				</div>
+																							</div>
+		</div>
+	</div>
 
 	<a name="sec-method-summary"></a>
 	<div class="info-box">
 		<div class="info-box-title">Method Summary</span></div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-																		<a href="#sec-vars">Vars</a>
+																		<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 				 
 				|
 						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
@@ -82,7 +101,7 @@
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#init" title="details" class="method-name">init</a>
-										()
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$enabled</span>)
 									</div>
 																											</div>
 		</div>
@@ -101,7 +120,28 @@
 							
 					</div>
 		<div class="info-box-body">
-			
+			<a name="var$stack" id="$stack"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			static <span class="var-type">mixed</span>
+			<span class="var-name">$stack</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksauto_escape.php.html#a26">26</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+
 							<h4>Inherited Variables</h4>
 				<A NAME='inherited_vars'><!-- --></A>
 									<p>Inherited from <span class="classname"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span></p>
@@ -125,7 +165,7 @@
 		<div class="info-box-title">Methods</div>
 		<div class="nav-bar">
 			<a href="#sec-description">Description</a> |
-															<a href="#sec-vars">Vars</a>
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
 																	<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
 						
 		</div>
@@ -135,7 +175,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforelse.php.html#a44">44</a></span>)
+		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksauto_escape.php.html#a60">60</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -178,7 +218,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforelse.php.html#a28">28</a></span>)
+		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksauto_escape.php.html#a32">32</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -224,7 +264,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksforelse.php.html#a24">24</a></span>)
+		<span class="method-title">init</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__pluginsbuiltinblocksauto_escape.php.html#a28">28</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -237,9 +277,14 @@
 		<span class="method-name">
 			init
 		</span>
-				()
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$enabled</span>)
 			</div>
 	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$enabled</span>			</li>
+				</ul>
 		
 			
 	</div>
@@ -265,7 +310,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:41 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 30 May 2008 04:51:24 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>
