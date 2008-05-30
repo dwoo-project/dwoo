@@ -925,6 +925,7 @@ class Dwoo
 		}
 		else
 		{
+			$this->curBlock = null;
 			echo $tmp->process();
 		}
 
