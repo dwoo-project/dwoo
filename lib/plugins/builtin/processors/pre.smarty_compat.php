@@ -54,8 +54,9 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			' ?>',
 		);
 
-		if(preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches))
+		if (preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches)) {
 			trigger_error('The Smarty Compatibility Module has detected that you use |@'.$matches[1].' in your template, this might lead to problems as Dwoo interprets the @ operator differently than Smarty, see http://wiki.dwoo.org/index.php/Syntax#The_.40_Operator', E_USER_NOTICE);
+		}
 
 		return preg_replace($smarty, $dwoo, $input);
 	}
@@ -64,65 +65,72 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 	{
 		$params = array();
 		$index = 1;
-		while(!empty($matches[$index]) && $index < 13)
-		{
+		while (!empty($matches[$index]) && $index < 13) {
 			$params[$matches[$index]] = $matches[$index+1];
 			$index += 2;
 		}
 		$params['content'] = $matches[13];
-		if(isset($matches[14]) && !empty($matches[14]))
+		if (isset($matches[14]) && !empty($matches[14])) {
 			$params['altcontent'] = $matches[14];
+		}
 
-		if(empty($params['name']))
+		if (empty($params['name'])) {
 			throw new Dwoo_Compilation_Exception('Missing parameter <em>name</em> for section tag');
+		}
 		$name = $params['name'];
 
-		if(isset($params['loop']))
+		if (isset($params['loop'])) {
 			$loops = $params['loop'];
+		}
 
-		if(isset($params['max']))
+		if (isset($params['max'])) {
 			$max = $params['max'];
+		}
 
-		if(isset($params['start']))
+		if (isset($params['start'])) {
 			$start = $params['start'];
+		}
 
-		if(isset($params['step']))
+		if (isset($params['step'])) {
 			$step = $params['step'];
+		}
 
 		if (!isset($loops))
 			$loops = null;
 
-		if (!isset($max) || $max < 0)
-		{
-			if(is_numeric($loops))
+		if (!isset($max) || $max < 0) {
+			if (is_numeric($loops)) {
 				$max = $loops;
-			else
+			} else {
 				$max = 'null';
+			}
 		}
 
 		if (!isset($step))
 			$step = 1;
 		if (!isset($start))
 			$start = $loops - 1;
-		elseif(!is_numeric($loops))
+		elseif (!is_numeric($loops)) {
 			$start = 0;
+		}
 
 		list($l, $r) = $this->compiler->getDelimiters();
 
-		if(is_numeric($loops))
-		{
-			if(isset($params['start']) && isset($params['loop']) && !isset($params['max']))
+		if (is_numeric($loops)) {
+			if (isset($params['start']) && isset($params['loop']) && !isset($params['max'])) {
 				$output = $l.'for '.$name.' '.$start.' '.($loops-$step).' '.$step.$r;
-			else
+			} else {
 				$output = $l.'for '.$name.' '.$start.' '.($start+floor($step*$max+($step>0?-1:1))).' '.$step.$r;
-		}
-		else
+			}
+		} else {
 			$output = $l.'for '.$name.' '.$loops.' '.($start+floor($max/$step)).' '.$step.' '.$start.$r;
+		}
 
 		$output .= str_replace('['.trim($name, '"\'').']', '[$'.trim($name, '"\'').']', $params['content']);
 
-		if(isset($params['altcontent']))
+		if (isset($params['altcontent'])) {
 			$output .= $l.'forelse'.$r.$params['altcontent'];
+		}
 
 		$output .= $l.'/for'.$r;
 

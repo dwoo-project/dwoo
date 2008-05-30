@@ -50,24 +50,24 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		// assigns params
 		$src = $params['from'];
 
-		if($params['item'] !== 'null')
-		{
-			if($params['key'] !== 'null')
+		if ($params['item'] !== 'null') {
+			if ($params['key'] !== 'null') {
 				$key = $params['key'];
+			}
 			$val = $params['item'];
-		}
-		elseif($params['key'] !== 'null')
-		{
+		} elseif ($params['key'] !== 'null') {
 			$val = $params['key'];
-		}
-		else
+		} else {
 			throw new Dwoo_Compilation_Exception('Foreach <em>item</em> parameter missing');
+		}
 		$name = $params['name'];
 
-		if(substr($val,0,1) !== '"' && substr($val,0,1) !== '\'')
+		if (substr($val,0,1) !== '"' && substr($val,0,1) !== '\'') {
 			throw new Dwoo_Compilation_Exception('Foreach <em>item</em> parameter must be of type string');
-		if(isset($key) && substr($val,0,1) !== '"' && substr($val,0,1) !== '\'')
+		}
+		if (isset($key) && substr($val,0,1) !== '"' && substr($val,0,1) !== '\'') {
 			throw new Dwoo_Compilation_Exception('Foreach <em>key</em> parameter must be of type string');
+		}
 
 		// evaluates which global variables have to be computed
 		$varName = '$dwoo.foreach.'.trim($name, '"\'').'.';
@@ -86,35 +86,38 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		// builds pre processing output
 		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_fh'.$cnt.'_data = '.$src.';';
 		// adds foreach properties
-		if($usesAny)
-		{
+		if ($usesAny) {
 			$out .= "\n".'$this->globals["foreach"]['.$name.'] = array'."\n(";
-			if($usesIndex) $out .="\n\t".'"index"		=> 0,';
-			if($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
-			if($usesFirst) $out .="\n\t".'"first"		=> null,';
-			if($usesLast) $out .="\n\t".'"last"		=> null,';
-			if($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true, true),';
-			if($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_fh'.$cnt.'_data) ? count($_fh'.$cnt.'_data) : 0,';
+			if ($usesIndex) $out .="\n\t".'"index"		=> 0,';
+			if ($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
+			if ($usesFirst) $out .="\n\t".'"first"		=> null,';
+			if ($usesLast) $out .="\n\t".'"last"		=> null,';
+			if ($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true, true),';
+			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_fh'.$cnt.'_data) ? count($_fh'.$cnt.'_data) : 0,';
 			$out.="\n);\n".'$_fh'.$cnt.'_glob =& $this->globals["foreach"]['.$name.'];';
 		}
 		// checks if foreach must be looped
-		$out .= "\n".'if($this->isArray($_fh'.$cnt.'_data, true, true) === true)'."\n{";
+		$out .= "\n".'if ($this->isArray($_fh'.$cnt.'_data, true, true) === true)'."\n{";
 		// iterates over keys
-		$out .= "\n\t".'foreach($_fh'.$cnt.'_data as '.(isset($key)?'$this->scope['.$key.']=>':'').'$this->scope['.$val.'])'."\n\t{";
+		$out .= "\n\t".'foreach ($_fh'.$cnt.'_data as '.(isset($key)?'$this->scope['.$key.']=>':'').'$this->scope['.$val.'])'."\n\t{";
 		// updates properties
-		if($usesFirst)
+		if ($usesFirst) {
 			$out .= "\n\t\t".'$_fh'.$cnt.'_glob["first"] = (string) ($_fh'.$cnt.'_glob["index"] === 0);';
-		if($usesLast)
+		}
+		if ($usesLast) {
 			$out .= "\n\t\t".'$_fh'.$cnt.'_glob["last"] = (string) ($_fh'.$cnt.'_glob["iteration"] === $_fh'.$cnt.'_glob["total"]);';
+		}
 		$out .= "\n// -- foreach start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
 		$postOut = Dwoo_Compiler::PHP_OPEN . "\n".'// -- foreach end output';
 		// update properties
-		if($usesIndex)
+		if ($usesIndex) {
 			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["index"]+=1;';
-		if($usesIteration)
+		}
+		if ($usesIteration) {
 			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["iteration"]+=1;';
+		}
 		// end loop
 		$postOut .= "\n\t}\n}\n";
 

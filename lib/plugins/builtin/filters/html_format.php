@@ -71,15 +71,15 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 	protected static function tagDispatcher($input)
 	{
 		// textarea, pre, code tags and comments are to be left alone to avoid any non-wanted whitespace inside them so it just outputs them as they were
-		if(substr($input[1],0,9) == "<textarea" || substr($input[1],0,4) == "<pre" || substr($input[1],0,5) == "<code" || substr($input[1],0,4) == "<!--" || substr($input[1],0,9) == "<![CDATA[") {
+		if (substr($input[1],0,9) == "<textarea" || substr($input[1],0,4) == "<pre" || substr($input[1],0,5) == "<code" || substr($input[1],0,4) == "<!--" || substr($input[1],0,9) == "<![CDATA[") {
 			return $input[1] . $input[3];
 		}
 		// closing textarea, code and pre tags and self-closed tags (i.e. <br />) are printed as singleTags because we didn't use openTag for the formers and the latter is a single tag
-		if(substr($input[1],0,10) == "</textarea" || substr($input[1],0,5) == "</pre" || substr($input[1],0,6) == "</code" || substr($input[1],-2) == "/>") {
+		if (substr($input[1],0,10) == "</textarea" || substr($input[1],0,5) == "</pre" || substr($input[1],0,6) == "</code" || substr($input[1],-2) == "/>") {
 			return self::singleTag($input[1],$input[3],$input[2]);
 		}
 		// it's the closing tag
-		if($input[0][1]=="/"){
+		if ($input[0][1]=="/"){
 			return self::closeTag($input[1],$input[3],$input[2]);
 		}
 		// opening tag
@@ -99,13 +99,11 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 		$tabs = str_pad('',self::$tabCount++,"\t");
 
 		// if it's one of those tag it's inline so it does not require a leading line break
-		if(preg_match('#^<(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)(?: [^>]*|)>#', $tag))
-		{
+		if (preg_match('#^<(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)(?: [^>]*|)>#', $tag)) {
 			$result = $tag . $whitespace . str_replace("\n","\n".$tabs,$add);
 		}
 		// it's the doctype declaration so no line break here either
-		elseif(substr($tag,0,9) == '<!DOCTYPE')
-		{
+		elseif (substr($tag,0,9) == '<!DOCTYPE') {
 			$result = $tabs . $tag;
 		}
 		// normal block tag
@@ -113,8 +111,7 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 		{
 			$result = "\n".$tabs . $tag;
 
-			if(!empty($add))
-			{
+			if (!empty($add)) {
 				$result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
 			}
 		}
@@ -137,16 +134,12 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 		$tabs = str_pad('',--self::$tabCount,"\t");
 
 		// if it's one of those tag it's inline so it does not require a leading line break
-		if(preg_match('#^</(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)>#', $tag))
-		{
+		if (preg_match('#^</(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)>#', $tag)) {
 			$result = $tag . $whitespace . str_replace("\n","\n".$tabs,$add);
-		}
-		else
-		{
+		} else {
 			$result = "\n".$tabs.$tag;
 
-			if(!empty($add))
-			{
+			if (!empty($add)) {
 				$result .= "\n".$tabs."\t".str_replace("\n","\n\t".$tabs,$add);
 			}
 		}
@@ -169,21 +162,16 @@ class Dwoo_Filter_html_format extends Dwoo_Filter
 
 		// if it's img, br it's inline so it does not require a leading line break
 		// if it's a closing textarea, code or pre tag, it does not require a leading line break either or it creates whitespace at the end of those blocks
-		if(preg_match('#^<(img|br|/textarea|/pre|/code)(?: [^>]*|)>#', $tag))
-		{
+		if (preg_match('#^<(img|br|/textarea|/pre|/code)(?: [^>]*|)>#', $tag)) {
 			$result = $tag.$whitespace;
 
-			if(!empty($add))
-			{
+			if (!empty($add)) {
 				$result .= str_replace("\n","\n".$tabs,$add);
 			}
-		}
-		else
-		{
+		} else {
 			$result = "\n".$tabs.$tag;
 
-			if(!empty($add))
-			{
+			if (!empty($add)) {
 				$result .= "\n".$tabs.str_replace("\n","\n".$tabs,$add);
 			}
 		}

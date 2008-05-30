@@ -29,34 +29,34 @@
  */
 function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
-	if($file === '')
+	if ($file === '') {
 		return;
+	}
 
-	if(preg_match('#^([a-z]{2,}):(.*)#i', $file, $m))
+	if (preg_match('#^([a-z]{2,}):(.*)#i', $file, $m))
 	{
 		$resource = $m[1];
 		$identifier = $m[2];
-	}
-	else
+	} else
 	{
 		// get the current template's resource
 		$resource = $dwoo->getTemplate()->getResourceName();
 		$identifier = $file;
 	}
 
-	if($resource === 'file' && $policy = $dwoo->getSecurityPolicy())
+	if ($resource === 'file' && $policy = $dwoo->getSecurityPolicy())
 	{
-		while(true)
-		{
-			if(preg_match('{^([a-z]+?)://}i', $identifier))
+		while (true) {
+			if (preg_match('{^([a-z]+?)://}i', $identifier)) {
 				throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources : <em>'.$identifier.'</em>.');
+			}
 
 			$identifier = realpath($identifier);
 			$dirs = $policy->getAllowedDirectories();
-			foreach($dirs as $dir=>$dummy)
-			{
-				if(strpos($identifier, $dir) === 0)
+			foreach ($dirs as $dir=>$dummy) {
+				if (strpos($identifier, $dir) === 0) {
 					break 2;
+				}
 			}
 			throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$identifier.'</em>');
 		}
@@ -68,27 +68,30 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		$dwoo->triggerError('Include : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_WARNING);
 	}
 
-	if($include === null)
+	if ($include === null) {
 		return;
-	elseif($include === false)
+	} elseif ($include === false) {
 		$dwoo->triggerError('Include : Including "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
+	}
 
-	if($dwoo->isArray($data))
+	if ($dwoo->isArray($data)) {
 		$vars = $data;
-	elseif($dwoo->isArray($cache_time))
+	} elseif ($dwoo->isArray($cache_time)) {
 		$vars = $cache_time;
-	else
+	} else {
 		$vars = $dwoo->readVar($data);
+	}
 
-	if(count($rest))
+	if (count($rest))
 	{
 		$vars = $rest + $vars;
 	}
 
 	$out = $dwoo->get($include, $vars);
 
-	if($assign !== null)
+	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);
-	else
+	} else {
 		return $out;
+	}
 }

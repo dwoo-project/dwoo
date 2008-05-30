@@ -33,10 +33,11 @@ class Dwoo_Plugin_withelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 
 		$compiler->injectBlock($type, $params, 1);
 
-		if(substr($out, -strlen(Dwoo_Compiler::PHP_CLOSE)) === Dwoo_Compiler::PHP_CLOSE)
+		if (substr($out, -strlen(Dwoo_Compiler::PHP_CLOSE)) === Dwoo_Compiler::PHP_CLOSE) {
 			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
-		else
+		} else {
 			$out .= Dwoo_Compiler::PHP_OPEN;
+		}
 
 		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
 	}

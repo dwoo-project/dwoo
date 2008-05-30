@@ -31,24 +31,31 @@
  */
 function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $encode=null, $cc=null, $bcc=null, $newsgroups=null, $followupto=null, $extra=null)
 {
-	if(empty($address))
+	if (empty($address)) {
 		return '';
-	if(empty($text))
+	}
+	if (empty($text)) {
 		$text = $address;
+	}
 
 	// build address string
 	$address .= '?';
 
-	if(!empty($subject))
+	if (!empty($subject)) {
 		$address .= 'subject='.rawurlencode($subject).'&';
-	if(!empty($cc))
+	}
+	if (!empty($cc)) {
 		$address .= 'cc='.rawurlencode($cc).'&';
-	if(!empty($bcc))
+	}
+	if (!empty($bcc)) {
 		$address .= 'bcc='.rawurlencode($bcc).'&';
-	if(!empty($newsgroup))
+	}
+	if (!empty($newsgroup)) {
 		$address .= 'newsgroups='.rawurlencode($newsgroups).'&';
-	if(!empty($followupto))
+	}
+	if (!empty($followupto)) {
 		$address .= 'followupto='.rawurlencode($followupto).'&';
+	}
 
 	$address = rtrim($address, '?&');
 
@@ -86,17 +93,18 @@ function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $en
 			break;
 
 		case 'hex':
-			if(strpos($address, '?') !== false)
+			if (strpos($address, '?') !== false) {
 				$dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
+			}
 
 			$out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
 			$len = strlen($address);
-			for ($i=0; $i<$len; $i++)
-			{
-				if(preg_match('#\w#', $address[$i]))
+			for ($i=0; $i<$len; $i++) {
+				if (preg_match('#\w#', $address[$i])) {
 					$out .= '%'.bin2hex($address[$i]);
-				else
+				} else {
 					$out .= $address[$i];
+				}
 			}
 			$out .= '" '.$extra.'>';
 			$len = strlen($text);

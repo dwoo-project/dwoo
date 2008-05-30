@@ -107,7 +107,7 @@ FOObartoplevelContent2
 baz"));
 	}
 
-	public function testIf()
+	public function testIf ()
 	{
 		$tpl = new Dwoo_Template_String('{if "BAR"==reverse($foo|reverse|upper)}true{/if}');
 		$tpl->forceCompilation();
@@ -135,11 +135,11 @@ baz"));
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
-		$fixCall = new Dwoo_Plugin_if($this->dwoo);
+		$fixCall = new Dwoo_Plugin_if ($this->dwoo);
 		$fixCall->init(array());
 	}
 
-	public function testIfElseif()
+	public function testIfElseif ()
 	{
 		$tpl = new Dwoo_Template_String('{if "BAR" == "bar"}true{elseif "BAR"=="BAR"}false{/if}');
 		$tpl->forceCompilation();
@@ -147,7 +147,7 @@ baz"));
 		$this->assertEquals('false', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
-		$fixCall = new Dwoo_Plugin_elseif($this->dwoo);
+		$fixCall = new Dwoo_Plugin_elseif ($this->dwoo);
 		$fixCall->init(array());
 	}
 
@@ -179,7 +179,7 @@ baz"));
 		$this->assertEquals('true', $this->dwoo->get($tpl, array('moo'=>'i'), $this->compiler));
 	}
 
-	public function testFor()
+	public function testFor ()
 	{
 		$tpl = new Dwoo_Template_String('{for name=i from=$sub}{$i}.{$sub[$i]}{/for}');
 		$tpl->forceCompilation();
@@ -187,7 +187,7 @@ baz"));
 		$this->assertEquals('0.foo1.bar2.baz3.qux', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
-		$fixCall = new Dwoo_Plugin_for($this->dwoo);
+		$fixCall = new Dwoo_Plugin_for ($this->dwoo);
 		$fixCall->init(null,null);
 	}
 
@@ -221,7 +221,7 @@ baz"));
 		$this->assertEquals('0.foo1.bar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
-		$fixCall = new Dwoo_Plugin_foreach($this->dwoo);
+		$fixCall = new Dwoo_Plugin_foreach ($this->dwoo);
 		$fixCall->init('');
 	}
 
@@ -235,13 +235,13 @@ baz"));
 
 	public function testForeachDwoo()
 	{
-		// Item only, key arg is mapped to it just as foreach($foo as $item)
+		// Item only, key arg is mapped to it just as foreach ($foo as $item)
 		$tpl = new Dwoo_Template_String('{foreach $sub item}{$item}{/foreach}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('foobar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
 
-		// Item and key used, key is second just as foreach($foo as $key=>$item)
+		// Item and key used, key is second just as foreach ($foo as $key=>$item)
 		$tpl = new Dwoo_Template_String('{foreach $sub key item}{$key}.{$item}{/foreach}');
 		$tpl->forceCompilation();
 

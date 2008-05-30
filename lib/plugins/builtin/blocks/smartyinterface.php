@@ -30,33 +30,31 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin implements Dwoo_ICom
 		$pluginType = $params['__functype'];
 		$params = $params['*'];
 
-		if($pluginType & Dwoo::CUSTOM_PLUGIN)
-		{
+		if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 			$customPlugins = $compiler->getDwoo()->getCustomPlugins();
 			$callback = $customPlugins[$func]['callback'];
-			if(is_array($callback))
-			{
-				if(is_object($callback[0]))
+			if (is_array($callback)) {
+				if (is_object($callback[0])) {
 					$callback = '$this->customPlugins[\''.$func.'\'][0]->'.$callback[1].'(';
-				else
+				} else {
 					$callback = ''.$callback[0].'::'.$callback[1].'(';
-			}
-			else
+				}
+			} else {
 				$callback = $callback.'(';
-		}
-		else
+			}
+		} else {
 			$callback = 'smarty_block_'.$func.'(';
+		}
 
 		$paramsOut = '';
-		foreach($params as $i=>$p)
-		{
+		foreach ($params as $i=>$p) {
 			$paramsOut .= var_export($i, true).' => '.$p.',';
 		}
 
 		$curBlock =& $compiler->getCurrentBlock();
 		$curBlock['params']['postOut'] = Dwoo_Compiler::PHP_OPEN.' $_block_content = ob_get_clean(); $_block_repeat=false; echo '.$callback.'$_tag_stack[count($_tag_stack)-1], $_block_content, $this, $_block_repeat); } array_pop($_tag_stack);'.Dwoo_Compiler::PHP_CLOSE;
 
-		return Dwoo_Compiler::PHP_OPEN.$prepend.' if(!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = array('.$paramsOut.'); $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.Dwoo_Compiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.$prepend.' if (!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = array('.$paramsOut.'); $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')

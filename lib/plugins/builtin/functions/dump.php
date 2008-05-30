@@ -32,7 +32,7 @@ class Dwoo_Plugin_dump extends Dwoo_Plugin
 			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
 		}
 
-		if(!is_array($var)) {
+		if (!is_array($var)) {
 			return $this->exportVar('', $var);
 		}
 
@@ -55,7 +55,7 @@ class Dwoo_Plugin_dump extends Dwoo_Plugin
 		foreach ($var as $i=>$v) {
 			if (is_array($v) || (is_object($v) && $v instanceof Iterator)) {
 				$out .= $i.' ('.(is_array($v) ? 'array':'object:'.get_class($v)).')';
-				if($v===$scope) {
+				if ($v===$scope) {
 					$out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">'.$this->export($v, $scope).'</div>';
 				} else {
 					$out .= ':<div style="padding-left:20px;">'.$this->export($v, $scope).'</div>';

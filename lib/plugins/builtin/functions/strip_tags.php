@@ -24,8 +24,9 @@
  */
 function Dwoo_Plugin_strip_tags_compile(Dwoo_Compiler $compiler, $value, $addspace=true)
 {
-	if($addspace==='true')
+	if ($addspace==='true') {
 		return "preg_replace('#<[^>]*>#', ' ', $value)";
-	else
+	} else {
 		return "strip_tags($value)";
+	}
 }

@@ -32,8 +32,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='', $type)
 	{
 		$params = $compiler->getCompiledParams($params);
-		switch(strtolower(trim((string) $params['enabled'], '"\'')))
-		{
+		switch(strtolower(trim((string) $params['enabled'], '"\''))) {
 			case 'on':
 			case 'true':
 			case 'enabled':

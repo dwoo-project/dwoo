@@ -25,8 +25,9 @@
  */
 function Dwoo_Plugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null)
 {
-	if($charset === null)
+	if ($charset === null) {
 		$charset = $dwoo->getCharset();
+	}
 
 	switch($format)
 	{
@@ -50,7 +51,7 @@ function Dwoo_Plugin_escape(Dwoo $dwoo, $value='', $format='html', $charset=null
 		case 'hexentity':
 			$out = '';
 			$cnt = strlen((string) $value);
-			for($i=0; $i < $cnt; $i++)
+			for ($i=0; $i < $cnt; $i++)
 				$out .= '&#x' . bin2hex((string) $value[$i]) . ';';
 			return $out;
 		case 'javascript':

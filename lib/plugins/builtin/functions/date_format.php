@@ -25,35 +25,34 @@
  */
 function Dwoo_Plugin_date_format(Dwoo $dwoo, $value, $format='%b %e, %Y', $default=null)
 {
-	if(!empty($value))
+	if (!empty($value))
 	{
 		// convert if it's not a valid unix timestamp
-		if(preg_match('#^\d{10}$#', $value)===0)
+		if (preg_match('#^\d{10}$#', $value)===0) {
 			$value = strtotime($value);
-	}
-	elseif(!empty($default))
+		}
+	} elseif (!empty($default))
 	{
 		// convert if it's not a valid unix timestamp
-		if(preg_match('#^\d{10}$#', $default)===0)
+		if (preg_match('#^\d{10}$#', $default)===0) {
 			$value = strtotime($default);
-		else
+		} else {
 			$value = $default;
-	}
-	else
+		}
+	} else {
 		return '';
+	}
 
 	// Credits for that windows compat block to Monte Ohrt who made smarty's date_format plugin
-	if(DIRECTORY_SEPARATOR == '\\')
+	if (DIRECTORY_SEPARATOR == '\\')
 	{
 		$_win_from = array('%D',       '%h', '%n', '%r',          '%R',    '%t', '%T');
 		$_win_to   = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');
-		if(strpos($format, '%e') !== false)
-		{
+		if (strpos($format, '%e') !== false) {
 			$_win_from[] = '%e';
 			$_win_to[]   = sprintf('%\' 2d', date('j', $value));
 		}
-		if(strpos($format, '%l') !== false)
-		{
+		if (strpos($format, '%l') !== false) {
 			$_win_from[] = '%l';
 			$_win_to[]   = sprintf('%\' 2d', date('h', $value));
 		}

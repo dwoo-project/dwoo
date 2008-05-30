@@ -44,10 +44,8 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 		$params = $params['*'];
 
-		while(list($k,$v) = each($params))
-		{
-			switch($v)
-			{
+		while (list($k,$v) = each($params)) {
+			switch($v) {
 				case '"<<"':
 				case '">>"':
 				case '"&&"':
@@ -100,53 +98,44 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 					$p[] = '!==';
 					break;
 				case '"is"':
-					if($params[$k+1] === '"not"')
-					{
+					if ($params[$k+1] === '"not"') {
 						$negate = true;
 						next($params);
-					}
-					else
+					} else {
 						$negate = false;
+					}
 					$ptr = 1+(int)$negate;
-					switch($params[$k+$ptr])
-					{
+					switch($params[$k+$ptr]) {
 						case '"div"':
-							if(isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"')
-							{
+							if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
 								$p[] = ' % '.$params[$k+$ptr+2].' '.($negate?'!':'=').'== 0';
 								next($params);
 								next($params);
 								next($params);
-							}
-							else
+							} else {
 								throw new Dwoo_Compilation_Exception('If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k-1].' is '.($negate?'not ':'').'div '.$params[$k+$ptr+1].' '.$params[$k+$ptr+2]);
+							}
 							break;
 						case '"even"':
 							$a = array_pop($p);
-							if(isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"')
-							{
+							if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
 								$b = $params[$k+$ptr+2];
 								$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'!':'=').'== 0';
 								next($params);
 								next($params);
-							}
-							else
-							{
+							} else {
 								$p[] = $a.' % 2 '.($negate?'!':'=').'== 0';
 							}
 							next($params);
 							break;
 						case '"odd"':
 							$a = array_pop($p);
-							if(isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"')
-							{
+							if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
 								$b = $params[$k+$ptr+2];
 								$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'=':'!').'== 0';
 								next($params);
 								next($params);
-							}
-							else
-							{
+							} else {
 								$p[] = $a.' % 2 '.($negate?'=':'!').'== 0';
 							}
 							next($params);
@@ -176,7 +165,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 		$currentBlock =& $compiler->getCurrentBlock();
 		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
-		return Dwoo_Compiler::PHP_OPEN.'if('.implode(' ', self::replaceKeywords($params, $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params, $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')

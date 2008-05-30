@@ -47,13 +47,11 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		$this->name = basename($file);
 		$this->cacheTime = $cacheTime;
 
-		if($compileId !== null)
-		{
+		if ($compileId !== null) {
 			$this->compileId = strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
 
-		if($cacheId !== null)
-		{
+		if ($cacheId !== null) {
 			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
 	}
@@ -70,12 +68,10 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		$compiledFile = $this->getCompiledFilename($dwoo);
 
 		// already checked, return compiled file
-		if($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true)
-		{
+		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
 		}
 		// template is compiled and has not been modified since the compilation
-		elseif($this->compilationEnforced !== true && file_exists($compiledFile)===true && filemtime($this->file) <= filemtime($compiledFile))
-		{
+		elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true && filemtime($this->file) <= filemtime($compiledFile)) {
 			self::$cache['compiled'][$this->compileId] = true;
 		}
 		// compiles the template
@@ -83,18 +79,17 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		{
 			$this->compilationEnforced = false;
 
-			if($compiler === null)
-			{
+			if ($compiler === null) {
 				$compiler = $dwoo->getDefaultCompilerFactory('string');
 
-				if($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory'))
-				{
-					if(class_exists('Dwoo_Compiler', false) === false)
+				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
+					if (class_exists('Dwoo_Compiler', false) === false) {
 						include 'Dwoo/Compiler.php';
+					}
 					$compiler = Dwoo_Compiler::compilerFactory();
-				}
-				else
+				} else {
 					$compiler = call_user_func($compiler);
+				}
 			}
 
 			$this->compiler = $compiler;
@@ -171,25 +166,24 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		$resourceId = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $resourceId);
-		if(file_exists($resourceId) === false)
-		{
+		if (file_exists($resourceId) === false) {
 			$tpl = $dwoo->getTemplate();
-			if($tpl instanceof Dwoo_Template_File)
-			{
+			if ($tpl instanceof Dwoo_Template_File) {
 				$resourceId = dirname($tpl->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
-				if(file_exists($resourceId) === false)
+				if (file_exists($resourceId) === false) {
 					return null;
-			}
-			else
+				}
+			} else {
 				return null;
+			}
 		}
 
 		// prevent template recursion if security is in effect
-		if($policy = $dwoo->getSecurityPolicy())
-		{
+		if ($policy = $dwoo->getSecurityPolicy()) {
 			$tpl = $dwoo->getTemplate();
-			if($tpl instanceof Dwoo_Template_File && $resourceId === $tpl->getResourceIdentifier())
+			if ($tpl instanceof Dwoo_Template_File && $resourceId === $tpl->getResourceIdentifier()) {
 				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
+			}
 		}
 
 		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId);
@@ -205,8 +199,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	protected function getCompiledFilename(Dwoo $dwoo)
 	{
 		// no compile id was provided, set default
-		if($this->compileId===null)
-		{
+		if ($this->compileId===null) {
 			$this->compileId = implode('/', array_slice(explode('/', strtr($this->file, '\\', '/')), -3));
 		}
 		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';

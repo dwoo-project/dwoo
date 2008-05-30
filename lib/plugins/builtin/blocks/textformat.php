@@ -41,11 +41,11 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 
 	public function init($wrap=80, $wrap_char="\r\n", $wrap_cut=false, $indent=0, $indent_char=" ", $indent_first=0, $style="", $assign="")
 	{
-		if($indent_char === 'tab')
+		if ($indent_char === 'tab') {
 			$indent_char = "\t";
+		}
 
-		switch($style)
-		{
+		switch($style) {
 			case 'email':
 				$wrap = 72;
 				$indent_first = 0;
@@ -70,10 +70,10 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 		// gets paragraphs
 		$pgs = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->buffer));
 
-		while(list($i,) = each($pgs))
-		{
-			if(empty($pgs[$i]))
+		while (list($i,) = each($pgs)) {
+			if (empty($pgs[$i])) {
 				continue;
+			}
 
 			// removes line breaks and extensive white space
 			$pgs[$i] = preg_replace(array('#\s+#', '#^\s*(.+?)\s*$#m'), array(' ', '$1'), str_replace("\n", '', $pgs[$i]));
@@ -88,9 +88,10 @@ class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
 					);
 		}
 
-		if($this->assign !== '')
+		if ($this->assign !== '') {
 			$this->dwoo->assignInScope(implode($this->wrapChar . $this->wrapChar, $pgs), $this->assign);
-		else
+		} else {
 			return implode($this->wrapChar . $this->wrapChar, $pgs);
+		}
 	}
 }

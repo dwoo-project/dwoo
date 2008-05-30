@@ -31,14 +31,16 @@
  */
 function Dwoo_Plugin_eval(Dwoo $dwoo, $var, $assign = null)
 {
-	if($var == '')
+	if ($var == '') {
 		return;
+	}
 
 	$tpl = new Dwoo_Template_String($var);
 	$out = $dwoo->get($var, $dwoo->readVar('_parent'));
 
-	if($assign !== null)
+	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);
-	else
+	} else {
 		return $out;
+	}
 }

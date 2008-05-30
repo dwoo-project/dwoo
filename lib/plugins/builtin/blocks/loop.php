@@ -77,35 +77,38 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		// builds pre processing output
 		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_loop'.$cnt.'_data = '.$src.';';
 		// adds foreach properties
-		if($usesAny)
-		{
+		if ($usesAny) {
 			$out .= "\n".'$this->globals["loop"]['.$name.'] = array'."\n(";
-			if($usesIndex) $out .="\n\t".'"index"		=> 0,';
-			if($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
-			if($usesFirst) $out .="\n\t".'"first"		=> null,';
-			if($usesLast) $out .="\n\t".'"last"		=> null,';
-			if($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_loop'.$cnt.'_data, true, true),';
-			if($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_loop'.$cnt.'_data) ? count($_loop'.$cnt.'_data) : 0,';
+			if ($usesIndex) $out .="\n\t".'"index"		=> 0,';
+			if ($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
+			if ($usesFirst) $out .="\n\t".'"first"		=> null,';
+			if ($usesLast) $out .="\n\t".'"last"		=> null,';
+			if ($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_loop'.$cnt.'_data, true, true),';
+			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_loop'.$cnt.'_data) ? count($_loop'.$cnt.'_data) : 0,';
 			$out.="\n);\n".'$_loop'.$cnt.'_glob =& $this->globals["loop"]['.$name.'];';
 		}
 		// checks if foreach must be looped
-		$out .= "\n".'if($this->isArray($_loop'.$cnt.'_data, true, true) === true)'."\n{";
+		$out .= "\n".'if ($this->isArray($_loop'.$cnt.'_data, true, true) === true)'."\n{";
 		// iterates over keys
-		$out .= "\n\t".'foreach($_loop'.$cnt.'_data as $tmp_key => $this->scope["-loop-"])'."\n\t{";
+		$out .= "\n\t".'foreach ($_loop'.$cnt.'_data as $tmp_key => $this->scope["-loop-"])'."\n\t{";
 		// updates properties
-		if($usesFirst)
+		if ($usesFirst) {
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["first"] = (string) ($_loop'.$cnt.'_glob["index"] === 0);';
-		if($usesLast)
+		}
+		if ($usesLast) {
 			$out .= "\n\t\t".'$_loop'.$cnt.'_glob["last"] = (string) ($_loop'.$cnt.'_glob["iteration"] === $_loop'.$cnt.'_glob["total"]);';
+		}
 		$out .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope(array("-loop-"));' . "\n// -- loop start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
 		$postOut = Dwoo_Compiler::PHP_OPEN . "\n".'// -- loop end output'."\n\t\t".'$this->setScope($_loop'.$cnt.'_scope, true);';
 		// update properties
-		if($usesIndex)
+		if ($usesIndex) {
 			$postOut.="\n\t\t".'$_loop'.$cnt.'_glob["index"]+=1;';
-		if($usesIteration)
+		}
+		if ($usesIteration) {
 			$postOut.="\n\t\t".'$_loop'.$cnt.'_glob["iteration"]+=1;';
+		}
 		// end loop
 		$postOut .= "\n\t}\n}\n";
 

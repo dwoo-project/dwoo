@@ -65,8 +65,7 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 	$out = '';
 	$ptr = 1;
 	$allowcomma = 0;
-	while(strlen($equation) > 0)
-	{
+	while (strlen($equation) > 0) {
 		$substr = substr($equation, 0, $ptr);
 		// allowed string
 		if (array_search($substr, $allowed) !== false) {
@@ -80,31 +79,31 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
 			$allowcomma++;
-			if($allowcomma === 1) {
+			if ($allowcomma === 1) {
 				$allowed[] = ',';
 			}
 		}
 		// variable
-		elseif(isset($rest[$substr]))
-		{
+		elseif (isset($rest[$substr])) {
 			$out.=$rest[$substr];
 			$equation = substr($equation, $ptr);
 			$ptr = 0;
 		}
 		// pre-replaced variable
-		elseif($substr === $open)
-		{
+		elseif ($substr === $open) {
 			preg_match('#.*\((?:[^()]*?|(?R))\)'.str_replace('.', '\\.', $close).'#', substr($equation, 2), $m);
-			if(empty($m))
+			if (empty($m)) {
 				preg_match('#.*?'.str_replace('.', '\\.', $close).'#', substr($equation, 2), $m);
+			}
 			$out.=substr($m[0], 0, -2);
 			$equation = substr($equation, strlen($m[0])+2);
 			$ptr = 0;
 		}
 		// opening parenthesis
 		elseif ($substr==='(') {
-			if($allowcomma>0)
+			if ($allowcomma>0) {
 				$allowcomma++;
+			}
 
 			$out.=$substr;
 			$equation = substr($equation, $ptr);
@@ -112,9 +111,9 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 		}
 		// closing parenthesis
 		elseif ($substr===')') {
-			if($allowcomma>0) {
+			if ($allowcomma>0) {
 				$allowcomma--;
-				if($allowcomma===0) {
+				if ($allowcomma===0) {
 					array_pop($allowed);
 				}
 			}
@@ -127,15 +126,15 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format=''
 		elseif ($ptr >= strlen($equation)) {
 			throw new Dwoo_Compilation_Exception('Math : Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr);
 			return;
-		}
-		else
-		{
+		} else {
 			$ptr++;
 		}
 	}
-	if($format !== '\'\'')
+	if ($format !== '\'\'') {
 		$out = 'sprintf('.$format.', '.$out.')';
-	if($assign !== '\'\'')
+	}
+	if ($assign !== '\'\'') {
 		return '($this->assignInScope('.$out.', '.$assign.'))';
+	}
 	return '('.$out.')';
 }

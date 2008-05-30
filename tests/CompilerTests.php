@@ -237,8 +237,9 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testConstants()
 	{
-		if(!defined('TEST'))
+		if (!defined('TEST')) {
 			define('TEST', 'Test');
+		}
 		$tpl = new Dwoo_Template_String('{$dwoo.const.TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*$dwoo.const.Dwoo::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 
@@ -247,8 +248,9 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 	public function testShortConstants()
 	{
-		if(!defined('TEST'))
+		if (!defined('TEST')) {
 			define('TEST', 'Test');
+		}
 		$tpl = new Dwoo_Template_String('{%TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*%Dwoo::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 

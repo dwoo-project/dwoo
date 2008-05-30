@@ -24,8 +24,9 @@
  */
 function Dwoo_Plugin_reverse(Dwoo $dwoo, $value, $preserve_keys=false)
 {
-	if(is_array($value))
+	if (is_array($value)) {
 		return array_reverse($value, $preserve_keys);
-	else
+	} else {
 		return implode('',array_reverse(str_split((string) $value,1)));
+	}
 }

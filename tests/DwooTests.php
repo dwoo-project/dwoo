@@ -1,7 +1,7 @@
 <?php
 
 error_reporting(E_ALL|E_STRICT);
-if(!ini_get('date.timezone'))
+if (!ini_get('date.timezone'))
 	date_default_timezone_set('CET');
 define('DWOO_CACHE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
@@ -17,9 +17,8 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 
 		$suite = new self('Dwoo - Unit Tests Report');
 
-		foreach(new DirectoryIterator(dirname(__FILE__)) as $file) {
-			if(!$file->isDot() && !$file->isDir() && (string) $file !== 'DwooTests.php' && substr((string) $file, -4) === '.php')
-			{
+		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
+			if (!$file->isDot() && !$file->isDir() && (string) $file !== 'DwooTests.php' && substr((string) $file, -4) === '.php') {
 				require_once $file->getPathname();
 				$suite->addTestSuite(basename($file, '.php'));
 			}
@@ -28,22 +27,21 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		return $suite;
 	}
 
-		protected function tearDown()
-		{
+		protected function tearDown() {
 			$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
 
 	protected function clearDir($path, $emptyOnly=false)
 	{
-			if(is_dir($path))
-			{
-					foreach(glob($path.'/*') as $f)
+			if (is_dir($path)) {
+					foreach (glob($path.'/*') as $f)
 							$this->clearDir($f);
-					if(!$emptyOnly)
+					if (!$emptyOnly) {
 						rmdir($path);
-			}
-			else
+					}
+			} else {
 					unlink($path);
+				}
 	}
 }
 

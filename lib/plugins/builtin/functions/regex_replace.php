@@ -26,10 +26,11 @@
 function Dwoo_Plugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
 {
 	// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
-	if(($pos = strpos($search,"\0")) !== false)
+	if (($pos = strpos($search,"\0")) !== false) {
 		$search = substr($search,0,$pos);
+	}
 
-	if(preg_match('#([a-z\s]+)$#i', $search, $m) && strpos($m[0], 'e') !== false) {
+	if (preg_match('#([a-z\s]+)$#i', $search, $m) && strpos($m[0], 'e') !== false) {
 		$search = substr($search, 0, -strlen($m[0])) . str_replace('e', '', $m[0]);
 	}
 

@@ -88,8 +88,8 @@ class Dwoo_Security_Policy
 	 */
 	public function allowPhpFunction($func)
 	{
-		if(is_array($func))
-			foreach($func as $fname)
+		if (is_array($func))
+			foreach ($func as $fname)
 				$this->allowedPhpFunctions[strtolower($fname)] = true;
 		else
 			$this->allowedPhpFunctions[strtolower($func)] = true;
@@ -102,8 +102,8 @@ class Dwoo_Security_Policy
 	 */
 	public function disallowPhpFunction($func)
 	{
-		if(is_array($func))
-			foreach($func as $fname)
+		if (is_array($func))
+			foreach ($func as $fname)
 				unset($this->allowedPhpFunctions[strtolower($fname)]);
 		else
 			unset($this->allowedPhpFunctions[strtolower($func)]);
@@ -127,8 +127,8 @@ class Dwoo_Security_Policy
 	 */
 	public function allowDirectory($path)
 	{
-		if(is_array($path))
-			foreach($path as $dir)
+		if (is_array($path))
+			foreach ($path as $dir)
 				$this->allowedDirectories[realpath($dir)] = true;
 		else
 			$this->allowedDirectories[realpath($path)] = true;
@@ -141,8 +141,8 @@ class Dwoo_Security_Policy
 	 */
 	public function disallowDirectory($path)
 	{
-		if(is_array($path))
-			foreach($path as $dir)
+		if (is_array($path))
+			foreach ($path as $dir)
 				unset($this->allowedDirectories[realpath($dir)]);
 		else
 			unset($this->allowedDirectories[realpath($path)]);

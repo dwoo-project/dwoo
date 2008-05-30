@@ -42,8 +42,7 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 	{
 		$block =& $compiler->getCurrentBlock();
 		$out = '';
-		while($block['type'] !== 'if' && $block['type'] !== 'foreach' && $block['type'] !== 'for' && $block['type'] !== 'with' && $block['type'] !== 'loop')
-		{
+		while ($block['type'] !== 'if' && $block['type'] !== 'foreach' && $block['type'] !== 'for' && $block['type'] !== 'with' && $block['type'] !== 'loop') {
 			$out .= $compiler->removeTopBlock();
 			$block =& $compiler->getCurrentBlock();
 		}
@@ -60,7 +59,8 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
 	{
-		if(isset($params['postOutput']))
+		if (isset($params['postOutput'])) {
 			return $params['postOutput'];
+		}
 	}
 }

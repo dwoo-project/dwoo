@@ -33,40 +33,42 @@ class Dwoo_Plugin_cycle extends Dwoo_Plugin
 
 	public function process($name = 'default', $values = null, $print = true, $advance = true, $delimiter = ',', $assign = null, $reset = false)
 	{
-		if($values !== null)
-		{
-			if(is_string($values))
+		if ($values !== null) {
+			if (is_string($values)) {
 				$values = explode($delimiter, $values);
+			}
 
-			if(!isset($this->cycles[$name]) || $this->cycles[$name]['values'] !== $values)
+			if (!isset($this->cycles[$name]) || $this->cycles[$name]['values'] !== $values) {
 				$this->cycles[$name]['index'] = 0;
+			}
 
 			$this->cycles[$name]['values'] = array_values($values);
-		}
-		elseif(isset($this->cycles[$name]))
-		{
+		} elseif (isset($this->cycles[$name])) {
 			$values = $this->cycles[$name]['values'];
 		}
 
-		if($reset)
+		if ($reset) {
 			$this->cycles[$name]['index'] = 0;
-
-		if($print)
-			$out = $values[$this->cycles[$name]['index']];
-		else
-			$out = null;
-
-		if($advance)
-		{
-			if($this->cycles[$name]['index'] >= count($values)-1)
-				$this->cycles[$name]['index'] = 0;
-			else
-				$this->cycles[$name]['index']++;
 		}
 
-		if($assign !== null)
+		if ($print) {
+			$out = $values[$this->cycles[$name]['index']];
+		} else {
+			$out = null;
+		}
+
+		if ($advance) {
+			if ($this->cycles[$name]['index'] >= count($values)-1) {
+				$this->cycles[$name]['index'] = 0;
+			} else {
+				$this->cycles[$name]['index']++;
+			}
+		}
+
+		if ($assign !== null) {
 			$this->dwoo->assignInScope($assign, $out);
-		else
+		} else {
 			return $out;
+		}
 	}
 }

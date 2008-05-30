@@ -52,10 +52,10 @@ class Dwoo_Plugin_capture extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		$params = $compiler->getCompiledParams($params);
 
 		$out = Dwoo_Compiler::PHP_OPEN.$prepend."\n".'$tmp = ob_get_clean();';
-		if($params['cat'] === 'true') {
+		if ($params['cat'] === 'true') {
 			$out .= "\n".'$tmp = $this->readVar(\'dwoo.capture.\'.'.$params['name'].') . $tmp;';
 		}
-		if($params['assign'] !== "null") {
+		if ($params['assign'] !== "null") {
 			$out .= "\n".'$this->scope['.$params['assign'].'] = $tmp;';
 		}
 		return $out . "\n".'$this->globals[\'capture\']['.$params['name'].'] = $tmp;'.$append.Dwoo_Compiler::PHP_CLOSE;

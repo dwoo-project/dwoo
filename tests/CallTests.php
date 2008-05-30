@@ -34,8 +34,7 @@ class CallTests extends PHPUnit_Framework_TestCase
 		$this->dwoo->removePlugin('test');
 	}
 
-	public function testFullCustomClassPluginByClassMethodCallback()
-		{
+	public function testFullCustomClassPluginByClassMethodCallback() {
 		$this->dwoo->addPlugin('test', array('plugin_full_custom', 'process'));
 		$tpl = new Dwoo_Template_String('{test "xxx"}');
 		$tpl->forceCompilation();
@@ -55,7 +54,7 @@ class CallTests extends PHPUnit_Framework_TestCase
 	}
 
 	public function testCustomObjectPluginByObjectMethodCallback()
-		{
+	{
 		$this->dwoo->addPlugin('test', array(new plugin_full_custom(), 'process'));
 		$tpl = new Dwoo_Template_String('{test "xxx"}');
 		$tpl->forceCompilation();

@@ -24,22 +24,23 @@
  */
 function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 {
-	if($file === '')
+	if ($file === '') {
 		return;
+	}
 
-	if($policy = $dwoo->getSecurityPolicy())
+	if ($policy = $dwoo->getSecurityPolicy())
 	{
-		while(true)
-		{
-			if(preg_match('{^([a-z]+?)://}i', $file))
+		while (true) {
+			if (preg_match('{^([a-z]+?)://}i', $file)) {
 				return $dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
+			}
 
 			$file = realpath($file);
 			$dirs = $policy->getAllowedDirectories();
-			foreach($dirs as $dir=>$dummy)
-			{
-				if(strpos($file, $dir) === 0)
+			foreach ($dirs as $dir=>$dummy) {
+				if (strpos($file, $dir) === 0) {
 					break 2;
+				}
 			}
 			return $dwoo->triggerError('The security policy prevents you to read <em>'.$file.'</em>', E_USER_WARNING);
 		}
@@ -48,8 +49,9 @@ function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 
 	$out = file_get_contents($file);
 
-	if($assign !== null)
+	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);
-	else
+	} else {
 		return $out;
+	}
 }

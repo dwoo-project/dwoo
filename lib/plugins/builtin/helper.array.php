@@ -31,11 +31,12 @@
 function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest=array())
 {
 	$out = array();
-	foreach($rest as $k=>$v)
-		if(is_numeric($k))
+	foreach ($rest as $k=>$v)
+		if (is_numeric($k)) {
 			$out[] = $k.'=>'.$v;
-		else
+		} else {
 			$out[] = '"'.$k.'"=>'.$v;
+		}
 
 	return 'array('.implode(', ', $out).')';
 }

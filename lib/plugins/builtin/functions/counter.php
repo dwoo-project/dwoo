@@ -33,8 +33,7 @@ class Dwoo_Plugin_counter extends Dwoo_Plugin
 	public function process($name = 'default', $start = null, $skip = null, $direction = null, $print = null, $assign = null)
 	{
 		// init counter
-		if(!isset($this->counters[$name]))
-		{
+		if (!isset($this->counters[$name])) {
 			$this->counters[$name] = array
 			(
 				'count'		=>	$start===null ? 1 : (int) $start,
@@ -48,29 +47,35 @@ class Dwoo_Plugin_counter extends Dwoo_Plugin
 		else
 		{
 			// override setting if present
-			if($skip !== null)
+			if ($skip !== null) {
 				$this->counters[$name]['skip'] = (int) $skip;
+			}
 
-			if($direction !== null)
+			if ($direction !== null) {
 				$this->counters[$name]['direction'] = strtolower($direction)==='down' ? -1 : 1;
+			}
 
-			if($print !== null)
+			if ($print !== null) {
 				$this->counters[$name]['print'] = (bool) $print;
+			}
 
-			if($assign !== null)
+			if ($assign !== null) {
 				$this->counters[$name]['assign'] = (string) $assign;
+			}
 
-			if($start !== null)
+			if ($start !== null) {
 				$this->counters[$name]['count'] = (int) $start;
-			else
+			} else {
 				$this->counters[$name]['count'] += ($this->counters[$name]['skip'] * $this->counters[$name]['direction']);
+			}
 		}
 
 		$out = $this->counters[$name]['count'];
 
-		if($this->counters[$name]['assign'] !== null)
+		if ($this->counters[$name]['assign'] !== null) {
 			$this->dwoo->assignInScope($out, $this->counters[$name]['assign']);
-		elseif($this->counters[$name]['print'] === true)
+		} elseif ($this->counters[$name]['print'] === true) {
 			return $out;
+		}
 	}
 }
