@@ -1,4 +1,4 @@
-[2008--] 0.9.1
+[2008-05-30] 0.9.1
 + API: Added Dwoo_Compiler->setAutoEscape() and getAutoEscape() to modify the
   automatic html entity escaping setting. This is disabled by default, and when
   enabled can be overriden with the {safe $var} plugin or the
