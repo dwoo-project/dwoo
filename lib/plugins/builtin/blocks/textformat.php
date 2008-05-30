@@ -6,7 +6,7 @@
  * <pre>
  *  * wrap : maximum line length
  *  * wrap_char : the character(s) to use to break the line
- *  * wrap_cut : if true, the line is cut at the exact length instead of breaking at the nearest space
+ *  * wrap_cut : if true, the words that are longer than $wrap are cut instead of overflowing
  *  * indent : amount of $indent_char to insert before every line
  *  * indent_char : character(s) to insert before every line
  *  * indent_first : amount of additional $indent_char to insert before the first line of each paragraphs

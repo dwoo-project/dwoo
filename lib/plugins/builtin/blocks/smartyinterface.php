@@ -19,7 +19,7 @@
  * @date       2008-05-10
  * @package    Dwoo
  */
-class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin
+class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
 	public function init($__funcname, $__functype, array $rest=array()) {}
 
