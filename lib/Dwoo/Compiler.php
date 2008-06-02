@@ -523,7 +523,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 		unset($preProc);
 
-		if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'<hr>';
+		if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre><hr />';
 
 		// strips comments
 		if (strstr($tpl, $this->ld.'*') !== false) {
@@ -1019,7 +1019,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$out = $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} else {
 			// parse error
-			throw new Dwoo_Compilation_Exception('Parse error in <em>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em> @ '.$from);
+			throw new Dwoo_Compilation_Exception('Parse error @ char '.$from.' ( '.substr($in, $from, $to-$from)." ) <br />\r\nin <em>".substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</em>');
 		}
 
 		if (empty($out)) {
