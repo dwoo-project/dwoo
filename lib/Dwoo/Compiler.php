@@ -985,7 +985,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$first = $in[$from];
 		$substr = substr($in, $from, $to-$from);
 
-		if ($this->debug) echo '<br />PARSE CALL : </pre>PARSING <b>'.htmlentities(substr($in, 0, $from)).'<u>'.htmlentities(substr($in, $from, $to-$from)).'</u>'.htmlentities(substr($in, $to)).'</b> @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
+		if ($this->debug) echo '<br />PARSE CALL : PARSING "<b>'.htmlentities(substr($in, $from, $to-$from)).'</b>" @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
 
 		if ($first==='$') {
 			// var
