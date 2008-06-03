@@ -42,7 +42,9 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Bloc
 			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
 		}
 
-		return $out . " elseif (".implode(' ', self::replaceKeywords($params, $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
+		$params = $compiler->getCompiledParams($params);
+
+		return $out . " elseif (".implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')

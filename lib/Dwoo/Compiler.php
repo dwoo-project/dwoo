@@ -692,9 +692,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($this->debug) {
 			echo '<hr><pre>';
-			$lines = preg_split('{\r\n|\n}', htmlentities($output));
-			foreach ($lines as $i=>$line)
+			$lines = preg_split('{\r\n|\n}', highlight_string(($output), true));
+			foreach ($lines as $i=>$line) {
 				echo ($i+1).'. '.$line."\r\n";
+			}
 		}
 		if ($this->debug) echo '<hr></pre></pre>';
 
@@ -1106,7 +1107,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 							break 2;
 						}
 
-						if (($paramstr[$ptr] === ' ' || $paramstr[$ptr] === ',')) {
+						if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === ',' || $paramstr[$ptr] === "\r" || $paramstr[$ptr] === "\n" || $paramstr[$ptr] === "\t") {
 							$ptr++;
 						} else {
 							break;
@@ -1115,13 +1116,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 					if ($this->debug) echo 'FUNC START PARAM PARSING WITH POINTER AT '.$ptr.'<br/>';
 
-					if ($func === 'if' || $func === 'elseif') {
+					if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
 						$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'condition', $ptr);
 					} else {
 						$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'function', $ptr);
 					}
 
-					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.'<br/>';
+					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.' ('.substr($paramstr, $ptr-1, 3).')<br/>';
 				}
 				$paramstr = substr($paramstr, 0, $ptr);
 				$state = 0;
@@ -1307,10 +1308,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 		$first = $substr[0];
 
-		if ($this->debug) echo 'STRING FOUND<br />';
+		if ($this->debug) echo 'STRING FOUND ('.$substr.')<br />';
 		$strend = false;
 		$o = $from+1;
-		while ($strend===false) {
+		while ($strend === false) {
 			$strend = strpos($in, $first, $o);
 			if ($strend === false) {
 				throw new Dwoo_Compilation_Exception('Unfinished string in : <strong>'.substr($in, 0, $from).'<u>'.substr($in, $from, $to-$from).'</u>'.substr($in, $to).'</strong>');
@@ -1324,10 +1325,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($strend !== false) {
 				$realend = $strend-$from+1;
 			}
-			$strend = strpos($in, ' ', $strend+1);
-			if ($strend===false) {
-				$strend = strlen($in)-1;
+			$newend = strlen($in)-1;
+			if (($tmpend = strpos($in, " ", $strend+1)) && $tmpend < $newend) {
+				$newend = $tmpend;
 			}
+			if (($tmpend = strpos($in, "\t", $strend+1)) && $tmpend < $newend) {
+				$newend = $tmpend;
+			}
+			if (($tmpend = strpos($in, "\r", $strend+1)) && $tmpend < $newend) {
+				$newend = $tmpend;
+			}
+			if (($tmpend = strpos($in, "\n", $strend+1)) && $tmpend < $newend) {
+				$newend = $tmpend;
+			}
+			$strend = $newend;
 		}
 		$srcOutput = substr($in, $from, $strend+1-$from);
 
@@ -1606,7 +1617,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 
 				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
-				$value = Dwoo_Plugin_if::replaceKeywords($parts, $this);
+				$parts = $this->getCompiledParams($parts);
+
+				$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
 
 				$output .= '='.implode(' ', $value);
 				$assign = true;
@@ -1838,11 +1851,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$end = strlen($substr);
 
 		if ($curBlock === 'condition') {
-			$breakChars = array('(', ')', ' ', '||', '&&', '|', '&', '>=', '<=', '===', '==', '=', '!==', '!=', '<<', '<', '>>', '>', '^', '~', ',', '+', '-', '*', '/', '%', '!');
+			$breakChars = array('(', ')', ' ', '||', '&&', '|', '&', '>=', '<=', '===', '==', '=', '!==', '!=', '<<', '<', '>>', '>', '^', '~', ',', '+', '-', '*', '/', '%', '!', '?', ':');
 		} elseif ($curBlock === 'modifier') {
-			$breakChars = array(' ', ',', ')', ':', '|');
+			$breakChars = array(' ', ',', ')', ':', '|', "\r", "\n", "\t");
 		} else {
-			$breakChars = array(' ', ',', ')');
+			$breakChars = array(' ', ',', ')', "\r", "\n", "\t");
 		}
 
 		$breaker = false;
@@ -1887,7 +1900,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$substr = '('.$substr.')';
 		} elseif ($curBlock === 'condition' && array_search($substr, $breakChars, true) !== false) {
 			if ($this->debug) echo 'BREAKCHAR PARSED<br />';
-			$substr = '"'.$substr.'"';
+			//$substr = '"'.$substr.'"';
 		} else {
 			if ($this->debug) echo 'BLABBER CASTED AS STRING<br />';
 

@@ -14,6 +14,19 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo();
 	}
 
+	public function testA()
+	{
+		$tpl = new Dwoo_Template_String('{a "http://foo/" "Foo!" test="foo" bar="bar"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">Foo!</a>', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{a $url test="foo" bar="bar"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
+	}
+
 	public function testAssign()
 	{
 		// test simple assign
@@ -402,6 +415,49 @@ a"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a b c d", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testTif()
+	{
+		$tpl = new Dwoo_Template_String('{tif $a && $b && 3==3 ? foo : bar}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>3), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a && $b && 3==3 foo bar}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("bar", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a foo bar}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a?"foo":"bar"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a?foo:bar}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a ? foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("foo", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{tif $a ?: foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("1", $this->dwoo->get($tpl, array('a'=>true, 'b'=>0), $this->compiler));
 	}
 
 	public function testTruncate()

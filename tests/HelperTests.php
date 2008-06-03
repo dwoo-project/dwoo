@@ -28,5 +28,14 @@ class HelperTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array("hoy"=>3, 5=>"foo", "bar"=>"moo"), 'baz'=>'baz'), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{if array(hoy=3,5=array(
+															"foo"
+															frack
+															18
+															) bar=moo) === $test}true{/if}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('true', $this->dwoo->get($tpl, array('test'=>array("hoy"=>3, 5=>array("foo", "frack", 18), "bar"=>"moo"), 'baz'=>'baz'), $this->compiler));
 	}
 }

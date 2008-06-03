@@ -38,14 +38,11 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 	{
 	}
 
-	public static function replaceKeywords($params, Dwoo_Compiler $compiler)
+	public static function replaceKeywords(array $params, Dwoo_Compiler $compiler)
 	{
-		$params = $compiler->getCompiledParams($params);
-
 		$p = array();
 
-		$params = $params['*'];
-
+		reset($params);
 		while (list($k,$v) = each($params)) {
 			switch($v) {
 
@@ -65,6 +62,12 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 			case '"*"':
 			case '"/"':
 				$p[] = trim($v, '"');
+				break;
+			case '"and"':
+				$p[] = '&&';
+				break;
+			case '"or"':
+				$p[] = '||';
 				break;
 			case '"=="':
 			case '"eq"':
@@ -171,7 +174,9 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 		$currentBlock =& $compiler->getCurrentBlock();
 		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
-		return Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params, $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+		$params = $compiler->getCompiledParams($params);
+
+		return Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')

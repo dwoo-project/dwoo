@@ -136,6 +136,25 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->dwoo->get($tpl, array(), $this->compiler);
 	}
 
+	public function testMixedParamsMultiline()
+	{
+		$tpl = new Dwoo_Template_String('{replace(
+												$foo	search="BAR"|lower
+replace="BAR"
+)}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{replace(
+												$foo	search=$bar|lower
+replace="BAR"
+)}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('BAR', $this->dwoo->get($tpl, array('foo'=>'bar','bar'=>'BAR'), $this->compiler));
+	}
+
 	public function testRecursiveCall()
 	{
 		$tpl = new Dwoo_Template_String('{lower(reverse(upper($foo)))}');
@@ -462,13 +481,13 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 
 		$this->dwoo->get($tpl, array('foo'=>0), $this->compiler);
 	}
-	
+
 	public function testAutoEscape()
 	{
 		$cmp = new Dwoo_Compiler();
 		$cmp->setAutoEscape(true);
 		$this->assertEquals(true, $cmp->getAutoEscape());
-		
+
 		$tpl = new Dwoo_Template_String('{$foo}{$foo|safe}');
 		$tpl->forceCompilation();
 
