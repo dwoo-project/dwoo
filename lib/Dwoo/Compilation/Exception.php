@@ -21,4 +21,9 @@
  */
 class Dwoo_Compilation_Exception extends Dwoo_Exception
 {
+	public function __construct(Dwoo_Compiler $compiler, $message)
+	{
+		$tpl = $compiler->getDwoo()->getTemplate();
+		parent::__construct('Compilation error at line '.$compiler->getLine().' in "'.$tpl->getResourceName().':'.$tpl->getResourceIdentifier().'" : '.$message);
+	}
 }

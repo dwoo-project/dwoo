@@ -30,7 +30,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 		try {
 			Dwoo_Loader::loadPlugin('if');
 		} catch (Exception $e) {
-			throw new Dwoo_Compilation_Exception('Tif: the if plugin is required to use Tif');
+			throw new Dwoo_Compilation_Exception($compiler, 'Tif: the if plugin is required to use Tif');
 		}
 	}
 
@@ -62,7 +62,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 
 	// check params were correctly provided
 	if (empty($rest) || empty($trueResult) || empty($falseResult)) {
-		throw new Dwoo_Compilation_Exception('Tif: you must provide three parameters serving as <expression> ? <true value> : <false value>');
+		throw new Dwoo_Compilation_Exception($compiler, 'Tif: you must provide three parameters serving as <expression> ? <true value> : <false value>');
 	}
 
 	// parse condition

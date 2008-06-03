@@ -120,7 +120,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 						next($params);
 						next($params);
 					} else {
-						throw new Dwoo_Compilation_Exception('If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k-1].' is '.($negate?'not ':'').'div '.$params[$k+$ptr+1].' '.$params[$k+$ptr+2]);
+						throw new Dwoo_Compilation_Exception($compiler, 'If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k-1].' is '.($negate?'not ':'').'div '.$params[$k+$ptr+1].' '.$params[$k+$ptr+2]);
 					}
 					break;
 				case '"even"':
@@ -148,7 +148,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 					next($params);
 					break;
 				default:
-					throw new Dwoo_Compilation_Exception('If : Syntax error : syntax should be "if $a is [not] (div|even|odd) [by $b]", found '.$params[$k-1].' is '.$params[$k+$ptr+1]);
+					throw new Dwoo_Compilation_Exception($compiler, 'If : Syntax error : syntax should be "if $a is [not] (div|even|odd) [by $b]", found '.$params[$k-1].' is '.$params[$k+$ptr+1]);
 
 				}
 				break;

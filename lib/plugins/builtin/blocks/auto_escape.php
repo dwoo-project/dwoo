@@ -49,7 +49,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
 			$enable = false;
 			break;
 		default:
-			throw new Dwoo_Compilation_Exception('Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
+			throw new Dwoo_Compilation_Exception($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
 
 		}
 

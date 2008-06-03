@@ -2,6 +2,7 @@
 + Plugins: Added {a} to build 'a' html tags
 + Plugins: Added {tif} that acts as a ternary if / allows you to use a ternary
   operator inside it
++ Added line numbers in compilation errors and improved several error messages
 * The compiler now allows \r, \n and \t to be parameter splitters as well as
   "," and " ". You can therefore make complex function calls on multiple lines
 * Converted most of the code to follow PEAR Coding Standards, hopefully this

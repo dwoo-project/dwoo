@@ -42,7 +42,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
 		while (!empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '"')) {
-				throw new Dwoo_Compilation_Exception('Extends : The file name must be a non-empty string');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : The file name must be a non-empty string');
 				return;
 			}
 
@@ -74,18 +74,18 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			try {
 				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier);
 			} catch (Dwoo_Exception $e) {
-				throw new Dwoo_Compilation_Exception('Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>');
 			}
 
 			if ($parent === null) {
-				throw new Dwoo_Compilation_Exception('Extends : Resource "'.$resource.':'.$identifier.'" was not found.');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.':'.$identifier.'" was not found.');
 			} elseif ($parent === false) {
-				throw new Dwoo_Compilation_Exception('Extends : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.');
 			}
 
 			$newParent = array('source'=>$parent->getSource(), 'resource'=>$resource, 'identifier'=>$identifier, 'uid'=>$parent->getUid());
 			if (array_search($newParent, $inheritanceTree, true) !== false) {
-				throw new Dwoo_Compilation_Exception('Extends : Recursive template inheritance detected');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Recursive template inheritance detected');
 			}
 
 			$inheritanceTree[] = $newParent;

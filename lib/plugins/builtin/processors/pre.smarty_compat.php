@@ -75,7 +75,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 		}
 
 		if (empty($params['name'])) {
-			throw new Dwoo_Compilation_Exception('Missing parameter <em>name</em> for section tag');
+			throw new Dwoo_Compilation_Exception($this->compiler, 'Missing parameter <em>name</em> for section tag');
 		}
 		$name = $params['name'];
 
