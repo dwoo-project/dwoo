@@ -31,8 +31,8 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 	public static function compile(Dwoo_Compiler $compiler, $file)
 	{
 		list($l, $r) = $compiler->getDelimiters();
-		self::$l = preg_quote($l);
-		self::$r = preg_quote($r);
+		self::$l = preg_quote($l,'/');
+		self::$r = preg_quote($r,'/');
 
 		if ($compiler->getLooseOpeningHandling()) {
 			self::$l .= '\s*';
@@ -120,7 +120,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
 	protected static function replaceBlock(array $matches)
 	{
-		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2]).'\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
+		if (preg_match('/'.self::$l.'block (["\']?)'.preg_quote($matches[2],'/').'\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', self::$childSource, $override)) {
 			$l = stripslashes(self::$l);
 			$r = stripslashes(self::$r);
 

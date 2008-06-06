@@ -26,8 +26,8 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 	{
 		list($l, $r) = $this->compiler->getDelimiters();
 
-		$rl = preg_quote($l);
-		$rr = preg_quote($r);
+		$rl = preg_quote($l,'/');
+		$rr = preg_quote($r,'/');
 		$sectionParam = '(?:(name|loop|start|step|max|show)\s*=\s*(\S+))?\s*';
 		$input = preg_replace_callback('/'.$rl.'\s*section '.str_repeat($sectionParam, 6).'\s*'.$rr.'(.+?)(?:'.$rl.'\s*sectionelse\s*'.$rr.'(.+?))?'.$rl.'\s*\/section\s*'.$rr.'/is', array($this, 'convertSection'), $input);
 		$input = str_replace('$smarty.section.', '$smarty.for.', $input);

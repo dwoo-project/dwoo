@@ -221,8 +221,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$this->ld = $left;
 		$this->rd = $right;
-		$this->ldr = preg_quote($left);
-		$this->rdr = preg_quote($right);
+		$this->ldr = preg_quote($left, '/');
+		$this->rdr = preg_quote($right, '/');
 	}
 
 	/**
