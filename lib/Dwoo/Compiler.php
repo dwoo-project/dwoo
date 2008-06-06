@@ -733,7 +733,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($this->debug) {
 			echo '<hr><pre>';
-			$lines = preg_split('{\r\n|\n}', highlight_string(($output), true));
+			$lines = preg_split('{\r\n|\n|<br />}', highlight_string(($output), true));
+			array_shift($lines);
 			foreach ($lines as $i=>$line) {
 				echo ($i+1).'. '.$line."\r\n";
 			}
@@ -1038,7 +1039,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($first==='"' || $first==="'") {
 			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (preg_match('#^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':' |').'\(|$)#i', $substr)) {
+		} elseif (preg_match('#^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|$)#i', $substr)) {
 			// func
 			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} elseif (is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) {
@@ -1092,23 +1093,24 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($this->debug) echo 'FUNC FOUND<br />';
 
 		$paramsep = '';
-		if (is_array($parsingParams) || $curBlock != 'root') {
-			$ppos1 = false;
-		} else {
-			$ppos1 = strpos($cmdstr, ' ');
-		}
-		$ppos2 = strpos($cmdstr, '(');
 
-		if ($ppos1 !== false && $ppos2 !== false) {
-			$paramspos = min($ppos1, $ppos2);
-			if ($paramspos === $ppos2) {
-				$paramsep = ')';
-			}
-		} elseif ($ppos1 !== false) {
-			$paramspos = $ppos1;
-		} else {
-			$paramspos = $ppos2;
+		if (is_array($parsingParams) || $curBlock != 'root') {
+			$paramspos = strpos($cmdstr, '(');
 			$paramsep = ')';
+		} elseif(preg_match_all('#[a-z0-9_]+(\s*\(|\s+[^(])#', $cmdstr, $match, PREG_OFFSET_CAPTURE)) {
+			$paramspos = $match[1][0][1];
+			$paramsep = substr($match[1][0][0], -1) === '(' ? ')':'';
+			if($paramsep === ')') {
+				$paramspos += strlen($match[1][0][0]) - 1;
+				if(substr($cmdstr, 0, 2) === 'if' || substr($cmdstr, 0, 6) === 'elseif') {
+					$paramsep = '';
+					if(strlen($match[1][0][0]) > 1) {
+						$paramspos--;
+					}
+				}
+			}
+		} else {
+			$paramspos = false;
 		}
 
 		$state = 0;
@@ -1125,7 +1127,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			}
 		} else {
-			$func = substr($cmdstr, 0, $paramspos);
+			$func = rtrim(substr($cmdstr, 0, $paramspos));
+			$whitespace = strlen(substr($cmdstr, strlen($func), $paramspos-strlen($func)));
 			$paramstr = substr($cmdstr, $paramspos+1);
 			if (substr($paramstr, -1, 1) === $paramsep) {
 				$paramstr = substr($paramstr, 0, -1);
@@ -1137,33 +1140,37 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				$ptr = 0;
 				$params = array();
-				while ($ptr < strlen($paramstr)) {
-					while (true) {
-						if ($ptr >= strlen($paramstr)) {
-							break 2;
+				if ($func === 'empty') {
+					$params = $this->parseVar($paramstr, $ptr, strlen($paramstr), $params, 'root', $ptr);
+				} else {
+					while ($ptr < strlen($paramstr)) {
+						while (true) {
+							if ($ptr >= strlen($paramstr)) {
+								break 2;
+							}
+
+							if ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === ')') {
+								if ($this->debug) echo 'PARAM PARSING ENDED, ")" FOUND, POINTER AT '.$ptr.'<br/>';
+								break 2;
+							}
+
+							if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === ',' || $paramstr[$ptr] === "\r" || $paramstr[$ptr] === "\n" || $paramstr[$ptr] === "\t") {
+								$ptr++;
+							} else {
+								break;
+							}
 						}
 
-						if ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === ')') {
-							if ($this->debug) echo 'PARAM PARSING ENDED, ")" FOUND, POINTER AT '.$ptr.'<br/>';
-							break 2;
-						}
+						if ($this->debug) echo 'FUNC START PARAM PARSING WITH POINTER AT '.$ptr.'<br/>';
 
-						if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === ',' || $paramstr[$ptr] === "\r" || $paramstr[$ptr] === "\n" || $paramstr[$ptr] === "\t") {
-							$ptr++;
+						if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
+							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'condition', $ptr);
 						} else {
-							break;
+							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'function', $ptr);
 						}
+
+						if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.' ('.substr($paramstr, $ptr-1, 3).')<br/>';
 					}
-
-					if ($this->debug) echo 'FUNC START PARAM PARSING WITH POINTER AT '.$ptr.'<br/>';
-
-					if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
-						$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'condition', $ptr);
-					} else {
-						$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'function', $ptr);
-					}
-
-					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.' ('.substr($paramstr, $ptr-1, 3).')<br/>';
 				}
 				$paramstr = substr($paramstr, 0, $ptr);
 				$state = 0;
@@ -1185,7 +1192,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		if ($pointer !== null) {
-			$pointer += (isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : 0) + strlen($func);
+			$pointer += (isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : 0) + strlen($func) + (isset($whitespace) ? $whitespace : 0);
 			if ($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : 0) + strlen($func)).' TO POINTER<br/>';
 		}
 
@@ -1596,7 +1603,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$args = $calls[2][$i];
 					if ($args === '') {
 						// property
-						$output = '(property_exists($tmp = '.$output.', \''.$method.'\') ? $tmp->'.$method.' : null)';
+						$output = '('.$output.'->'.$method.' : null)';
 					} else {
 						// method
 						if ($args === '()') {
@@ -1604,7 +1611,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						} else {
 							$parsedCall = '->'.$this->parseFunction($method.$args, 0, strlen($method.$args), false, 'method');
 						}
-						$output = '(is_object($tmp = '.$output.') ? (method_exists($tmp, \''.$method.'\') ? $tmp'.$parsedCall.' : $this->triggerError(\'Call to an undefined method : <em>\'.get_class($tmp).\'::'.$method.'()</em>\')) : $this->triggerError(\'Method <em>'.$method.'()</em> was called on a non-object (\'.var_export($tmp, true).\')\'))';
+						$output = '(is_object($tmp = '.$output.') ? $tmp'.$parsedCall.' : $this->triggerError(\'Method <em>'.$method.'()</em> was called on a non-object ($'.$key.': \'.var_export($tmp, true).\')\'))';
 					}
 				}
 			}
@@ -2247,7 +2254,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$pluginType = -1;
 
-		if (($this->securityPolicy === null && function_exists($name)) ||
+		if (($this->securityPolicy === null && (function_exists($name) || strtolower($name) === 'isset' || strtolower($name) === 'empty')) ||
 			($this->securityPolicy !== null && in_array(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false)) {
 			$phpFunc = true;
 		}

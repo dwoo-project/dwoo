@@ -21,4 +21,12 @@ class BugTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("here is\nsome text\nthat\nshould\nwrap\nand this\none should\ncut words\nthat go\nbeyooooooo\nnd 10\nchars", $this->dwoo->get($tpl, array()));
     }
+
+    public function testSpaceBeforeArgsBug()
+    {
+        $tpl = new Dwoo_Template_String('{upper ("moo")}.{upper    	("moo")}.{if (true) && (true)}MOO{/if}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("MOO.MOO.MOO", $this->dwoo->get($tpl, array()));
+    }
 }
