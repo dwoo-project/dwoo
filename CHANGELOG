@@ -3,6 +3,7 @@
 + Plugins: Added {tif} that acts as a ternary if / allows you to use a ternary
   operator inside it
 + Added line numbers in compilation errors and improved several error messages
+* Plugins: added a fourth 'bool $case_sensitive' parameter to {replace}
 * Fixed compiler bug that prevented empty() to be called
 * Removed checks for methods/properties being present on objects before calling
   them since these can be handled by __get() and __call()

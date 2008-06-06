@@ -23,7 +23,11 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $replace)
+function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $replace, $case_sensitive = true)
 {
-	return 'str_replace('.$search.', '.$replace.', '.$value.')';
+	if ($case_sensitive == 'false' || (bool)$case_sensitive === false) {
+		return 'str_ireplace('.$search.', '.$replace.', '.$value.')';
+	} else {
+		return 'str_replace('.$search.', '.$replace.', '.$value.')';
+	}
 }

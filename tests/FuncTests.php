@@ -365,6 +365,11 @@ a"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("FLML", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{replace "FOOMOO" "oo" "l" off}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("FlMl", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testReverse()
