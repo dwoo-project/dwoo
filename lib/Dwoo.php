@@ -658,6 +658,8 @@ class Dwoo
 	/**
 	 * returns the character set used by the string manipulation plugins
 	 *
+	 * the charset is automatically lowercased
+	 *
 	 * @return string
 	 */
 	public function getCharset()
