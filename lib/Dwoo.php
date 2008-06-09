@@ -40,10 +40,15 @@ Dwoo_Loader::loadPlugin('topLevelBlock');
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
  *
+ * <pre>
  * requirements :
  *  php 5.2.0 or above
  *  php's mbstring extension for some plugins
  *  php's hash extension to use the Dwoo_Template_String class
+ *
+ * project created :
+ *  2008-01-05
+ * </pre>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
