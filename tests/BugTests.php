@@ -29,4 +29,44 @@ class BugTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("MOO.MOO.MOO", $this->dwoo->get($tpl, array()));
     }
+
+    public function testEmptyStringArgInModifierCall()
+    {
+        $tpl = new Dwoo_Template_String('{$var|replace:"foo":""}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("ab", $this->dwoo->get($tpl, array('var'=>'afoob')));
+    }
+
+    public function testRecursiveVarModifiersCalls()
+    {
+        $tpl = new Dwoo_Template_String('{$var|replace:array("foo", "bar"):array("")}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("abc", $this->dwoo->get($tpl, array('var'=>'afoobbarc')));
+    }
+
+    public function testVarModifierCallWithSpaces()
+    {
+        $tpl = new Dwoo_Template_String('{"x$var|replace:array(\'foo\', bar):array(\"\") y"}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("xabc y", $this->dwoo->get($tpl, array('var'=>'afoobbarc')));
+    }
+
+    public function testVarModifierCallWithDelimiters()
+    {
+        $tpl = new Dwoo_Template_String('{"x`$var|replace:array(\'foo\', bar):array(\"\")`y"}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("xabcy", $this->dwoo->get($tpl, array('var'=>'afoobbarc')));
+    }
+
+    public function testStringModifierInOtherCall()
+    {
+        $tpl = new Dwoo_Template_String('{cat "f o o"|replace:" ":"" "xx"}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("fooxx", $this->dwoo->get($tpl, array()));
+    }
 }

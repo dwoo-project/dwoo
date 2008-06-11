@@ -628,17 +628,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$compiled .= $add;
 				$this->line += substr_count($add, "\n");
 
-				$endpos = strpos($tpl, $this->rd, $pos);
-
-				if ($endpos===false) {
-					throw new Dwoo_Compilation_Exception($this, 'A template tag was not closed, started with <em>'.substr($tpl, $pos, 20).'</em>');
-				}
-
-				while (substr($tpl, $endpos-1, 1) === '\\') {
-					$tpl = substr_replace($tpl, $this->rd, $endpos-1, 1+strlen($this->rd));
-					$endpos = strpos($tpl, $this->rd, $endpos);
-				}
-
 				$pos += strlen($this->ld);
 				if ($this->allowLooseOpenings) {
 					while (substr($tpl, $pos, 1) === ' ') {
@@ -651,6 +640,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$this->line += substr_count($this->ld, "\n");
 						continue;
 					}
+				}
+
+				$endpos = strpos($tpl, $this->rd, $pos);
+
+				if ($endpos===false) {
+					throw new Dwoo_Compilation_Exception($this, 'A template tag was not closed, started with <em>'.substr($tpl, $pos, 20).'</em>');
+				}
+
+				while (substr($tpl, $endpos-1, 1) === '\\') {
+					$tpl = substr_replace($tpl, $this->rd, $endpos-1, 1+strlen($this->rd));
+					$endpos = strpos($tpl, $this->rd, $endpos);
 				}
 
 				$ptr = $endpos+strlen($this->rd);
@@ -1356,7 +1356,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 		$first = $substr[0];
 
-		if ($this->debug) echo 'STRING FOUND ('.$substr.')<br />';
+		if ($this->debug) echo 'STRING FOUND (in '.$substr.')<br />';
 		$strend = false;
 		$o = $from+1;
 		while ($strend === false) {
@@ -1369,49 +1369,35 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$strend = false;
 			}
 		}
-		if ($curBlock !== 'modifier' && substr($in, $strend+1, 1)==='|') {
-			if ($strend !== false) {
-				$realend = $strend-$from+1;
-			}
-			$newend = strlen($in)-1;
-			if (($tmpend = strpos($in, " ", $strend+1)) && $tmpend < $newend) {
-				$newend = $tmpend;
-			}
-			if (($tmpend = strpos($in, "\t", $strend+1)) && $tmpend < $newend) {
-				$newend = $tmpend;
-			}
-			if (($tmpend = strpos($in, "\r", $strend+1)) && $tmpend < $newend) {
-				$newend = $tmpend;
-			}
-			if (($tmpend = strpos($in, "\n", $strend+1)) && $tmpend < $newend) {
-				$newend = $tmpend;
-			}
-			$strend = $newend;
-		}
+		if ($this->debug) echo 'STRING DELIMITED: '.substr($substr, 0, $strend+1-$from).'<br/>';
+
 		$srcOutput = substr($in, $from, $strend+1-$from);
 
 		if ($pointer !== null) {
 			$pointer += strlen($srcOutput);
 		}
 
-		if (isset($realend)) {
-			$output = $this->replaceStringVars(substr($srcOutput, 0, $realend), $first) . substr($srcOutput, $realend);
-		} else {
-			$output = $this->replaceStringVars($srcOutput, $first);
-		}
+		$output = $this->replaceStringVars($srcOutput, $first);
 
 		// handle modifiers
-		if ($curBlock !== 'modifier' && preg_match('#(.+?)((?:\|(?:@?[a-z0-9_]+(?::[^\s]*)*))+)#i', $output, $match)) {
-			$modstr = $match[2];
-			$output = $match[1];
-			$strend += strlen($match[1]);
+		if ($curBlock !== 'modifier' && preg_match('#^((?:\|(?:@?[a-z0-9_]+(?::.*)*))+)#i', substr($substr, $strend+1-$from), $match)) {
+			$modstr = $match[1];
 
 			if ($curBlock === 'root' && substr($modstr, -1) === '}') {
 				$modstr = substr($modstr, 0, -1);
 			}
-			$output = $this->replaceModifiers(array(null, null, $output, $modstr), 'string');
+			$modstr = str_replace('\\'.$first, $first, $modstr);
+			$ptr = 0;
+			$output = $this->replaceModifiers(array(null, null, $output, $modstr), 'string', $ptr);
+
+			$strend += $ptr;
+			if ($pointer !== null) {
+				$pointer += $ptr;
+			}
+			$srcOutput .= substr($substr, $strend+1-$from, $ptr);
 		}
 
+		// TODO obsolete?
 		if ($curBlock !== 'namedparam' && $curBlock !== 'modifier' && $curBlock !== 'function' && $curBlock !== 'condition' && strlen(substr($in, 0, $to)) > $strend+1) {
 			$output .= $this->parse($in, $strend+1, $to, $parsingParams);
 		}
@@ -1501,7 +1487,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
-			($curBlock!=='modifier'? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\5|:[^\s`"\']*))*))+)?':'(())') . // modifiers
+			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
 			$key = substr($match[1], 1);
 
@@ -1513,6 +1499,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($hasMethodCall) {
 				$key = substr($match[1], 1, strrpos($match[1], '->')-1);
 				$methodCall = substr($match[1], strrpos($match[1], '->')) . $match[2];
+			}
+
+			if ($hasModifiers) {
+				$matchedLength -= strlen($match[4]);
 			}
 
 			if ($pointer !== null) {
@@ -1679,7 +1669,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			// handle modifiers
 			if ($curBlock !== 'modifier' && $hasModifiers) {
-				$output = $this->replaceModifiers(array(null, null, $output, $match[4]), 'var');
+				$ptr = 0;
+				$output = $this->replaceModifiers(array(null, null, $output, $match[4]), 'var', $ptr);
+				if ($pointer !== null) {
+					$pointer += $ptr;
+				}
+				$matchedLength += $ptr;
 			}
 
 			if (is_array($parsingParams)) {
@@ -1989,14 +1984,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				continue;
 			}
 
+			// get var length first
 			$var = $this->parse($string, $last, null, false, $curBlock === 'modifier' ? 'modifier' : 'string');
 			$len = $var[0];
+			// reparse after removing every \" in the parsed string
+			$var = $this->parse(str_replace('\\'.$first, $first, $string), $last, null, false, $curBlock === 'modifier' ? 'modifier' : 'string');
+
 			$string = substr_replace($string, $first.'.'.$var[1].'.'.$first, $last, $len);
 			if ($this->debug) echo 'STRING VAR REPLACEMENT DONE : '.$string.'<br>';
 		}
 
 		// handle modifiers
-		$string = preg_replace_callback('#("|\')\.(.+?)\.\1((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\4|:[^\s`"\']*))*))+)#i', array($this, 'replaceModifiers'), $string);
+		// TODO Obsolete?
+		$string = preg_replace_callback('#("|\')\.(.+?)\.\1((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\4|:[^`]*))*))+)#i', array($this, 'replaceModifiers'), $string);
 
 		// replace escaped dollar operators by unescaped ones if required
 		if ($first==="'") {
@@ -2016,10 +2016,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @param string $curBlock the current parser-block being processed
 	 * @return string the input enclosed with various function calls according to the modifiers found
 	 */
-	protected function replaceModifiers(array $m, $curBlock)
+	protected function replaceModifiers(array $m, $curBlock = null, &$pointer = null)
 	{
 		if ($this->debug) echo 'PARSING MODIFIERS : '.$m[3].'<br />';
 
+		if ($pointer !== null) {
+			$pointer += strlen($m[3]);
+		}
 		// remove first pipe
 		$cmdstrsrc = substr($m[3], 1);
 		// remove last quote if present
@@ -2030,7 +2033,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$output = $m[2];
 
-		while (strlen($cmdstrsrc) > 0) {
+		$continue = true;
+		while (strlen($cmdstrsrc) > 0 && $continue) {
 			$cmdstr = $cmdstrsrc;
 			$paramsep = ':';
 			$paramspos = strpos($cmdstr, $paramsep);
@@ -2061,19 +2065,23 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.'<br/>';
 
 					if ($ptr >= strlen($paramstr)) {
+						if ($this->debug) echo 'PARAM PARSING ENDED, PARAM STRING CONSUMED<br/>';
 						break;
 					}
-					while (true) {
-						if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === '|') {
-							if ($this->debug) echo 'PARAM PARSING ENDED, " " or "|" FOUND, POINTER AT '.$ptr.'<br/>';
-							$ptr++;
-							break 2;
+
+					if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === '|') {
+						if ($this->debug) echo 'PARAM PARSING ENDED, " " or "|" FOUND, POINTER AT '.$ptr.'<br/>';
+						if ($paramstr[$ptr] === ' ') {
+							$continue = false;
+							if ($pointer !== null) {
+								$pointer -= strlen($paramstr) - $ptr;
+							}
 						}
-						if ($ptr < strlen($paramstr) && $paramstr[$ptr] === ':') {
-							$ptr++;
-						} else {
-							break;
-						}
+						$ptr++;
+						break;
+					}
+					if ($ptr < strlen($paramstr) && $paramstr[$ptr] === ':') {
+						$ptr++;
 					}
 				}
 				$cmdstrsrc = substr($cmdstrsrc, strlen($func)+1+$ptr);

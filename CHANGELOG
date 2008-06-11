@@ -5,11 +5,15 @@
 + Added line numbers in compilation errors and improved several error messages
 * Plugins: added a fourth 'bool $case_sensitive' parameter to {replace}
 * Fixed compiler bug that prevented empty() to be called
+* Fixed several modifier parsing bugs
+   => http://forum.dwoo.org/viewtopic.php?id=27
+* Fixed empty string parsing in modifier applied to variables
 * Removed checks for methods/properties being present on objects before calling
   them since these can be handled by __get() and __call()
    => http://forum.dwoo.org/viewtopic.php?id=22
 * Calling {func (params)} (with the space between function and params) is now
-  allowed => http://forum.dwoo.org/viewtopic.php?id=21
+  allowed
+   => http://forum.dwoo.org/viewtopic.php?id=21
 * The compiler now allows \r, \n and \t to be parameter splitters as well as
   "," and " ". You can therefore make complex function calls on multiple lines
 * Converted most of the code to follow PEAR Coding Standards, hopefully this
