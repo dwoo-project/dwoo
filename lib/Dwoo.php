@@ -1126,7 +1126,7 @@ class Dwoo
 					return null;
 				}
 			} else {
-				if (is_object($data) && property_exists($data, $m[2][$k])) {
+				if (is_object($data)) {
 					$data = $data->$m[2][$k];
 				} else {
 					return null;
@@ -1298,7 +1298,7 @@ class Dwoo
 					return null;
 				}
 			} elseif ($sep === '->') {
-				if (is_object($cur) && property_exists($cur, $m[2][$k])) {
+				if (is_object($cur)) {
 					$cur = $cur->$m[2][$k];
 				} else {
 					return null;
