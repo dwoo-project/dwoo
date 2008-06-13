@@ -8,6 +8,8 @@
 * Fixed several modifier parsing bugs
    => http://forum.dwoo.org/viewtopic.php?id=27
 * Fixed empty string parsing in modifier applied to variables
+* Fixed compiler handling of <?php echo "foo" ?>{template_tag} where there was
+  no ';' at the end of the php tag
 * Removed checks for methods/properties being present on objects before calling
   them since these can be handled by __get() and __call()
    => http://forum.dwoo.org/viewtopic.php?id=22
