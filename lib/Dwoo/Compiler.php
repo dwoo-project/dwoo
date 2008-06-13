@@ -1939,6 +1939,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif (is_numeric($substr)) {
 			if ($this->debug) echo 'NUMBER PARSED<br />';
 			$substr = (float) $substr;
+			if ((int) $substr == $substr) {
+				$substr = (int) $substr;
+			}
 		} elseif (preg_match('{^-?(\d+|\d*(\.\d+))\s*([/*%+-]\s*-?(\d+|\d*(\.\d+)))+$}', $substr)) {
 			if ($this->debug) echo 'SIMPLE MATH PARSED<br />';
 			$substr = '('.$substr.')';
