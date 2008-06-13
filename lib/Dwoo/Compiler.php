@@ -665,7 +665,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$add = $this->parse($tpl, $pos, $endpos, false, 'root');
 				}
 				$compiled .= $add;
-				$this->line += substr_count($add, "\n");
+				$this->line += substr_count(substr($tpl, $pos, $endpos-$pos), "\n");
 
 				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
 				if (substr($compiled, -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
@@ -729,6 +729,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$output .= $compiled."\n?>";
 
+		$output = preg_replace('/(?<!;)(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
 
 		if ($this->debug) {
