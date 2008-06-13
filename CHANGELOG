@@ -4,6 +4,8 @@
   operator inside it
 + Added line numbers in compilation errors and improved several error messages
 * Plugins: added a fourth 'bool $case_sensitive' parameter to {replace}
+* Plugins: added a fourth 'bool $trim' parameter to {capture} that trims
+  the captured text
 * Fixed compiler bug that prevented empty() to be called
 * Fixed several modifier parsing bugs
    => http://forum.dwoo.org/viewtopic.php?id=27

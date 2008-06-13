@@ -69,4 +69,12 @@ class BugTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("fooxx", $this->dwoo->get($tpl, array()));
     }
+
+    public function testPhpTagWithoutSemicolon()
+    {
+        $tpl = new Dwoo_Template_String('{capture "foo"}<?php $var=3; echo $var ?>{/capture}-{$.capture.foo}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("-3", $this->dwoo->get($tpl, array()));
+    }
 }
