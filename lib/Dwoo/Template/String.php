@@ -37,7 +37,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 	/**
 	 * template cache id, if not provided in the constructor, it is set to
-	 * the md5 hash of the request_uri. it is however highly recommended to
+	 * the md4 hash of the request_uri. it is however highly recommended to
 	 * provide one that will fit your needs.
 	 *
 	 * in all cases, the compilation id is prepended to the cache id to separate
@@ -91,12 +91,16 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * 						  makes this template's content unique, if null it defaults
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
-	 * 							template from others, if null it defaults to the md5 hash of the template
+	 * 							template from others, if null it defaults to the md4 hash of the template
 	 */
 	public function __construct($templateString, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
 		$this->template = $templateString;
-		$this->name = hash('md4', $templateString);
+		if (function_exists('hash')) {
+			$this->name = hash('md4', $templateString);
+		} else {
+			$this->name = md5($templateString);
+		}
 		$this->cacheTime = $cacheTime;
 
 		if ($compileId !== null) {
