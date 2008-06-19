@@ -101,6 +101,17 @@ class Dwoo_Data implements Dwoo_IDataProvider
 			$this->data[$name] = $val;
 		}
 	}
+   	
+   	/**
+   	 * allows to assign variables using the object syntax
+   	 * 
+   	 * @param string $name the variable name
+   	 * @param string $value the value to assign to it
+   	 */
+   	public function __set($name, $value)
+   	{
+   		$this->assign($name, $value);
+   	}
 
 	/**
 	 * assigns a value by reference to the data object
@@ -170,6 +181,73 @@ class Dwoo_Data implements Dwoo_IDataProvider
    			}
    		} else {
    			$this->data[$name][] =& $val;
+   		}
+   	}
+   	
+   	/**
+   	 * returns true if the variable has been assigned already, false otherwise
+   	 * 
+   	 * @param string $name the variable name
+   	 * @return bool 
+   	 */
+   	public function isAssigned($name)
+   	{
+   		return isset($this->data[$name]);
+   	}
+   	
+   	/**
+   	 * supports calls to isset($dwooData->var)
+   	 * 
+   	 * @param string $name the variable name
+   	 */
+   	public function __isset($name)
+   	{
+   		return isset($this->data[$name]);
+   	}
+   	
+   	/**
+   	 * unassigns/removes a variable
+   	 * 
+   	 * @param string $name the variable name
+   	 */
+   	public function unassign($name)
+   	{
+   		unset($this->data[$name]);
+   	}
+   	
+   	/**
+   	 * supports unsetting variables using the object syntax
+   	 * 
+   	 * @param string $name the variable name
+   	 */
+   	public function __unset($name)
+   	{
+   		unset($this->data[$name]);
+   	}
+   	
+   	/**
+   	 * returns a variable if it was assigned
+   	 * 
+   	 * @param string $name the variable name
+   	 * @return mixed
+   	 */
+   	public function get($name)
+   	{
+   		return $this->__get($name);
+   	}
+
+   	/**
+   	 * allows to read variables using the object syntax
+   	 * 
+   	 * @param string $name the variable name
+   	 * @return mixed
+   	 */
+   	public function __get($name)
+   	{
+   		if (isset($this->data[$name])) {
+   			return $this->data[$name];
+   		} else {
+   			throw new Dwoo_Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
    		}
    	}
 }
