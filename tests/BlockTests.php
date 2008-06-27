@@ -18,7 +18,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 	{
 		$cmp = new Dwoo_Compiler();
 		$cmp->setAutoEscape(true);
-		
+
 		$tpl = new Dwoo_Template_String('{$foo}{auto_escape off}{$foo}{/}');
 		$tpl->forceCompilation();
 
@@ -28,7 +28,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a<b>ca&lt;b&gt;c", $this->dwoo->get($tpl, array('foo'=>'a<b>c')));
-		
+
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_auto_escape($this->dwoo);
 		$fixCall->init('');
@@ -61,7 +61,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$fixCall = new Dwoo_Plugin_capture($this->dwoo);
 		$fixCall->init('');
 	}
-	
+
 	public function testDynamic()
 	{
 		$preTime = time();
@@ -69,7 +69,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals($preTime . $preTime, $this->dwoo->get($tpl, array('pre'=>$preTime), $this->compiler));
-		
+
 		sleep(1);
 		$postTime = time();
 		$this->assertEquals($preTime . $postTime, $this->dwoo->get($tpl, array('pre'=>$postTime), $this->compiler));
@@ -348,14 +348,11 @@ baz"));
 		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
-	public function testStripCode()
+	public function testStripWithPhp()
 	{
-		$tpl = new Dwoo_Template_String("{strip code}
-function foo() {
-	x;
-}");
+		$tpl = new Dwoo_Template_String("{strip}a\nb{\$foo=\"\\n\"}{if \$foo}>{\$foo}<{/if}\nc{/strip}a\nb\nc");
 		$tpl->forceCompilation();
-		$this->assertEquals("function foo() { x;}", $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals("ab>\n<ca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testTextFormat()

@@ -21,7 +21,7 @@
  */
 class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	public function init($type = 'text')
+	public function init()
 	{
 	}
 
@@ -33,18 +33,8 @@ class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
 		$params = $compiler->getCompiledParams($params);
-		
-		switch (trim($params['type'], '"\'')) {
-			
-		case 'code':
-			$content = preg_replace('/\{[\r\n]+/', '{ ', preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
-			$content = str_replace(array("\n","\r"), null, $content);
-			break;
-			
-		case 'text':
-		default:
-			$content = str_replace(array("\n","\r"), null, preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
-		}
+
+		$content = preg_replace(array("/\n/","/\r/",'/(<\?(?:php)?|<%)\s*/'), array('','','$1 '), preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
 
 		return $content;
 	}
