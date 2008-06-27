@@ -209,7 +209,7 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 		if (!empty($this->plugins_dir)) {
 			foreach ($this->plugins_dir as $dir) {
-				Dwoo_Loader::addDirectory(rtrim($dir, '\\/'));
+				$this->getLoader()->addDirectory(rtrim($dir, '\\/'));
 			}
 		}
 

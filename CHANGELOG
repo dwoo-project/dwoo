@@ -8,12 +8,19 @@
 ! BC Break: Dwoo_ITemplate::cache() must now return the cached file name or false if 
   caching failed, only affects you if you had a custom template class and 
   implemented cache() yourself
+! BC Break: Dwoo_Loader is not static anymore so anything you did on it directly
+  will break. Use $dwoo->getLoader()->addDirectory() instead of 
+  Dwoo_Loader::addDirectory() for example
+! BC Break: DWOO_COMPILE_DIRECTORY and DWOO_CACHE_DIRECTORY are gone, set those
+  paths in Dwoo's constructor (i.e. new Dwoo('compiledir', 'cachedir')) if you
+  need to override the default ones
 + Plugins: Added {dynamic} that allows cached templates to have dynamic 
   (non-cached) parts, when rendering a cached page, the dynamic parts can still
   use the variables you provides
-+ Plugins: Added {a} to build 'a' html tags
 + Plugins: Added {tif} that acts as a ternary if / allows you to use a ternary
   operator inside it
++ API: Added a Dwoo_ILoader interface if you want to provide a custom plugin
+  loading solution (use $dwoo->setLoader($myLoader))
 + Added line numbers in compilation errors and improved several error messages
 + Added magic object-access methods to Dwoo_Data, so you can assign values by
   doing $data->var = $val; instead of $data->assign('var', $val);

@@ -12,7 +12,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo();
+		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testVarReplacement()
@@ -408,6 +408,10 @@ replace="BAR"
 	{
 		$cmp = new Dwoo_Compiler();
 		$cmp->addPreProcessor('__BAAAAD__', true);
+
+		$tpl = new Dwoo_Template_String('');
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $cmp);
 	}
 
 	/**
@@ -417,6 +421,10 @@ replace="BAR"
 	{
 		$cmp = new Dwoo_Compiler();
 		$cmp->addPostProcessor('__BAAAAD__', true);
+
+		$tpl = new Dwoo_Template_String('');
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $cmp);
 	}
 
 	/**

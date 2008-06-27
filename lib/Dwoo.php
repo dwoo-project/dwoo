@@ -1,6 +1,7 @@
 <?php
 
-set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__));
+define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
+set_include_path(get_include_path() . PATH_SEPARATOR . DWOO_DIRECTORY);
 
 include 'Dwoo/Loader.php';
 include 'Dwoo/Exception.php';
@@ -19,23 +20,15 @@ include 'Dwoo/Template/String.php';
 include 'Dwoo/Template/File.php';
 include 'Dwoo/Data.php';
 
-define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
-if (defined('DWOO_CACHE_DIRECTORY') === false)
-	define('DWOO_CACHE_DIRECTORY', DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR);
-if (defined('DWOO_COMPILE_DIRECTORY') === false)
-	define('DWOO_COMPILE_DIRECTORY', DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR);
+// TODO BC Checks, remove
+if (defined('DWOO_CACHE_DIRECTORY'))
+	throw new Dwoo_Exception('DWOO_CACHE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
+if (defined('DWOO_COMPILE_DIRECTORY'))
+	throw new Dwoo_Exception('DWOO_COMPILE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
+// end
+
 if (defined('DWOO_CHMOD') === false)
 	define('DWOO_CHMOD', 0777);
-if (is_writable(DWOO_CACHE_DIRECTORY) === false)
-	throw new Dwoo_Exception('Dwoo cache directory must be writable, either chmod "'.DWOO_CACHE_DIRECTORY.'" to make it writable or define DWOO_CACHE_DIRECTORY to a writable directory before including Dwoo.php');
-if (is_writable(DWOO_COMPILE_DIRECTORY) === false)
-	throw new Dwoo_Exception('Dwoo compile directory must be writable, either chmod "'.DWOO_COMPILE_DIRECTORY.'" to make it writable or define DWOO_COMPILE_DIRECTORY to a writable directory before including Dwoo.php');
-
-// include class paths or rebuild paths if the cache file isn't there
-if ((file_exists(DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') && include DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php') === false)
-	Dwoo_Loader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
-
-Dwoo_Loader::loadPlugin('topLevelBlock');
 
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
@@ -211,6 +204,13 @@ class Dwoo
 	);
 
 	/**
+	 * the dwoo loader object used to load plugins by this dwoo instance
+	 * 
+	 * @var Dwoo_ILoader
+	 */
+	protected $loader = null;
+	
+	/**
 	 * currently rendered template, set to null when not-rendering
 	 *
 	 * @var Dwoo_ITemplate
@@ -267,12 +267,29 @@ class Dwoo
 	protected $buffer;
 
 	/**
-	 * constructor, sets the cache and compile dir to the default values
+	 * constructor, sets the cache and compile dir to the default values if not provided
+	 * 
+	 * @param string $compileDir path to the compiled directory, defaults to lib/compiled
+	 * @param string $cacheDir path to the cache directory, defaults to lib/cache
 	 */
-	public function __construct()
+	public function __construct($compileDir = null, $cacheDir = null)
 	{
-		$this->cacheDir = DWOO_CACHE_DIRECTORY.DIRECTORY_SEPARATOR;
-		$this->compileDir = DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR;
+		if ($cacheDir === null) {
+			$this->cacheDir = DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR;
+		} else {
+			$this->cacheDir = $cacheDir.DIRECTORY_SEPARATOR;
+		}
+
+		if ($compileDir === null) {
+			$this->compileDir = DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR;
+		} else {
+			$this->compileDir = $compileDir.DIRECTORY_SEPARATOR;
+		}
+
+		if (is_writable($this->cacheDir) === false)
+			throw new Dwoo_Exception('Dwoo cache directory must be writable, chmod "'.$this->cacheDir.'" to make it writable');
+		if (is_writable($this->compileDir) === false)
+			throw new Dwoo_Exception('Dwoo compile directory must be writable, chmod "'.$this->compileDir.'" to make it writable');
 	}
 
 	/**
@@ -523,7 +540,7 @@ class Dwoo
 			$class = 'Dwoo_Filter_'.$name;
 
 			if (!class_exists($class, false) && !function_exists($class)) {
-				Dwoo_Loader::loadPlugin($name);
+				$this->getLoader()->loadPlugin($name);
 			}
 
 			if (class_exists($class, false)) {
@@ -603,6 +620,30 @@ class Dwoo
 	/*
 	 * --------- getters and setters ---------
 	 */
+	
+	/**
+	 * sets the loader object to use to load plugins
+	 * 
+	 * @param Dwoo_ILoader $loader loader object
+	 */
+	public function setLoader(Dwoo_ILoader $loader) 
+	{
+		$this->loader = $loader;
+	}
+	
+	/**
+	 * returns the current loader object or a default one if none is currently found
+	 * 
+	 * @param Dwoo_ILoader
+	 */
+	public function getLoader()
+	{
+		if ($this->loader === null) {
+			$this->loader = new Dwoo_Loader($this->compileDir);
+		}
+		
+		return $this->loader;
+	}
 
 	/**
 	 * returns the custom plugins loaded

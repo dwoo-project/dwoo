@@ -13,7 +13,7 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo();
+		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$this->policy = new Dwoo_Security_Policy();
 		$this->dwoo->setSecurityPolicy($this->policy);
 	}

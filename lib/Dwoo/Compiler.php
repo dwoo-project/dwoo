@@ -302,16 +302,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (!class_exists($class, false) && !function_exists($class)) {
-				Dwoo_Loader::loadPlugin($name);
-			}
-
 			if (class_exists($class, false)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
 			} else {
-				throw new Dwoo_Exception('Wrong pre-processor name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"');
+				$callback = array('autoload'=>true, 'class'=>$class, 'name'=>$name);
 			}
 
 			$this->processors['pre'][] = $callback;
@@ -331,10 +327,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			unset($this->processors['pre'][$index]);
 		} elseif (($index = array_search('Dwoo_Processor_'.str_replace('Dwoo_Processor_', '', $callback), $this->processors['pre'], true)) !== false) {
 			unset($this->processors['pre'][$index]);
-		} else	{
+		} else {
 			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach ($this->processors['pre'] as $index=>$proc) {
-				if (is_array($proc) && $proc[0] instanceof $class) {
+				if (is_array($proc) && ($proc[0] instanceof $class) || (isset($proc['class']) && $proc['class'] == $class)) {
 					unset($this->processors['pre'][$index]);
 					break;
 				}
@@ -355,16 +351,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (!class_exists($class, false) && !function_exists($class)) {
-				Dwoo_Loader::loadPlugin($name);
-			}
-
 			if (class_exists($class, false)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
 			} else {
-				throw new Dwoo_Exception('Wrong post-processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"');
+				$callback = array('autoload'=>true, 'class'=>$class, 'name'=>$name);
 			}
 
 			$this->processors['post'][] = $callback;
@@ -372,7 +364,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$this->processors['post'][] = $callback;
 		}
 	}
-
+	
 	/**
 	 * removes a postprocessor from the compiler
 	 *
@@ -387,12 +379,39 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} else	{
 			$class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
 			foreach ($this->processors['post'] as $index=>$proc) {
-				if (is_array($proc) && $proc[0] instanceof $class) {
+				if (is_array($proc) && ($proc[0] instanceof $class) || (isset($proc['class']) && $proc['class'] == $class)) {
 					unset($this->processors['post'][$index]);
 					break;
 				}
 			}
 		}
+	}
+	
+	/**
+	 * internal function to autoload processors at runtime if required
+	 * 
+	 * @param string $class the class/function name
+	 * @param string $name the plugin name (without Dwoo_Plugin_ prefix)
+	 */
+	protected function loadProcessor($class, $name)
+	{
+		if (!class_exists($class, false) && !function_exists($class)) {
+			try {
+				$this->dwoo->getLoader()->loadPlugin($name);
+			} catch (Dwoo_Exception $e) {
+				throw new Dwoo_Exception('Processor '.$name.' could not be found in your plugin directories, please ensure it is in a file named '.$name.'.php in the plugin directory');
+			}
+		}
+		
+		if (class_exists($class, false)) {
+			return array(new $class($this), 'process');
+		} 
+
+		if (function_exists($class)) {
+			return $class;
+		} 
+		
+		throw new Dwoo_Exception('Wrong processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"');
 	}
 
 	/**
@@ -465,7 +484,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($isOffset) {
 			$this->line += $number;
 		} else {
-			$this->line = $position;
+			$this->line = $number;
 		}
 	}
 
@@ -540,6 +559,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// runs preprocessors
 		foreach ($this->processors['pre'] as $preProc) {
+			if (is_array($preProc) && isset($preProc['autoload'])) {
+				$preProc = $this->loadProcessor($preProc['class'], $preProc['name']);
+			}
 			if (is_array($preProc) && $preProc[0] instanceof Dwoo_Processor) {
 				$tpl = call_user_func($preProc, $tpl);
 			} else {
@@ -668,6 +690,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($this->debug) echo 'PROCESSING POSTPROCESSORS<br>';
 
 		foreach ($this->processors['post'] as $postProc) {
+			if (is_array($postProc) && isset($postProc['autoload'])) {
+				$postProc = $this->loadProcessor($postProc['class'], $postProc['name']);
+			}
 			if (is_array($postProc) && $postProc[0] instanceof Dwoo_Processor) {
 				$compiled = call_user_func($postProc, $compiled);
 			} else {
@@ -687,19 +712,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			case Dwoo::BLOCK_PLUGIN:
 			case Dwoo::CLASS_PLUGIN:
-				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::FUNC_PLUGIN:
-				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_MODIFIER:
-				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_FUNCTION:
-				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_BLOCK:
-				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\tDwoo_Loader::loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
 				break;
 			default:
 				throw new Dwoo_Compilation_Exception($this, 'Type error for '.$plugin.' with type'.$type);
@@ -831,7 +856,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$class = 'Dwoo_Plugin_'.$type;
 		if (class_exists($class, false) === false) {
-			Dwoo_Loader::loadPlugin($type);
+			$this->dwoo->getLoader()->loadPlugin($type);
 		}
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
@@ -877,7 +902,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$class = 'Dwoo_Plugin_'.$type;
 		if (class_exists($class, false) === false) {
-			Dwoo_Loader::loadPlugin($type);
+			$this->dwoo->getLoader()->loadPlugin($type);
 		}
 		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
@@ -2311,7 +2336,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				if ($pluginType===-1) {
 					try {
-						Dwoo_Loader::loadPlugin($name, isset($phpFunc)===false);
+						$this->dwoo->getLoader()->loadPlugin($name, isset($phpFunc)===false);
 					} catch (Exception $e) {
 						if (isset($phpFunc)) {
 							$pluginType = Dwoo::NATIVE_PLUGIN;

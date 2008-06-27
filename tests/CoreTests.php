@@ -10,15 +10,17 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo();
+		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testCoverConstructorsEtc()
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo();
-		Dwoo_Loader::rebuildClassPathCache(DWOO_DIRECTORY.'plugins', DWOO_COMPILE_DIRECTORY.DIRECTORY_SEPARATOR.'classpath.cache.php');
+		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$tpl = new Dwoo_Template_String('');
+		$tpl->forceCompilation();
+		$this->assertEquals("", $this->dwoo->get($tpl, array(), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_topLevelBlock($this->dwoo);
@@ -85,7 +87,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testGetSetSecurityPolicy()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$policy = new Dwoo_Security_Policy();
 		$policy->setConstantHandling(Dwoo_Security_Policy::CONST_ALLOW);
 		$dwoo->setSecurityPolicy($policy);
@@ -249,7 +251,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testCachedTemplateWithDwoo_Cache()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->setCacheTime(10);
 		$tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
 		$tpl->forceCompilation();
@@ -263,7 +265,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testClearCacheOnTemplateClass()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->setCacheTime(10);
 		$tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
 		$tpl->forceCompilation();
@@ -278,7 +280,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 	public function testTemplateGetSet()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->setCacheTime(10);
 		$tpl = new Dwoo_Template_String('foo');
 		$tpl2 = new Dwoo_Template_File('./resources/test.html');

@@ -27,7 +27,7 @@ class Dwoo_Loader
 	 * @see addDirectory
 	 * @var array
 	 */
-	protected static $paths = array();
+	protected $paths = array();
 
 	/**
 	 * stores the plugins names/paths relationships
@@ -35,22 +35,46 @@ class Dwoo_Loader
 	 *
 	 * @see addDirectory
 	 * @var array
-	 * @access protected
+	 */
+	protected $classPath = array();
+	
+	/**
+	 * path where class paths cache files are written
+	 * 
+	 * @var string
+	 */
+	protected $cacheDir;
+	
+	/**
+	 * legacy/transitional var for BC with old classpath.cache files, do NOT rely on it
+	 * 
+	 * will be deleted sooner or later
+	 * 
+	 * TODO remove this and compat code in addDirectory
 	 */
 	public static $classpath = array();
+	
+	public function __construct($cacheDir)
+	{
+		$this->cacheDir = $cacheDir . DIRECTORY_SEPARATOR;
 
+		// include class paths or rebuild paths if the cache file isn't there
+		if ((file_exists($this->cacheDir.'classpath.cache.php') && include $this->cacheDir.'classpath.cache.php') == false) {
+			$this->rebuildClassPathCache(DWOO_DIRECTORY.'plugins', $this->cacheDir.'classpath.cache.php');
+		}
+	}
+	
 	/**
 	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
 	 *
 	 * @param string $path the plugin path to scan
 	 * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
-	 * @access protected
 	 */
-	public static function rebuildClassPathCache($path, $cacheFile)
+	protected function rebuildClassPathCache($path, $cacheFile)
 	{
 		if ($cacheFile!==false) {
-			$tmp = self::$classpath;
-			self::$classpath = array();
+			$tmp = $this->classPath;
+			$this->classPath = array();
 		}
 
 		// iterates over all files/folders
@@ -58,19 +82,19 @@ class Dwoo_Loader
 		if (is_array($list)) {
 			foreach ($list as $f) {
 				if (is_dir($f)) {
-					self::rebuildClassPathCache($f, false);
+					$this->rebuildClassPathCache($f, false);
 				} else {
-					self::$classpath[str_replace(array('function.','block.','modifier.','outputfilter.','filter.','prefilter.','postfilter.','pre.','post.','output.','shared.','helper.'), '', basename($f, '.php'))] = $f;
+					$this->classPath[str_replace(array('function.','block.','modifier.','outputfilter.','filter.','prefilter.','postfilter.','pre.','post.','output.','shared.','helper.'), '', basename($f, '.php'))] = $f;
 				}
 			}
 		}
 
 		// save in file if it's the first call (not recursed)
 		if ($cacheFile!==false) {
-			if (!file_put_contents($cacheFile, '<?php Dwoo_Loader::$classpath = '.var_export(self::$classpath, true).' + Dwoo_Loader::$classpath; ?>')) {
-				throw new Dwoo_Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php)');
+			if (!file_put_contents($cacheFile, '<?php $this->classPath = '.var_export($this->classPath, true).' + $this->classPath;')) {
+				throw new Dwoo_Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
 			}
-			self::$classpath += $tmp;
+			$this->classPath += $tmp;
 		}
 	}
 
@@ -80,17 +104,17 @@ class Dwoo_Loader
 	 * @param string $class the plugin name, without the Dwoo_Plugin_ prefix
 	 * @param bool $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
 	 */
-	public static function loadPlugin($class, $forceRehash = true)
+	public function loadPlugin($class, $forceRehash = true)
 	{
 		// a new class was added or the include failed so we rebuild the cache
-		if (!isset(self::$classpath[$class]) || !include self::$classpath[$class]) {
+		if (!isset($this->classPath[$class]) || !include $this->classPath[$class]) {
 			if ($forceRehash) {
-				self::rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath.cache.php');
-				foreach (self::$paths as $path=>$file) {
-					self::rebuildClassPathCache($path, $file);
+				$this->rebuildClassPathCache(DWOO_DIRECTORY . 'plugins', $this->cacheDir . 'classpath.cache.php');
+				foreach ($this->paths as $path=>$file) {
+					$this->rebuildClassPathCache($path, $file);
 				}
-				if (isset(self::$classpath[$class])) {
-					include self::$classpath[$class];
+				if (isset($this->classPath[$class])) {
+					include $this->classPath[$class];
 				} else {
 					throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 				}
@@ -112,16 +136,21 @@ class Dwoo_Loader
 	 *
 	 * @param string $pluginDir the plugin path to scan
 	 */
-	public static function addDirectory($pluginDir)
+	public function addDirectory($pluginDir)
 	{
-		if (!isset(self::$paths[$pluginDir])) {
-			$cacheFile = DWOO_COMPILE_DIRECTORY . DIRECTORY_SEPARATOR . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
-			self::$paths[$pluginDir] = $cacheFile;
-			if (file_exists($cacheFile)) {
-				include $cacheFile;
-			} else {
-				Dwoo_Loader::rebuildClassPathCache($pluginDir, $cacheFile);
+		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
+		$this->paths[$pluginDir] = $cacheFile;
+		if (file_exists($cacheFile)) {
+			include $cacheFile;
+			// BC code, will be removed
+			if (!empty(Dwoo_Loader::$classpath)) {
+				$this->classPath = Dwoo_Loader::$classpath + $this->classPath;
+				Dwoo_Loader::$classpath = array();
+				$this->rebuildClassPathCache($pluginDir, $cacheFile);
 			}
+			// end
+		} else {
+			$this->rebuildClassPathCache($pluginDir, $cacheFile);
 		}
 	}
 }
