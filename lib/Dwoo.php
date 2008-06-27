@@ -68,7 +68,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = "0.9.1";
+	const VERSION = "0.9.2";
 
 	/**
 	 * unique number of this dwoo release
@@ -77,7 +77,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 10;
+	const RELEASE_TAG = 11;
 
 	/**#@+
 	 * constants that represents all plugin types
@@ -205,11 +205,11 @@ class Dwoo
 
 	/**
 	 * the dwoo loader object used to load plugins by this dwoo instance
-	 * 
+	 *
 	 * @var Dwoo_ILoader
 	 */
 	protected $loader = null;
-	
+
 	/**
 	 * currently rendered template, set to null when not-rendering
 	 *
@@ -268,7 +268,7 @@ class Dwoo
 
 	/**
 	 * constructor, sets the cache and compile dir to the default values if not provided
-	 * 
+	 *
 	 * @param string $compileDir path to the compiled directory, defaults to lib/compiled
 	 * @param string $cacheDir path to the cache directory, defaults to lib/cache
 	 */
@@ -347,7 +347,7 @@ class Dwoo
 				$_tpl = new Dwoo_Template_File($_tpl);
 			} elseif (strstr($_tpl, ':')) {
 				$_bits = explode(':', $_tpl, 2);
-				$_tpl = $this->templateFactory($_bits[0], $_bits[1]); 
+				$_tpl = $this->templateFactory($_bits[0], $_bits[1]);
 			} else {
 				$_tpl = new Dwoo_Template_String($_tpl);
 			}
@@ -393,7 +393,7 @@ class Dwoo
 			if ($doCache === true) {
 				$dynamicId = uniqid();
 			}
-			
+
 			// render template
 			$out = include $_tpl->getCompiledTemplate($this, $_compiler);
 
@@ -402,7 +402,7 @@ class Dwoo
 				$_tpl->forceCompilation();
 				$out = include $_tpl->getCompiledTemplate($this, $_compiler);
 			}
-			
+
 			if ($doCache === true) {
 				$out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
 				if (!class_exists('Dwoo_plugin_dynamic', false)) {
@@ -410,7 +410,7 @@ class Dwoo
 				}
 				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId);
 			}
-			
+
 			// process filters
 			foreach ($this->filters as $filter) {
 				if (is_array($filter) && $filter[0] instanceof Dwoo_Filter) {
@@ -620,20 +620,20 @@ class Dwoo
 	/*
 	 * --------- getters and setters ---------
 	 */
-	
+
 	/**
 	 * sets the loader object to use to load plugins
-	 * 
+	 *
 	 * @param Dwoo_ILoader $loader loader object
 	 */
-	public function setLoader(Dwoo_ILoader $loader) 
+	public function setLoader(Dwoo_ILoader $loader)
 	{
 		$this->loader = $loader;
 	}
-	
+
 	/**
 	 * returns the current loader object or a default one if none is currently found
-	 * 
+	 *
 	 * @param Dwoo_ILoader
 	 */
 	public function getLoader()
@@ -641,7 +641,7 @@ class Dwoo
 		if ($this->loader === null) {
 			$this->loader = new Dwoo_Loader($this->compileDir);
 		}
-		
+
 		return $this->loader;
 	}
 
