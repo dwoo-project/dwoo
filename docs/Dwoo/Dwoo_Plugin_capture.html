@@ -76,19 +76,19 @@
 				<div class="method-definition">
 					static 						<span class="method-result">void</span>
 										<a href="#postProcessing" title="details" class="method-name">postProcessing</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>])
+											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$append</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$content</span>)
 									</div>
 														
 				<div class="method-definition">
 					static 						<span class="method-result">void</span>
 										<a href="#preProcessing" title="details" class="method-name">preProcessing</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>], <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$append</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
 									</div>
 																		
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#init" title="details" class="method-name">init</a>
-											([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">'default'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$assign</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$cat</span> = <span class="var-default">false</span>])
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">'default'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$assign</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$cat</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$trim</span> = <span class="var-default">false</span>])
 									</div>
 																											</div>
 		</div>
@@ -154,7 +154,7 @@
 		<span class="method-name">
 			postProcessing
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>])
+					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$append</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$content</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -170,6 +170,9 @@
 					<li>
 				<span class="var-type"></span>
 				<span class="var-name">$append</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$content</span>			</li>
 				</ul>
 		
 			<hr class="separator" />
@@ -197,7 +200,7 @@
 		<span class="method-name">
 			preProcessing
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>], <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
+					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$append</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$type</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -243,7 +246,7 @@
 		<span class="method-name">
 			init
 		</span>
-					([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">'default'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$assign</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$cat</span> = <span class="var-default">false</span>])
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$name</span> = <span class="var-default">'default'</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$assign</span> = <span class="var-default">null</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$cat</span> = <span class="var-default">false</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$trim</span> = <span class="var-default">false</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -256,6 +259,9 @@
 					<li>
 				<span class="var-type"></span>
 				<span class="var-name">$cat</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$trim</span>			</li>
 				</ul>
 		
 			
@@ -282,7 +288,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:25 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 28 Jun 2008 01:38:08 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

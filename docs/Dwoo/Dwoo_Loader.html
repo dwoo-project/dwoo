@@ -56,15 +56,23 @@
 								</div>
 		<div class="info-box-body">
 			<div class="var-summary">
-												<div class="var-title">
-					static <span class="var-type">array</span>
+																				<div class="var-title">
+					static <span class="var-type">mixed</span>
 					<a href="#$classpath" title="details" class="var-name">$classpath</a>
 				</div>
+																																				<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$cacheDir" title="details" class="var-name">$cacheDir</a>
+				</div>
+																								<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$classPath" title="details" class="var-name">$classPath</a>
+				</div>
 																<div class="var-title">
-					static <span class="var-type">array</span>
+					<span class="var-type">array</span>
 					<a href="#$paths" title="details" class="var-name">$paths</a>
 				</div>
-																															</div>
+											</div>
 		</div>
 	</div>
 
@@ -80,25 +88,31 @@
 		</div>
 		<div class="info-box-body">			
 			<div class="method-summary">
-										
+																																														
 				<div class="method-definition">
-					static 						<span class="method-result">void</span>
+											<span class="method-result">Dwoo_Loader</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$cacheDir</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
 										<a href="#addDirectory" title="details" class="method-name">addDirectory</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pluginDir</span>)
 									</div>
 														
 				<div class="method-definition">
-					static 						<span class="method-result">void</span>
+											<span class="method-result">void</span>
 										<a href="#loadPlugin" title="details" class="method-name">loadPlugin</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$forceRehash</span> = <span class="var-default">true</span>])
 									</div>
 														
 				<div class="method-definition">
-					static 						<span class="method-result">void</span>
+											<span class="method-result">void</span>
 										<a href="#rebuildClassPathCache" title="details" class="method-name">rebuildClassPathCache</a>
 											(<span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$cacheFile</span>)
 									</div>
-																																							</div>
+											</div>
 		</div>
 	</div>		
 
@@ -116,20 +130,20 @@
 					</div>
 		<div class="info-box-body">
 			<a name="var$classpath" id="$classpath"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
-			static <span class="var-type">array</span>
+			static <span class="var-type">mixed</span>
 			<span class="var-name">$classpath</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a40">40</a></span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a55">55</a></span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">stores the plugins names/paths relationships  don't edit this on your own, use addDirectory</p>
+<p class="short-description">legacy/transitional var for BC with old classpath.cache files, do NOT rely on it</p>
+<p class="description"><p>will be deleted sooner or later</p><p>TODO remove this and compat code in addDirectory</p></p>
 	<ul class="tags">
-				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Loader.html#methodaddDirectory">Dwoo_Loader::addDirectory()</a></li>
 				<li><span class="field">access:</span> public</li>
 			</ul>
 	
@@ -138,12 +152,58 @@
 		
 
 </div>
-<a name="var$paths" id="$paths"><!-- --></A>
+
+<a name="var$cacheDir" id="$cacheDir"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$cacheDir</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a46">46</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">path where class paths cache files are written</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$classPath" id="$classPath"><!-- --></A>
 <div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
-			static <span class="var-type">array</span>
+			<span class="var-type">array</span>
+			<span class="var-name">$classPath</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a39">39</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the plugins names/paths relationships  don't edit this on your own, use addDirectory</p>
+	<ul class="tags">
+				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Loader.html#methodaddDirectory">Dwoo_Loader::addDirectory()</a></li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$paths" id="$paths"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
 			<span class="var-name">$paths</span>
 			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a30">30</a></span>)
 		</span>
@@ -161,7 +221,6 @@
 		
 
 </div>
-
 						
 		</div>
 	</div>
@@ -177,11 +236,39 @@
 		</div>
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a57">57</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Dwoo_Loader</span>
+		<span class="method-name">
+			__construct
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$cacheDir</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$cacheDir</span>			</li>
+				</ul>
+		
+			
+	</div>
 <a name="methodaddDirectory" id="addDirectory"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static addDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a115">115</a></span>)
+		<span class="method-title">addDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a139">139</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -192,7 +279,7 @@
 			</ul>
 	
 	<div class="method-signature">
-		static <span class="method-result">void</span>
+		<span class="method-result">void</span>
 		<span class="method-name">
 			addDirectory
 		</span>
@@ -211,7 +298,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static loadPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a83">83</a></span>)
+		<span class="method-title">loadPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a107">107</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -221,7 +308,7 @@
 			</ul>
 	
 	<div class="method-signature">
-		static <span class="method-result">void</span>
+		<span class="method-result">void</span>
 		<span class="method-name">
 			loadPlugin
 		</span>
@@ -243,17 +330,17 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static rebuildClassPathCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a49">49</a></span>)
+		<span class="method-title">rebuildClassPathCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a73">73</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">rebuilds class paths, scans the given directory recursively and saves all paths in the given file</p>
 	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
+				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
 	<div class="method-signature">
-		static <span class="method-result">void</span>
+		<span class="method-result">void</span>
 		<span class="method-name">
 			rebuildClassPathCache
 		</span>
@@ -277,7 +364,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:44 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 28 Jun 2008 01:38:29 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

@@ -81,6 +81,12 @@
 										</td>
 				</tr>
 								<tr>
+					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_dynamic.html">Dwoo_Plugin_dynamic</a></td>
+					<td>
+											Marks the contents of the block as dynamic. Which means that it will not be cached.
+										</td>
+				</tr>
+								<tr>
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_else.html">Dwoo_Plugin_else</a></td>
 					<td>
 											Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with
@@ -126,6 +132,12 @@
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_smartyinterface.html">Dwoo_Plugin_smartyinterface</a></td>
 					<td>
 											Smarty compatibility layer for block plugins, this is used internally and you should not call it
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_strip.html">Dwoo_Plugin_strip</a></td>
+					<td>
+											Strips the spaces at the beginning and end of each line and also the line breaks
 										</td>
 				</tr>
 								<tr>
@@ -195,13 +207,13 @@
 				<div class="method-definition">
 					static 						<span class="method-result">void</span>
 										<a href="#postProcessing" title="details" class="method-name">postProcessing</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>])
+											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$append</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$content</span>)
 									</div>
 														
 				<div class="method-definition">
 					static 						<span class="method-result">void</span>
 										<a href="#preProcessing" title="details" class="method-name">preProcessing</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>], <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+											(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$append</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
 									</div>
 																										
 				<div class="method-definition">
@@ -290,7 +302,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a103">103</a></span>)
+		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a104">104</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -306,7 +318,7 @@
 		<span class="method-name">
 			postProcessing
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>])
+					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$append</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$content</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -322,6 +334,9 @@
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$append</span><span class="var-description">: that is just meant to allow a child class to call                           parent::postProcessing($compiler, $params, null, &quot;foo();&quot;) to add a command after the                           default commands are executed</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$content</span><span class="var-description">: the entire content of the block being closed</span>			</li>
 				</ul>
 		
 			
@@ -336,6 +351,9 @@
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_capture.html#methodpostProcessing">Dwoo_Plugin_capture::postProcessing()</a>
+							</li>
+					<li>
+				<a href="../Dwoo/Dwoo_Plugin_dynamic.html#methodpostProcessing">Dwoo_Plugin_dynamic::postProcessing()</a>
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_else.html#methodpostProcessing">Dwoo_Plugin_else::postProcessing()</a>
@@ -363,6 +381,9 @@
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_smartyinterface.html#methodpostProcessing">Dwoo_Plugin_smartyinterface::postProcessing()</a>
+							</li>
+					<li>
+				<a href="../Dwoo/Dwoo_Plugin_strip.html#methodpostProcessing">Dwoo_Plugin_strip::postProcessing()</a>
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_topLevelBlock.html#methodpostProcessing">Dwoo_Plugin_topLevelBlock::postProcessing()</a>
@@ -394,7 +415,7 @@
 		<span class="method-name">
 			preProcessing
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, [<span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span> = <span class="var-default">''</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$append</span> = <span class="var-default">''</span>], <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+					(<span class="var-type"><a href="../Dwoo/Dwoo_Compiler.html">Dwoo_Compiler</a></span>&nbsp;<span class="var-name">$compiler</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$prepend</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$append</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
 			</div>
 	
 			<ul class="parameters">
@@ -429,6 +450,9 @@
 				<a href="../Dwoo/Dwoo_Plugin_capture.html#methodpreProcessing">Dwoo_Plugin_capture::preProcessing()</a>
 							</li>
 					<li>
+				<a href="../Dwoo/Dwoo_Plugin_dynamic.html#methodpreProcessing">Dwoo_Plugin_dynamic::preProcessing()</a>
+							</li>
+					<li>
 				<a href="../Dwoo/Dwoo_Plugin_else.html#methodpreProcessing">Dwoo_Plugin_else::preProcessing()</a>
 							</li>
 					<li>
@@ -454,6 +478,9 @@
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_smartyinterface.html#methodpreProcessing">Dwoo_Plugin_smartyinterface::preProcessing()</a>
+							</li>
+					<li>
+				<a href="../Dwoo/Dwoo_Plugin_strip.html#methodpreProcessing">Dwoo_Plugin_strip::preProcessing()</a>
 							</li>
 					<li>
 				<a href="../Dwoo/Dwoo_Plugin_topLevelBlock.html#methodpreProcessing">Dwoo_Plugin_topLevelBlock::preProcessing()</a>
@@ -565,7 +592,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:46 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 28 Jun 2008 01:38:31 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

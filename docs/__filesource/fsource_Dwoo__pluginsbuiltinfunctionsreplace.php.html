@@ -36,14 +36,18 @@
 <li><div class="src-line"><a name="a23"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-tag">@date</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2008-05-30</span></div></li>
 <li><div class="src-line"><a name="a24"></a><span class="src-doc">&nbsp;*&nbsp;</span><span class="src-doc-coretag">@package</span><span class="src-doc">&nbsp;&nbsp;&nbsp;&nbsp;Dwoo</span></div></li>
 <li><div class="src-line"><a name="a25"></a><span class="src-doc">&nbsp;*/</span></div></li>
-<li><div class="src-line"><a name="a26"></a><span class="src-key">function&nbsp;</span><a href="../Dwoo/_plugins---builtin---functions---replace.php.html#functionDwoo_Plugin_replace_compile">Dwoo_Plugin_replace_compile</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-var">$value</span><span class="src-sym">,&nbsp;</span><span class="src-var">$search</span><span class="src-sym">,&nbsp;</span><span class="src-var">$replace</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a26"></a><span class="src-key">function&nbsp;</span><a href="../Dwoo/_plugins---builtin---functions---replace.php.html#functionDwoo_Plugin_replace_compile">Dwoo_Plugin_replace_compile</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-var">$value</span><span class="src-sym">,&nbsp;</span><span class="src-var">$search</span><span class="src-sym">,&nbsp;</span><span class="src-var">$replace</span><span class="src-sym">,&nbsp;</span><span class="src-var">$case_sensitive&nbsp;</span>=&nbsp;<span class="src-id">true</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a27"></a><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'str_replace('</span>.<span class="src-var">$search</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$replace</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$value</span>.<span class="src-str">')'</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a29"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-var">$case_sensitive&nbsp;</span>==&nbsp;<span class="src-str">'false'&nbsp;</span>||&nbsp;(bool)<span class="src-var">$case_sensitive&nbsp;</span>===&nbsp;<span class="src-id">false</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a29"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'str_ireplace('</span>.<span class="src-var">$search</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$replace</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$value</span>.<span class="src-str">')'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a30"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}&nbsp;</span><span class="src-key">else&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'str_replace('</span>.<span class="src-var">$search</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$replace</span>.<span class="src-str">',&nbsp;'</span>.<span class="src-var">$value</span>.<span class="src-str">')'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a32"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a33"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Fri, 30 May 2008 04:51:48 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 28 Jun 2008 01:38:33 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>
