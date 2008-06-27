@@ -907,7 +907,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				if (count($this->stack)) {
 					$this->curBlock =& $this->stack[count($this->stack)-1];
-					$this->push(call_user_func(array($class, 'postProcessing'), $this, $top['params'], '', '', $top['buffer']));
+					$this->push(call_user_func(array($class, 'postProcessing'), $this, $top['params'], '', '', $top['buffer']), 0);
 				} else {
 					$null = null;
 					$this->curBlock =& $null;
