@@ -56,6 +56,7 @@ interface Dwoo_ITemplate
 	 *
 	 * @param Dwoo $dwoo the dwoo instance that requests it
 	 * @param string $output the template output
+	 * @return mixed full path of the cached file or false upon failure
 	 */
 	public function cache(Dwoo $dwoo, $output);
 

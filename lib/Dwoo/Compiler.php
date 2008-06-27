@@ -574,20 +574,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		// handles the built-in strip function
-		if (preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . 'strip' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl, $pos, PREG_OFFSET_CAPTURE) && substr($tpl, $pos[0][1]-1, 1) !== '\\') {
-			if (!preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . '\/strip' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl)) {
-				$this->line += substr_count(substr($tpl, 0, $pos[0][1]), "\n");
-				throw new Dwoo_Compilation_Exception($this, 'The {strip} blocks must be closed explicitly with {/strip}');
-			}
-			$tpl = preg_replace_callback('/'.$this->ldr.($this->allowLooseOpenings ? '\s*' : '').'strip'.($this->allowLooseOpenings ? '\s*' : '').$this->rdr.'(.+?)'.$this->ldr.($this->allowLooseOpenings ? '\s*' : '').'\/strip'.($this->allowLooseOpenings ? '\s*' : '').$this->rdr.'/s', array($this, 'stripPreprocessorHelper'), $tpl);
-		}
-
 		while (true) {
 			// if pointer is at the beginning, reset everything, that allows a plugin to externally reset the compiler if everything must be reparsed
 			if ($ptr===0) {
 				// resets variables
-				$this->usedPlugins = array('topLevelBlock' => Dwoo::BLOCK_PLUGIN);
+				$this->usedPlugins = array();
 				$this->data = array();
 				$this->scope =& $this->data;
 				$this->scopeTree = array();
@@ -595,38 +586,31 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$this->line = 1;
 				// add top level block
 				$compiled = $this->addBlock('topLevelBlock', array(), 0);
+				$this->stack[0]['buffer'] = '';
 			}
 
 			$pos = strpos($tpl, $this->ld, $ptr);
 
 			if ($pos === false) {
-				$compiled .= substr($tpl, $ptr);
+				$this->push(substr($tpl, $ptr), 0);
 				break;
 			} elseif (substr($tpl, $pos-1, 1) === '\\' && substr($tpl, $pos-2, 1) !== '\\') {
-				$add = substr($tpl, $ptr, $pos-$ptr-1).$this->ld;
-				$compiled .= $add;
-				$this->line += substr_count($add, "\n");
+				$this->push(substr($tpl, $ptr, $pos-$ptr-1) . $this->ld);
 				$ptr = $pos+strlen($this->ld);
 			} elseif (preg_match('/^'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . 'literal' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', substr($tpl, $pos), $litOpen)) {
 				if (!preg_match('/'.$this->ldr . ($this->allowLooseOpenings ? '\s*' : '') . '\/literal' . ($this->allowLooseOpenings ? '\s*' : '') . $this->rdr.'/s', $tpl, $litClose, PREG_OFFSET_CAPTURE, $pos)) {
 					throw new Dwoo_Compilation_Exception($this, 'The {literal} blocks must be closed explicitly with {/literal}');
 				}
 				$endpos = $litClose[0][1];
-				$add = substr($tpl, $ptr, $pos-$ptr) . substr($tpl, $pos + strlen($litOpen[0]), $endpos-$pos-strlen($litOpen[0]));
-				$compiled .= $add;
-				$this->line += substr_count($add, "\n");
+				$this->push(substr($tpl, $ptr, $pos-$ptr) . substr($tpl, $pos + strlen($litOpen[0]), $endpos-$pos-strlen($litOpen[0])));
 				$ptr = $endpos+strlen($litClose[0][0]);
 			} else {
 				if (substr($tpl, $pos-2, 1) === '\\' && substr($tpl, $pos-1, 1) === '\\') {
-					$add = substr($tpl, $ptr, $pos-$ptr-1);
-					$compiled .= $add;
-					$this->line += substr_count($add, "\n");
+					$this->push(substr($tpl, $ptr, $pos-$ptr-1));
 					$ptr = $pos;
 				}
 
-				$add = substr($tpl, $ptr, $pos-$ptr);
-				$compiled .= $add;
-				$this->line += substr_count($add, "\n");
+				$this->push(substr($tpl, $ptr, $pos-$ptr));
 
 				$pos += strlen($this->ld);
 				if ($this->allowLooseOpenings) {
@@ -636,8 +620,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					if (substr($tpl, $pos, 1) === ' ' || substr($tpl, $pos, 1) === "\r" || substr($tpl, $pos, 1) === "\n" || substr($tpl, $pos, 1) === "\t") {
 						$ptr = $pos;
-						$compiled .= $this->ld;
-						$this->line += substr_count($this->ld, "\n");
+						$this->push($this->ld);
 						continue;
 					}
 				}
@@ -655,28 +638,26 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				$ptr = $endpos+strlen($this->rd);
 
+				$lines = substr_count(substr($tpl, $pos, $endpos-$pos), "\n");
+
 				if (substr($tpl, $pos, 1)==='/') {
 					if (substr($tpl, $pos, $endpos-$pos) === '/') {
-						$add = $this->removeTopBlock();
+						$this->push($this->removeTopBlock(), $lines);
 					} else {
-						$add = $this->removeBlock(substr($tpl, $pos+1, $endpos-$pos-1));
+						$this->push($this->removeBlock(substr($tpl, $pos+1, $endpos-$pos-1)), $lines);
 					}
 				} else {
-					$add = $this->parse($tpl, $pos, $endpos, false, 'root');
+					$this->push($this->parse($tpl, $pos, $endpos, false, 'root'), $lines);
 				}
-				$compiled .= $add;
-				$this->line += substr_count(substr($tpl, $pos, $endpos-$pos), "\n");
 
 				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
-				if (substr($compiled, -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
+				if (substr($this->curBlock['buffer'], -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
 					if ($m[3] === '') {
 						$ptr+=1;
-						$compiled .= $m[1].$m[1];
-						$this->line += 1;
+						$this->push($m[1].$m[1], 1);
 					} else {
 						$ptr+=2;
-						$compiled .= $m[1]."\n";
-						$this->line += 2;
+						$this->push($m[1]."\n", 2);
 					}
 				}
 			}
@@ -698,8 +679,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($this->debug) echo 'COMPILATION COMPLETE : MEM USAGE : '.memory_get_usage().'<br>';
 
 		$output = "<?php\n";
-		// remove topLevelBlock
-		array_shift($this->usedPlugins);
+
 		// build plugin preloader
 		foreach ($this->usedPlugins as $plugin=>$type) {
 			if ($type & Dwoo::CUSTOM_PLUGIN) continue;
@@ -752,6 +732,29 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		return $output;
 	}
 
+	/**
+	 * adds compiled content to the current block
+	 * 
+	 * @param string $content the content to push
+	 * @param int $lineCount newlines count in content, optional
+	 */
+	public function push($content, $lineCount = null)
+	{
+		if ($lineCount === null) {
+			$lineCount = substr_count($content, "\n");
+		}
+
+		if ($this->curBlock['buffer'] === null && count($this->stack) > 1) {
+			// buffer is not initialized yet (the block has just been created)
+			$this->stack[count($this->stack)-2]['buffer'] .= (string) $content;
+			$this->curBlock['buffer'] = '';
+		} else {
+			// append current content to current block's buffer
+			$this->curBlock['buffer'] .= (string) $content;
+		}
+		$this->line += $lineCount;
+	}
+	
 	/**
 	 * sets the scope
 	 *
@@ -833,7 +836,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 		return call_user_func(array($class,'preProcessing'), $this, $params, '', '', $type);
 	}
@@ -857,7 +860,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => true, 'class'=>$class);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => true, 'class'=>$class, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 		return call_user_func(array($class,'preProcessing'), $this, $params, '', '', $type);
 	}
@@ -876,7 +879,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (class_exists($class, false) === false) {
 			Dwoo_Loader::loadPlugin($type);
 		}
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 	}
 
@@ -902,7 +905,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					$class = 'Dwoo_Plugin_'.$top['type'];
 				}
-				$output .= call_user_func(array($class, 'postProcessing'), $this, $top['params']);
+				if (count($this->stack)) {
+					$this->curBlock =& $this->stack[count($this->stack)-1];
+					$this->push(call_user_func(array($class, 'postProcessing'), $this, $top['params'], '', '', $top['buffer']));
+				} else {
+					$null = null;
+					$this->curBlock =& $null;
+					$output = call_user_func(array($class, 'postProcessing'), $this, $top['params'], '', '', $top['buffer']);
+				}
+					
 				if ($top['type'] === $type) {
 					break 2;
 				}
@@ -911,8 +922,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			throw new Dwoo_Compilation_Exception($this, 'Syntax malformation, a block of type "'.$type.'" was closed but was not opened');
 			break;
 		}
-
-		$this->curBlock =& $this->stack[count($this->stack)-1];
 
 		return $output;
 	}
@@ -981,7 +990,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 
-		return call_user_func(array($class, 'postProcessing'), $this, $o['params']);
+		return call_user_func(array($class, 'postProcessing'), $this, $o['params'], '', '', $o['buffer']);
 	}
 
 	/**
@@ -1201,34 +1210,35 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$pluginType = Dwoo::NATIVE_PLUGIN;
 		} else {
 			$pluginType = $this->getPluginType($func);
-
-			// add block
-			if ($pluginType & Dwoo::BLOCK_PLUGIN) {
-				if ($curBlock !== 'root' || is_array($parsingParams)) {
-					throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
-				}
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
-					return $this->addCustomBlock($func, $params, $state);
-				} else {
-					return $this->addBlock($func, $params, $state);
-				}
-			} elseif ($pluginType & Dwoo::SMARTY_BLOCK) {
-				if ($curBlock !== 'root' || is_array($parsingParams)) {
-					throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
-				}
-
-				if ($state & 2) {
-					array_unshift($params, array('__functype', array($pluginType, $pluginType)));
-					array_unshift($params, array('__funcname', array($func, $func)));
-				} else {
-					array_unshift($params, array($pluginType, $pluginType));
-					array_unshift($params, array($func, $func));
-				}
-
-				return $this->addBlock('smartyinterface', $params, $state);
-			}
 		}
 
+		// blocks
+		if ($pluginType & Dwoo::BLOCK_PLUGIN) {
+			if ($curBlock !== 'root' || is_array($parsingParams)) {
+				throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
+			}
+			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+				return $this->addCustomBlock($func, $params, $state);
+			} else {
+				return $this->addBlock($func, $params, $state);
+			}
+		} elseif ($pluginType & Dwoo::SMARTY_BLOCK) {
+			if ($curBlock !== 'root' || is_array($parsingParams)) {
+				throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
+			}
+
+			if ($state & 2) {
+				array_unshift($params, array('__functype', array($pluginType, $pluginType)));
+				array_unshift($params, array('__funcname', array($func, $func)));
+			} else {
+				array_unshift($params, array($pluginType, $pluginType));
+				array_unshift($params, array($func, $func));
+			}
+
+			return $this->addBlock('smartyinterface', $params, $state);
+		}
+		
+		// funcs
 		if ($pluginType & Dwoo::NATIVE_PLUGIN || $pluginType & Dwoo::SMARTY_FUNCTION || $pluginType & Dwoo::SMARTY_BLOCK) {
 			$params = $this->mapParams($params, null, $state);
 		} elseif ($pluginType & Dwoo::CLASS_PLUGIN) {
@@ -1435,6 +1445,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (!preg_match('#^%([a-z0-9_:]+)#i', $substr, $m)) {
 			throw new Dwoo_Compilation_Exception($this, 'Invalid constant');
 		}
+		
+		if ($pointer !== null) {
+			$pointer += strlen($m[0]);
+		}
 
 		$output = $this->parseConstKey($m[1], $curBlock);
 
@@ -1486,8 +1500,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
 			$key = substr($match[1], 1);
@@ -1584,7 +1598,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				$output = preg_replace('#(^""\.|""\.|\.""$|(\()""\.|\.""(\)))#', '$2$3', '$this->readVar("'.$key.'")');
 			} else {
-				$output = $this->parseVarKey($key, $curBlock);
+				$output = $this->parseVarKey($key, $hasModifiers ? 'modifier' : $curBlock);
 			}
 
 			// methods
@@ -2317,18 +2331,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		return $pluginType;
-	}
-
-	/**
-	 * handles the {strip} blocks regex replacement, do not rely on it as it will eventually be moved into it's own plugin
-	 *
-	 * @param array $matches the regex matches with the "1" index being the contents of the {strip} block
-	 * @return string processed string
-	 */
-	protected function stripPreprocessorHelper(array $matches)
-	{
-		// TODO make this into a separated plugin
-		return str_replace(array("\n","\r"), null, preg_replace('#^\s*(.+?)\s*$#m', '$1', $matches[1]));
 	}
 
 	/**

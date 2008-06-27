@@ -57,8 +57,8 @@ class Dwoo_Plugin_smartyinterface extends Dwoo_Block_Plugin implements Dwoo_ICom
 		return Dwoo_Compiler::PHP_OPEN.$prepend.' if (!isset($_tag_stack)){ $_tag_stack = array(); } $_tag_stack[] = array('.$paramsOut.'); $_block_repeat=true; '.$callback.'$_tag_stack[count($_tag_stack)-1], null, $this, $_block_repeat); while ($_block_repeat) { ob_start();'.Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $params['postOut'];
+		return $content . $params['postOut'];
 	}
 }

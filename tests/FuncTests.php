@@ -414,9 +414,9 @@ a"}');
 		$this->assertEquals("testtest", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
-	public function testStrip()
+	public function testWhitespace()
 	{
-		$tpl = new Dwoo_Template_String('{strip "a		b	 c   		   d"}');
+		$tpl = new Dwoo_Template_String('{whitespace "a		b	 c   		   d"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a b c d", $this->dwoo->get($tpl, array(), $this->compiler));

@@ -38,7 +38,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 {
 	public static $cnt=0;
 
-	public function init($from, $key=null, $item=null, $name='default')
+	public function init($from, $key=null, $item=null, $name='default', $implode=null)
 	{
 	}
 
@@ -61,7 +61,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 			throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter missing');
 		}
 		$name = $params['name'];
-
+		
 		if (substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
 			throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter must be of type string');
 		}
@@ -79,6 +79,13 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		$usesIteration = $usesLast || strpos($tpl, $varName.'iteration') !== false || strpos($tpl, $shortVarName.'iteration') !== false;
 		$usesShow = strpos($tpl, $varName.'show') !== false || strpos($tpl, $shortVarName.'show') !== false;
 		$usesTotal = $usesLast || strpos($tpl, $varName.'total') !== false || strpos($tpl, $shortVarName.'total') !== false;
+
+		// override globals vars if implode is used
+		if ($params['implode'] !== 'null') {
+			$implode = $params['implode'];
+			$usesAny = true;
+			$usesLast = true;
+		}
 
 		// gets foreach id
 		$cnt = self::$cnt++;
@@ -110,7 +117,13 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		$out .= "\n// -- foreach start output\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
-		$postOut = Dwoo_Compiler::PHP_OPEN . "\n".'// -- foreach end output';
+		$postOut = Dwoo_Compiler::PHP_OPEN . "\n";
+		
+		if (isset($implode)) {
+			$postOut .= '// -- implode'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
+				"\n\t".'echo '.$implode.";\n}\n";
+		}
+		$postOut .= '// -- foreach end output';
 		// update properties
 		if ($usesIndex) {
 			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["index"]+=1;';
@@ -128,8 +141,8 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		return $out;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $params['postOutput'];
+		return $content . $params['postOutput'];
 	}
 }

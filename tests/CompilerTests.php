@@ -4,6 +4,7 @@ require_once 'Dwoo/Compiler.php';
 
 class CompilerTests extends PHPUnit_Framework_TestCase
 {
+	const FOO = 3;
 	protected $compiler;
 	protected $dwoo;
 
@@ -178,23 +179,6 @@ replace="BAR"
 		$this->assertEquals('AB3o2o1CDAB3o2o1CDAB3o2o1CD', $this->dwoo->get($tpl, array('foo'=>'123'), $this->compiler));
 	}
 
-	public function testStrip()
-	{
-		$tpl = new Dwoo_Template_String("{strip}a\nb\nc{/strip}a\nb\nc");
-		$tpl->forceCompilation();
-		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
-	}
-
-	/**
-	 * @expectedException Dwoo_Compilation_Exception
-	 */
-	public function testUnclosedStrip()
-	{
-		$tpl = new Dwoo_Template_String("{strip}a\nb\nca\nb\nc");
-		$tpl->forceCompilation();
-		$this->dwoo->get($tpl, array(), $this->compiler);
-	}
-
 	public function testWhitespace()
 	{
 		$tpl = new Dwoo_Template_String("{\$foo}{\$foo}\n{\$foo}\n\n{\$foo}\n\n\n{\$foo}");
@@ -274,6 +258,14 @@ replace="BAR"
 		$tpl->forceCompilation();
 
 		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+	
+	public function testShortClassConstants()
+	{
+		$tpl = new Dwoo_Template_String('{if %CompilerTests::FOO == 3}{%CompilerTests::FOO}{/}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals(self::FOO, $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testAltDelimiters()
@@ -492,6 +484,14 @@ replace="BAR"
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
+	}
+	
+	public function testPhpInjection()
+	{
+		$tpl = new Dwoo_Template_String('{$foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('a <?php echo "foo"; ?>', $this->dwoo->get($tpl, array('foo'=>'a <?php echo "foo"; ?>'), $this->compiler));
 	}
 }
 

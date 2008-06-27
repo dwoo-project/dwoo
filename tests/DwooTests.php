@@ -63,6 +63,6 @@ class DwooConstraintStringEquals extends PHPUnit_Framework_Constraint
 
 	public function toString()
 	{
-		return 'equals "'.$this->target.'" / "'.$this->other.'"';
+		return 'equals expected value.'.PHP_EOL.'Expected:'.PHP_EOL.$this->target.PHP_EOL.'Received:'.PHP_EOL.$this->other.PHP_EOL;
 	}
 }

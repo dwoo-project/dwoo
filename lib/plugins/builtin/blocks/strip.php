@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This plugin serves as a {else} block specifically for the {with} plugin.
- * 
+ * Strips the spaces at the beginning and end of each line and also the line breaks
+ *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -19,31 +19,33 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Plugin_withelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	public function init()
+	public function init($type = 'text')
 	{
 	}
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		$foreach =& $compiler->findBlock('with', true);
-		$out = $foreach['params']['postOutput'];
-		$foreach['params']['postOutput'] = '';
-
-		$compiler->injectBlock($type, $params, 1);
-
-		if (substr($out, -strlen(Dwoo_Compiler::PHP_CLOSE)) === Dwoo_Compiler::PHP_CLOSE) {
-			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
-		} else {
-			$out .= Dwoo_Compiler::PHP_OPEN;
-		}
-
-		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
+		return '';
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $content . Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
+		$params = $compiler->getCompiledParams($params);
+		
+		switch (trim($params['type'], '"\'')) {
+			
+		case 'code':
+			$content = preg_replace('/\{[\r\n]+/', '{ ', preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
+			$content = str_replace(array("\n","\r"), null, $content);
+			break;
+			
+		case 'text':
+		default:
+			$content = str_replace(array("\n","\r"), null, preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
+		}
+
+		return $content;
 	}
 }

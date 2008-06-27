@@ -42,8 +42,8 @@ class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompila
 		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
+		return $content . Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
 	}
 }

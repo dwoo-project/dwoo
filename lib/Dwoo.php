@@ -43,8 +43,10 @@ Dwoo_Loader::loadPlugin('topLevelBlock');
  * <pre>
  * requirements :
  *  php 5.2.0 or above
- *  php's mbstring extension for some plugins
- *  php's hash extension to use the Dwoo_Template_String class
+ *  SPL and PCRE extensions (for php versions prior to 5.3.0)
+ *  mbstring extension for some string manipulation plugins (especially if you intend to use UTF-8)
+ * recommended :
+ *  hash extension (for Dwoo_Template_String - minor performance boost)
  *
  * project created :
  *  2008-01-05
@@ -323,10 +325,15 @@ class Dwoo
 		// auto-create template if required
 		if ($_tpl instanceof Dwoo_ITemplate) {
 			// valid, skip
-		} elseif (is_string($_tpl) && file_exists($_tpl)) {
-			$_tpl = new Dwoo_Template_File($_tpl);
 		} elseif (is_string($_tpl)) {
-			$_tpl = new Dwoo_Template_String($_tpl);
+			if (file_exists($_tpl)) {
+				$_tpl = new Dwoo_Template_File($_tpl);
+			} elseif (strstr($_tpl, ':')) {
+				$_bits = explode(':', $_tpl, 2);
+				$_tpl = $this->templateFactory($_bits[0], $_bits[1]); 
+			} else {
+				$_tpl = new Dwoo_Template_String($_tpl);
+			}
 		} else {
 			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s first argument must be a Dwoo_ITemplate (i.e. Dwoo_Template_File) or a valid path to a template file', E_USER_NOTICE);
 		}
@@ -355,17 +362,21 @@ class Dwoo
 		if ($cacheLoaded === true) {
 			// cache is present, run it
 			if ($_output === true) {
-				readfile($file);
+				include $file;
 				$this->template = null;
 			} else {
-				//ob_start();
+				ob_start();
+				include $file;
 				$this->template = null;
-				return file_get_contents($file);
-				//return ob_get_clean();
+				return ob_get_clean();
 			}
 		} else {
 			// no cache present
 
+			if ($doCache === true) {
+				$dynamicId = uniqid();
+			}
+			
 			// render template
 			$out = include $_tpl->getCompiledTemplate($this, $_compiler);
 
@@ -374,7 +385,15 @@ class Dwoo
 				$_tpl->forceCompilation();
 				$out = include $_tpl->getCompiledTemplate($this, $_compiler);
 			}
-
+			
+			if ($doCache === true) {
+				$out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
+				if (!class_exists('Dwoo_plugin_dynamic', false)) {
+					Dwoo_Loader::loadPlugin('dynamic');
+				}
+				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId);
+			}
+			
 			// process filters
 			foreach ($this->filters as $filter) {
 				if (is_array($filter) && $filter[0] instanceof Dwoo_Filter) {
@@ -384,19 +403,27 @@ class Dwoo
 				}
 			}
 
-			// exit render mode
-			$this->template = null;
-
 			if ($doCache === true) {
 				// building cache
-				$_tpl->cache($this, $out);
+				$file = $_tpl->cache($this, $out);
+
+				// run it from the cache to be sure dynamics are rendered
 				if ($_output === true) {
-					echo $out;
+					include $file;
+					// exit render mode
+					$this->template = null;
 				} else {
-					return $out;
+					ob_start();
+					include $file;
+					// exit render mode
+					$this->template = null;
+					return ob_get_clean();
 				}
 			} else {
 				// no need to build cache
+				// exit render mode
+				$this->template = null;
+				// output
 				if ($_output === true) {
 					echo $out;
 				} else {

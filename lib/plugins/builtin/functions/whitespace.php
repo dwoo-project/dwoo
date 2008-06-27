@@ -11,7 +11,7 @@
  * <code>
  * {"a    b  c		d
  *
- * e"|strip}
+ * e"|whitespace}
  *
  * results in : a b c d e
  * </code>
@@ -32,7 +32,7 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-function Dwoo_Plugin_strip_compile(Dwoo_Compiler $compiler, $value, $with=' ')
+function Dwoo_Plugin_whitespace_compile(Dwoo_Compiler $compiler, $value, $with=' ')
 {
 	return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
 }

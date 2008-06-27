@@ -99,9 +99,10 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 	 * @param string $append that is just meant to allow a child class to call
 	 * 						 parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
 	 * 						 default commands are executed
+	 * @param string $content the entire content of the block being closed
 	 */
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.Dwoo_Compiler::PHP_CLOSE;
+		return $content . Dwoo_Compiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 }

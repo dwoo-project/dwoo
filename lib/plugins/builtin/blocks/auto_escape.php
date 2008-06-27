@@ -58,9 +58,9 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
 		return '';
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
 		$compiler->setAutoEscape(array_pop(self::$stack));
-		return '';
+		return $content;
 	}
 }

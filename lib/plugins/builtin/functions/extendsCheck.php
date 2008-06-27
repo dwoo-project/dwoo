@@ -35,5 +35,5 @@ if ($tpl === null)
 	$this->triggerError(\'Extends : Resource "'.$resource.':'.$identifier.'" was not found.\', E_USER_WARNING);
 elseif ($tpl === false)
 	$this->triggerError(\'Include : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.\', E_USER_WARNING);
-if ($tpl->getUid() !== "'.substr($uid, 1, -1).'") { ob_end_clean(); return false; }';
+if ($tpl->getUid() != "'.substr($uid, 1, -1).'") { ob_end_clean(); return false; }';
 }

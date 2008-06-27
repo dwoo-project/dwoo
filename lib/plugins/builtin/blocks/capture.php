@@ -47,11 +47,11 @@ class Dwoo_Plugin_capture extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		return Dwoo_Compiler::PHP_OPEN.$prepend.'ob_start();'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
 		$params = $compiler->getCompiledParams($params);
 
-		$out = Dwoo_Compiler::PHP_OPEN.$prepend."\n".'$tmp = ob_get_clean();';
+		$out = $content . Dwoo_Compiler::PHP_OPEN.$prepend."\n".'$tmp = ob_get_clean();';
 		if ($params['trim'] !== 'false' && $params['trim'] !== 0) {
 			$out .= "\n".'$tmp = trim($tmp);';
 		}

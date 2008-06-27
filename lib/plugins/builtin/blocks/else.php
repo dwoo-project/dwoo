@@ -57,10 +57,12 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		return $out . "else {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
 		if (isset($params['postOutput'])) {
-			return $params['postOutput'];
+			return $content . $params['postOutput'];
+		} else {
+			return $content;
 		}
 	}
 }

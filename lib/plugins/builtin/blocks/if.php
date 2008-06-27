@@ -179,8 +179,8 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 		return Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $params['postOutput'];
+		return $content . $params['postOutput'];
 	}
 }

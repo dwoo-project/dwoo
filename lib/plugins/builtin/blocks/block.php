@@ -32,8 +32,8 @@ class Dwoo_Plugin_block extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 		return '';
 	}
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend='', $append='')
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return '';
+		return $content;
 	}
 }

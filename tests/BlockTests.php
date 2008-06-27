@@ -61,6 +61,23 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$fixCall = new Dwoo_Plugin_capture($this->dwoo);
 		$fixCall->init('');
 	}
+	
+	public function testDynamic()
+	{
+		$preTime = time();
+		$tpl = new Dwoo_Template_String('{$pre}{dynamic}{$pre}{/}', 10, 'testDynamic');
+		$tpl->forceCompilation();
+
+		$this->assertEquals($preTime . $preTime, $this->dwoo->get($tpl, array('pre'=>$preTime), $this->compiler));
+		
+		sleep(1);
+		$postTime = time();
+		$this->assertEquals($preTime . $postTime, $this->dwoo->get($tpl, array('pre'=>$postTime), $this->compiler));
+
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_dynamic($this->dwoo);
+		$fixCall->init('');
+	}
 
 	public function testExtends()
 	{
@@ -322,6 +339,23 @@ baz"));
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_loop($this->dwoo);
 		$fixCall->init('');
+	}
+
+	public function testStrip()
+	{
+		$tpl = new Dwoo_Template_String("{strip}a\nb\nc{/strip}a\nb\nc");
+		$tpl->forceCompilation();
+		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testStripCode()
+	{
+		$tpl = new Dwoo_Template_String("{strip code}
+function foo() {
+	x;
+}");
+		$tpl->forceCompilation();
+		$this->assertEquals("function foo() { x;}", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testTextFormat()

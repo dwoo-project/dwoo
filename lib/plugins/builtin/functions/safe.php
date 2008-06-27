@@ -23,5 +23,5 @@
  */
 function Dwoo_Plugin_safe_compile(Dwoo_Compiler $compiler, $var)
 {
-	return preg_replace('#htmlspecialchars\((.+?), ENT_QUOTES, \$this->charset\)#', '$1', $var);
+	return preg_replace('#\(is_string\(\$tmp=(.+?)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $var);
 }

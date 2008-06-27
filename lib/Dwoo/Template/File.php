@@ -69,7 +69,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 
 		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
 			// already checked, return compiled file
-		} elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true && filemtime($this->file) <= filemtime($compiledFile)) {
+		} elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true && (int)$this->getUid() <= filemtime($compiledFile)) {
 			// template is compiled and has not been modified since the compilation
 			self::$cache['compiled'][$this->compileId] = true;
 		} else {
