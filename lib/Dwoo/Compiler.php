@@ -709,7 +709,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$output .= $compiled."\n?>";
 
-		$output = preg_replace('/(?<!;)(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
+		$output = preg_replace('/(?<!;|\})(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
 
 		if ($this->debug) {
@@ -734,7 +734,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * adds compiled content to the current block
-	 * 
+	 *
 	 * @param string $content the content to push
 	 * @param int $lineCount newlines count in content, optional
 	 */
@@ -754,7 +754,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 		$this->line += $lineCount;
 	}
-	
+
 	/**
 	 * sets the scope
 	 *
@@ -913,7 +913,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$this->curBlock =& $null;
 					$output = call_user_func(array($class, 'postProcessing'), $this, $top['params'], '', '', $top['buffer']);
 				}
-					
+
 				if ($top['type'] === $type) {
 					break 2;
 				}
@@ -1237,7 +1237,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			return $this->addBlock('smartyinterface', $params, $state);
 		}
-		
+
 		// funcs
 		if ($pluginType & Dwoo::NATIVE_PLUGIN || $pluginType & Dwoo::SMARTY_FUNCTION || $pluginType & Dwoo::SMARTY_BLOCK) {
 			$params = $this->mapParams($params, null, $state);
@@ -1445,7 +1445,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (!preg_match('#^%([a-z0-9_:]+)#i', $substr, $m)) {
 			throw new Dwoo_Compilation_Exception($this, 'Invalid constant');
 		}
-		
+
 		if ($pointer !== null) {
 			$pointer += strlen($m[0]);
 		}
