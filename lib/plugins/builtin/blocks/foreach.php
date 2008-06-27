@@ -61,7 +61,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 			throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter missing');
 		}
 		$name = $params['name'];
-		
+
 		if (substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
 			throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter must be of type string');
 		}
@@ -114,16 +114,16 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		if ($usesLast) {
 			$out .= "\n\t\t".'$_fh'.$cnt.'_glob["last"] = (string) ($_fh'.$cnt.'_glob["iteration"] === $_fh'.$cnt.'_glob["total"]);';
 		}
-		$out .= "\n// -- foreach start output\n".Dwoo_Compiler::PHP_CLOSE;
+		$out .= "\n/* -- foreach start output */\n".Dwoo_Compiler::PHP_CLOSE;
 
 		// build post processing output and cache it
 		$postOut = Dwoo_Compiler::PHP_OPEN . "\n";
-		
+
 		if (isset($implode)) {
-			$postOut .= '// -- implode'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
+			$postOut .= '/* -- implode */'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
 				"\n\t".'echo '.$implode.";\n}\n";
 		}
-		$postOut .= '// -- foreach end output';
+		$postOut .= '/* -- foreach end output */';
 		// update properties
 		if ($usesIndex) {
 			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["index"]+=1;';

@@ -102,11 +102,11 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		if ($usesLast) {
 			$out .= "\n\t\t".'$_for'.$cnt.'_glob["last"] = (string) ($_for'.$cnt.'_glob["iteration"] === $_for'.$cnt.'_glob["total"]);';
 		}
-		$out .= "\n// -- for start output\n".Dwoo_Compiler::PHP_CLOSE;
+		$out .= "\n/* -- for start output */\n".Dwoo_Compiler::PHP_CLOSE;
 
 
 		// build post processing output and cache it
-		$postOut = Dwoo_Compiler::PHP_OPEN . '// -- for end output';
+		$postOut = Dwoo_Compiler::PHP_OPEN . '/* -- for end output */';
 		// update properties
 		if ($usesIteration) {
 			$postOut.="\n\t\t".'$_for'.$cnt.'_glob["iteration"]+=1;';

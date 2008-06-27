@@ -59,9 +59,9 @@ class Dwoo_Plugin_with extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		$compiler->setScope($rparams['var']);
 
 		$params =& $compiler->getCurrentBlock();
-		$params['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n// -- end with output\n".'$this->setScope($_with'.(self::$cnt).', true);'."\n}\n".Dwoo_Compiler::PHP_CLOSE;
+		$params['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n/* -- end with output */\n".'$this->setScope($_with'.(self::$cnt).', true);'."\n}\n".Dwoo_Compiler::PHP_CLOSE;
 
-		return Dwoo_Compiler::PHP_OPEN.'if ('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$rparams['var'].'");'."\n// -- start with output\n".Dwoo_Compiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.'if ('.$cparams['var'].')'."\n{\n".'$_with'.(self::$cnt++).' = $this->setScope("'.$rparams['var'].'");'."\n/* -- start with output */\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
