@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Dwoo_Security_Policy</title>
+			<link rel="stylesheet" href="../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Dwoo_Security_Policy</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">represents the security settings of a dwoo instance, it can be passed around to different dwoo instances</p>
+<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+	<ul class="tags">
+				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
+				<li><span class="field">version:</span> 0.9.1</li>
+				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
+				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
+				<li><span class="field">date:</span> 2008-05-30</li>
+				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
+			</ul>
+		<p class="notes">
+			Located in <a class="field" href="_Dwoo---Security---Policy.php.html">/Dwoo/Security/Policy.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a22">22</a></span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#CONST_ALLOW" title="details" class="const-name">CONST_ALLOW</a> = 					<span class="var-type"> true</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#CONST_DISALLOW" title="details" class="const-name">CONST_DISALLOW</a> = 					<span class="var-type"> false</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#PHP_ALLOW" title="details" class="const-name">PHP_ALLOW</a> = 					<span class="var-type"> 3</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#PHP_ENCODE" title="details" class="const-name">PHP_ENCODE</a> = 					<span class="var-type"> 1</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#PHP_REMOVE" title="details" class="const-name">PHP_REMOVE</a> = 					<span class="var-type"> 2</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$allowedDirectories" title="details" class="var-name">$allowedDirectories</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$allowedPhpFunctions" title="details" class="var-name">$allowedPhpFunctions</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">bool</span>
+					<a href="#$constHandling" title="details" class="var-name">$constHandling</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int</span>
+					<a href="#$phpHandling" title="details" class="var-name">$phpHandling</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#allowDirectory" title="details" class="method-name">allowDirectory</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#allowPhpFunction" title="details" class="method-name">allowPhpFunction</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#disallowDirectory" title="details" class="method-name">disallowDirectory</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#disallowPhpFunction" title="details" class="method-name">disallowPhpFunction</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getAllowedDirectories" title="details" class="method-name">getAllowedDirectories</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getAllowedPhpFunctions" title="details" class="method-name">getAllowedPhpFunctions</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">bool</span>
+										<a href="#getConstantHandling" title="details" class="method-name">getConstantHandling</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">int</span>
+										<a href="#getPhpHandling" title="details" class="method-name">getPhpHandling</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setConstantHandling" title="details" class="method-name">setConstantHandling</a>
+											([<span class="var-type">bool</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">self::CONST_DISALLOW</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setPhpHandling" title="details" class="method-name">setPhpHandling</a>
+											([<span class="var-type">int</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">self::PHP_REMOVE</span>])
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			
+<a name="var$allowedDirectories" id="$allowedDirectories"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$allowedDirectories</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a64">64</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">paths that are safe to use with include or other file-access plugins</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$allowedPhpFunctions" id="$allowedPhpFunctions"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$allowedPhpFunctions</span>
+			 = <span class="var-default">array<br />	(<br />		'str_repeat', 'count', 'number_format', 'htmlentities', 'htmlspecialchars',<br />		'long2ip', 'strlen', 'list', 'empty', 'count', 'sizeof', 'in_array', 'is_array',<br />	)</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a53">53</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">php functions that are allowed to be used within the template</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$constHandling" id="$constHandling"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">bool</span>
+			<span class="var-name">$constHandling</span>
+			 = <span class="var-default"> self::CONST_DISALLOW</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a82">82</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the constant handling level</p>
+<p class="description"><p>defaults to Dwoo_Security_Policy::CONST_DISALLOW</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$phpHandling" id="$phpHandling"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int</span>
+			<span class="var-name">$phpHandling</span>
+			 = <span class="var-default"> self::PHP_REMOVE</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a73">73</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">stores the php handling level</p>
+<p class="description"><p>defaults to Dwoo_Security_Policy::PHP_REMOVE</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																			<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodallowDirectory" id="allowDirectory"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">allowDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a128">128</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a directory to the safelist for includes and other file-access plugins</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			allowDirectory
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$path</span><span class="var-description">: a path name or an array of paths</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodallowPhpFunction" id="allowPhpFunction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">allowPhpFunction</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a89">89</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a php function to the allowed list</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			allowPhpFunction
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$func</span><span class="var-description">: function name or array of function names</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddisallowDirectory" id="disallowDirectory"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">disallowDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a142">142</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes a directory from the safelist</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			disallowDirectory
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$path</span><span class="var-description">: a path name or an array of paths</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddisallowPhpFunction" id="disallowPhpFunction"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">disallowPhpFunction</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a103">103</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">removes a php function from the allowed list</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			disallowPhpFunction
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$func</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$func</span><span class="var-description">: function name or array of function names</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetAllowedDirectories" id="getAllowedDirectories"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getAllowedDirectories</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a157">157</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the list of safe paths, note that the paths are stored in the array  keys and not values</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getAllowedDirectories
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetAllowedPhpFunctions" id="getAllowedPhpFunctions"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getAllowedPhpFunctions</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a118">118</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the list of php functions allowed to run, note that the function names  are stored in the array keys and not values</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getAllowedPhpFunctions
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetConstantHandling" id="getConstantHandling"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getConstantHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a197">197</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the constant handling level</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the current level, one of the Dwoo_Security_Policy::CONST_* constants</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			getConstantHandling
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetPhpHandling" id="getPhpHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getPhpHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a177">177</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the php handling level</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the current level, one of the Dwoo_Security_Policy::PHP_* constants</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			getPhpHandling
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodsetConstantHandling" id="setConstantHandling"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setConstantHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a187">187</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the constant handling level, defaults to CONST_DISALLOW</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setConstantHandling
+		</span>
+					([<span class="var-type">bool</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">self::CONST_DISALLOW</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$level</span><span class="var-description">: one of the Dwoo_Security_Policy::CONST_* constants</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetPhpHandling" id="setPhpHandling"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setPhpHandling</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a167">167</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the php handling level, defaults to REMOVE</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setPhpHandling
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$level</span> = <span class="var-default">self::PHP_REMOVE</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$level</span><span class="var-description">: one of the Dwoo_Security_Policy::PHP_* constants</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+														| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constCONST_ALLOW" id="CONST_ALLOW"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">CONST_ALLOW</span>
+			 = <span class="const-default"> true</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a45">45</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">constant handling constants, defaults to CONST_DISALLOW</p>
+<p class="description"><p>CONST_DISALLOW : throw an error if {$dwoo.const.*} is used in the template  CONST_ALLOW : allow {$dwoo.const.*} calls</p></p>
+	
+	
+</div>
+<a name="constCONST_DISALLOW" id="CONST_DISALLOW"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">CONST_DISALLOW</span>
+			 = <span class="const-default"> false</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a44">44</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">constant handling constants, defaults to CONST_DISALLOW</p>
+<p class="description"><p>CONST_DISALLOW : throw an error if {$dwoo.const.*} is used in the template  CONST_ALLOW : allow {$dwoo.const.*} calls</p></p>
+	
+	
+</div>
+<a name="constPHP_ALLOW" id="PHP_ALLOW"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">PHP_ALLOW</span>
+			 = <span class="const-default"> 3</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a35">35</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">php handling constants, defaults to PHP_REMOVE</p>
+<p class="description"><p>PHP_REMOVE : remove all &lt;?php ?&gt; (+ short tags if your short tags option is on) from the input template  PHP_ALLOW : leave them as they are  PHP_ENCODE : run htmlentities over them</p></p>
+	
+	
+</div>
+<a name="constPHP_ENCODE" id="PHP_ENCODE"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">PHP_ENCODE</span>
+			 = <span class="const-default"> 1</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a33">33</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">php handling constants, defaults to PHP_REMOVE</p>
+<p class="description"><p>PHP_REMOVE : remove all &lt;?php ?&gt; (+ short tags if your short tags option is on) from the input template  PHP_ALLOW : leave them as they are  PHP_ENCODE : run htmlentities over them</p></p>
+	
+	
+</div>
+<a name="constPHP_REMOVE" id="PHP_REMOVE"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">PHP_REMOVE</span>
+			 = <span class="const-default"> 2</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooSecurityPolicy.php.html#a34">34</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">php handling constants, defaults to PHP_REMOVE</p>
+<p class="description"><p>PHP_REMOVE : remove all &lt;?php ?&gt; (+ short tags if your short tags option is on) from the input template  PHP_ALLOW : leave them as they are  PHP_ENCODE : run htmlentities over them</p></p>
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Sat, 28 Jun 2008 01:38:31 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+	</p>
+	</div></body>
+</html>
