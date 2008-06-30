@@ -364,7 +364,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$this->processors['post'][] = $callback;
 		}
 	}
-	
+
 	/**
 	 * removes a postprocessor from the compiler
 	 *
@@ -386,10 +386,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 	}
-	
+
 	/**
 	 * internal function to autoload processors at runtime if required
-	 * 
+	 *
 	 * @param string $class the class/function name
 	 * @param string $name the plugin name (without Dwoo_Plugin_ prefix)
 	 */
@@ -402,15 +402,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				throw new Dwoo_Exception('Processor '.$name.' could not be found in your plugin directories, please ensure it is in a file named '.$name.'.php in the plugin directory');
 			}
 		}
-		
+
 		if (class_exists($class, false)) {
 			return array(new $class($this), 'process');
-		} 
+		}
 
 		if (function_exists($class)) {
 			return $class;
-		} 
-		
+		}
+
 		throw new Dwoo_Exception('Wrong processor name, when using autoload the processor must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Processor_name"');
 	}
 
@@ -712,19 +712,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			case Dwoo::BLOCK_PLUGIN:
 			case Dwoo::CLASS_PLUGIN:
-				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
+				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::FUNC_PLUGIN:
-				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_MODIFIER:
-				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_FUNCTION:
-				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::SMARTY_BLOCK:
-				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->loader->loadPlugin('$plugin');\n";
+				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			default:
 				throw new Dwoo_Compilation_Exception($this, 'Type error for '.$plugin.' with type'.$type);
