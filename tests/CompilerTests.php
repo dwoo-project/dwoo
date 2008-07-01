@@ -205,7 +205,7 @@ replace="BAR"
 
 	public function testEscaping()
 	{
-		$tpl = new Dwoo_Template_String('\{foo\{bar\\\\{$var}}{"tes\}t"}{"foo\"lol\"bar"}');
+		$tpl = new Dwoo_Template_String('\{foo\{bar\\\\{$var}}{"tes}t"}{"foo\"lol\"bar"}');
 		$tpl->forceCompilation();
 		$this->assertEquals('{foo{bar\\1}tes}tfoo"lol"bar', $this->dwoo->get($tpl, array('var'=>1), $this->compiler));
 	}
@@ -259,7 +259,7 @@ replace="BAR"
 
 		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
 	public function testShortClassConstants()
 	{
 		$tpl = new Dwoo_Template_String('{if %CompilerTests::FOO == 3}{%CompilerTests::FOO}{/}');
@@ -270,7 +270,7 @@ replace="BAR"
 
 	public function testAltDelimiters()
 	{
-		$tpl = new Dwoo_Template_String('{"test"} <%"test"%> <%"foo{lol}\%>"%>');
+		$tpl = new Dwoo_Template_String('{"test"} <%"test"%> <%"foo{lol}%>"%>');
 		$tpl->forceCompilation();
 		$this->compiler->setDelimiters('<%', '%>');
 		$this->assertEquals('{"test"} test foo{lol}%>', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -479,7 +479,18 @@ replace="BAR"
 		$tpl = new Dwoo_Template_String('{upper foo=bar}');
 		$tpl->forceCompilation();
 
-		$this->dwoo->get($tpl, array('foo'=>0), $this->compiler);
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testUnclosedTemplateTag()
+	{
+		$tpl = new Dwoo_Template_String('aa{upper foo=bar');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
 	}
 
 	public function testAutoEscape()
@@ -493,7 +504,7 @@ replace="BAR"
 
 		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
 	}
-	
+
 	public function testPhpInjection()
 	{
 		$tpl = new Dwoo_Template_String('{$foo}');

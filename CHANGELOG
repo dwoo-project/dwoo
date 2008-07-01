@@ -1,3 +1,10 @@
+[2008--] 0.9.3
++ Syntax: Added the ";" token that allows to group multiple instructions in one
+  single template tag, for example: {if $foo; "> $foo";$bar;/} is equal to:
+  {if $foo}> {$foo}{$bar}{/} - It is not that useful with {/} as delimiters but
+  might come in handy to those using longer delimiters
+* Compiler now allows the use of the right delimiter inside strings (i.e. {"}"})
+
 [2008-06-28] 0.9.2
 ! BC Break: Renamed the {strip} modifier/function to {whitespace}, this does
   not affect the strip block, that has been moved off the compiler into a
@@ -6,9 +13,9 @@
 ! BC Break: Changed the function signature of Dwoo_Block_Plugin::postProcessing
   it only affects you if you had any custom block plugins, see UPGRADE_NOTES
   for more details
-! BC Break: Dwoo_ITemplate::cache() must now return the cached file name or false if
-  caching failed, only affects you if you had a custom template class and
-  implemented cache() yourself
+! BC Break: Dwoo_ITemplate::cache() must now return the cached file name or
+  false if caching failed, only affects you if you had a custom template class
+  and implemented cache() yourself
 ! BC Break: Dwoo_Loader is not static anymore so anything you did on it directly
   will break. Use $dwoo->getLoader()->addDirectory() instead of
   Dwoo_Loader::addDirectory() for example

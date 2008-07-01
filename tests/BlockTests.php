@@ -131,29 +131,41 @@ baz"));
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_if ($this->dwoo);
+		$fixCall->init(array());
+	}
+	
+	public function testIfVariation2 ()
+	{
 		$tpl = new Dwoo_Template_String('{if 4/2==2 && 2!=1 && 3>0 && 4<5 && 5<=5 && 6>=3 && 3===3 && "3"!==3}true{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
-
+	}
+	
+	public function testIfVariation3 ()
+	{
 		$tpl = new Dwoo_Template_String('{if 5%2==1 && !isset($foo)}true{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
-
+	}
+	
+	public function testIfVariation4 ()
+	{
 		$tpl = new Dwoo_Template_String('{if 5 is not div by 2 && 4 is div by 2 && 6 is even && 6 is not even by 5 && (3 is odd && 9 is odd by 3)}true{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
-
+	}
+	
+	public function testIfVariation5 ()
+	{
 		$tpl = new Dwoo_Template_String('{if (3==4 && 5==5) || 3==3}true{/if}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
-
-		// fixes the init call not being called (which is normal)
-		$fixCall = new Dwoo_Plugin_if ($this->dwoo);
-		$fixCall->init(array());
 	}
 
 	public function testIfElseif ()

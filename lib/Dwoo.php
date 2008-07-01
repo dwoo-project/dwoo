@@ -406,7 +406,7 @@ class Dwoo
 			if ($doCache === true) {
 				$out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
 				if (!class_exists('Dwoo_plugin_dynamic', false)) {
-					Dwoo_Loader::loadPlugin('dynamic');
+					$this->getLoader()->loadPlugin('dynamic');
 				}
 				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId);
 			}

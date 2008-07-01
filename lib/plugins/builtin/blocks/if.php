@@ -44,25 +44,8 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 		reset($params);
 		while (list($k,$v) = each($params)) {
-			switch($v) {
+			switch((string) $v) {
 
-			case '"<<"':
-			case '">>"':
-			case '"&&"':
-			case '"||"':
-			case '"|"':
-			case '"^"':
-			case '"&"':
-			case '"~"':
-			case '"("':
-			case '")"':
-			case '","':
-			case '"+"':
-			case '"-"':
-			case '"*"':
-			case '"/"':
-				$p[] = trim($v, '"');
-				break;
 			case '"and"':
 				$p[] = '&&';
 				break;

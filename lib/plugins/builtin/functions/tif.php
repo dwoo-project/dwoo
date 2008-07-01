@@ -28,7 +28,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 	// load if plugin
 	if (!class_exists('Dwoo_Plugin_if', false)) {
 		try {
-			Dwoo_Loader::loadPlugin('if');
+			$compiler->getDwoo()->getLoader()->loadPlugin('if');
 		} catch (Exception $e) {
 			throw new Dwoo_Compilation_Exception($compiler, 'Tif: the if plugin is required to use Tif');
 		}
