@@ -505,6 +505,18 @@ replace="BAR"
 		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
 	}
 
+	public function testAutoEscapeWithFunctionCall()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->setAutoEscape(true);
+		$this->assertEquals(true, $cmp->getAutoEscape());
+
+		$tpl = new Dwoo_Template_String('{upper $foo}{upper $foo|safe}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("A&LT;B&GT;CA<B>C", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
+	}
+
 	public function testPhpInjection()
 	{
 		$tpl = new Dwoo_Template_String('{$foo}');
