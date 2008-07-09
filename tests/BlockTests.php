@@ -14,6 +14,30 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
+	public function testA()
+	{
+		$tpl = new Dwoo_Template_String('{a "http://foo/" test="foo" bar="bar"; "Foo!" /}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">Foo!</a>', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{a $url test="foo" bar="bar"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{a $url foo="bar"; "text" /}
+{a $url; "" /}
+{a $url; /}
+{a $url}{/}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('<a href="http://foo/" foo="bar">text</a>
+<a href="http://foo/"></a>
+<a href="http://foo/">http://foo/</a>
+<a href="http://foo/">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
+	}
+
 	public function testAutoEscape()
 	{
 		$cmp = new Dwoo_Compiler();
@@ -135,7 +159,7 @@ baz"));
 		$fixCall = new Dwoo_Plugin_if ($this->dwoo);
 		$fixCall->init(array());
 	}
-	
+
 	public function testIfVariation2 ()
 	{
 		$tpl = new Dwoo_Template_String('{if 4/2==2 && 2!=1 && 3>0 && 4<5 && 5<=5 && 6>=3 && 3===3 && "3"!==3}true{/if}');
@@ -143,7 +167,7 @@ baz"));
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
 	public function testIfVariation3 ()
 	{
 		$tpl = new Dwoo_Template_String('{if 5%2==1 && !isset($foo)}true{/if}');
@@ -151,7 +175,7 @@ baz"));
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
 	public function testIfVariation4 ()
 	{
 		$tpl = new Dwoo_Template_String('{if 5 is not div by 2 && 4 is div by 2 && 6 is even && 6 is not even by 5 && (3 is odd && 9 is odd by 3)}true{/if}');
@@ -159,7 +183,7 @@ baz"));
 
 		$this->assertEquals('true', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
 	public function testIfVariation5 ()
 	{
 		$tpl = new Dwoo_Template_String('{if (3==4 && 5==5) || 3==3}true{/if}');
@@ -190,6 +214,38 @@ baz"));
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_else($this->dwoo);
 		$fixCall->init();
+	}
+
+	public function testIfElseifElse()
+	{
+		$tpl = new Dwoo_Template_String('{if "BAR" == "bar"}true{elseif 3==5}true{else}false{/if}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('false', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testIfElseifElseifElse()
+	{
+		$tpl = new Dwoo_Template_String('{if "BAR" == "bar"}true{elseif 3==5}true{elseif 5==3}true{else}false{/if}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('false', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testIfElseifElseif()
+	{
+		$tpl = new Dwoo_Template_String('{if "BAR" == "bar"}true{elseif 3==5}true{elseif 5==5}moo{/if}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('moo', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testIfElseifElseifVariation2()
+	{
+		$tpl = new Dwoo_Template_String('{if "BAR" == "bar"}true{elseif 5==5}moo{elseif 3==5}true{/if}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('moo', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testIfElseImplicitUnset()

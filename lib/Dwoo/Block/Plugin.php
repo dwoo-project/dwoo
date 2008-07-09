@@ -41,7 +41,7 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 		$this->buffer .= $input;
 	}
 
-	// initialization code, receives the parameters from {block param1, param2}
+	// initialization code, receives the parameters from {block param1 param2}
 	// public function init($arg, $arg, ...);
 
 	/**

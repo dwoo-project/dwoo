@@ -29,6 +29,22 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	protected $file;
 
 	/**
+	 * include path(s) to look into to find this template
+	 *
+	 * @var array
+	 */
+	protected $includePath = null;
+
+	/**
+	 * resolved path cache when looking for a file in multiple include paths
+	 *
+	 * this is reset when the include path is changed
+	 *
+	 * @var string
+	 */
+	protected $resolvedPath = null;
+
+	/**
 	 * creates a template from a file
 	 *
 	 * @param string $file the path to the template file, make sure it exists
@@ -40,8 +56,9 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
 	 * 							template from others, if null it defaults to the filename+bits of the path
+	 * @param mixed $includePath a string for a single path to look into for the given file, or an array of paths
 	 */
-	public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null)
+	public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null)
 	{
 		$this->file = $file;
 		$this->name = basename($file);
@@ -54,6 +71,37 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		if ($cacheId !== null) {
 			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
+
+		if (is_string($includePath)) {
+			$this->includePath = array($includePath);
+		} elseif (is_array($includePath)) {
+			$this->includePath = $includePath;
+		}
+	}
+
+	/**
+	 * sets the include path(s) to where the given template filename must be looked up
+	 *
+	 * @param mixed $paths the path to look into, can be string for a single path or an array of paths
+	 */
+	public function setIncludePath($paths)
+	{
+		if (is_array($paths) === false) {
+			$paths = array($paths);
+		}
+
+		$this->includePath = $paths;
+		$this->resolvedPath = null;
+	}
+
+	/**
+	 * return the current include path(s)
+	 *
+	 * @return array
+	 */
+	public function getIncludePath()
+	{
+		return $this->includePath;
 	}
 
 	/**
@@ -110,7 +158,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public function getSource()
 	{
-		return file_get_contents($this->file);
+		return file_get_contents($this->getResourceIdentifier());
 	}
 
 	/**
@@ -130,7 +178,20 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public function getResourceIdentifier()
 	{
-		return $this->file;
+		if ($this->resolvedPath !== null) {
+			return $this->resolvedPath;
+		} elseif ($this->includePath === null) {
+			return $this->file;
+		} else {
+			foreach ($this->includePath as $path) {
+				if (file_exists($path.DIRECTORY_SEPARATOR.$this->file) === true) {
+					$this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
+					return $this->resolvedPath;
+				}
+			}
+
+			throw new Dwoo_Exception('Template "'.$this->file.'" could not be found in any of your include path(s)');
+		}
 	}
 
 	/**
@@ -141,7 +202,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public function getUid()
 	{
-		return (string) filemtime($this->file);
+		return (string) filemtime($this->getResourceIdentifier());
 	}
 
 	/**
@@ -197,7 +258,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	{
 		// no compile id was provided, set default
 		if ($this->compileId===null) {
-			$this->compileId = implode('/', array_slice(explode('/', strtr($this->file, '\\', '/')), -3));
+			$this->compileId = implode('/', array_slice(explode('/', strtr($this->getResourceIdentifier(), '\\', '/')), -3));
 		}
 		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
 	}

@@ -657,24 +657,26 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				$ptr += strlen($this->ld);
 				$subptr = $ptr;
-				$subparse = '';
 
 				while (true) {
 					$parsed = $this->parse($tpl, $subptr, null, false, 'root', $subptr);
-					if ($parsed === false) {
-						break;
-					} else {
-						$subparse .= $parsed;
-					}
+
 					// reload loop if the compiler was reset
 					if ($ptr === 0) {
 						continue 2;
 					}
+
+					$len = $subptr - $ptr;
+					$this->push($parsed, substr_count(substr($tpl, $ptr, $len), "\n"));
+					$ptr += $len;
+
+					if ($parsed === false) {
+						break;
+					}
 				}
 
-				$len = $subptr - $ptr + strlen($this->rd);
-				$this->push($subparse, substr_count(substr($tpl, $ptr, $len), "\n"));
-				$ptr += $len;
+				$ptr += strlen($this->rd);
+				$this->setLine(substr_count($this->rd, "\n"), true);
 
 				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
 				if (substr($this->curBlock['buffer'], -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
@@ -1248,6 +1250,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 								$ptr++;
 								if ($this->debug) echo 'PARAM PARSING ENDED, ";" FOUND, POINTER AT '.$ptr.'<br/>';
 								break 2;
+							} elseif ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === '/') {
+								if ($this->debug) echo 'PARAM PARSING ENDED, "/" FOUND, POINTER AT '.$ptr.'<br/>';
+								break 2;
 							} elseif (substr($paramstr, $ptr, strlen($this->rd)) === $this->rd) {
 								if ($this->debug) echo 'PARAM PARSING ENDED, RIGHT DELIMITER FOUND, POINTER AT '.$ptr.'<br/>';
 								break 2;
@@ -1585,7 +1590,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
 			$key = substr($match[1], 1);
@@ -1784,7 +1789,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				return $parsingParams;
 			} elseif ($curBlock === 'namedparam') {
 				return array($output, $key);
-			} elseif ($curBlock === 'string') {
+			} elseif ($curBlock === 'string' || $curBlock === 'delimited_string') {
 				return array($matchedLength, $output);
 			} elseif ($curBlock === 'expression' || $curBlock === 'variable') {
 				return $output;
@@ -1794,7 +1799,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				return $output;
 			}
 		} else {
-			if ($curBlock === 'string') {
+			if ($curBlock === 'string' || $curBlock === 'delimited_string') {
 				return array(0, '');
 			} else {
 				throw new Dwoo_Compilation_Exception($this, 'Invalid variable name <em>'.$substr.'</em>');
@@ -2050,7 +2055,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($this->debug) echo 'BREAKCHAR ('.$substr.') PARSED<br />';
 			//$substr = '"'.$substr.'"';
 		} else {
-			$substr = $this->replaceStringVars('"'.str_replace('"', '\\"', $substr).'"', '"', $curBlock);
+			$substr = $this->replaceStringVars('\''.str_replace('\'', '\\\'', $substr).'\'', '\'', $curBlock);
 
 			if ($this->debug) echo 'BLABBER ('.$substr.') CASTED AS STRING<br />';
 		}
@@ -2075,27 +2080,26 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function replaceStringVars($string, $first, $curBlock='')
 	{
-		// replace vars
-		$cnt=substr_count($string, '$');
+		$pos = 0;
 		if ($this->debug) echo 'STRING VAR REPLACEMENT : '.$string.'<br>';
-		while (--$cnt >= 0) {
-			if (isset($last)) {
-				$last = strrpos($string, '$', - (strlen($string) - $last + 1));
-			} else {
-				$last = strrpos($string, '$');
-			}
-
-			if (array_search($string[$last-1], array('\\', '/', '*', '+', '-', '%')) !== false) {
+		// replace vars
+		while (($pos = strpos($string, '$', $pos)) !== false) {
+			$prev = substr($string, $pos-1, 1);
+			if ($prev === '\\') {
+				$pos++;
 				continue;
 			}
 
-			// get var length first
-			$var = $this->parse($string, $last, null, false, $curBlock === 'modifier' ? 'modifier' : 'string');
+			$var = $this->parse($string, $pos, null, false, ($curBlock === 'modifier' ? 'modifier' : ($prev === '`' ? 'delimited_string':'string')));
 			$len = $var[0];
-			// reparse after removing every \" in the parsed string
-			$var = $this->parse(str_replace('\\'.$first, $first, $string), $last, null, false, $curBlock === 'modifier' ? 'modifier' : 'string');
+			$var = $this->parse(str_replace('\\'.$first, $first, $string), $pos, null, false, ($curBlock === 'modifier' ? 'modifier' : ($prev === '`' ? 'delimited_string':'string')));
 
-			$string = substr_replace($string, $first.'.'.$var[1].'.'.$first, $last, $len);
+			if ($prev === '`' && substr($string, $pos+$len, 1) === '`') {
+				$string = substr_replace($string, $first.'.'.$var[1].'.'.$first, $pos-1, $len+2);
+			} else {
+				$string = substr_replace($string, $first.'.'.$var[1].'.'.$first, $pos, $len);
+			}
+			$pos += strlen($var[1]) + 2;
 			if ($this->debug) echo 'STRING VAR REPLACEMENT DONE : '.$string.'<br>';
 		}
 
@@ -2107,9 +2111,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($first==="'") {
 			$string = str_replace('\\$', '$', $string);
 		}
-
-		// remove backticks around strings if needed
-		$string = preg_replace('#`(("|\').+?\2)`#', '$1', $string);
 
 		return $string;
 	}

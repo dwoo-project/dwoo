@@ -223,16 +223,19 @@ replace="BAR"
 		$tpl->forceCompilation();
 
 		$this->assertEquals("10 10 40 145 5 3.3 3.3 win win", $this->dwoo->get($tpl, array('foo'=>5, 'arr'=>array(8=>'win')), $this->compiler));
+	}
 
-		$tpl = new Dwoo_Template_String('{"$foo/$foo"}');
+	public function testDelimitedExpressionsInString()
+	{
+		$tpl = new Dwoo_Template_String('{"`$foo/$foo`"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("1", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));
 	}
 
-	public function testNonExpressions()
+	public function testNonDelimitedExpressionsInString()
 	{
-		$tpl = new Dwoo_Template_String('{"`$foo`/`$foo`"}');
+		$tpl = new Dwoo_Template_String('{"$foo/$foo"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("5/5", $this->dwoo->get($tpl, array('foo'=>5), $this->compiler));

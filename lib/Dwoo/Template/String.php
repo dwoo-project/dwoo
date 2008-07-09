@@ -219,7 +219,6 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	public function getCachedTemplate(Dwoo $dwoo)
 	{
-		$cachedFile = $this->getCacheFilename($dwoo);
 		if ($this->cacheTime !== null) {
 			$cacheLength = $this->cacheTime;
 		} else {
@@ -230,6 +229,8 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		if ($cacheLength === 0) {
 			return false;
 		}
+
+		$cachedFile = $this->getCacheFilename($dwoo);
 
 		if (isset(self::$cache['cached'][$this->cacheId]) === true && file_exists($cachedFile)) {
 			// already checked, return cache file
@@ -394,8 +395,13 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 				$cacheId = $_SERVER['REQUEST_URI'];
 			} elseif (isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv'])) {
 				$cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
+			} else {
+				$cacheId = '';
 			}
-			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			// force compiled id generation
+			$this->getCompiledFilename($dwoo);
+
+			$this->cacheId = $this->compileId . strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
 		}
 		return $dwoo->getCacheDir() . $this->cacheId.'.html';
 	}

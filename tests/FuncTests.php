@@ -14,19 +14,6 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
-	public function testA()
-	{
-		$tpl = new Dwoo_Template_String('{a "http://foo/" "Foo!" test="foo" bar="bar"}');
-		$tpl->forceCompilation();
-
-		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">Foo!</a>', $this->dwoo->get($tpl, array(), $this->compiler));
-
-		$tpl = new Dwoo_Template_String('{a $url test="foo" bar="bar"}');
-		$tpl->forceCompilation();
-
-		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
-	}
-
 	public function testAssign()
 	{
 		// test simple assign

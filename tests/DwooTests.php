@@ -28,21 +28,22 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		return $suite;
 	}
 
-		protected function tearDown() {
-			$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
+	protected function tearDown() {
+		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
 
 	protected function clearDir($path, $emptyOnly=false)
 	{
-			if (is_dir($path)) {
-					foreach (glob($path.'/*') as $f)
-							$this->clearDir($f);
-					if (!$emptyOnly) {
-						rmdir($path);
-					}
-			} else {
-					unlink($path);
-				}
+		if (is_dir($path)) {
+			foreach (glob($path.'/*') as $f) {
+				$this->clearDir($f);
+			}
+			if (!$emptyOnly) {
+				rmdir($path);
+			}
+		} else {
+			unlink($path);
+		}
 	}
 }
 
@@ -59,6 +60,27 @@ class DwooConstraintStringEquals extends PHPUnit_Framework_Constraint
 	public function evaluate($other)
 	{
 		$this->other = preg_replace('#(\r\n|\r)#', "\n", $other);
+		return $this->target == $this->other;
+	}
+
+	public function toString()
+	{
+		return 'equals expected value.'.PHP_EOL.'Expected:'.PHP_EOL.$this->target.PHP_EOL.'Received:'.PHP_EOL.$this->other.PHP_EOL;
+	}
+}
+
+class DwooConstraintPathEquals extends PHPUnit_Framework_Constraint
+{
+	protected $target;
+
+	public function __construct($target)
+	{
+		$this->target = preg_replace('#([\\\\/]{1,2})#', '/', $target);
+	}
+
+	public function evaluate($other)
+	{
+		$this->other = preg_replace('#([\\\\/]{1,2})#', '/', $other);
 		return $this->target == $this->other;
 	}
 

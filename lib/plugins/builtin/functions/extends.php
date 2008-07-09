@@ -41,7 +41,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		$inheritanceTree = array(array('source'=>$compiler->getTemplateSource()));
 
 		while (!empty($file)) {
-			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '"')) {
+			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
 				throw new Dwoo_Compilation_Exception($compiler, 'Extends : The file name must be a non-empty string');
 				return;
 			}

@@ -44,60 +44,66 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 		reset($params);
 		while (list($k,$v) = each($params)) {
-			switch((string) $v) {
+			$v = (string) $v;
+			switch(substr($v, 0, 1) === '"' || substr($v, 0, 1) === '\'' ? substr($v, 1, -1) : $v) {
 
-			case '"and"':
+			case 'and':
 				$p[] = '&&';
 				break;
-			case '"or"':
+			case 'or':
 				$p[] = '||';
 				break;
-			case '"=="':
-			case '"eq"':
+			case '==':
+			case 'eq':
 				$p[] = '==';
 				break;
-			case '"<>"':
-			case '"!="':
-			case '"ne"':
-			case '"neq"':
+			case '<>':
+			case '!=':
+			case 'ne':
+			case 'neq':
 				$p[] = '!=';
 				break;
-			case '">="':
-			case '"gte"':
-			case '"ge"':
+			case '>=':
+			case 'gte':
+			case 'ge':
 				$p[] = '>=';
 				break;
-			case '"<="':
-			case '"lte"':
-			case '"le"':
+			case '<=':
+			case 'lte':
+			case 'le':
 				$p[] = '<=';
 				break;
-			case '">"':
-			case '"gt"':
+			case '>':
+			case 'gt':
 				$p[] = '>';
 				break;
-			case '"<"':
-			case '"lt"':
+			case '<':
+			case 'lt':
 				$p[] = '<';
 				break;
-			case '"==="':
+			case '===':
 				$p[] = '===';
 				break;
-			case '"!=="':
+			case '!==':
 				$p[] = '!==';
 				break;
-			case '"is"':
-				if ($params[$k+1] === '"not"') {
+			case 'is':
+				if (isset($params[$k+1]) && trim($params[$k+1], '"\'') === 'not') {
 					$negate = true;
 					next($params);
 				} else {
 					$negate = false;
 				}
 				$ptr = 1+(int)$negate;
+				if (!isset($params[$k+$ptr])) {
+					$params[$k+$ptr] = '';
+				} else {
+					$params[$k+$ptr] = trim($params[$k+$ptr], '"\'');
+				}
 				switch($params[$k+$ptr]) {
 
-				case '"div"':
-					if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
+				case 'div':
+					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
 						$p[] = ' % '.$params[$k+$ptr+2].' '.($negate?'!':'=').'== 0';
 						next($params);
 						next($params);
@@ -106,9 +112,9 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 						throw new Dwoo_Compilation_Exception($compiler, 'If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k-1].' is '.($negate?'not ':'').'div '.$params[$k+$ptr+1].' '.$params[$k+$ptr+2]);
 					}
 					break;
-				case '"even"':
+				case 'even':
 					$a = array_pop($p);
-					if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
+					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
 						$b = $params[$k+$ptr+2];
 						$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'!':'=').'== 0';
 						next($params);
@@ -118,9 +124,9 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 					}
 					next($params);
 					break;
-				case '"odd"':
+				case 'odd':
 					$a = array_pop($p);
-					if (isset($params[$k+$ptr+1]) && $params[$k+$ptr+1] === '"by"') {
+					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
 						$b = $params[$k+$ptr+2];
 						$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'=':'!').'== 0';
 						next($params);
@@ -135,12 +141,12 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 				}
 				break;
-			case '"%"':
-			case '"mod"':
+			case '%':
+			case 'mod':
 				$p[] = '%';
 				break;
-			case '"!"':
-			case '"not"':
+			case '!':
+			case 'not':
 				$p[] = '!';
 				break;
 			default:

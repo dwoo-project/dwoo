@@ -2,12 +2,12 @@
 
 /**
  * Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with
- * 
- * If any of those block contains an else statement, the content between {else} and {/block} (you do not 
+ *
+ * If any of those block contains an else statement, the content between {else} and {/block} (you do not
  * need to close the else block) will be shown if the block's condition has no been met
- * 
+ *
  * Example :
- * 
+ *
  * <code>
  * {foreach $array val}
  *   $array is not empty so we display it's values : {$val}
@@ -34,6 +34,12 @@
  */
 class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
+	public static $types = array
+	(
+		'if' => true, 'elseif' => true, 'for' => true,
+		'foreach' => true, 'loop' => true, 'with' => true
+	);
+
 	public function init()
 	{
 	}
@@ -42,7 +48,7 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 	{
 		$block =& $compiler->getCurrentBlock();
 		$out = '';
-		while ($block['type'] !== 'if' && $block['type'] !== 'foreach' && $block['type'] !== 'for' && $block['type'] !== 'with' && $block['type'] !== 'loop') {
+		while (!isset(self::$types[$block['type']])) {
 			$out .= $compiler->removeTopBlock();
 			$block =& $compiler->getCurrentBlock();
 		}
@@ -54,7 +60,7 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		$currentBlock =& $compiler->getCurrentBlock();
 		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
 
-		return $out . "else {\n".Dwoo_Compiler::PHP_CLOSE;
+		return $out . " else {\n".Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
