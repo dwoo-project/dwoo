@@ -5,7 +5,7 @@
   {a http://url.com; "Text" /} which equals to {a http://url.com}Text{/}
 + Syntax: Block plugins that you want to call without content can be
   self-closed just like XML tags (e.g. {a "http://url.com" /} ). Be careful not
-  to close a non-block plugin like that however, since it will close it's 
+  to close a non-block plugin like that however, since it will close it's
   parent block
 + Plugins: Added the {a} block plugin to generate <a> tags
 + API: Added Dwoo_Plugin::paramsToAttributes() utility function to help
@@ -19,6 +19,7 @@
    => http://forum.dwoo.org/viewtopic.php?id=50
 * Compiler now allows the use of the right delimiter inside strings (e.g. {"}"})
 * Fixed a bug preventing if blocks containing a {elseif} followed by {else}
+* Include allows paths going in upper levels now such as : "../foo.html"
 
 [2008-06-28] 0.9.2
 ! BC Break: Renamed the {strip} modifier/function to {whitespace}, this does

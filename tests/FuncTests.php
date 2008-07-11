@@ -243,6 +243,14 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("34", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testIncludeParent()
+	{
+		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/subfolder/inctest.html');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("43", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testIndent()
 	{
 		$tpl = new Dwoo_Template_String('{indent $foo 6 "-"}');

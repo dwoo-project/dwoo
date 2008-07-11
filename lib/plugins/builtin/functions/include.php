@@ -59,6 +59,10 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		}
 	}
 
+	if ($resource === 'file' && strpos($identifier, '..') !== false) {
+		$identifier = realpath(dirname($dwoo->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR . $identifier);
+	}
+
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (Dwoo_Exception $e) {
