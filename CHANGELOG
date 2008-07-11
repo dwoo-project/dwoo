@@ -4,10 +4,13 @@
   {if $foo}> {$foo}{$bar}{/} - This also allow block operations such as:
   {a http://url.com; "Text" /} which equals to {a http://url.com}Text{/}
 + Syntax: Block plugins that you want to call without content can be
-  self-closed just like XML tags (e.g. {a "http://url.com" /} )
+  self-closed just like XML tags (e.g. {a "http://url.com" /} ). Be careful not
+  to close a non-block plugin like that however, since it will close it's 
+  parent block
 + Plugins: Added the {a} block plugin to generate <a> tags
 + API: Added Dwoo_Plugin::paramsToAttributes() utility function to help
   with the creation of compilable xml/html-related plugins
++ Syntax: Static methods can be called using {Class::method()}
 * Syntax: Math expressions in strings are now only allowed when the entire
   expression is delimited, e.g. {"/$foo/$bar"} evaluates as just that while
   {"/`$foo/$bar`"} will result in "/".($foo/$bar), therefore processing the /

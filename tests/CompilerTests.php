@@ -527,6 +527,14 @@ replace="BAR"
 
 		$this->assertEquals('a <?php echo "foo"; ?>', $this->dwoo->get($tpl, array('foo'=>'a <?php echo "foo"; ?>'), $this->compiler));
 	}
+	
+	public function testStaticMethodCall()
+	{
+		$tpl = new Dwoo_Template_String('{upper MethodCallsHelper::staticFoo(bar "baz")}');
+		$tpl->forceCompilation();
+		
+		$this->assertEquals('-BAZBAR-', $this->dwoo->get($tpl, array(), $this->compiler));	
+	}
 }
 
 class MethodCallsHelper {
@@ -551,4 +559,8 @@ class MethodCallsHelper {
 		return ($int+5).$str;
 	}
 	public function __toString() { return 'obj'; }
+	
+	public static function staticFoo($bar, $baz) {
+		return "-$baz$bar-";
+	}
 }

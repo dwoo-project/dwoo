@@ -1105,7 +1105,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($first==='"' || $first==="'") {
 			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (preg_match('/^[a-z][a-z0-9_]*('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
+		} elseif (preg_match('/^[a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
 			// func
 			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} elseif ($first === ';') {
@@ -1178,13 +1178,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected function parseFunction($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
 		$cmdstr = substr($in, $from, $to-$from);
-		preg_match('/^([a-z][a-z0-9_]*)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
+		preg_match('/^([a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
+
+		if (empty($match[1])) {
+			throw new Dwoo_Compilation_Exception($this, 'Parse error, invalid function name');
+		}
+
+		$func = $match[1];
 
 		if (!empty($match[2])) {
 			$cmdstr = $match[1];
 		}
 
-		if ($this->debug) echo 'FUNC FOUND<br />';
+		if ($this->debug) echo 'FUNC FOUND ('.$func.')<br />';
 
 		$paramsep = '';
 
@@ -1210,18 +1216,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$state = 0;
 
 		if ($paramspos === false) {
-			if (strpos($cmdstr, ' ')) {
-				$func = substr($cmdstr, 0, strpos($cmdstr, ' '));
-			} else {
-				$func = $cmdstr;
-			}
 			$params = array();
 
 			if ($curBlock !== 'root') {
 				return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			}
 		} else {
-			$func = rtrim(substr($cmdstr, 0, $paramspos));
 			$whitespace = strlen(substr($cmdstr, strlen($func), $paramspos-strlen($func)));
 			$paramstr = substr($cmdstr, $paramspos+1);
 			if (substr($paramstr, -1, 1) === $paramsep) {
@@ -1300,7 +1300,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func)).' TO POINTER<br/>';
 		}
 
-		if ($curBlock === 'method' || $func === 'do') {
+		if ($curBlock === 'method' || $func === 'do' || strstr($func, '::') !== false) {
 			$pluginType = Dwoo::NATIVE_PLUGIN;
 		} else {
 			$pluginType = $this->getPluginType($func);
