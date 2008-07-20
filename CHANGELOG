@@ -19,6 +19,7 @@
    => http://forum.dwoo.org/viewtopic.php?id=50
 * Compiler now allows the use of the right delimiter inside strings (e.g. {"}"})
 * Fixed a bug preventing if blocks containing a {elseif} followed by {else}
+* Fixed a compileId auto-generation creating conflicts
 * Include allows paths going in upper levels now such as : "../foo.html"
 
 [2008-06-28] 0.9.2
