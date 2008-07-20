@@ -258,7 +258,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	{
 		// no compile id was provided, set default
 		if ($this->compileId===null) {
-			$this->compileId = implode('/', array_slice(explode('/', strtr($this->getResourceIdentifier(), '\\', '/')), -3));
+			$this->compileId = strtr($this->getResourceIdentifier(), '\\:', '/-');
 		}
 		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
 	}
