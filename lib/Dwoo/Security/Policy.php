@@ -52,7 +52,7 @@ class Dwoo_Security_Policy
 	 */
 	protected $allowedPhpFunctions = array
 	(
-		'str_repeat', 'count', 'number_format', 'htmlentities', 'htmlspecialchars',
+		'str_repeat', 'number_format', 'htmlentities', 'htmlspecialchars',
 		'long2ip', 'strlen', 'list', 'empty', 'count', 'sizeof', 'in_array', 'is_array',
 	);
 
