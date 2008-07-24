@@ -19,7 +19,7 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Loader
+class Dwoo_Loader implements Dwoo_ILoader
 {
 	/**
 	 * stores the plugin directories
@@ -37,23 +37,23 @@ class Dwoo_Loader
 	 * @var array
 	 */
 	protected $classPath = array();
-	
+
 	/**
 	 * path where class paths cache files are written
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $cacheDir;
-	
+
 	/**
 	 * legacy/transitional var for BC with old classpath.cache files, do NOT rely on it
-	 * 
+	 *
 	 * will be deleted sooner or later
-	 * 
+	 *
 	 * TODO remove this and compat code in addDirectory
 	 */
 	public static $classpath = array();
-	
+
 	public function __construct($cacheDir)
 	{
 		$this->cacheDir = $cacheDir . DIRECTORY_SEPARATOR;
@@ -63,7 +63,7 @@ class Dwoo_Loader
 			$this->rebuildClassPathCache(DWOO_DIRECTORY.'plugins', $this->cacheDir.'classpath.cache.php');
 		}
 	}
-	
+
 	/**
 	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
 	 *

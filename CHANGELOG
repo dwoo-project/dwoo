@@ -19,6 +19,8 @@
    => http://forum.dwoo.org/viewtopic.php?id=50
 * Compiler now allows the use of the right delimiter inside strings (e.g. {"}"})
 * Fixed a bug preventing if blocks containing a {elseif} followed by {else}
+* Fixed the Dwoo_ILoader interface and implemented it in Dwoo_Loader now
+   => http://forum.dwoo.org/viewtopic.php?id=70
 * Fixed a compileId auto-generation creating conflicts
 * Include allows paths going in upper levels now such as : "../foo.html"
 

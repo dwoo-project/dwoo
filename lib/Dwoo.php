@@ -3,6 +3,7 @@
 define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
 set_include_path(get_include_path() . PATH_SEPARATOR . DWOO_DIRECTORY);
 
+include 'Dwoo/ILoader.php';
 include 'Dwoo/Loader.php';
 include 'Dwoo/Exception.php';
 include 'Dwoo/Security/Policy.php';
