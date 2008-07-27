@@ -11,6 +11,7 @@
 + API: Added Dwoo_Plugin::paramsToAttributes() utility function to help
   with the creation of compilable xml/html-related plugins
 + Syntax: Static methods can be called using {Class::method()}
++ Compiler supports method calls into a method call's parameters
 * Syntax: Math expressions in strings are now only allowed when the entire
   expression is delimited, e.g. {"/$foo/$bar"} evaluates as just that while
   {"/`$foo/$bar`"} will result in "/".($foo/$bar), therefore processing the /
