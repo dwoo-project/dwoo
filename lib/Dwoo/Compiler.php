@@ -780,6 +780,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$this->stack[count($this->stack)-2]['buffer'] .= (string) $content;
 			$this->curBlock['buffer'] = '';
 		} else {
+			if (!isset($this->curBlock['buffer'])) {
+				throw new Dwoo_Compilation_Exception($this, 'The template has been closed too early, you probably have an extra block-closing tag somewhere');
+			}
 			// append current content to current block's buffer
 			$this->curBlock['buffer'] .= (string) $content;
 		}
@@ -1099,6 +1102,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if ($first==='$') {
 			// var
 			$out = $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
+			$parsed = 'var';
 		} elseif ($first==='%' && preg_match('#^%[a-z]#i', $substr)) {
 			// const
 			$out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
@@ -1157,6 +1161,25 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (empty($out)) {
 			return '';
 		}
+		$substr = substr($in, $pointer, $to-$pointer);
+		if (isset($parsed) && $parsed==='var' && preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
+			$pointer += strlen($match[0]) - 1;
+			if (is_array($parsingParams)) {
+				if ($match[2] == '$') {
+					$expr = $this->parseVar($in, $pointer, $to, array(), $curBlock, $pointer);
+				} else {
+					$expr = $this->parseOthers($in, $pointer, $to, array(), 'expression', $pointer);
+				}
+				$out[count($out)-1][0] .= $match[1] . $expr[0];
+				$out[count($out)-1][1] .= $match[1] . $expr[1];
+			} else {
+				if ($match[2] == '$') {
+					$out .= $match[1] . $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
+				} else {
+					$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+				}
+			}
+		}
 		if ($curBlock === 'root' && substr($out, 0, strlen(self::PHP_OPEN)) !== self::PHP_OPEN) {
 			return self::PHP_OPEN .'echo '.$out.';'. self::PHP_CLOSE;
 		} else {
@@ -1181,7 +1204,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		preg_match('/^([a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
 
 		if (empty($match[1])) {
-			throw new Dwoo_Compilation_Exception($this, 'Parse error, invalid function name');
+			throw new Dwoo_Compilation_Exception($this, 'Parse error, invalid function name : '.substr($cmdstr, 0, 15));
 		}
 
 		$func = $match[1];
@@ -1589,18 +1612,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\([^)]*?\)(?:->[a-z0-9_]+(?:\([^)]*?\))?)*)?' : '()') . // method call
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\(.*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
 			$key = substr($match[1], 1);
 
 			$matchedLength = strlen($match[0]);
-			$hasModifiers = isset($match[4]) && !empty($match[4]);
-			$hasExpression = isset($match[3]) && !empty($match[3]);
-			$hasMethodCall = isset($match[2]) && !empty($match[2]);
+			$hasModifiers = !empty($match[4]);
+			$hasExpression = !empty($match[3]);
+			$hasMethodCall = !empty($match[2]);
 
 			if ($hasMethodCall) {
+				$matchedLength -= strlen($match[2]) + strlen(substr($match[1], strrpos($match[1], '->')));
 				$key = substr($match[1], 1, strrpos($match[1], '->')-1);
 				$methodCall = substr($match[1], strrpos($match[1], '->')) . $match[2];
 			}
@@ -1623,7 +1647,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			if ($this->debug) {
 				if ($hasMethodCall) {
-					echo 'METHOD CALL FOUND : $'.$key.$methodCall.'<br />';
+					echo 'METHOD CALL FOUND : $'.$key.substr($methodCall, 0, 30).'<br />';
 				} else {
 					echo 'VAR FOUND : $'.$key.'<br />';
 				}
@@ -1692,22 +1716,51 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			// methods
 			if ($hasMethodCall) {
-				preg_match_all('{->([a-z0-9_]+)(\([^)]*\))?}i', $methodCall, $calls);
-				foreach ($calls[1] as $i=>$method) {
-					$args = $calls[2][$i];
-					if ($args === '') {
+				$ptr = 0;
+				$len = strlen($methodCall);
+
+				while ($ptr < $len) {
+					if (strpos($methodCall, '->', $ptr) === $ptr) {
+						$ptr += 2;
+					}
+
+					if (in_array($methodCall[$ptr], array(';', '/', ' ', "\t", "\r", "\n", ')', '+', '*', '%', '=', '-')) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd) {
+						// break char found
+						break;
+					}
+
+					if(!preg_match('/^([a-z0-9_]+)(\(.*?\))?/i', substr($methodCall, $ptr), $methMatch)) {
+						throw new Dwoo_Compilation_Exception($this, 'Invalid method name : '.substr($methodCall, $ptr, 20));
+					}
+
+					if (empty($methMatch[2])) {
 						// property
-						$output = '('.$output.'->'.$method.' : null)';
+						if ($curBlock === 'root') {
+							$output .= '->'.$methMatch[1];
+						} else {
+							$output = '(($tmp = '.$output.') ? $tmp->'.$methMatch[1].' : null)';
+						}
+						$ptr += strlen($methMatch[1]);
 					} else {
 						// method
-						if ($args === '()') {
-							$parsedCall = '->'.$method.$args;
+						if (substr($methMatch[2], 0, 2) === '()') {
+							$parsedCall = '->'.$methMatch[1].'()';
+							$ptr += strlen($methMatch[1]) + 2;
 						} else {
-							$parsedCall = '->'.$this->parseFunction($method.$args, 0, strlen($method.$args), false, 'method');
+							$parsedCall = '->'.$this->parseFunction($methodCall, $ptr, strlen($methodCall), false, 'method', $ptr);
 						}
-						$output = '(is_object($tmp = '.$output.') ? $tmp'.$parsedCall.' : $this->triggerError(\'Method <em>'.$method.'()</em> was called on a non-object ($'.$key.': \'.var_export($tmp, true).\')\'))';
+						if ($curBlock === 'root') {
+							$output .= $parsedCall;
+						} else {
+							$output = '(($tmp = '.$output.') ? $tmp'.$parsedCall.' : null)';
+						}
 					}
 				}
+
+				if ($pointer !== null) {
+					$pointer += $ptr;
+				}
+				$matchedLength += $ptr;
 			}
 
 			if ($hasExpression) {
@@ -2004,6 +2057,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$breakChars = array('(', ')', ' ', '||', '&&', '|', '&', '>=', '<=', '===', '==', '=', '!==', '!=', '<<', '<', '>>', '>', '^', '~', ',', '+', '-', '*', '/', '%', '!', '?', ':', $this->rd, ';');
 		} elseif ($curBlock === 'modifier') {
 			$breakChars = array(' ', ',', ')', ':', '|', "\r", "\n", "\t", ";", $this->rd);
+		} elseif ($curBlock === 'expression') {
+			$breakChars = array('/', '%', '+', '-', '*', ' ', ',', ')', "\r", "\n", "\t", ";", $this->rd);
 		} else {
 			$breakChars = array(' ', ',', ')', "\r", "\n", "\t", ";", $this->rd);
 		}
@@ -2065,6 +2120,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			return $parsingParams;
 		} elseif ($curBlock === 'namedparam') {
 			return array($substr, $src);
+		} elseif ($curBlock === 'expression') {
+			return $substr;
 		} else {
 			throw new Exception('Something went wrong');
 		}
