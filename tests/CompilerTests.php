@@ -536,6 +536,16 @@ replace="BAR"
 		$this->assertEquals('-BAZBAR-', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testFunctionCallsChaining()
+	{
+		$tpl = new Dwoo_Template_String('{getobj()->foo()->bar("hoy")}');
+		$tpl->forceCompilation();
+		$dwoo = new Dwoo();
+		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
+
+		$this->assertEquals('HOY', $dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testPluginProxy()
 	{
 		$proxy = new ProxyHelper('baz',true,3);
@@ -571,7 +581,31 @@ class ProxyHelper implements Dwoo_IPluginProxy
 	}
 }
 
-class MethodCallsHelper {
+class PluginHelper
+{
+	public function callWithDwoo(Dwoo $dwoo)
+	{
+		return $this;
+	}
+
+	public function call()
+	{
+		return $this;
+	}
+
+	public function foo()
+	{
+		return $this;
+	}
+
+	public function bar($a)
+	{
+		return strtoupper($a);
+	}
+}
+
+class MethodCallsHelper
+{
  	public function __construct($int=0) {
 		$this->int = $int;
 	}
