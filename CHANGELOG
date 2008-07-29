@@ -12,6 +12,10 @@
   with the creation of compilable xml/html-related plugins
 + Syntax: Static methods can be called using {Class::method()}
 + Compiler supports method calls into a method call's parameters
++ API: Added Dwoo->setPluginProxy() and Dwoo_IPluginProxy that allow you to
+  hook into the compiler's plugin subsystem to provide your own plugin calls.
+  Thanks to Denis Arh for the patch
+   => http://forum.dwoo.org/viewtopic.php?id=70
 * Syntax: Math expressions in strings are now only allowed when the entire
   expression is delimited, e.g. {"/$foo/$bar"} evaluates as just that while
   {"/`$foo/$bar`"} will result in "/".($foo/$bar), therefore processing the /

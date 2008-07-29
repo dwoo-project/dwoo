@@ -3,6 +3,7 @@
 define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
 set_include_path(get_include_path() . PATH_SEPARATOR . DWOO_DIRECTORY);
 
+include 'Dwoo/IPluginProxy.php';
 include 'Dwoo/ILoader.php';
 include 'Dwoo/Loader.php';
 include 'Dwoo/Exception.php';
@@ -97,6 +98,7 @@ class Dwoo
 	const SMARTY_MODIFIER = 64;
 	const SMARTY_BLOCK = 128;
 	const SMARTY_FUNCTION = 256;
+	const PROXY_PLUGIN = 512;
 	/**#@-*/
 
 	/**
@@ -268,6 +270,13 @@ class Dwoo
 	protected $buffer;
 
 	/**
+	 * stores plugin proxy
+	 *
+	 * @var Dwoo_IPluginProxy
+	 */
+	protected $pluginProxy;
+
+ 	/**
 	 * constructor, sets the cache and compile dir to the default values if not provided
 	 *
 	 * @param string $compileDir path to the compiled directory, defaults to lib/compiled
@@ -802,6 +811,25 @@ class Dwoo
 	public function getSecurityPolicy()
 	{
 		return $this->securityPolicy;
+	}
+
+	/**
+	 * sets the object that must be used as a plugin proxy when plugin can't be found
+	 * by dwoo's loader
+	 *
+	 * @param Dwoo_IPluginProxy $pluginProxy the proxy object
+	 */
+	public function setPluginProxy(Dwoo_IPluginProxy $pluginProxy) {
+		$this->pluginProxy = $pluginProxy;
+	}
+
+	/**
+	 * returns the current plugin proxy object or null by default
+	 *
+	 * @param Dwoo_IPluginProxy|null the proxy object if any
+	 */
+	public function getPluginProxy() {
+		return $this->pluginProxy;
 	}
 
 	/*

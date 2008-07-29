@@ -527,13 +527,47 @@ replace="BAR"
 
 		$this->assertEquals('a <?php echo "foo"; ?>', $this->dwoo->get($tpl, array('foo'=>'a <?php echo "foo"; ?>'), $this->compiler));
 	}
-	
+
 	public function testStaticMethodCall()
 	{
 		$tpl = new Dwoo_Template_String('{upper MethodCallsHelper::staticFoo(bar "baz")}');
 		$tpl->forceCompilation();
-		
-		$this->assertEquals('-BAZBAR-', $this->dwoo->get($tpl, array(), $this->compiler));	
+
+		$this->assertEquals('-BAZBAR-', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testPluginProxy()
+	{
+		$proxy = new ProxyHelper('baz',true,3);
+		$dwoo = new Dwoo();
+		$dwoo->setPluginProxy($proxy);
+		$tpl = new Dwoo_Template_String('{TestProxy("baz", true, 3)}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('valid', $dwoo->get($tpl, array(), $this->compiler));
+	}
+}
+
+class ProxyHelper implements Dwoo_IPluginProxy
+{
+	public function __construct()
+	{
+		$this->params = func_get_args();
+	}
+
+	public function loadPlugin($name)
+	{
+		return $name === 'TestProxy';
+	}
+
+	public function checkTestProxy()
+	{
+		return func_get_args() === $this->params ? 'valid' : 'fubar';
+	}
+
+	public function __call($m, $p)
+	{
+		return '$this->getPluginProxy()->check'.$m.'('.implode(',', $p).')';
 	}
 }
 
@@ -559,7 +593,7 @@ class MethodCallsHelper {
 		return ($int+5).$str;
 	}
 	public function __toString() { return 'obj'; }
-	
+
 	public static function staticFoo($bar, $baz) {
 		return "-$baz$bar-";
 	}

@@ -291,4 +291,12 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(hash('md4','foo'), $tpl->getUid());
 
 	}
+
+	public function testPluginProxyGetSet()
+	{
+		$proxy = new ProxyHelper;
+		$dwoo = new Dwoo();
+		$dwoo->setPluginProxy($proxy);
+		$this->assertEquals($proxy, $dwoo->getPluginProxy());
+	}
 }
