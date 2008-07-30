@@ -538,12 +538,12 @@ replace="BAR"
 
 	public function testFunctionCallsChaining()
 	{
-		$tpl = new Dwoo_Template_String('{getobj()->foo()->bar("hoy")}');
+		$tpl = new Dwoo_Template_String('{getobj()->foo()->Bar("hoy") getobj()->moo}');
 		$tpl->forceCompilation();
 		$dwoo = new Dwoo();
 		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
 
-		$this->assertEquals('HOY', $dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals('HOYyay', $dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testPluginProxy()
@@ -583,6 +583,8 @@ class ProxyHelper implements Dwoo_IPluginProxy
 
 class PluginHelper
 {
+	public $moo = "yay";
+
 	public function callWithDwoo(Dwoo $dwoo)
 	{
 		return $this;
@@ -598,7 +600,7 @@ class PluginHelper
 		return $this;
 	}
 
-	public function bar($a)
+	public function Bar($a)
 	{
 		return strtoupper($a);
 	}
