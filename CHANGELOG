@@ -18,6 +18,8 @@
    => http://forum.dwoo.org/viewtopic.php?id=70
 + Syntax: It is now possible to use a plugin's result as an object and call
   a method or read a property from it, i.e. {fetchObject()->doStuff()}
+* Dwoo_Compiler::implode_r is now public/static so it can be used in other
+  places such as plugin proxies
 * Syntax: Math expressions in strings are now only allowed when the entire
   expression is delimited, e.g. {"/$foo/$bar"} evaluates as just that while
   {"/`$foo/$bar`"} will result in "/".($foo/$bar), therefore processing the /

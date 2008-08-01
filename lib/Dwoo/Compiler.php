@@ -2471,14 +2471,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @param bool $recursiveCall if set to true, the function outputs key names for the top level
 	 * @return string the imploded array
 	 */
-	protected function implode_r(array $params, $recursiveCall = false)
+	public static function implode_r(array $params, $recursiveCall = false)
 	{
 		$out = '';
 		foreach ($params as $k=>$p) {
 			if (is_array($p)) {
 				$out2 = 'array(';
 				foreach ($p as $k2=>$v)
-					$out2 .= var_export($k2, true).' => '.(is_array($v) ? 'array('.$this->implode_r($v, true).')' : $v).', ';
+					$out2 .= var_export($k2, true).' => '.(is_array($v) ? 'array('.self::implode_r($v, true).')' : $v).', ';
 				$p = rtrim($out2, ', ').')';
 			}
 			if ($recursiveCall) {
