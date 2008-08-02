@@ -1,0 +1,19 @@
+// ------------------------
+// Usage example :
+// ------------------------
+// Note that you might need to manually include 'lib/Dwoo.php',
+// 'lib/Dwoo/Adapters/ZendFramework/View.php' and
+// 'lib/Dwoo/Adapters/ZendFramework/PluginProxy.php' for this to
+// work as expected, depending on your ZF setup
+//
+// If anyone writes a more advanced how-to please let me know
+// ------------------------
+
+$viewInterface = new Dwoo_Adapters_ZendFramework_View(array(
+       'compile_dir' => 'path/to/compile_dir' // set to null or remove this line to use defaults
+       'cache_dir'   => 'path/to/cache_dir' // set to null or remove this line to use defaults
+));
+
+$viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($viewInterface);
+
+Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
