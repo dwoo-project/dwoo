@@ -17,19 +17,22 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	protected $_engine = null;
 
 	/**
-	 *
 	 * @var Dwoo_Data
 	 */
 	protected $_data = null;
 
 	/**
-	 *
 	 * @var Dwoo_IPluginProxy
 	 */
 	protected $_pluginProxy = null;
 
-	protected $_scriptPaths;
-
+	/**
+	 * Constructor method. Opt array::
+	 *  - compile_dir Where to store compiled template
+	 *  - cache_dir   Cache files location
+	 *
+	 * @param array $opt
+	 */
 	public function __construct(array $opt = array())
 	{
 		if (!isset($opt['compile_dir'])) {
@@ -41,6 +44,8 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 
 		$this->_engine = new Dwoo($opt['compile_dir'], $opt['cache_dir']);
 		$this->_data = new Dwoo_Data;
+
+		$this->init();
 	}
 
 	/**
@@ -57,87 +62,48 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Set the path to find the view script used by render()
-	 *
-	 * @param string|array The directory (-ies) to set as the path. Note that
-	 * the concrete view implentation may not necessarily support multiple
-	 * directories.
-	 *
-	 * @return void
-	 */
-	public function setScriptPath($path)
-	{
-		$this->_scriptPaths = (array) $path;
-	}
-
-	/**
-	 * Retrieve all view script paths
-	 *
-	 * @return array
-	 */
-	public function getScriptPaths()
-	{
-		return $this->_scriptPaths;
-	}
-
-	/**
-	 * Set a base path to all view resources
-	 *
-	 * @param  string $path        Base path
-	 * @param  string $classPrefix Class prefix
-	 *
-	 * @return void
-	 */
-	public function setBasePath($path, $classPrefix = 'Zend_View')
-	{
-		// Not supported by Dwoo
-	}
-
-	/**
-	 * Add an additional path to view resources
-	 *
-	 * @param  string $path        Base path
-	 * @param  string $classPrefix Class prefix
-	 * @return void
-	 */
-	public function addBasePath($path, $classPrefix = 'Zend_View')
-	{
-		// Not supported by Dwoo
-	}
-
-	/**
 	 * Wraper for Dwoo_Data::__set()
  	 * allows to assign variables using the object syntax
 	 *
+	 * @see Dwoo_Data::__set()
 	 * @param string $name the variable name
 	 * @param string $value the value to assign to it
 	 */
-   	public function __set($name, $value)
-   	{
-   		$this->_data->__set($name, $value);
-   	}
+ 	public function __set($name, $value)
+ 	{
+ 		$this->_data->__set($name, $value);
+ 	}
 
-	public function __get($name)
-	{
-		return $this->_data->__get($name);
-	}
+ 	/**
+ 	 * Sraper for Dwoo_Data::__get()
+ 	 * allows to read variables using the object syntax
+ 	 *
+ 	 * @see Dwoo_Data::__get()
+ 	 * @param string $name the variable name
+ 	 * @return mixed
+ 	 */
+ 	public function __get($name)
+ 	{
+ 	  return $this->_data->__get($name);
+ 	}
 
-   	/**
+ 	/**
 	 * Wraper for Dwoo_Data::__isset()
  	 * supports calls to isset($dwooData->var)
  	 *
+ 	 * @see Dwoo_Data::__isset()
 	 * @param string $name the variable name
 	 */
-   	public function __isset($name)
-   	{
-   		return $this->_data->__isset($name);
-   	}
+ 	public function __isset($name)
+ 	{
+ 		return $this->_data->__isset($name);
+ 	}
 
 	/**
 	 * Wraper for Dwoo_Data::_unset()
 	 * supports unsetting variables using the object syntax
 	 *
-	 * @see Dwoo_Data::_unset()
+	 * @see Dwoo_Data::__unset()
 	 * @param string $name the variable name
 	 */
 	public function __unset($name)
@@ -212,77 +178,89 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * property overloading ({@link __get()}/{@link __set()}).
 	 *
 	 * @return void
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function clearVars()
 	{
 		$this->_data->clear();
+		return $this;
 	}
 
 	public function render($name) {
 		$this->preRender();
-
-		return $this->_filter($this->_run($name));
+		return parent::render($name);
 	}
 
 	/**
-	 * Processes a view script and returns the output.
+	 * Processes a view script and outputs it. Output is then
+	 * passed through filters.
 	 *
 	 * @param string $name The script script name to process.
 	 * @return string The script output.
 	 */
-	public function _run($name)
+	public function _run()
 	{
-		$tpl = new Dwoo_Template_File($name, null, null, null, $this->_scriptPaths);
-		return $this->_engine->get($tpl, $this->_data);
+		$tpl = new Dwoo_Template_File(func_get_arg(0));
+		echo $this->_engine->get($tpl, $this->_data);
 	}
 
 	/**
 	 * Add plugin path
 	 *
 	 * @param string $dir Directory
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function addPluginDir($dir)
 	{
 		$this->_engine->getLoader()->addDirectory($dir);
+		return $this;
 	}
 
 	/**
 	 * Set compile path
 	 *
 	 * @param string $dir Directory
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function setCompileDir($dir)
 	{
 		$this->_engine->setCompileDir($dir);
+		return $this;
 	}
 
 	/**
 	 * Set cache path
 	 *
 	 * @param string $dir Directory
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function setCacheDir($dir)
 	{
 		$this->_engine->setCacheDir($dir);
+		return $this;
 	}
 
 	/**
 	 * Set cache lifetime
 	 *
 	 * @param string $seconds Lifetime in seconds
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function setCacheLifetime($seconds)
 	{
 		$this->_engine->setCacheTime($seconds);
+		return $this;
 	}
 
 	/**
 	 * Set charset
 	 *
 	 * @param string $charset
+	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function setCharset($charset)
 	{
 		$this->_engine->setCharset($charset);
+		return $this;
 	}
 }
