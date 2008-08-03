@@ -15,6 +15,7 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'plugins/builtin');
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'Dwoo');
 		PHPUnit_Util_Filter::addFileToWhitelist(DWOO_DIRECTORY.'Dwoo.php');
+		PHPUnit_Util_Filter::removeDirectoryFromWhitelist(DWOO_DIRECTORY.'Dwoo/Adapters');
 
 		$suite = new self('Dwoo - Unit Tests Report');
 

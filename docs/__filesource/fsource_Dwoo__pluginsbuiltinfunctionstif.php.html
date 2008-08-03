@@ -41,7 +41,7 @@
 <li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-comm">//&nbsp;load&nbsp;if&nbsp;plugin</span></div></li>
 <li><div class="src-line"><a name="a29"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><span class="src-sym">!</span><span class="src-id">class_exists</span><span class="src-sym">(</span><span class="src-str">'Dwoo_Plugin_if'</span><span class="src-sym">,&nbsp;</span><span class="src-id">false</span><span class="src-sym">))&nbsp;</span><span class="src-sym">{</span></div></li>
 <li><div class="src-line"><a name="a30"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;try&nbsp;<span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-id"><a href="../Dwoo/Dwoo_Loader.html">Dwoo_Loader</a></span><span class="src-sym">::</span><a href="../Dwoo/Dwoo_Loader.html#methodloadPlugin">loadPlugin</a><span class="src-sym">(</span><span class="src-str">'if'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$compiler</span><span class="src-sym">-&gt;</span><span class="src-id">getDwoo</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">-&gt;</span><span class="src-id">getLoader</span><span class="src-sym">(</span><span class="src-sym">)</span><span class="src-sym">-&gt;</span><span class="src-id">loadPlugin</span><span class="src-sym">(</span><span class="src-str">'if'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a32"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}&nbsp;</span>catch&nbsp;<span class="src-sym">(</span><span class="src-id">Exception&nbsp;</span><span class="src-var">$e</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
 <li><div class="src-line"><a name="a33"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw&nbsp;<span class="src-key">new&nbsp;</span><span class="src-id"><a href="../Dwoo/Dwoo_Compilation_Exception.html">Dwoo_Compilation_Exception</a></span><span class="src-sym">(</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-str">'Tif:&nbsp;the&nbsp;if&nbsp;plugin&nbsp;is&nbsp;required&nbsp;to&nbsp;use&nbsp;Tif'</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a34"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
@@ -86,7 +86,7 @@
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 28 Jun 2008 01:38:36 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 03 Aug 2008 15:12:47 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>

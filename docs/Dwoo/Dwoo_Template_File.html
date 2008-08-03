@@ -58,9 +58,17 @@
 								</div>
 		<div class="info-box-body">
 			<div class="var-summary">
-																								<div class="var-title">
+																																								<div class="var-title">
 					<span class="var-type">string</span>
 					<a href="#$file" title="details" class="var-name">$file</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">array</span>
+					<a href="#$includePath" title="details" class="var-name">$includePath</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">string</span>
+					<a href="#$resolvedPath" title="details" class="var-name">$resolvedPath</a>
 				</div>
 											</div>
 		</div>
@@ -78,7 +86,7 @@
 		</div>
 		<div class="info-box-body">			
 			<div class="method-summary">
-																																																																		
+																																																																																		
 				<div class="method-definition">
 					static 						<span class="method-result"><a href="../Dwoo/Dwoo_Template_File.html">Dwoo_Template_File</a>|null</span>
 										<a href="#templateFactory" title="details" class="method-name">templateFactory</a>
@@ -88,7 +96,7 @@
 				<div class="method-definition">
 											<span class="method-result">Dwoo_Template_File</span>
 										<a href="#__construct" title="details" class="method-name">__construct</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$includePath</span> = <span class="var-default">null</span>])
 									</div>
 														
 				<div class="method-definition">
@@ -101,6 +109,12 @@
 											<span class="method-result">string</span>
 										<a href="#getCompiledTemplate" title="details" class="method-name">getCompiledTemplate</a>
 											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, [<span class="var-type"><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></span>&nbsp;<span class="var-name">$compiler</span> = <span class="var-default">null</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">array</span>
+										<a href="#getIncludePath" title="details" class="method-name">getIncludePath</a>
+										()
 									</div>
 														
 				<div class="method-definition">
@@ -126,6 +140,12 @@
 										<a href="#getUid" title="details" class="method-name">getUid</a>
 										()
 									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setIncludePath" title="details" class="method-name">setIncludePath</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$paths</span>)
+									</div>
 																			</div>
 		</div>
 	</div>		
@@ -145,7 +165,7 @@
 		<div class="info-box-body">
 			
 <a name="var$file" id="$file"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -157,6 +177,51 @@
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">template filename</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$includePath" id="$includePath"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">array</span>
+			<span class="var-name">$includePath</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a36">36</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">include path(s) to look into to find this template</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$resolvedPath" id="$resolvedPath"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">string</span>
+			<span class="var-name">$resolvedPath</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a45">45</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">resolved path cache when looking for a file in multiple include paths</p>
+<p class="description"><p>this is reset when the include path is changed</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -208,10 +273,10 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodtemplateFactory" id="templateFactory"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a163">163</a></span>)
+		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a224">224</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -255,10 +320,10 @@
 			
 	</div>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a44">44</a></span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a61">61</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -272,7 +337,7 @@
 		<span class="method-name">
 			__construct
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type">mixed</span>&nbsp;<span class="var-name">$includePath</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -288,6 +353,9 @@
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$compileId</span><span class="var-description">: the unique compiled identifier, which is used to distinguish this                              template from others, if null it defaults to the filename+bits of the path</span>			</li>
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$includePath</span><span class="var-description">: a string for a single path to look into for the given file, or an array of paths</span>			</li>
 				</ul>
 		
 			<hr class="separator" />
@@ -299,10 +367,10 @@
 			
 	</div>
 <a name="methodgetCompiledFilename" id="getCompiledFilename"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a196">196</a></span>)
+		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a257">257</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -335,10 +403,10 @@
 			
 	</div>
 <a name="methodgetCompiledTemplate" id="getCompiledTemplate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a66">66</a></span>)
+		<span class="method-title">getCompiledTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a114">114</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -372,11 +440,35 @@
 					</dl>
 			
 	</div>
+<a name="methodgetIncludePath" id="getIncludePath"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a102">102</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">return the current include path(s)</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">array</span>
+		<span class="method-name">
+			getIncludePath
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
 <a name="methodgetResourceIdentifier" id="getResourceIdentifier"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a131">131</a></span>)
+		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a179">179</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -406,7 +498,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a121">121</a></span>)
+		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a169">169</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -436,7 +528,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a111">111</a></span>)
+		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a159">159</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -466,7 +558,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a142">142</a></span>)
+		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a203">203</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -490,6 +582,35 @@
 			<dt><a href="../Dwoo/Dwoo_Template_String.html#methodgetUid">Dwoo_Template_String::getUid()</a></dt>
 						<dd>returns an unique value identifying the current version of this template,  in this case it's the md4 hash of the content</dd>
 					</dl>
+			
+	</div>
+<a name="methodsetIncludePath" id="setIncludePath"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a87">87</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">sets the include path(s) to where the given template filename must be looked up</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setIncludePath
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$paths</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$paths</span><span class="var-description">: the path to look into, can be string for a single path or an array of paths</span>			</li>
+				</ul>
+		
 			
 	</div>
 							<h4>Inherited Methods</h4>
@@ -522,7 +643,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 28 Jun 2008 01:38:23 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 03 Aug 2008 15:12:35 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>
