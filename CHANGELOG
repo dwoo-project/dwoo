@@ -1,4 +1,5 @@
 [2008-07-] 0.9.3
++ Plugins: Added the {a} block plugin to generate <a> tags
 + Syntax: Added the ";" token that allows to group multiple instructions in one
   single template tag, example: {if $foo; "> $foo";$bar;/} is equal to:
   {if $foo}> {$foo}{$bar}{/} - This also allow block operations such as:
@@ -7,17 +8,17 @@
   self-closed just like XML tags (e.g. {a "http://url.com" /} ). Be careful not
   to close a non-block plugin like that however, since it will close it's
   parent block
-+ Plugins: Added the {a} block plugin to generate <a> tags
++ Syntax: Static methods can be called using {Class::method()}
++ Syntax: It is now possible to use a plugin's result as an object and call
+  a method or read a property from it, i.e. {fetchObject()->doStuff()}
 + API: Added Dwoo_Plugin::paramsToAttributes() utility function to help
   with the creation of compilable xml/html-related plugins
-+ Syntax: Static methods can be called using {Class::method()}
-+ Compiler supports method calls into a method call's parameters
 + API: Added Dwoo->setPluginProxy() and Dwoo_IPluginProxy that allow you to
   hook into the compiler's plugin subsystem to provide your own plugin calls.
   Thanks to Denis Arh for the patch
    => http://forum.dwoo.org/viewtopic.php?id=70
-+ Syntax: It is now possible to use a plugin's result as an object and call
-  a method or read a property from it, i.e. {fetchObject()->doStuff()}
++ API: Dwoo->addPlugin() has a third parameter to mark a plugin as compilable
++ Compiler supports method calls into a method call's parameters
 * Dwoo_Compiler::implode_r is now public/static so it can be used in other
   places such as plugin proxies
 * Syntax: Math expressions in strings are now only allowed when the entire
@@ -32,6 +33,7 @@
    => http://forum.dwoo.org/viewtopic.php?id=70
 * Fixed a compileId auto-generation creating conflicts
 * Include allows paths going in upper levels now such as : "../foo.html"
+* Some compiler fixes regarding custom plugins
 
 [2008-06-28] 0.9.2
 ! BC Break: Renamed the {strip} modifier/function to {whitespace}, this does

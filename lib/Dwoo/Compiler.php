@@ -1426,12 +1426,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		} elseif ($pluginType & Dwoo::FUNC_PLUGIN) {
 			if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
-				$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
+				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+					$funcCompiler = $this->customPlugins[$func]['callback'];
+				} else {
+					$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
+				}
 				array_unshift($params, $this);
 				$output = call_user_func_array($funcCompiler, $params);
 			} else {
 				array_unshift($params, '$this');
-				$params = $this->implode_r($params);
+				$params = self::implode_r($params);
 
 				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
@@ -1442,14 +1446,33 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		} elseif ($pluginType & Dwoo::CLASS_PLUGIN) {
 			if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
-				$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
-				array_unshift($params, $this);
-				$output = call_user_func_array($funcCompiler, $params);
-			} else {
-				$params = $this->implode_r($params);
 				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					if (!is_array($callback)) {
+						if (!method_exists($callback, 'compile')) {
+							throw new Dwoo_Exception('Custom plugin '.$func.' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
+						}
+						if (($ref = new ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
+							$funcCompiler = array($callback, 'compile');
+						} else {
+							$funcCompiler = array(new $callback, 'compile');
+						}
+					} else {
+						$funcCompiler = $callback;
+					}
+				} else {
+					$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
+					array_unshift($params, $this);
+				}
+				$output = call_user_func_array($funcCompiler, $params);
+			} else {
+				$params = self::implode_r($params);
+				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+					$callback = $this->customPlugins[$func]['callback'];
+					if (!is_array($callback)) {
+						if (!method_exists($callback, 'process')) {
+							throw new Dwoo_Exception('Custom plugin '.$func.' must implement the "process" method to be usable, or you should provide a full callback to the method to use');
+						}
 						if (($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic()) {
 							$output = 'call_user_func(array(\''.$callback.'\', \'process\'), '.$params.')';
 						} else {
@@ -1476,7 +1499,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$output = call_user_func(array($this->dwoo->getPluginProxy(), $func));
 			}
 		} elseif ($pluginType & Dwoo::SMARTY_FUNCTION) {
-			$params = $this->implode_r($params['*'], true);
+			$params = self::implode_r($params['*'], true);
 
 			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 				$callback = $this->customPlugins[$func]['callback'];
@@ -2356,7 +2379,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				$params = $params['*'][0];
 
-				$params = $this->implode_r($params);
+				$params = self::implode_r($params);
 
 				if ($mapped) {
 					$output = '$this->arrayMap(\''.$func.'\', array('.$params.'))';
@@ -2371,7 +2394,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$params = $this->mapParams($params, null, $state);
 				$params = $params['*'][0];
 
-				$params = $this->implode_r($params);
+				$params = self::implode_r($params);
 
 				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
@@ -2415,13 +2438,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						if ($mapped) {
 							throw new Dwoo_Compilation_Exception($this, 'The @ operator can not be used on compiled plugins.');
 						}
-						$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
+						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+							$funcCompiler = $this->customPlugins[$func]['callback'];
+						} else {
+							$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
+						}
 						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
 					} else {
 						array_unshift($params, '$this');
 
-						$params = $this->implode_r($params);
+						$params = self::implode_r($params);
 						if ($mapped) {
 							$output = '$this->arrayMap(\''.$pluginName.'\', array('.$params.'))';
 						} else {
@@ -2433,11 +2460,27 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						if ($mapped) {
 							throw new Dwoo_Compilation_Exception($this, 'The @ operator can not be used on compiled plugins.');
 						}
-						$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
-						array_unshift($params, $this);
+						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+							$callback = $this->customPlugins[$func]['callback'];
+							if (!is_array($callback)) {
+								if (!method_exists($callback, 'compile')) {
+									throw new Dwoo_Exception('Custom plugin '.$func.' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
+								}
+								if (($ref = new ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
+									$funcCompiler = array($callback, 'compile');
+								} else {
+									$funcCompiler = array(new $callback, 'compile');
+								}
+							} else {
+								$funcCompiler = $callback;
+							}
+						} else {
+							$funcCompiler = array('Dwoo_Plugin_'.$func, 'compile');
+							array_unshift($params, $this);
+						}
 						$output = call_user_func_array($funcCompiler, $params);
 					} else {
-						$params = $this->implode_r($params);
+						$params = self::implode_r($params);
 
 						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 							if (is_object($callback[0])) {

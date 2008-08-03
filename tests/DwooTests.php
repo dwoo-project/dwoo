@@ -29,6 +29,7 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 	}
 
 	protected function tearDown() {
+		$this->clearDir(TEST_DIRECTORY.'/temp/cache', true);
 		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
 

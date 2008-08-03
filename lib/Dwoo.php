@@ -503,23 +503,25 @@ class Dwoo
 	 * @param callback $callback the plugin callback, either a function name,
 	 * 							 a class name or an array containing an object
 	 * 							 or class name and a method name
+	 * @param bool $compilable if set to true, the plugin is assumed to be compilable
 	 */
-	public function addPlugin($name, $callback)
+	public function addPlugin($name, $callback, $compilable = false)
 	{
+		$compilable = $compilable ? self::COMPILABLE_PLUGIN : 0;
 		if (is_array($callback)) {
 			if (is_subclass_of(is_object($callback[0]) ? get_class($callback[0]) : $callback[0], 'Dwoo_Block_Plugin')) {
-				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]));
+				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]));
 			} else {
-				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function'=>$callback[1]);
+				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function'=>$callback[1]);
 			}
 		} elseif (class_exists($callback, false)) {
 			if (is_subclass_of($callback, 'Dwoo_Block_Plugin')) {
-				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN, 'callback'=>$callback, 'class'=>$callback);
+				$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback);
 			} else {
-				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN, 'callback'=>$callback, 'class'=>$callback, 'function'=>'process');
+				$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback, 'function'=>'process');
 			}
 		} elseif (function_exists($callback)) {
-			$this->plugins[$name] = array('type'=>self::FUNC_PLUGIN, 'callback'=>$callback);
+			$this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
 		} else {
 			throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
 		}
