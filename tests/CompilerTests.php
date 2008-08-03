@@ -540,7 +540,7 @@ replace="BAR"
 	{
 		$tpl = new Dwoo_Template_String('{getobj()->foo()->Bar("hoy") getobj()->moo}');
 		$tpl->forceCompilation();
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
 
 		$this->assertEquals('HOYyay', $dwoo->get($tpl, array(), $this->compiler));
@@ -549,7 +549,7 @@ replace="BAR"
 	public function testPluginProxy()
 	{
 		$proxy = new ProxyHelper('baz',true,3);
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->setPluginProxy($proxy);
 		$tpl = new Dwoo_Template_String('{TestProxy("baz", true, 3)}');
 		$tpl->forceCompilation();

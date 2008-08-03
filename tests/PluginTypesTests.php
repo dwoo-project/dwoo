@@ -83,7 +83,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 	// Functions - Custom style
 	public function testCustomCompilableFunctionPlugin()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableFunctionPlugin', 'custom_compilable_plugin', true);
 		$tpl = new Dwoo_Template_String('{CustomCompilableFunctionPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -93,7 +93,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomCompilableFunctionPluginAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableFunctionPlugin', 'custom_compilable_plugin', true);
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomCompilableFunctionPlugin:5}');
 		$tpl->forceCompilation();
@@ -103,7 +103,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomFunctionPlugin()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomFunctionPlugin', 'custom_plugin');
 		$tpl = new Dwoo_Template_String('{CustomFunctionPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -113,7 +113,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomFunctionPluginAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomFunctionPlugin', 'custom_plugin');
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomFunctionPlugin:5}');
 		$tpl->forceCompilation();
@@ -124,7 +124,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 	// Classes - Custom style - Static
 	public function testCustomCompilableClassPlugin()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableClassPlugin', array('custom_compilable_class_plugin', 'call'), true);
 		$tpl = new Dwoo_Template_String('{CustomCompilableClassPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -134,7 +134,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomCompilableClassPluginAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableClassPlugin', array('custom_compilable_class_plugin', 'call'), true);
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomCompilableClassPlugin:5}');
 		$tpl->forceCompilation();
@@ -144,7 +144,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomClassPlugin()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomClassPlugin', array('custom_class_plugin', 'call'));
 		$tpl = new Dwoo_Template_String('{CustomClassPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -154,7 +154,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomClassPluginAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomClassPlugin', array('custom_class_plugin', 'call'));
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomClassPlugin:5}');
 		$tpl->forceCompilation();
@@ -165,7 +165,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 	// Classes - Custom style - Instance
 	public function testCustomCompilableClassPluginInstance()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableClassPlugin', array(new custom_compilable_class_plugin_obj(), 'call'), true);
 		$tpl = new Dwoo_Template_String('{CustomCompilableClassPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -175,7 +175,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomCompilableClassPluginInstanceAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomCompilableClassPlugin', array(new custom_compilable_class_plugin_obj(), 'call'), true);
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomCompilableClassPlugin:5}');
 		$tpl->forceCompilation();
@@ -185,7 +185,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomClassPluginInstance()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomClassPlugin', array(new custom_class_plugin_obj(), 'call'));
 		$tpl = new Dwoo_Template_String('{CustomClassPlugin 4 5}');
 		$tpl->forceCompilation();
@@ -195,7 +195,7 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
 
 	public function testCustomClassPluginInstanceAsModifier()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('CustomClassPlugin', array(new custom_class_plugin_obj(), 'call'));
 		$tpl = new Dwoo_Template_String('{$foo=4}{$foo|CustomClassPlugin:5}');
 		$tpl->forceCompilation();

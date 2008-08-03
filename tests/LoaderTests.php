@@ -16,7 +16,7 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
 	public function testLoaderGetSet()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
@@ -25,7 +25,7 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
 	public function testPluginLoad()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
@@ -38,7 +38,7 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
 	public function testRebuildClassPath()
 	{
-		$dwoo = new Dwoo();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
