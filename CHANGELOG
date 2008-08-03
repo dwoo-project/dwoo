@@ -1,4 +1,4 @@
-[2008-07-] 0.9.3
+[2008-08-03] 0.9.3
 + Plugins: Added the {a} block plugin to generate <a> tags
 + Syntax: Added the ";" token that allows to group multiple instructions in one
   single template tag, example: {if $foo; "> $foo";$bar;/} is equal to:
