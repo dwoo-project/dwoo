@@ -1,4 +1,10 @@
+[2008-0-] 0.9.4 / 1.0.0 ?
+* Fixed compiler bug that created a parse error when you had comments in an
+  extended template
+
 [2008-08-03] 0.9.3
++ Adapters: Added the ZendFramework interface for Dwoo
+  (see /Dwoo/Adapters/ZendFramework/README)
 + Plugins: Added the {a} block plugin to generate <a> tags
 + Syntax: Added the ";" token that allows to group multiple instructions in one
   single template tag, example: {if $foo; "> $foo";$bar;/} is equal to:

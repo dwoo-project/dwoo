@@ -562,47 +562,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$this->templateSource =& $tpl;
 		$this->pointer =& $ptr;
 
-		if ($this->debug) echo 'PROCESSING PREPROCESSORS<br>';
-
-		// runs preprocessors
-		foreach ($this->processors['pre'] as $preProc) {
-			if (is_array($preProc) && isset($preProc['autoload'])) {
-				$preProc = $this->loadProcessor($preProc['class'], $preProc['name']);
-			}
-			if (is_array($preProc) && $preProc[0] instanceof Dwoo_Processor) {
-				$tpl = call_user_func($preProc, $tpl);
-			} else {
-				$tpl = call_user_func($preProc, $this, $tpl);
-			}
-		}
-		unset($preProc);
-
-		if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre><hr />';
-
-		// strips comments
-		if (strstr($tpl, $this->ld.'*') !== false) {
-			$tpl = preg_replace('/'.$this->ldr.'\*.*?\*'.$this->rdr.'/s', '', $tpl);
-		}
-
-		// strips php tags if required by the security policy
-		if ($this->securityPolicy !== null) {
-			$search = array('{<\?php.*?\?>}');
-			if (ini_get('short_open_tags')) {
-				$search = array('{<\?.*?\?>}', '{<%.*?%>}');
-			}
-			switch($this->securityPolicy->getPhpHandling()) {
-
-			case Dwoo_Security_Policy::PHP_ALLOW:
-				break;
-			case Dwoo_Security_Policy::PHP_ENCODE:
-				$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
-				break;
-			case Dwoo_Security_Policy::PHP_REMOVE:
-				$tpl = preg_replace($search, '', $tpl);
-
-			}
-		}
-
 		while (true) {
 			// if pointer is at the beginning, reset everything, that allows a plugin to externally reset the compiler if everything must be reparsed
 			if ($ptr===0) {
@@ -616,7 +575,50 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				// add top level block
 				$compiled = $this->addBlock('topLevelBlock', array(), 0);
 				$this->stack[0]['buffer'] = '';
+
 				if ($this->debug) echo 'COMPILER INIT<br />';
+
+				if ($this->debug) echo 'PROCESSING PREPROCESSORS ('.count($this->processors['pre']).')<br>';
+
+				// runs preprocessors
+				foreach ($this->processors['pre'] as $preProc) {
+					if (is_array($preProc) && isset($preProc['autoload'])) {
+						$preProc = $this->loadProcessor($preProc['class'], $preProc['name']);
+					}
+					if (is_array($preProc) && $preProc[0] instanceof Dwoo_Processor) {
+						$tpl = call_user_func($preProc, $tpl);
+					} else {
+						$tpl = call_user_func($preProc, $this, $tpl);
+					}
+				}
+				unset($preProc);
+
+				// show template source if debug
+				if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre><hr />';
+
+				// strips comments
+				if (strstr($tpl, $this->ld.'*') !== false) {
+					$tpl = preg_replace('/'.$this->ldr.'\*.*?\*'.$this->rdr.'/s', '', $tpl);
+				}
+
+				// strips php tags if required by the security policy
+				if ($this->securityPolicy !== null) {
+					$search = array('{<\?php.*?\?>}');
+					if (ini_get('short_open_tags')) {
+						$search = array('{<\?.*?\?>}', '{<%.*?%>}');
+					}
+					switch($this->securityPolicy->getPhpHandling()) {
+
+					case Dwoo_Security_Policy::PHP_ALLOW:
+						break;
+					case Dwoo_Security_Policy::PHP_ENCODE:
+						$tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
+						break;
+					case Dwoo_Security_Policy::PHP_REMOVE:
+						$tpl = preg_replace($search, '', $tpl);
+
+					}
+				}
 			}
 
 			$pos = strpos($tpl, $this->ld, $ptr);
