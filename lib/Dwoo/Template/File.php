@@ -223,7 +223,8 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 */
 	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
 	{
-		$resourceId = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $resourceId);
+		$resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
+
 		if (file_exists($resourceId) === false) {
 			$tpl = $dwoo->getTemplate();
 			if ($tpl instanceof Dwoo_Template_File) {

@@ -39,6 +39,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			self::$r = '\s*'.self::$r;
 		}
 		$inheritanceTree = array(array('source'=>$compiler->getTemplateSource()));
+		$curPath = dirname($compiler->getDwoo()->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR;
 
 		while (!empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
@@ -54,13 +55,16 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 				$identifier = substr($file, 1, -1);
 			}
 
+			if (!preg_match('#^([a-z]:[/\\\\]|[/\\\\])#i', $identifier)) {
+				$identifier = realpath($curPath . $identifier);
+			}
+
 			if ($resource === 'file' && $policy = $compiler->getSecurityPolicy()) {
 				while (true) {
 					if (preg_match('{^([a-z]+?)://}i', $identifier)) {
 						throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources.');
 					}
 
-					$identifier = realpath($identifier);
 					$dirs = $policy->getAllowedDirectories();
 					foreach ($dirs as $dir=>$dummy) {
 						if (strpos($identifier, $dir) === 0) {
@@ -91,6 +95,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			$inheritanceTree[] = $newParent;
 
 			if (preg_match('/^'.self::$l.'extends\s+(?:file=)?\s*(\S+?)'.self::$r.'/i', $parent->getSource(), $match)) {
+				$curPath = dirname($identifier) . DIRECTORY_SEPARATOR;
 				$file = (substr($match[1], 0, 1) !== '"' && substr($match[1], 0, 1) !== '"') ? '"'.str_replace('"', '\\"', $match[1]).'"' : $match[1];
 			} else {
 				$file = false;
