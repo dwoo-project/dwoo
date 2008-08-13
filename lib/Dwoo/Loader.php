@@ -134,10 +134,14 @@ class Dwoo_Loader implements Dwoo_ILoader
 	 * TOCOM don't forget that php functions overrides are not rehashed so you
 	 * need to clear the classpath caches by hand when adding those
 	 *
-	 * @param string $pluginDir the plugin path to scan
+	 * @param string $pluginDirectory the plugin path to scan
 	 */
-	public function addDirectory($pluginDir)
+	public function addDirectory($pluginDirectory)
 	{
+		$pluginDir = realpath($pluginDirectory);
+		if (!$pluginDir) {
+			throw new Dwoo_Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
+		}
 		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, ':/\\.', '----'), strlen($pluginDir) > 80 ? -80 : 0).'.cache.php';
 		$this->paths[$pluginDir] = $cacheFile;
 		if (file_exists($cacheFile)) {
