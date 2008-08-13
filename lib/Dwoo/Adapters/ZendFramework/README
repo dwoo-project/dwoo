@@ -9,11 +9,24 @@
 // If anyone writes a more advanced how-to please let me know
 // ------------------------
 
-$viewInterface = new Dwoo_Adapters_ZendFramework_View(array(
+$view = new Dwoo_Adapters_ZendFramework_View(array(
        'compile_dir' => 'path/to/compile_dir' // set to null or remove this line to use defaults
        'cache_dir'   => 'path/to/cache_dir' // set to null or remove this line to use defaults
 ));
 
-$viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($viewInterface);
+// This allows you to use ZF's helpers as if they were Dwoo plugins (i.e. {doctype} will call the doctype helper)
+
+$view->setPluginProxy(new Dwoo_Adapters_ZendFramework_PluginProxy(new Zend_View()));
+
+
+// 1. example - used with the Zend Controller
+
+$viewRenderer = new Zend_Controller_Action_Helper_ViewRenderer($view);
 
 Zend_Controller_Action_HelperBroker::addHelper($viewRenderer);
+
+
+// 2. example - used manually
+
+$view->assign('foo', 'bar');
+$view->display('foobar.phtml');
