@@ -25,13 +25,18 @@
  */
 function Dwoo_Plugin_regex_replace(Dwoo $dwoo, $value, $search, $replace)
 {
-	// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
-	if (($pos = strpos($search, "\0")) !== false) {
-		$search = substr($search, 0, $pos);
-	}
+	$search = (array) $search;
+	$cnt = count($search);
 
-	if (preg_match('#([a-z\s]+)$#i', $search, $m) && strpos($m[0], 'e') !== false) {
-		$search = substr($search, 0, -strlen($m[0])) . str_replace('e', '', $m[0]);
+	for ($i = 0; $i < $cnt; $i++) {
+		// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
+		if (($pos = strpos($search[$i], "\0")) !== false) {
+			$search[$i] = substr($search[$i], 0, $pos);
+		}
+
+		if (preg_match('#[a-z\s]+$#is', $search[$i], $m) && (strpos($m[0], 'e') !== false)) {
+			$search[$i] = substr($search[$i], 0, -strlen($m[0])) . str_replace(array('e', ' '), '', $m[0]);
+		}
 	}
 
 	return preg_replace($search, $replace, $value);
