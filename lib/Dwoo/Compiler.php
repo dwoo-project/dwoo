@@ -1501,7 +1501,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$output = call_user_func(array($this->dwoo->getPluginProxy(), $func));
 			}
 		} elseif ($pluginType & Dwoo::SMARTY_FUNCTION) {
-			$params = self::implode_r($params['*'], true);
+			if (isset($params['*'])) {
+				$params = self::implode_r($params['*'], true);
+			} else {
+				$params = '';
+			}
 
 			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
 				$callback = $this->customPlugins[$func]['callback'];
