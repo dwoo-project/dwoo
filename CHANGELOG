@@ -3,6 +3,8 @@
   extended template
 * Fixed extends bug when extending files in other directories using relative
   paths
+* Fixed parsing bug with |modifier:param|modifier2} with:colon after it
+* Bug fixed with smarty functions called with no parameters (in compat mode)
 
 [2008-08-03] 0.9.3
 + Adapters: Added the ZendFramework interface for Dwoo

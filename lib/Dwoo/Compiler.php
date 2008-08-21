@@ -2296,7 +2296,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 			$cmdstr = $cmdstrsrc;
 			$paramsep = ':';
-			if (!preg_match('/^(@{0,2}[a-z][a-z0-9_]*)(:)?/', $cmdstr, $match)) {
+			if (!preg_match('/^(@{0,2}[a-z][a-z0-9_]*)(:)?/i', $cmdstr, $match)) {
 				throw new Dwoo_Compilation_Exception($this, 'Invalid modifier name, started with : '.substr($cmdstr, 0, 10));
 			}
 			$paramspos = !empty($match[2]) ? strlen($match[1]) : false;
