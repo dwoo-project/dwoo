@@ -2296,24 +2296,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 			$cmdstr = $cmdstrsrc;
 			$paramsep = ':';
-			$paramspos = strpos($cmdstr, $paramsep);
-			$funcsep = strpos($cmdstr, '|');
-			if ($funcsep !== false && ($paramspos === false || $paramspos > $funcsep)) {
-				$paramspos = false;
-				$cmdstr = substr($cmdstr, 0, $funcsep);
+			if (!preg_match('/^(@{0,2}[a-z][a-z0-9_]*)(:)?/', $cmdstr, $match)) {
+				throw new Dwoo_Compilation_Exception($this, 'Invalid modifier name, started with : '.substr($cmdstr, 0, 10));
 			}
+			$paramspos = !empty($match[2]) ? strlen($match[1]) : false;
+			$func = $match[1];
 
 			$state = 0;
 			if ($paramspos === false) {
-				if (!preg_match('/^(@{0,2}[a-z][a-z0-9_]*)/', $cmdstr, $match)) {
-					throw new Dwoo_Compilation_Exception($this, 'Invalid modifier name, started with : '.substr($cmdstr, 0, 10));
-				}
-				$func = $match[1];
 				$cmdstrsrc = substr($cmdstrsrc, strlen($func));
 				$params = array();
 				if ($this->debug) echo 'MODIFIER ('.$func.') CALLED WITH NO PARAMS<br/>';
 			} else {
-				$func = substr($cmdstr, 0, $paramspos);
 				$paramstr = substr($cmdstr, $paramspos+1);
 				if (substr($paramstr, -1, 1) === $paramsep) {
 					$paramstr = substr($paramstr, 0, -1);
