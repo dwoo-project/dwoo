@@ -263,4 +263,56 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		$this->_engine->setCharset($charset);
 		return $this;
 	}
+
+   /**
+     * Given a base path, add script, helper, and filter paths relative to it
+     *
+     * Assumes a directory structure of:
+     * <code>
+     * basePath/ (view scripts)
+     *     helpers/
+     *     filters/
+     * </code>
+     *
+     * @param  string $path
+     * @param  string $prefix Prefix to use for helper and filter paths
+     * @return Zend_View_Abstract
+     */
+    public function addBasePath($path, $classPrefix = 'Zend_View')
+    {
+        $path        = rtrim($path, '/');
+        $path        = rtrim($path, '\\');
+        $path       .= DIRECTORY_SEPARATOR;
+        $classPrefix = rtrim($classPrefix, '_') . '_';
+        $this->addScriptPath($path);
+        $this->addHelperPath($path . 'helpers', $classPrefix . 'Helper');
+        $this->addFilterPath($path . 'filters', $classPrefix . 'Filter');
+        return $this;
+    }
+
+    /**
+     * Given a base path, sets the script, helper, and filter paths relative to it
+     *
+     * Assumes a directory structure of:
+     * <code>
+     * basePath/ (view scripts)
+     *     helpers/
+     *     filters/
+     * </code>
+     *
+     * @param  string $path
+     * @param  string $prefix Prefix to use for helper and filter paths
+     * @return Zend_View_Abstract
+     */
+    public function setBasePath($path, $classPrefix = 'Zend_View')
+	{
+        $path        = rtrim($path, '/');
+        $path        = rtrim($path, '\\');
+        $path       .= DIRECTORY_SEPARATOR;
+        $classPrefix = rtrim($classPrefix, '_') . '_';
+        $this->setScriptPath($path);
+        $this->setHelperPath($path . 'helpers', $classPrefix . 'Helper');
+        $this->setFilterPath($path . 'filters', $classPrefix . 'Filter');
+        return $this;
+    }
 }
