@@ -7,6 +7,7 @@
 * Bug fixed with smarty functions called with no parameters (in compat mode)
 * Fixed Dwoo::isArray() check, objects implementing ArrayAccess are now
   valid (thanks to Daniel Cousineau for the patch)
+* Fixed compiler warning when doing {func()->method()} or {func()->property}
 
 [2008-08-03] 0.9.3
 + Adapters: Added the ZendFramework interface for Dwoo

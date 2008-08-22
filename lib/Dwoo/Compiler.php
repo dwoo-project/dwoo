@@ -1174,6 +1174,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (empty($out)) {
 			return '';
 		}
+
 		$substr = substr($in, $pointer, $to-$pointer);
 		if (isset($parsed) && $parsed==='var' && preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
 			$pointer += strlen($match[0]) - 1;
@@ -1198,7 +1199,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$ptr = 0;
 
 			if (is_array($parsingParams)) {
-				$output = $this->parseMethodCall($out[1], $match[0], $curBlock, $ptr);
+				$output = $this->parseMethodCall($out[count($out)-1][1], $match[0], $curBlock, $ptr);
 
 				$out[count($out)-1][0] .= substr($match[0], 0, $ptr);
 				$out[count($out)-1][1] .= $output;

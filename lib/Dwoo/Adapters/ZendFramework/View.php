@@ -1,13 +1,26 @@
 <?php
 
 /**
- * View interface for Dwoo template engine based on
- * Zend_View_Abstract
+ * Dwoo adapter for ZendFramework
  *
- * @package		 Dwoo
- * @author		 Denis Arh <denis@arh.cc>
- * @author       Stephan Wentz <stephan@wentz.it>
- * @author       Jordi Boggiano <j.boggiano@seld.be>
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the
+ * use of this software.
+ *
+ * This file is released under the LGPL
+ * "GNU Lesser General Public License"
+ * More information can be found here:
+ * {@link http://www.gnu.org/copyleft/lesser.html}
+ *
+ * @author	   Denis Arh <denis@arh.cc>
+ * @author     Stephan Wentz <stephan@wentz.it>
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
+ * @link       http://dwoo.org/
+ * @version    1.0.0
+ * @date       2008-08-17
+ * @package    Dwoo
  */
 class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 {
@@ -63,7 +76,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 
 	/**
 	 * Wraper for Dwoo_Data::__set()
- 	 * allows to assign variables using the object syntax
+	 * allows to assign variables using the object syntax
 	 *
 	 * @see Dwoo_Data::__set()
 	 * @param string $name the variable name
@@ -75,23 +88,23 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
  	}
 
  	/**
- 	 * Sraper for Dwoo_Data::__get()
- 	 * allows to read variables using the object syntax
- 	 *
- 	 * @see Dwoo_Data::__get()
- 	 * @param string $name the variable name
- 	 * @return mixed
- 	 */
+	 * Sraper for Dwoo_Data::__get() allows to read variables using the object
+	 * syntax
+	 *
+	 * @see Dwoo_Data::__get()
+	 * @param string $name the variable name
+	 * @return mixed
+	 */
  	public function __get($name)
  	{
- 	  return $this->_data->__get($name);
+		 return $this->_data->__get($name);
  	}
 
  	/**
 	 * Wraper for Dwoo_Data::__isset()
- 	 * supports calls to isset($dwooData->var)
- 	 *
- 	 * @see Dwoo_Data::__isset()
+	 * supports calls to isset($dwooData->var)
+	 *
+	 * @see Dwoo_Data::__isset()
 	 * @param string $name the variable name
 	 */
  	public function __isset($name)
