@@ -5,6 +5,8 @@
   paths
 * Fixed parsing bug with |modifier:param|modifier2} with:colon after it
 * Bug fixed with smarty functions called with no parameters (in compat mode)
+* Fixed Dwoo::isArray() check, objects implementing ArrayAccess are now
+  valid (thanks to Daniel Cousineau for the patch)
 
 [2008-08-03] 0.9.3
 + Adapters: Added the ZendFramework interface for Dwoo

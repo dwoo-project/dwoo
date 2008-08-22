@@ -910,7 +910,7 @@ class Dwoo
 			} else {
 				return count($value) > 0;
 			}
-		} elseif ($value instanceof Iterator) {
+		} elseif ($value instanceof Iterator || $value instanceof ArrayAccess) {
 			if ($checkIsEmpty === false) {
 				return true;
 			} else {
