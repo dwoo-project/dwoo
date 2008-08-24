@@ -104,11 +104,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		$this->cacheTime = $cacheTime;
 
 		if ($compileId !== null) {
-			$this->compileId = strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			$this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
 		}
 
 		if ($cacheId !== null) {
-			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			$this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
 		}
 	}
 
@@ -401,7 +401,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			// force compiled id generation
 			$this->getCompiledFilename($dwoo);
 
-			$this->cacheId = $this->compileId . strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			$this->cacheId = str_replace('../', '__', $this->compileId . strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
 		}
 		return $dwoo->getCacheDir() . $this->cacheId.'.html';
 	}

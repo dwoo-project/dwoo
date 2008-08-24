@@ -65,11 +65,11 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		$this->cacheTime = $cacheTime;
 
 		if ($compileId !== null) {
-			$this->compileId = strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			$this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
 		}
 
 		if ($cacheId !== null) {
-			$this->cacheId = strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------');
+			$this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
 		}
 
 		if (is_string($includePath)) {
@@ -259,7 +259,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	{
 		// no compile id was provided, set default
 		if ($this->compileId===null) {
-			$this->compileId = strtr($this->getResourceIdentifier(), '\\:', '/-');
+			$this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
 		}
 		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
 	}
