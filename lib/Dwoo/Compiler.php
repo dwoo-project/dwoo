@@ -104,15 +104,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected $securityPolicy;
 
 	/**
-	 * storage for parse errors/warnings
-	 *
-	 * will be deprecated when proper exceptions are added
-	 *
-	 * @var array
-	 */
-	protected $errors = array();
-
-	/**
 	 * stores the custom plugins registered with this compiler
 	 *
 	 * @var array
@@ -764,10 +755,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 		if ($this->debug) echo '<hr></pre></pre>';
-
-		if (!empty($this->errors)) {
-			print_r($this->errors);
-		}
 
 		$this->template = $this->dwoo = null;
 		$tpl = null;
