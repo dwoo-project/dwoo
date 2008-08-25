@@ -746,6 +746,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$output = preg_replace('/(?<!;|\}|\*\/|\n|\{)(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
 
+		// handle <?xml tag at the beginning
+		$output = preg_replace('#(/\* template body \*/ \?>\s*)<\?xml#is', '$1<?php echo \'<?xml\'; ?>', $output);
+
 		if ($this->debug) {
 			echo '<hr><pre>';
 			$lines = preg_split('{\r\n|\n|<br />}', highlight_string(($output), true));
