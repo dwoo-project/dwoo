@@ -1,4 +1,7 @@
 [2008-0-] 0.9.4 / 1.0.0 ?
++ API: Added Dwoo_Compilation_Exception methods getCompiler() and
+  getTemplate() so you can catch the exception and use those to build a nicer
+  error view with all the details you want
 * Fixed compiler bug that created a parse error when you had comments in an
   extended template
 * Fixed extends bug when extending files in other directories using relative
