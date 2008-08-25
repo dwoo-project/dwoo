@@ -45,7 +45,12 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 		reset($params);
 		while (list($k,$v) = each($params)) {
 			$v = (string) $v;
-			switch(substr($v, 0, 1) === '"' || substr($v, 0, 1) === '\'' ? substr($v, 1, -1) : $v) {
+			if(substr($v, 0, 1) === '"' || substr($v, 0, 1) === '\'') {
+				$vmod = strtolower(substr($v, 1, -1));
+			} else {
+				$vmod = strtolower($v);
+			}
+			switch($vmod) {
 
 			case 'and':
 				$p[] = '&&';
@@ -88,7 +93,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 				$p[] = '!==';
 				break;
 			case 'is':
-				if (isset($params[$k+1]) && trim($params[$k+1], '"\'') === 'not') {
+				if (isset($params[$k+1]) && strtolower(trim($params[$k+1], '"\'')) === 'not') {
 					$negate = true;
 					next($params);
 				} else {
@@ -103,7 +108,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 				switch($params[$k+$ptr]) {
 
 				case 'div':
-					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
+					if (isset($params[$k+$ptr+1]) && strtolower(trim($params[$k+$ptr+1], '"\'')) === 'by') {
 						$p[] = ' % '.$params[$k+$ptr+2].' '.($negate?'!':'=').'== 0';
 						next($params);
 						next($params);
@@ -114,7 +119,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 					break;
 				case 'even':
 					$a = array_pop($p);
-					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
+					if (isset($params[$k+$ptr+1]) && strtolower(trim($params[$k+$ptr+1], '"\'')) === 'by') {
 						$b = $params[$k+$ptr+2];
 						$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'!':'=').'== 0';
 						next($params);
@@ -126,7 +131,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 					break;
 				case 'odd':
 					$a = array_pop($p);
-					if (isset($params[$k+$ptr+1]) && trim($params[$k+$ptr+1], '"\'') === 'by') {
+					if (isset($params[$k+$ptr+1]) && strtolower(trim($params[$k+$ptr+1], '"\'')) === 'by') {
 						$b = $params[$k+$ptr+2];
 						$p[] = '('.$a .' / '.$b.') % 2 '.($negate?'=':'!').'== 0';
 						next($params);

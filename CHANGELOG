@@ -10,6 +10,7 @@
 * Fixed compiler warning when doing {func()->method()} or {func()->property}
 * Fixed compiled/cached files being written in the wrong place when the path
   to the template contains "../"s
+* Fixed {if} failing with conditions using upper case operators (i.e. AND)
 
 [2008-08-03] 0.9.3
 + Adapters: Added the ZendFramework interface for Dwoo
