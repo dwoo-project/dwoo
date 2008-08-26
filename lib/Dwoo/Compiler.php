@@ -1667,7 +1667,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$substr = substr($in, $from, $to-$from);
 
-		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R))\]))*)' . // var key
+		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*\2)\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\(.*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
@@ -1675,18 +1675,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$key = substr($match[1], 1);
 
 			$matchedLength = strlen($match[0]);
-			$hasModifiers = !empty($match[4]);
-			$hasExpression = !empty($match[3]);
-			$hasMethodCall = !empty($match[2]);
+			$hasModifiers = !empty($match[5]);
+			$hasExpression = !empty($match[4]);
+			$hasMethodCall = !empty($match[3]);
 
 			if ($hasMethodCall) {
-				$matchedLength -= strlen($match[2]) + strlen(substr($match[1], strrpos($match[1], '->')));
+				$matchedLength -= strlen($match[3]) + strlen(substr($match[1], strrpos($match[1], '->')));
 				$key = substr($match[1], 1, strrpos($match[1], '->')-1);
-				$methodCall = substr($match[1], strrpos($match[1], '->')) . $match[2];
+				$methodCall = substr($match[1], strrpos($match[1], '->')) . $match[3];
 			}
 
 			if ($hasModifiers) {
-				$matchedLength -= strlen($match[4]);
+				$matchedLength -= strlen($match[5]);
 			}
 
 			if ($pointer !== null) {
@@ -1784,7 +1784,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			if ($hasExpression) {
 				// expressions
-				preg_match_all('#(?:([+/*%=-])(=?-?[%$][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[3], $expMatch);
+				preg_match_all('#(?:([+/*%=-])(=?-?[%$][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|=?-?[0-9.,]+|\1))#i', $match[4], $expMatch);
 
 				foreach ($expMatch[1] as $k=>$operator) {
 					if (substr($expMatch[2][$k], 0, 1)==='=') {
@@ -1849,7 +1849,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			// handle modifiers
 			if ($curBlock !== 'modifier' && $hasModifiers) {
 				$ptr = 0;
-				$output = $this->replaceModifiers(array(null, null, $output, $match[4]), 'var', $ptr);
+				$output = $this->replaceModifiers(array(null, null, $output, $match[5]), 'var', $ptr);
 				if ($pointer !== null) {
 					$pointer += $ptr;
 				}
@@ -1983,7 +1983,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 				}
 			} else {
-				preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $key, $m);
+				preg_match_all('#(\[|->|\.)?([a-z0-9_]+|(\\\?[\'"])[^\3]*\3)\]?#i', $key, $m);
 
 				$i = $m[2][0];
 				if ($i === '_parent' || $i === '_') {
@@ -2016,7 +2016,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 
 					while (count($m[1]) && $m[1][0] !== '->') {
-						$output .= '["'.$m[2][0].'"]';
+						$m[2][0] = preg_replace('/(^\\\([\'"])|\\\([\'"])$)/x', '$2$3', $m[2][0]);
+						if(substr($m[2][0], 0, 1) == '"' || substr($m[2][0], 0, 1) == "'") {
+							$output .= '['.$m[2][0].']';
+						} else {
+							$output .= '["'.$m[2][0].'"]';
+						}
 						array_shift($m[2]);
 						array_shift($m[1]);
 					}

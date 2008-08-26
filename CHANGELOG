@@ -4,6 +4,10 @@
   error view with all the details you want
 * The Compiler now ensures that a template starting with <?xml will not
   conflict with php using the short_open_tag=On setting
+* Complex arrays keys can be read using {$var["Long|Key*With.some)Crap"]},
+  however since it is really bad practice I won't spend time fixing edge
+  cases, which are $ and '/" characters inside the string. Those will break
+  it and that's it.. if you really care feel free to send a patch
 * Fixed compiler bug that created a parse error when you had comments in an
   extended template
 * Fixed extends bug when extending files in other directories using relative
