@@ -12,7 +12,7 @@
   extended template
 * Fixed extends bug when extending files in other directories using relative
   paths
-* Fixed parsing bug with |modifier:param|modifier2} with:colon after it
+* Fixed parsing bug with "|modifier:param|modifier2} with:colon after it"
 * Bug fixed with smarty functions called with no parameters (in compat mode)
 * Fixed Dwoo::isArray() check, objects implementing ArrayAccess are now
   valid (thanks to Daniel Cousineau for the patch)

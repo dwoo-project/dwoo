@@ -548,11 +548,18 @@ class Dwoo
 	public function addFilter($callback, $autoload = false)
 	{
 		if ($autoload) {
-			$name = str_replace('Dwoo_Filter_', '', $callback);
-			$class = 'Dwoo_Filter_'.$name;
+			$class = 'Dwoo_Filter_'.$callback;
 
 			if (!class_exists($class, false) && !function_exists($class)) {
-				$this->getLoader()->loadPlugin($name);
+				try {
+					$this->getLoader()->loadPlugin($callback);
+				} catch (Dwoo_Exception $e) {
+					if (strstr($callback, 'Dwoo_Filter_')) {
+						throw new Dwoo_Exception('Wrong filter name : '.$callback.', the "Dwoo_Filter_" prefix should not be used, please only use "'.str_replace('Dwoo_Filter_', '', $callback).'"');
+					} else {
+						throw new Dwoo_Exception('Wrong filter name : '.$callback.', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
+					}
+				}
 			}
 
 			if (class_exists($class, false)) {
@@ -560,7 +567,7 @@ class Dwoo
 			} elseif (function_exists($class)) {
 				$callback = $class;
 			} else {
-				throw new Dwoo_Exception('Wrong filter name, when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
+				throw new Dwoo_Exception('Wrong filter name : '.$callback.', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
 			}
 
 			$this->filters[] = $callback;
@@ -576,12 +583,12 @@ class Dwoo
 	 */
 	public function removeFilter($callback)
 	{
-		if (($index = array_search($callback, $this->filters, true)) !== false) {
+		if (($index = array_search('Dwoo_Filter_'.$callback, $this->filters, true)) !== false) {
 			unset($this->filters[$index]);
-		} elseif (($index = array_search('Dwoo_Filter_'.str_replace('Dwoo_Filter_', '', $callback), $this->filters, true)) !== false) {
+		} elseif (($index = array_search($callback, $this->filters, true)) !== false) {
 			unset($this->filters[$index]);
 		} else	{
-			$class = 'Dwoo_Filter_' . str_replace('Dwoo_Filter_', '', $callback);
+			$class = 'Dwoo_Filter_' . $callback;
 			foreach ($this->filters as $index=>$filter) {
 				if (is_array($filter) && $filter[0] instanceof $class) {
 					unset($this->filters[$index]);
