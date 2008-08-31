@@ -346,8 +346,9 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	}
 
 	/**
-	 * returns false as this template type does not support inclusions
+	 * returns a new template string object with the resource id being the template source code
 	 *
+	 * @param Dwoo $dwoo the dwoo instance requiring it
 	 * @param mixed $resourceId the filename (relative to this template's dir) of the template to include
 	 * @param int $cacheTime duration of the cache validity for this template,
 	 * 						 if null it defaults to the Dwoo instance that will
@@ -357,11 +358,13 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
 	 * 							template from others, if null it defaults to the filename+bits of the path
-	 * @return false
+	 * @param Dwoo_ITemplate $parentTemplate the template that is requesting a new template object (through
+	 * 											an include, extends or any other plugin)
+	 * @return Dwoo_Template_String
 	 */
-	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
+	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
-		return false;
+		return new self($resourceId, $cacheTime, $cacheId, $compileId);
 	}
 
 	/**

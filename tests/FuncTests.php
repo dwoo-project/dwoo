@@ -248,15 +248,18 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("ab", $this->dwoo->get($tpl, array('foo'=>'a', 'bar'=>'b'), $this->compiler));
 
-		$tpl = new Dwoo_Template_String('{include file=\'file:/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/test.html\'}');
-		$tpl->forceCompilation();
-
-		$this->assertEquals("", $this->dwoo->get($tpl, array('foo'=>'a', 'bar'=>'b'), $this->compiler));
-
 		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/inctest.html');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("34", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testIncludeString()
+	{
+		$tpl = new Dwoo_Template_String('{include file=$tpl foo=$a bar=$b}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("AB", $this->dwoo->get($tpl, array('a'=>'A', 'b'=>'B', 'tpl'=>'{$a}{$b}')));
 	}
 
 	public function testIncludeParent()

@@ -20,57 +20,46 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Block, Dwoo_IElseable
 {
-	public static $types = array
-	(
-		'if' => true, 'elseif' => true
-	);
-
 	public function init(array $rest)
 	{
 	}
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		// delete this block
-		$compiler->removeTopBlock();
-		// fetch the top of the stack
-		$parent =& $compiler->getCurrentBlock();
-		// loop until we get an elseif or if block
-		$out = '';
-		while (!isset(self::$types[$parent['type']])) {
-			$out .= $compiler->removeTopBlock();
-			$parent =& $compiler->getCurrentBlock();
-		}
-		//
-		$out .= $parent['params']['postOutput'];
-		$parent['params']['postOutput'] = '';
-
-		// reinsert this block
-		$compiler->injectBlock($type, $params, 1);
-
-		// generate post-output
-		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
-
-		if ($out === '') {
-			$out = Dwoo_Compiler::PHP_OPEN."\n}";
-		} else {
-			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
+		$preContent = '';
+		while (true) {
+			$preContent .= $compiler->removeTopBlock();
+			$block =& $compiler->getCurrentBlock();
+			$interfaces = class_implements($block['class'], false);
+			if (in_array('Dwoo_IElseable', $interfaces) !== false) {
+				break;
+			}
 		}
 
-		$params = $compiler->getCompiledParams($params);
-
-		return $out . " elseif (".implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
+		$params['initialized'] = true;
+		$compiler->injectBlock($type, $params);
+		return $preContent;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		if (isset($params['postOutput'])) {
-			return $content . $params['postOutput'];
-		} else {
-			return $content;
+		if (!isset($params['initialized'])) {
+			return '';
 		}
+
+		$params = $compiler->getCompiledParams($params);
+
+		$pre = Dwoo_Compiler::PHP_OPEN."elseif (".implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n" . Dwoo_Compiler::PHP_CLOSE;
+		$post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+
+		if (isset($params['hasElse'])) {
+			$post .= $params['hasElse'];
+		}
+
+		$block =& $compiler->getCurrentBlock();
+		$block['params']['hasElse'] = $pre . $content . $post;
+		return '';
 	}
 }

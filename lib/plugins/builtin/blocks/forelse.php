@@ -27,23 +27,22 @@ class Dwoo_Plugin_forelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		$foreach =& $compiler->findBlock('for', true);
-		$out = $foreach['params']['postOutput'];
-		$foreach['params']['postOutput'] = '';
+		$with =& $compiler->findBlock('for', true);
 
-		$compiler->injectBlock($type, $params, 1);
+		$params['initialized'] = true;
+		$compiler->injectBlock($type, $params);
 
-		if (substr($out, -strlen(Dwoo_Compiler::PHP_CLOSE)) === Dwoo_Compiler::PHP_CLOSE) {
-			$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
-		} else {
-			$out .= Dwoo_Compiler::PHP_OPEN;
-		}
-
-		return $out . "else\n{" . Dwoo_Compiler::PHP_CLOSE;
+		return '';
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $content . Dwoo_Compiler::PHP_OPEN.'}'.Dwoo_Compiler::PHP_CLOSE;
+		if (!isset($params['initialized'])) {
+			return '';
+		}
+
+		$block =& $compiler->getCurrentBlock();
+		$block['params']['hasElse'] = Dwoo_Compiler::PHP_OPEN."else {\n".Dwoo_Compiler::PHP_CLOSE . $content . Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+		return '';
 	}
 }

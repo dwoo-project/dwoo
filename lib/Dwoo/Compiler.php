@@ -525,13 +525,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * returns the template that is being compiled
 	 *
-	 * @param bool $fromPointer if set to true, only the source from the current pointer position is returned
+	 * @param mixed $fromPointer if set to true, only the source from the current pointer
+	 * 							  position is returned, if a number is given it overrides the current pointer
 	 * @return string the template or partial template
 	 */
 	public function getTemplateSource($fromPointer = false)
 	{
-		if ($fromPointer) {
+		if ($fromPointer === true) {
 			return substr($this->templateSource, $this->pointer);
+		} elseif (is_numeric($fromPointer)) {
+			return substr($this->templateSource, $fromPointer);
 		} else {
 			return $this->templateSource;
 		}
@@ -872,7 +875,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'buffer' => null);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'class' => $class, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 		return call_user_func(array($class,'preProcessing'), $this, $params, '', '', $type);
 	}
@@ -896,7 +899,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => true, 'class'=>$class, 'buffer' => null);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => true, 'class' => $class, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 		return call_user_func(array($class,'preProcessing'), $this, $params, '', '', $type);
 	}
@@ -915,7 +918,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (class_exists($class, false) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
 		}
-		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'buffer' => null);
+		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'class' => $class, 'buffer' => null);
 		$this->curBlock =& $this->stack[count($this->stack)-1];
 	}
 
@@ -981,7 +984,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if ($b['type']===$type) {
 					return $this->stack[key($this->stack)];
 				}
-				$this->removeTopBlock();
+				$this->push($this->removeTopBlock(), 0);
 			}
 		} else {
 			end($this->stack);
@@ -1037,8 +1040,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function getCompiledParams(array $params)
 	{
-		foreach ($params as &$p)
-			$p = $p[0];
+		foreach ($params as $k=>$p) {
+			if (is_array($p)) {
+				$params[$k] = $p[0];
+			}
+		}
 		return $params;
 	}
 
@@ -1050,8 +1056,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function getRealParams(array $params)
 	{
-		foreach ($params as &$p)
-			$p = $p[1];
+		foreach ($params as $k=>$p) {
+			if (is_array($p)) {
+				$params[$k] = $p[1];
+			}
+		}
 		return $params;
 	}
 
@@ -1124,10 +1133,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			return $this->parse($in, $from+1, $to, false, 'root', $pointer);
 		} elseif ($curBlock === 'root' && preg_match('#^/([a-z][a-z0-9_]*)?#i', $substr, $match)) {
 			// close block
+			if (!empty($match[1]) && $match[1] == 'else') {
+				throw new Dwoo_Compilation_Exception($this, 'Else blocks must not be closed explicitly, they are automatically closed when their parent block is closed');
+			}
+			if (!empty($match[1]) && $match[1] == 'elseif') {
+				throw new Dwoo_Compilation_Exception($this, 'Elseif blocks must not be closed explicitly, they are automatically closed when their parent block is closed or a new else/elseif block is declared after them');
+			}
 			if ($pointer !== null) {
 				$pointer += strlen($match[0]);
 			}
 			if (empty($match[1])) {
+				if ($this->curBlock['type'] == 'else' || $this->curBlock['type'] == 'elseif') {
+					$pointer -= strlen($match[0]);
+				}
 				if ($this->debug) echo 'TOP BLOCK CLOSED<br />';
 				return $this->removeTopBlock();
 			} else {

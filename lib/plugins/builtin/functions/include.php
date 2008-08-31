@@ -33,7 +33,8 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		return;
 	}
 
-	if (preg_match('#^([a-z]{2,}):(.*)#i', $file, $m)) {
+	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
+		// resource:identifier given, extract them
 		$resource = $m[1];
 		$identifier = $m[2];
 	} else {
@@ -42,37 +43,18 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 		$identifier = $file;
 	}
 
-	if ($resource === 'file' && $policy = $dwoo->getSecurityPolicy()) {
-		while (true) {
-			if (preg_match('{^([a-z]+?)://}i', $identifier)) {
-				throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources : <em>'.$identifier.'</em>.');
-			}
-
-			$identifier = realpath($identifier);
-			$dirs = $policy->getAllowedDirectories();
-			foreach ($dirs as $dir=>$dummy) {
-				if (strpos($identifier, $dir) === 0) {
-					break 2;
-				}
-			}
-			throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$identifier.'</em>');
-		}
-	}
-
-	if ($resource === 'file' && strpos($identifier, '..') !== false) {
-		$identifier = realpath(dirname($dwoo->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR . $identifier);
-	}
-
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
+	} catch (Dwoo_Security_Exception $e) {
+		return $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
 	} catch (Dwoo_Exception $e) {
-		$dwoo->triggerError('Include : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>', E_USER_WARNING);
+		return $dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
 	}
 
 	if ($include === null) {
-		return;
+		return $dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
 	} elseif ($include === false) {
-		$dwoo->triggerError('Include : Including "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.', E_USER_WARNING);
+		return $dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
 	}
 
 	if ($dwoo->isArray($data)) {

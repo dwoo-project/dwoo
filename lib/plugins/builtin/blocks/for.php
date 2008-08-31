@@ -25,7 +25,7 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
 {
 	public static $cnt=0;
 
@@ -35,8 +35,17 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
+		// get block params and save the current template pointer to use it in the postProcessing method
+		$currentBlock =& $compiler->getCurrentBlock();
+		$currentBlock['params']['tplPointer'] = $compiler->getPointer();
+
+		return '';
+	}
+
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+	{
 		$params = $compiler->getCompiledParams($params);
-		$tpl = $compiler->getTemplateSource(true);
+		$tpl = $compiler->getTemplateSource($params['tplPointer']);
 
 		// assigns params
 		$from = $params['from'];
@@ -112,17 +121,12 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 			$postOut.="\n\t\t".'$_for'.$cnt.'_glob["iteration"]+=1;';
 		}
 		// end loop
-		$postOut .= "\n\t}\n}\n";
+		$postOut .= "\n\t}\n}\n".Dwoo_Compiler::PHP_CLOSE;
 
-		// get block params and save the post-processing output already
-		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = $postOut . Dwoo_Compiler::PHP_CLOSE;
+		if (isset($params['hasElse'])) {
+			$postOut .= $params['hasElse'];
+		}
 
-		return $out;
-	}
-
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
-	{
-		return $content . $params['postOutput'];
+		return $out . $content . $postOut;
 	}
 }

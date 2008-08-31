@@ -1,4 +1,11 @@
-[2008-0-] 0.9.4 / 1.0.0 ?
+[2008-09-] 0.9.4
+! BC Break: {include} and {extends} now support the include path properly,
+  which means that if you include "foo/bar.html" from _any_ template and you
+  have an include path set on your template object, it will look in all those
+  paths for foo/bar.html. If you use relative paths, for example
+  if you include "../foo/bar.html" AND have an include path set, you will now
+  have a problem, because you can't mix both approaches, otherwise you should
+  be fine, so to fix this you should convert your relative includes/extends
 + API: Added Dwoo_Compilation_Exception methods getCompiler() and
   getTemplate() so you can catch the exception and use those to build a nicer
   error view with all the details you want
@@ -8,6 +15,10 @@
   however since it is really bad practice I won't spend time fixing edge
   cases, which are $ and '/" characters inside the string. Those will break
   it and that's it.. if you really care feel free to send a patch
+* Dwoo->get() is now stricter as to what it accepts as a "template", only
+  Dwoo_ITemplate objects or valid filenames are accepted
+* Foreach and other similar plugins that support "else" now only count()
+  their input before processing when an else block follows
 * Fixed compiler bug that created a parse error when you had comments in an
   extended template
 * Fixed extends bug when extending files in other directories using relative

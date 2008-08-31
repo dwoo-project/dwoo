@@ -40,6 +40,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		}
 		$inheritanceTree = array(array('source'=>$compiler->getTemplateSource()));
 		$curPath = dirname($compiler->getDwoo()->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR;
+		$curTpl = $compiler->getDwoo()->getTemplate();
 
 		while (!empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
@@ -48,53 +49,38 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			}
 
 			if (preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m)) {
+				// resource:identifier given, extract them
 				$resource = $m[1];
 				$identifier = $m[2];
 			} else {
-				$resource = 'file';
+				// get the current template's resource
+				$resource = $curTpl->getResourceName();
 				$identifier = substr($file, 1, -1);
 			}
 
-			if (!preg_match('#^([a-z]:[/\\\\]|[/\\\\])#i', $identifier)) {
-				$identifier = realpath($curPath . $identifier);
-			}
-
-			if ($resource === 'file' && $policy = $compiler->getSecurityPolicy()) {
-				while (true) {
-					if (preg_match('{^([a-z]+?)://}i', $identifier)) {
-						throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources.');
-					}
-
-					$dirs = $policy->getAllowedDirectories();
-					foreach ($dirs as $dir=>$dummy) {
-						if (strpos($identifier, $dir) === 0) {
-							break 2;
-						}
-					}
-					throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$identifier.'</em>');
-				}
-			}
-
 			try {
-				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier);
+				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier, null, null, null, $curTpl);
+			} catch (Dwoo_Security_Exception $e) {
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Security restriction : '.$e->getMessage());
 			} catch (Dwoo_Exception $e) {
-				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : '.$e->getMessage());
 			}
 
 			if ($parent === null) {
-				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.':'.$identifier.'" was not found.');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.':'.$identifier.'" not found.');
 			} elseif ($parent === false) {
-				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.');
+				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.'" does not support extends.');
 			}
 
-			$newParent = array('source'=>$parent->getSource(), 'resource'=>$resource, 'identifier'=>$identifier, 'uid'=>$parent->getUid());
+			$curTpl = $parent;
+			$newParent = array('source'=>$parent->getSource(), 'resource'=>$resource, 'identifier'=>$parent->getResourceIdentifier(), 'uid'=>$parent->getUid());
 			if (array_search($newParent, $inheritanceTree, true) !== false) {
 				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Recursive template inheritance detected');
 			}
 
 			$inheritanceTree[] = $newParent;
 
-			if (preg_match('/^'.self::$l.'extends\s+(?:file=)?\s*(\S+?)'.self::$r.'/i', $parent->getSource(), $match)) {
+			if (preg_match('/^'.self::$l.'extends\s+(?:file=)?\s*(\S+?|(["\']).+?\2)'.self::$r.'/i', $parent->getSource(), $match)) {
 				$curPath = dirname($identifier) . DIRECTORY_SEPARATOR;
 				$file = (substr($match[1], 0, 1) !== '"' && substr($match[1], 0, 1) !== '"') ? '"'.str_replace('"', '\\"', $match[1]).'"' : $match[1];
 			} else {

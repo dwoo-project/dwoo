@@ -34,41 +34,35 @@
  */
 class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	public static $types = array
-	(
-		'if' => true, 'elseif' => true, 'for' => true,
-		'foreach' => true, 'loop' => true, 'with' => true
-	);
-
 	public function init()
 	{
 	}
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		$block =& $compiler->getCurrentBlock();
-		$out = '';
-		while (!isset(self::$types[$block['type']])) {
-			$out .= $compiler->removeTopBlock();
+		$preContent = '';
+		while (true) {
+			$preContent .= $compiler->removeTopBlock();
 			$block =& $compiler->getCurrentBlock();
+			$interfaces = class_implements($block['class'], false);
+			if (in_array('Dwoo_IElseable', $interfaces) !== false) {
+				break;
+			}
 		}
 
-		$out .= $block['params']['postOutput'];
-		$block['params']['postOutput'] = '';
-		$out = substr($out, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
-
-		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
-
-		return $out . " else {\n".Dwoo_Compiler::PHP_CLOSE;
+		$params['initialized'] = true;
+		$compiler->injectBlock($type, $params);
+		return $preContent;
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		if (isset($params['postOutput'])) {
-			return $content . $params['postOutput'];
-		} else {
-			return $content;
+		if (!isset($params['initialized'])) {
+			return '';
 		}
+
+		$block =& $compiler->getCurrentBlock();
+		$block['params']['hasElse'] = Dwoo_Compiler::PHP_OPEN."else {\n".Dwoo_Compiler::PHP_CLOSE . $content . Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+		return '';
 	}
 }

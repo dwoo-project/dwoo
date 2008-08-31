@@ -32,7 +32,7 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
 {
 	public function init(array $rest)
 	{
@@ -165,16 +165,21 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
-
-		$params = $compiler->getCompiledParams($params);
-
-		return Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+		return '';
 	}
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		return $content . $params['postOutput'];
+		$params = $compiler->getCompiledParams($params);
+
+		$pre = Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+
+		$post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+
+		if (isset($params['hasElse'])) {
+			$post .= $params['hasElse'];
+		}
+
+		return $pre . $content . $post;
 	}
 }

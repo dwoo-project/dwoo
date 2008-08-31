@@ -5,6 +5,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . DWOO_DIRECTORY);
 
 include 'Dwoo/IPluginProxy.php';
 include 'Dwoo/ILoader.php';
+include 'Dwoo/IElseable.php';
 include 'Dwoo/Loader.php';
 include 'Dwoo/Exception.php';
 include 'Dwoo/Security/Policy.php';
@@ -352,15 +353,8 @@ class Dwoo
 		// auto-create template if required
 		if ($_tpl instanceof Dwoo_ITemplate) {
 			// valid, skip
-		} elseif (is_string($_tpl)) {
-			if (file_exists($_tpl)) {
-				$_tpl = new Dwoo_Template_File($_tpl);
-			} elseif (strstr($_tpl, ':')) {
-				$_bits = explode(':', $_tpl, 2);
-				$_tpl = $this->templateFactory($_bits[0], $_bits[1]);
-			} else {
-				$_tpl = new Dwoo_Template_String($_tpl);
-			}
+		} elseif (is_string($_tpl) && file_exists($_tpl)) {
+			$_tpl = new Dwoo_Template_File($_tpl);
 		} else {
 			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s first argument must be a Dwoo_ITemplate (i.e. Dwoo_Template_File) or a valid path to a template file', E_USER_NOTICE);
 		}
@@ -889,10 +883,11 @@ class Dwoo
 	 * @param string $compileId the unique compiler identifier
 	 * @return Dwoo_ITemplate
 	 */
-	public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
+	public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
 		if (isset($this->resources[$resourceName])) {
-			return call_user_func(array($this->resources[$resourceName]['class'], 'templateFactory'), $this, $resourceId, $cacheTime, $cacheId, $compileId);
+			// TODO could be changed to $this->resources[$resourceName]['class']::templateFactory(..) in 5.3 maybe
+			return call_user_func(array($this->resources[$resourceName]['class'], 'templateFactory'), $this, $resourceId, $cacheTime, $cacheId, $compileId, $parentTemplate);
 		} else {
 			throw new Dwoo_Exception('Unknown resource type : '.$resourceName);
 		}
@@ -944,7 +939,10 @@ class Dwoo
 	 */
 	public function triggerError($message, $level=E_USER_NOTICE)
 	{
-		trigger_error('Dwoo error (in '.$this->template->getResourceIdentifier().') : '.$message, $level);
+		if (!($tplIdentifier = $this->template->getResourceIdentifier())) {
+			$tplIdentifier = $this->template->getResourceName();
+		}
+		trigger_error('Dwoo error (in '.$tplIdentifier.') : '.$message, $level);
 	}
 
 	/*

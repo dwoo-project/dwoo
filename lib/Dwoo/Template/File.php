@@ -219,33 +219,61 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	 * 						  to the current url
 	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
 	 * 							template from others, if null it defaults to the filename+bits of the path
+	 * @param Dwoo_ITemplate $parentTemplate the template that is requesting a new template object (through
+	 * 											an include, extends or any other plugin)
 	 * @return Dwoo_Template_File|null
 	 */
-	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null)
+	public static function templateFactory(Dwoo $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
-		$resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
+		if (DIRECTORY_SEPARATOR === '\\') {
+			$resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
+		}
+		$resourceId = strtr($resourceId, '\\', '/');
+
+		$includePath = null;
 
 		if (file_exists($resourceId) === false) {
-			$tpl = $dwoo->getTemplate();
-			if ($tpl instanceof Dwoo_Template_File) {
-				$resourceId = dirname($tpl->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
-				if (file_exists($resourceId) === false) {
-					return null;
+			if ($parentTemplate === null) {
+				$parentTemplate = $dwoo->getTemplate();
+			}
+			if ($parentTemplate instanceof Dwoo_Template_File) {
+				if ($includePath = $parentTemplate->getIncludePath()) {
+					if (strstr($resourceId, '../')) {
+						throw new Dwoo_Exception('When using an include path you can not reference a template into a parent directory (using ../)');
+					}
+				} else {
+					$resourceId = dirname($parentTemplate->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
+					if (file_exists($resourceId) === false) {
+						return null;
+					}
 				}
 			} else {
 				return null;
 			}
 		}
 
-		// prevent template recursion if security is in effect
 		if ($policy = $dwoo->getSecurityPolicy()) {
-			$tpl = $dwoo->getTemplate();
-			if ($tpl instanceof Dwoo_Template_File && $resourceId === $tpl->getResourceIdentifier()) {
-				return $dwoo->triggerError('You can not include a template into itself', E_USER_WARNING);
+			while (true) {
+				if (preg_match('{^([a-z]+?)://}i', $resourceId)) {
+					throw new Dwoo_Security_Exception('The security policy prevents you to read files from external sources : <em>'.$resourceId.'</em>.');
+				}
+
+				if ($includePath) {
+					break;
+				}
+
+				$resourceId = realpath($resourceId);
+				$dirs = $policy->getAllowedDirectories();
+				foreach ($dirs as $dir=>$dummy) {
+					if (strpos($resourceId, $dir) === 0) {
+						break 2;
+					}
+				}
+				throw new Dwoo_Security_Exception('The security policy prevents you to read <em>'.$resourceId.'</em>');
 			}
 		}
 
-		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId);
+		return new Dwoo_Template_File($resourceId, $cacheTime, $cacheId, $compileId, $includePath);
 	}
 
 	/**

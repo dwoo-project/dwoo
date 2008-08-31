@@ -25,7 +25,7 @@ function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file, $uid)
 	$resource = $m[1];
 	$identifier = $m[2];
 
-	return '// check for modification in '.$resource.':'.$identifier.'
+	return '// checking for modification in '.$resource.':'.$identifier.'
 try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
 } catch (Dwoo_Exception $e) {
@@ -34,6 +34,6 @@ try {
 if ($tpl === null)
 	$this->triggerError(\'Extends : Resource "'.$resource.':'.$identifier.'" was not found.\', E_USER_WARNING);
 elseif ($tpl === false)
-	$this->triggerError(\'Include : Extending "'.$resource.':'.$identifier.'" was not allowed for an unknown reason.\', E_USER_WARNING);
+	$this->triggerError(\'Extends : Resource "'.$resource.'" does not support extends.\', E_USER_WARNING);
 if ($tpl->getUid() != "'.substr($uid, 1, -1).'") { ob_end_clean(); return false; }';
 }

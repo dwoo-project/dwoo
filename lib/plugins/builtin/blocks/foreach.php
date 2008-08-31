@@ -34,7 +34,7 @@
  * @date       2008-05-30
  * @package    Dwoo
  */
-class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
 {
 	public static $cnt=0;
 
@@ -44,8 +44,17 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
+		// get block params and save the current template pointer to use it in the postProcessing method
+		$currentBlock =& $compiler->getCurrentBlock();
+		$currentBlock['params']['tplPointer'] = $compiler->getPointer();
+
+		return '';
+	}
+
+	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+	{
 		$params = $compiler->getCompiledParams($params);
-		$tpl = $compiler->getTemplateSource(true);
+		$tpl = $compiler->getTemplateSource($params['tplPointer']);
 
 		// assigns params
 		$src = $params['from'];
@@ -90,59 +99,53 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		// gets foreach id
 		$cnt = self::$cnt++;
 
-		// builds pre processing output
-		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_fh'.$cnt.'_data = '.$src.';';
+		// build pre content output
+		$pre = Dwoo_Compiler::PHP_OPEN . "\n".'$_fh'.$cnt.'_data = '.$src.';';
 		// adds foreach properties
 		if ($usesAny) {
-			$out .= "\n".'$this->globals["foreach"]['.$name.'] = array'."\n(";
-			if ($usesIndex) $out .="\n\t".'"index"		=> 0,';
-			if ($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
-			if ($usesFirst) $out .="\n\t".'"first"		=> null,';
-			if ($usesLast) $out .="\n\t".'"last"		=> null,';
-			if ($usesShow) $out .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true, true),';
-			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_fh'.$cnt.'_data) ? count($_fh'.$cnt.'_data) : 0,';
-			$out.="\n);\n".'$_fh'.$cnt.'_glob =& $this->globals["foreach"]['.$name.'];';
+			$pre .= "\n".'$this->globals["foreach"]['.$name.'] = array'."\n(";
+			if ($usesIndex) $pre .="\n\t".'"index"		=> 0,';
+			if ($usesIteration) $pre .="\n\t".'"iteration"		=> 1,';
+			if ($usesFirst) $pre .="\n\t".'"first"		=> null,';
+			if ($usesLast) $pre .="\n\t".'"last"		=> null,';
+			if ($usesShow) $pre .="\n\t".'"show"		=> $this->isArray($_fh'.$cnt.'_data, true, true),';
+			if ($usesTotal) $pre .="\n\t".'"total"		=> $this->isArray($_fh'.$cnt.'_data) ? count($_fh'.$cnt.'_data) : 0,';
+			$pre.="\n);\n".'$_fh'.$cnt.'_glob =& $this->globals["foreach"]['.$name.'];';
 		}
 		// checks if foreach must be looped
-		$out .= "\n".'if ($this->isArray($_fh'.$cnt.'_data, true, true) === true)'."\n{";
+		$pre .= "\n".'if ($this->isArray($_fh'.$cnt.'_data'.(isset($params['hasElse']) ? ', true, true' : '').') === true)'."\n{";
 		// iterates over keys
-		$out .= "\n\t".'foreach ($_fh'.$cnt.'_data as '.(isset($key)?'$this->scope['.$key.']=>':'').'$this->scope['.$val.'])'."\n\t{";
+		$pre .= "\n\t".'foreach ($_fh'.$cnt.'_data as '.(isset($key)?'$this->scope['.$key.']=>':'').'$this->scope['.$val.'])'."\n\t{";
 		// updates properties
 		if ($usesFirst) {
-			$out .= "\n\t\t".'$_fh'.$cnt.'_glob["first"] = (string) ($_fh'.$cnt.'_glob["index"] === 0);';
+			$pre .= "\n\t\t".'$_fh'.$cnt.'_glob["first"] = (string) ($_fh'.$cnt.'_glob["index"] === 0);';
 		}
 		if ($usesLast) {
-			$out .= "\n\t\t".'$_fh'.$cnt.'_glob["last"] = (string) ($_fh'.$cnt.'_glob["iteration"] === $_fh'.$cnt.'_glob["total"]);';
+			$pre .= "\n\t\t".'$_fh'.$cnt.'_glob["last"] = (string) ($_fh'.$cnt.'_glob["iteration"] === $_fh'.$cnt.'_glob["total"]);';
 		}
-		$out .= "\n/* -- foreach start output */\n".Dwoo_Compiler::PHP_CLOSE;
+		$pre .= "\n/* -- foreach start output */\n".Dwoo_Compiler::PHP_CLOSE;
 
-		// build post processing output and cache it
-		$postOut = Dwoo_Compiler::PHP_OPEN . "\n";
+		// build post content output
+		$post = Dwoo_Compiler::PHP_OPEN . "\n";
 
 		if (isset($implode)) {
-			$postOut .= '/* -- implode */'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
+			$post .= '/* -- implode */'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
 				"\n\t".'echo '.$implode.";\n}\n";
 		}
-		$postOut .= '/* -- foreach end output */';
+		$post .= '/* -- foreach end output */';
 		// update properties
 		if ($usesIndex) {
-			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["index"]+=1;';
+			$post.="\n\t\t".'$_fh'.$cnt.'_glob["index"]+=1;';
 		}
 		if ($usesIteration) {
-			$postOut.="\n\t\t".'$_fh'.$cnt.'_glob["iteration"]+=1;';
+			$post.="\n\t\t".'$_fh'.$cnt.'_glob["iteration"]+=1;';
 		}
 		// end loop
-		$postOut .= "\n\t}\n}\n";
+		$post .= "\n\t}\n}".Dwoo_Compiler::PHP_CLOSE;
+		if (isset($params['hasElse'])) {
+			$post .= $params['hasElse'];
+		}
 
-		// get block params and save the post-processing output already
-		$currentBlock =& $compiler->getCurrentBlock();
-		$currentBlock['params']['postOutput'] = $postOut . Dwoo_Compiler::PHP_CLOSE;
-
-		return $out;
-	}
-
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
-	{
-		return $content . $params['postOutput'];
+		return $pre . $content . $post;
 	}
 }

@@ -123,6 +123,9 @@ class Dwoo_Security_Policy
 	/**
 	 * adds a directory to the safelist for includes and other file-access plugins
 	 *
+	 * note that all the includePath directories you provide to the Dwoo_Template_File class
+	 * are automatically marked as safe
+	 *
 	 * @param mixed $path a path name or an array of paths
 	 */
 	public function allowDirectory($path)

@@ -217,7 +217,6 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals("13", $tpl->getCacheTime());
 		$this->assertEquals(null, $tpl->getCompiler());
-		$this->assertEquals(false, Dwoo_Template_String::templateFactory($this->dwoo, 'foo', 5));
 	}
 
 	public function testCachedTemplateAndClearCache()
