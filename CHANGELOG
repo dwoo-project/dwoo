@@ -9,6 +9,8 @@
   if you include "../foo/bar.html" AND have an include path set, you will now
   have a problem, because you can't mix both approaches, otherwise you should
   be fine, so to fix this you should convert your relative includes/extends
++ Adapters: Added the Agavi interface for Dwoo
+  (see /Dwoo/Adapters/Agavi/README)
 + API: Added Dwoo_Compilation_Exception methods getCompiler() and
   getTemplate() so you can catch the exception and use those to build a nicer
   error view with all the details you want
