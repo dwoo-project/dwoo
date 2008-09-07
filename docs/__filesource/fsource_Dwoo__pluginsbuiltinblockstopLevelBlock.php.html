@@ -40,18 +40,18 @@
 <li><div class="src-line"><a name="a27"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">static&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Plugin_topLevelBlock.html#methodpreProcessing">preProcessing</a><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-key">array&nbsp;</span><span class="src-var">$params</span><span class="src-sym">,&nbsp;</span><span class="src-var">$prepend</span><span class="src-sym">,&nbsp;</span><span class="src-var">$append</span><span class="src-sym">,&nbsp;</span><span class="src-var">$type</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a29"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a30"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'ob_start();&nbsp;'</span>.<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_CLOSE</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a30"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'ob_start();&nbsp;/*&nbsp;template&nbsp;body&nbsp;*/&nbsp;'</span>.<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_CLOSE</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a31"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a32"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a33"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">static&nbsp;</span><span class="src-key">function&nbsp;</span><span class="src-id">postProcessing</span><span class="src-sym">(</span><span class="src-id">Dwoo_Compiler&nbsp;</span><span class="src-var">$compiler</span><span class="src-sym">,&nbsp;</span><span class="src-key">array&nbsp;</span><span class="src-var">$params</span><span class="src-sym">,&nbsp;</span><span class="src-var">$prepend</span><span class="src-sym">,&nbsp;</span><span class="src-var">$append</span><span class="src-sym">,&nbsp;</span><span class="src-var">$content</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a34"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a35"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$content&nbsp;</span>.&nbsp;<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_OPEN</span>.<span class="src-str">'return&nbsp;$this-&gt;buffer&nbsp;.&nbsp;ob_get_clean();'</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a35"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$content&nbsp;</span>.&nbsp;<span class="src-id">Dwoo_Compiler</span><span class="src-sym">::</span><span class="src-id">PHP_OPEN</span>.<span class="src-str">'&nbsp;/*&nbsp;end&nbsp;template&nbsp;body&nbsp;*/'</span>.<span class="src-str">&quot;\n&quot;</span>.<span class="src-str">'return&nbsp;$this-&gt;buffer&nbsp;.&nbsp;ob_get_clean();'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a36"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a37"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:47 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:58:00 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>

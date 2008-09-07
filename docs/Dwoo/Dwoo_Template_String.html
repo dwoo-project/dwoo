@@ -92,13 +92,17 @@
 					static <span class="var-type">array</span>
 					<a href="#$cache" title="details" class="var-name">$cache</a>
 				</div>
-																																																																												<div class="var-title">
+																																																																																				<div class="var-title">
 					<span class="var-type">string</span>
 					<a href="#$cacheId" title="details" class="var-name">$cacheId</a>
 				</div>
 																<div class="var-title">
 					<span class="var-type">int</span>
 					<a href="#$cacheTime" title="details" class="var-name">$cacheTime</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">int</span>
+					<a href="#$chmod" title="details" class="var-name">$chmod</a>
 				</div>
 																<div class="var-title">
 					<span class="var-type">bool</span>
@@ -133,11 +137,11 @@
 		</div>
 		<div class="info-box-body">			
 			<div class="method-summary">
-																																																																																																																																																		
+																																																																																																																																																																		
 				<div class="method-definition">
-					static 						<span class="method-result">false</span>
+					static 						<span class="method-result"><a href="../Dwoo/Dwoo_Template_String.html">Dwoo_Template_String</a></span>
 										<a href="#templateFactory" title="details" class="method-name">templateFactory</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$parentTemplate</span> = <span class="var-default">null</span>])
 									</div>
 																		
 				<div class="method-definition">
@@ -179,6 +183,12 @@
 				<div class="method-definition">
 											<span class="method-result">int|null</span>
 										<a href="#getCacheTime" title="details" class="method-name">getCacheTime</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">int|null</span>
+										<a href="#getChmod" title="details" class="method-name">getChmod</a>
 										()
 									</div>
 														
@@ -240,6 +250,12 @@
 											<span class="method-result">void</span>
 										<a href="#setCacheTime" title="details" class="method-name">setCacheTime</a>
 											([<span class="var-type">int</span>&nbsp;<span class="var-name">$seconds</span> = <span class="var-default">null</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setChmod" title="details" class="method-name">setChmod</a>
+											([<span class="var-type">int</span>&nbsp;<span class="var-name">$mask</span> = <span class="var-default">null</span>])
 									</div>
 																			</div>
 		</div>
@@ -328,8 +344,31 @@
 		
 
 </div>
-<a name="var$compilationEnforced" id="$compilationEnforced"><!-- --></A>
+<a name="var$chmod" id="$chmod"><!-- --></A>
 <div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">int</span>
+			<span class="var-name">$chmod</span>
+			 = <span class="var-default"> 0777</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a90">90</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">chmod value for all files written (cached or compiled ones)</p>
+<p class="description"><p>set to null if you don't want any chmod operation to happen</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$compilationEnforced" id="$compilationEnforced"><!-- --></A>
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -351,7 +390,7 @@
 
 </div>
 <a name="var$compileId" id="$compileId"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -373,7 +412,7 @@
 
 </div>
 <a name="var$compiler" id="$compiler"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -395,7 +434,7 @@
 
 </div>
 <a name="var$name" id="$name"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -433,27 +472,30 @@
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
 <a name="methodtemplateFactory" id="templateFactory"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a362">362</a></span>)
+		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a402">402</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">returns false as this template type does not support inclusions</p>
+<p class="short-description">returns a new template string object with the resource id being the template source code</p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
 			</ul>
 	
 	<div class="method-signature">
-		static <span class="method-result">false</span>
+		static <span class="method-result"><a href="../Dwoo/Dwoo_Template_String.html">Dwoo_Template_String</a></span>
 		<span class="method-name">
 			templateFactory
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$parentTemplate</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
+				<span class="var-name">$dwoo</span><span class="var-description">: the dwoo instance requiring it</span>			</li>
 					<li>
 				<span class="var-type">mixed</span>
 				<span class="var-name">$resourceId</span><span class="var-description">: the filename (relative to this template's dir) of the template to include</span>			</li>
@@ -467,15 +509,15 @@
 				<span class="var-type">string</span>
 				<span class="var-name">$compileId</span><span class="var-description">: the unique compiled identifier, which is used to distinguish this                              template from others, if null it defaults to the filename+bits of the path</span>			</li>
 					<li>
-				<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
-				<span class="var-name">$dwoo</span>			</li>
+				<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>
+				<span class="var-name">$parentTemplate</span><span class="var-description">: the template that is requesting a new template object (through                                              an include, extends or any other plugin)</span>			</li>
 				</ul>
 		
 				<hr class="separator" />
 		<div class="notes">Implementation of:</div>
 			<dl>
 			<dt><a href="../Dwoo/Dwoo_ITemplate.html#methodtemplateFactory">Dwoo_ITemplate::templateFactory()</a></dt>
-						<dd>returns a new template object from the given include name, null if no include is  possible (resource not found), or false if include is not permitted by this resource type</dd>
+						<dd>returns a new template object from the given resource identifier, null if no include is  possible (resource not found), or false if include is not permitted by this resource type</dd>
 					</dl>
 			
 			<hr class="separator" />
@@ -488,10 +530,10 @@
 				</ul>
 	</div>
 <a name="method__construct" id="__construct"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a96">96</a></span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a105">105</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -534,10 +576,10 @@
 				</ul>
 	</div>
 <a name="methodcache" id="cache"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">cache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a255">255</a></span>)
+		<span class="method-title">cache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a288">288</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -573,10 +615,10 @@
 			
 	</div>
 <a name="methodclearCache" id="clearCache"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">clearCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a294">294</a></span>)
+		<span class="method-title">clearCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a329">329</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -612,10 +654,10 @@
 			
 	</div>
 <a name="methodforceCompilation" id="forceCompilation"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">forceCompilation</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a208">208</a></span>)
+		<span class="method-title">forceCompilation</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a241">241</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -637,10 +679,10 @@
 			
 	</div>
 <a name="methodgetCachedTemplate" id="getCachedTemplate"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCachedTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a220">220</a></span>)
+		<span class="method-title">getCachedTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a253">253</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -672,10 +714,10 @@
 			
 	</div>
 <a name="methodgetCacheFilename" id="getCacheFilename"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCacheFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a390">390</a></span>)
+		<span class="method-title">getCacheFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a430">430</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -702,10 +744,10 @@
 			
 	</div>
 <a name="methodgetCacheTime" id="getCacheTime"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a122">122</a></span>)
+		<span class="method-title">getCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a131">131</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -732,11 +774,36 @@
 					</dl>
 			
 	</div>
+<a name="methodgetChmod" id="getChmod"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getChmod</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a158">158</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns the chmod value for all files written (cached or compiled ones)</p>
+<p class="description"><p>defaults to 0777</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int|null</span>
+		<span class="method-name">
+			getChmod
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
 <a name="methodgetCompiledFilename" id="getCompiledFilename"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a374">374</a></span>)
+		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a414">414</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -774,7 +841,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a308">308</a></span>)
+		<span class="method-title">getCompiledTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a343">343</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -820,7 +887,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiler</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a198">198</a></span>)
+		<span class="method-title">getCompiler</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a231">231</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -850,7 +917,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a147">147</a></span>)
+		<span class="method-title">getName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a180">180</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -880,7 +947,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a167">167</a></span>)
+		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a200">200</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -918,7 +985,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a157">157</a></span>)
+		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a190">190</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -956,7 +1023,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a177">177</a></span>)
+		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a210">210</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -994,7 +1061,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a188">188</a></span>)
+		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a221">221</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1032,7 +1099,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">makeDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a414">414</a></span>)
+		<span class="method-title">makeDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a454">454</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1061,7 +1128,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a137">137</a></span>)
+		<span class="method-title">setCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a146">146</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1093,13 +1160,43 @@
 					</dl>
 			
 	</div>
+<a name="methodsetChmod" id="setChmod"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setChmod</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateString.php.html#a170">170</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">set the chmod value for all files written (cached or compiled ones)</p>
+<p class="description"><p>set to null if you don't want to do any chmod() operation</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setChmod
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$mask</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$mask</span><span class="var-description">: new bitmask to use for all files</span>			</li>
+				</ul>
+		
+			
+	</div>
 						
 		</div>
 	</div>
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:45 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:58 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

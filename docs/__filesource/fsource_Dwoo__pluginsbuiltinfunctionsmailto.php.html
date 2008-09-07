@@ -109,7 +109,7 @@
 <li><div class="src-line"><a name="a96"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a97"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">case&nbsp;</span><span class="src-str">'hex'</span>:</div></li>
 <li><div class="src-line"><a name="a98"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">if&nbsp;</span><span class="src-sym">(</span><a href="http://www.php.net/strpos">strpos</a><span class="src-sym">(</span><span class="src-var">$address</span><span class="src-sym">,&nbsp;</span><span class="src-str">'?'</span><span class="src-sym">)&nbsp;</span>!==&nbsp;<span class="src-id">false</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a99"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$dwoo</span><span class="src-sym">-&gt;</span><span class="src-id">triggerError</span><span class="src-sym">(</span><span class="src-str">'Mailto:&nbsp;Hex&nbsp;encoding&nbsp;is&nbsp;not&nbsp;possible&nbsp;with&nbsp;extra&nbsp;attributes,&nbsp;use&nbsp;one&nbsp;of&nbsp;:&nbsp;&lt;em&gt;js,&nbsp;jscharcode&nbsp;or&nbsp;none&lt;/em&gt;.'</span><span class="src-sym">,&nbsp;</span><span class="src-id">E_USER_WARNING</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a99"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$dwoo</span><span class="src-sym">-&gt;</span><span class="src-id">triggerError</span><span class="src-sym">(</span><span class="src-str">'Mailto:&nbsp;Hex&nbsp;encoding&nbsp;is&nbsp;not&nbsp;possible&nbsp;with&nbsp;extra&nbsp;attributes,&nbsp;use&nbsp;one&nbsp;of&nbsp;:&nbsp;&lt;em&gt;js,&nbsp;jscharcode&nbsp;or&nbsp;none&lt;/em&gt;.'</span><span class="src-sym">,&nbsp;</span><span class="src-id">E_USER_WARNING</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a100"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a101"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a102"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$out&nbsp;</span>=&nbsp;<span class="src-str">'&lt;a&nbsp;href=&quot;&amp;#109;&amp;#97;&amp;#105;&amp;#108;&amp;#116;&amp;#111;&amp;#58;'</span><span class="src-sym">;</span></div></li>
@@ -129,14 +129,14 @@
 <li><div class="src-line"><a name="a116"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$out</span>.<span class="src-str">'&lt;/a&gt;'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a117"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a118"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">default</span>:</div></li>
-<li><div class="src-line"><a name="a119"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$dwoo</span><span class="src-sym">-&gt;</span><span class="src-id">triggerError</span><span class="src-sym">(</span><span class="src-str">'Mailto:&nbsp;&lt;em&gt;encode&lt;/em&gt;&nbsp;argument&nbsp;is&nbsp;invalid,&nbsp;it&nbsp;must&nbsp;be&nbsp;one&nbsp;of&nbsp;:&nbsp;&lt;em&gt;none&nbsp;(=&nbsp;no&nbsp;value),&nbsp;js,&nbsp;js_charcode&nbsp;or&nbsp;hex&lt;/em&gt;'</span><span class="src-sym">,&nbsp;</span><span class="src-id">E_USER_WARNING</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a119"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$dwoo</span><span class="src-sym">-&gt;</span><span class="src-id">triggerError</span><span class="src-sym">(</span><span class="src-str">'Mailto:&nbsp;&lt;em&gt;encode&lt;/em&gt;&nbsp;argument&nbsp;is&nbsp;invalid,&nbsp;it&nbsp;must&nbsp;be&nbsp;one&nbsp;of&nbsp;:&nbsp;&lt;em&gt;none&nbsp;(=&nbsp;no&nbsp;value),&nbsp;js,&nbsp;js_charcode&nbsp;or&nbsp;hex&lt;/em&gt;'</span><span class="src-sym">,&nbsp;</span><span class="src-id">E_USER_WARNING</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a120"></a>&nbsp;</div></li>
 <li><div class="src-line"><a name="a121"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a122"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:42 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:54 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>

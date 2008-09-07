@@ -57,7 +57,7 @@
 				<div class="method-definition">
 					static 						<span class="method-result"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a>|null|false</span>
 										<a href="#templateFactory" title="details" class="method-name">templateFactory</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$parentTemplate</span> = <span class="var-default">null</span>])
 									</div>
 																		
 				<div class="method-definition">
@@ -150,11 +150,12 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a139">139</a></span>)
+		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a145">145</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">returns a new template object from the given include name, null if no include is  possible (resource not found), or false if include is not permitted by this resource type</p>
+<p class="short-description">returns a new template object from the given resource identifier, null if no include is  possible (resource not found), or false if include is not permitted by this resource type</p>
+<p class="description"><p>this method should also check if $dwoo-&gt;getSecurityPolicy() is null or not and do the  necessary permission checks if required, if the security policy prevents the template  generation it should throw a new Dwoo_Security_Exception with a relevant message</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> public</li>
 			</ul>
@@ -164,7 +165,7 @@
 		<span class="method-name">
 			templateFactory
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>])
+					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$resourceId</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$cacheTime</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheId</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$compileId</span> = <span class="var-default">null</span>], [<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$parentTemplate</span> = <span class="var-default">null</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -180,6 +181,9 @@
 					<li>
 				<span class="var-type">string</span>
 				<span class="var-name">$compileId</span><span class="var-description">: the unique compiled identifier, which is used to distinguish this                              template from others, if null it defaults to the filename+bits of the path</span>			</li>
+					<li>
+				<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>
+				<span class="var-name">$parentTemplate</span><span class="var-description">: the template that is requesting a new template object (through                                              an include, extends or any other plugin)</span>			</li>
 					<li>
 				<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
 				<span class="var-name">$dwoo</span>			</li>
@@ -519,7 +523,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:40 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:53 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

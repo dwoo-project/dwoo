@@ -61,17 +61,17 @@
 								</div>
 		<div class="info-box-body">
 			<div class="var-summary">
-																				<div class="var-title">
-					static <span class="var-type">mixed</span>
-					<a href="#$classpath" title="details" class="var-name">$classpath</a>
-				</div>
-																																				<div class="var-title">
+																																																<div class="var-title">
 					<span class="var-type">string</span>
 					<a href="#$cacheDir" title="details" class="var-name">$cacheDir</a>
 				</div>
-																								<div class="var-title">
+																<div class="var-title">
 					<span class="var-type">array</span>
 					<a href="#$classPath" title="details" class="var-name">$classPath</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$corePluginDir" title="details" class="var-name">$corePluginDir</a>
 				</div>
 																<div class="var-title">
 					<span class="var-type">array</span>
@@ -103,7 +103,7 @@
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#addDirectory" title="details" class="method-name">addDirectory</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pluginDir</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$pluginDirectory</span>)
 									</div>
 														
 				<div class="method-definition">
@@ -134,32 +134,9 @@
 							
 					</div>
 		<div class="info-box-body">
-			<a name="var$classpath" id="$classpath"><!-- --></A>
-<div class="evenrow">
-
-	<div class="var-header">
-		<span class="var-title">
-			static <span class="var-type">mixed</span>
-			<span class="var-name">$classpath</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a55">55</a></span>)
-		</span>
-	</div>
-
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">legacy/transitional var for BC with old classpath.cache files, do NOT rely on it</p>
-<p class="description"><p>will be deleted sooner or later</p><p>TODO remove this and compat code in addDirectory</p></p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	
-		
-		
-
-</div>
-
+			
 <a name="var$cacheDir" id="$cacheDir"><!-- --></A>
-<div class="oddrow">
+<div class="evenrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -181,7 +158,7 @@
 
 </div>
 <a name="var$classPath" id="$classPath"><!-- --></A>
-<div class="evenrow">
+<div class="oddrow">
 
 	<div class="var-header">
 		<span class="var-title">
@@ -195,6 +172,27 @@
 <p class="short-description">stores the plugins names/paths relationships  don't edit this on your own, use addDirectory</p>
 	<ul class="tags">
 				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo_Loader.html#methodaddDirectory">Dwoo_Loader::addDirectory()</a></li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$corePluginDir" id="$corePluginDir"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$corePluginDir</span>
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a48">48</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
 	
@@ -245,7 +243,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a57">57</a></span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a50">50</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -273,7 +271,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">addDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a139">139</a></span>)
+		<span class="method-title">addDirectory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a136">136</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -288,13 +286,13 @@
 		<span class="method-name">
 			addDirectory
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pluginDir</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$pluginDirectory</span>)
 			</div>
 	
 			<ul class="parameters">
 					<li>
 				<span class="var-type">string</span>
-				<span class="var-name">$pluginDir</span><span class="var-description">: the plugin path to scan</span>			</li>
+				<span class="var-name">$pluginDirectory</span><span class="var-description">: the plugin path to scan</span>			</li>
 				</ul>
 		
 			
@@ -303,7 +301,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">loadPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a107">107</a></span>)
+		<span class="method-title">loadPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a104">104</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -341,7 +339,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">rebuildClassPathCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a73">73</a></span>)
+		<span class="method-title">rebuildClassPathCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooLoader.php.html#a70">70</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -375,7 +373,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:40 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:53 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

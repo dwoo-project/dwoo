@@ -38,7 +38,7 @@
 <li><div class="src-line"><a name="a25"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$resource&nbsp;</span>=&nbsp;<span class="src-var">$m</span><span class="src-sym">[</span><span class="src-num">1</span><span class="src-sym">]</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a26"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$identifier&nbsp;</span>=&nbsp;<span class="src-var">$m</span><span class="src-sym">[</span><span class="src-num">2</span><span class="src-sym">]</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a27"></a>&nbsp;</div></li>
-<li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'//&nbsp;check&nbsp;for&nbsp;modification&nbsp;in&nbsp;'</span>.<span class="src-var">$resource</span>.<span class="src-str">':'</span>.<span class="src-var">$identifier</span>.<span class="src-str">'</span></div></li>
+<li><div class="src-line"><a name="a28"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-str">'//&nbsp;checking&nbsp;for&nbsp;modification&nbsp;in&nbsp;'</span>.<span class="src-var">$resource</span>.<span class="src-str">':'</span>.<span class="src-var">$identifier</span>.<span class="src-str">'</span></div></li>
 <li><div class="src-line"><a name="a29"></a><span class="src-str">try&nbsp;{</span></div></li>
 <li><div class="src-line"><a name="a30"></a><span class="src-str">&nbsp;&nbsp;&nbsp;&nbsp;$tpl&nbsp;=&nbsp;$this-&gt;templateFactory(&quot;'</span>.<span class="src-var">$resource</span>.<span class="src-str">'&quot;,&nbsp;&quot;'</span>.<span class="src-var">$identifier</span>.<span class="src-str">'&quot;);</span></div></li>
 <li><div class="src-line"><a name="a31"></a><span class="src-str">}&nbsp;catch&nbsp;(Dwoo_Exception&nbsp;$e)&nbsp;{</span></div></li>
@@ -47,13 +47,13 @@
 <li><div class="src-line"><a name="a34"></a><span class="src-str">if&nbsp;($tpl&nbsp;===&nbsp;null)</span></div></li>
 <li><div class="src-line"><a name="a35"></a><span class="src-str">&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;triggerError(\'Extends&nbsp;:&nbsp;Resource&nbsp;&quot;'</span>.<span class="src-var">$resource</span>.<span class="src-str">':'</span>.<span class="src-var">$identifier</span>.<span class="src-str">'&quot;&nbsp;was&nbsp;not&nbsp;found.\',&nbsp;E_USER_WARNING);</span></div></li>
 <li><div class="src-line"><a name="a36"></a><span class="src-str">elseif&nbsp;($tpl&nbsp;===&nbsp;false)</span></div></li>
-<li><div class="src-line"><a name="a37"></a><span class="src-str">&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;triggerError(\'Include&nbsp;:&nbsp;Extending&nbsp;&quot;'</span>.<span class="src-var">$resource</span>.<span class="src-str">':'</span>.<span class="src-var">$identifier</span>.<span class="src-str">'&quot;&nbsp;was&nbsp;not&nbsp;allowed&nbsp;for&nbsp;an&nbsp;unknown&nbsp;reason.\',&nbsp;E_USER_WARNING);</span></div></li>
+<li><div class="src-line"><a name="a37"></a><span class="src-str">&nbsp;&nbsp;&nbsp;&nbsp;$this-&gt;triggerError(\'Extends&nbsp;:&nbsp;Resource&nbsp;&quot;'</span>.<span class="src-var">$resource</span>.<span class="src-str">'&quot;&nbsp;does&nbsp;not&nbsp;support&nbsp;extends.\',&nbsp;E_USER_WARNING);</span></div></li>
 <li><div class="src-line"><a name="a38"></a><span class="src-str">if&nbsp;($tpl-&gt;getUid()&nbsp;!=&nbsp;&quot;'</span>.<a href="http://www.php.net/substr">substr</a><span class="src-sym">(</span><span class="src-var">$uid</span><span class="src-sym">,&nbsp;</span><span class="src-num">1</span><span class="src-sym">,&nbsp;</span>-<span class="src-num">1</span><span class="src-sym">)</span>.<span class="src-str">'&quot;)&nbsp;{&nbsp;ob_end_clean();&nbsp;return&nbsp;false;&nbsp;}'</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a39"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:34 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:47 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>

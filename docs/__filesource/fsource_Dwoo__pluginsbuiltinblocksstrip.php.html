@@ -34,7 +34,7 @@
 <li><div class="src-line"><a name="a21"></a><span class="src-doc">&nbsp;*/</span></div></li>
 <li><div class="src-line"><a name="a22"></a><span class="src-key">class&nbsp;</span><a href="../Dwoo/Dwoo_Plugin_strip.html">Dwoo_Plugin_strip</a>&nbsp;<span class="src-key">extends&nbsp;</span><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a>&nbsp;<span class="src-key">implements&nbsp;</span><a href="../Dwoo/Dwoo_ICompilable_Block.html">Dwoo_ICompilable_Block</a></div></li>
 <li><div class="src-line"><a name="a23"></a><span class="src-sym">{</span></div></li>
-<li><div class="src-line"><a name="a24"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Plugin_strip.html#methodinit">init</a><span class="src-sym">(</span><span class="src-sym">)</span></div></li>
+<li><div class="src-line"><a name="a24"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">public&nbsp;</span><span class="src-key">function&nbsp;</span><a href="../Dwoo/Dwoo_Plugin_strip.html#methodinit">init</a><span class="src-sym">(</span><span class="src-var">$mode&nbsp;</span>=&nbsp;<span class="src-str">&quot;default&quot;</span><span class="src-sym">)</span></div></li>
 <li><div class="src-line"><a name="a25"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
 <li><div class="src-line"><a name="a26"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
 <li><div class="src-line"><a name="a27"></a>&nbsp;</div></li>
@@ -47,15 +47,25 @@
 <li><div class="src-line"><a name="a34"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">{</span></div></li>
 <li><div class="src-line"><a name="a35"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$params&nbsp;</span>=&nbsp;<span class="src-var">$compiler</span><span class="src-sym">-&gt;</span><span class="src-id">getCompiledParams</span><span class="src-sym">(</span><span class="src-var">$params</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
 <li><div class="src-line"><a name="a36"></a>&nbsp;</div></li>
-<li><div class="src-line"><a name="a37"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$content&nbsp;</span>=&nbsp;<span class="src-id">preg_replace</span><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">&quot;/\n/&quot;</span><span class="src-sym">,</span><span class="src-str">&quot;/\r/&quot;</span><span class="src-sym">,</span><span class="src-str">'/(&lt;\?(?:php)?|&lt;%)\s*/'</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">''</span><span class="src-sym">,</span><span class="src-str">''</span><span class="src-sym">,</span><span class="src-str">'$1&nbsp;'</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-id">preg_replace</span><span class="src-sym">(</span><span class="src-str">'#^\s*(.+?)\s*$#m'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'$1'</span><span class="src-sym">,&nbsp;</span><span class="src-var">$content</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a38"></a>&nbsp;</div></li>
-<li><div class="src-line"><a name="a39"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$content</span><span class="src-sym">;</span></div></li>
-<li><div class="src-line"><a name="a40"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
-<li><div class="src-line"><a name="a41"></a><span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a37"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$mode&nbsp;</span>=&nbsp;<span class="src-id">trim</span><span class="src-sym">(</span><span class="src-var">$params</span><span class="src-sym">[</span><span class="src-str">'mode'</span><span class="src-sym">]</span><span class="src-sym">,&nbsp;</span><span class="src-str">'&quot;\''</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a38"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">switch&nbsp;</span><span class="src-sym">(</span><span class="src-var">$mode</span><span class="src-sym">)&nbsp;</span><span class="src-sym">{</span></div></li>
+<li><div class="src-line"><a name="a39"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">case&nbsp;</span><span class="src-str">'js'</span>:</div></li>
+<li><div class="src-line"><a name="a40"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">case&nbsp;</span><span class="src-str">'javascript'</span>:</div></li>
+<li><div class="src-line"><a name="a41"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$content&nbsp;</span>=&nbsp;<span class="src-id">preg_replace</span><span class="src-sym">(</span><span class="src-str">'#(?&lt;!:)//\s[^\r\n]*|/\*.*?\*/#'</span><span class="src-sym">,</span><span class="src-str">''</span><span class="src-sym">,&nbsp;</span><span class="src-var">$content</span><span class="src-sym">)</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a42"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a43"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">case&nbsp;</span><span class="src-str">'default'</span>:</div></li>
+<li><div class="src-line"><a name="a44"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">default</span>:</div></li>
+<li><div class="src-line"><a name="a45"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a46"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a47"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-var">$content&nbsp;</span>=&nbsp;<a href="http://www.php.net/preg_replace">preg_replace</a><span class="src-sym">(</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">&quot;/\n/&quot;</span><span class="src-sym">,</span><span class="src-str">&quot;/\r/&quot;</span><span class="src-sym">,</span><span class="src-str">'/(&lt;\?(?:php)?|&lt;%)\s*/'</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><span class="src-key">array</span><span class="src-sym">(</span><span class="src-str">''</span><span class="src-sym">,</span><span class="src-str">''</span><span class="src-sym">,</span><span class="src-str">'$1&nbsp;'</span><span class="src-sym">)</span><span class="src-sym">,&nbsp;</span><a href="http://www.php.net/preg_replace">preg_replace</a><span class="src-sym">(</span><span class="src-str">'#^\s*(.+?)\s*$#m'</span><span class="src-sym">,&nbsp;</span><span class="src-str">'$1'</span><span class="src-sym">,&nbsp;</span><span class="src-var">$content</span><span class="src-sym">))</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a48"></a>&nbsp;</div></li>
+<li><div class="src-line"><a name="a49"></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-key">return&nbsp;</span><span class="src-var">$content</span><span class="src-sym">;</span></div></li>
+<li><div class="src-line"><a name="a50"></a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="src-sym">}</span></div></li>
+<li><div class="src-line"><a name="a51"></a><span class="src-sym">}</span></div></li>
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 03 Aug 2008 15:12:46 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Sep 2008 23:57:59 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>
