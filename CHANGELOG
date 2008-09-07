@@ -14,6 +14,9 @@
 + API: Added Dwoo_Compilation_Exception methods getCompiler() and
   getTemplate() so you can catch the exception and use those to build a nicer
   error view with all the details you want
++ Plugins: Added a mode parameter to {strip} to allow stripping of javascript
+  code blocks that use "// comments", because without this special mode the
+  comments result in syntax errors
 * The Compiler now ensures that a template starting with <?xml will not
   conflict with php using the short_open_tag=On setting
 * Complex arrays keys can be read using {$var["Long|Key*With.some)Crap"]},

@@ -2,6 +2,10 @@
 
 /**
  * Strips the spaces at the beginning and end of each line and also the line breaks
+ * <pre>
+ *  * mode : sets the content being stripped, available mode are 'default' or 'js'
+ *    for javascript, which strips the comments to prevent syntax errors
+ * </pre>
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -21,7 +25,7 @@
  */
 class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	public function init()
+	public function init($mode = "default")
 	{
 	}
 
@@ -33,6 +37,16 @@ class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
 		$params = $compiler->getCompiledParams($params);
+
+		$mode = trim($params['mode'], '"\'');
+		switch ($mode) {
+			case 'js':
+			case 'javascript':
+				$content = preg_replace('#(?<!:)//\s[^\r\n]*|/\*.*?\*/#','', $content);
+
+			case 'default':
+			default:
+		}
 
 		$content = preg_replace(array("/\n/","/\r/",'/(<\?(?:php)?|<%)\s*/'), array('','','$1 '), preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
 
