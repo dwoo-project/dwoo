@@ -6,7 +6,7 @@ if (!ini_get('date.timezone'))
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
-require dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'lib'.DIRECTORY_SEPARATOR.'Dwoo.php';
+require dirname(dirname(__FILE__)) . '/lib/dwooAutoload.php';
 define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests extends PHPUnit_Framework_TestSuite {

@@ -1,37 +1,16 @@
 <?php
 
-define('DWOO_DIRECTORY', dirname(__FILE__).DIRECTORY_SEPARATOR);
-set_include_path(get_include_path() . PATH_SEPARATOR . DWOO_DIRECTORY);
-
-include 'Dwoo/IPluginProxy.php';
-include 'Dwoo/ILoader.php';
-include 'Dwoo/IElseable.php';
-include 'Dwoo/Loader.php';
-include 'Dwoo/Exception.php';
-include 'Dwoo/Security/Policy.php';
-include 'Dwoo/Security/Exception.php';
-include 'Dwoo/ICompilable.php';
-include 'Dwoo/ICompiler.php';
-include 'Dwoo/IDataProvider.php';
-include 'Dwoo/ITemplate.php';
-include 'Dwoo/ICompilable/Block.php';
-include 'Dwoo/Plugin.php';
-include 'Dwoo/Block/Plugin.php';
-include 'Dwoo/Filter.php';
-include 'Dwoo/Processor.php';
-include 'Dwoo/Template/String.php';
-include 'Dwoo/Template/File.php';
-include 'Dwoo/Data.php';
+define('DWOO_DIRECTORY', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 // TODO BC Checks, remove
 if (defined('DWOO_CACHE_DIRECTORY'))
 	throw new Dwoo_Exception('DWOO_CACHE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
 if (defined('DWOO_COMPILE_DIRECTORY'))
 	throw new Dwoo_Exception('DWOO_COMPILE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
+if (defined('DWOO_CHMOD')) {
+	throw new Dwoo_Exception('DWOO_CHMOD is deprecated, you should now set this on your template object using $tpl->setChmod('.DWOO_CHMOD.');');
+}
 // end
-
-if (defined('DWOO_CHMOD') === false)
-	define('DWOO_CHMOD', 0777);
 
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
@@ -134,7 +113,7 @@ class Dwoo
 	/**
 	 * directory where the compiled templates are stored
 	 *
-	 * defaults to DWOO_COMPILEDIR (= DWOO_DIRECTORY/compiled by default)
+	 * defaults to DWOO_COMPILEDIR (= dwoo_dir/compiled by default)
 	 *
 	 * @var string
 	 */
@@ -143,7 +122,7 @@ class Dwoo
 	/**
 	 * directory where the cached templates are stored
 	 *
-	 * defaults to DWOO_CACHEDIR (= DWOO_DIRECTORY/cache by default)
+	 * defaults to DWOO_CACHEDIR (= dwoo_dir/cache by default)
 	 *
 	 * @var string
 	 */
@@ -286,13 +265,13 @@ class Dwoo
 	public function __construct($compileDir = null, $cacheDir = null)
 	{
 		if ($cacheDir === null) {
-			$this->cacheDir = DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR;
+			$this->cacheDir = dirname(__FILE__).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR;
 		} else {
 			$this->cacheDir = $cacheDir.DIRECTORY_SEPARATOR;
 		}
 
 		if ($compileDir === null) {
-			$this->compileDir = DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR;
+			$this->compileDir = dirname(__FILE__).DIRECTORY_SEPARATOR.'compiled'.DIRECTORY_SEPARATOR;
 		} else {
 			$this->compileDir = $compileDir.DIRECTORY_SEPARATOR;
 		}

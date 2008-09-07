@@ -34,7 +34,7 @@ http://www.gnu.org/licenses/lgpl.html
 -----------------------------------------------------------------------------
 /***************************** Basic Example *******************************/
 // Include the main class (it should handle the rest on its own)
-include 'path/to/Dwoo.php';
+include 'path/to/dwooAutoload.php';
 
 // Create the controller, this is reusable
 $dwoo = new Dwoo();
@@ -59,7 +59,7 @@ $dwoo->get($tpl, $data);
 // To loop over multiple articles of a blog for instance, if you have a
 // template file representing an article, you could do the following :
 
-include 'path/to/Dwoo.php';
+include 'path/to/dwooAutoload.php';
 
 $dwoo = new Dwoo();
 $tpl = new Dwoo_Template_File('path/to/article.tpl');

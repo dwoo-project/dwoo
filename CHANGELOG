@@ -1,4 +1,7 @@
-[2008-09-] 0.9.4
+[2008-09-] 1.0.0beta
+! Important note : Dwoo.php should not be included directly anymore, please
+  read the UPGRADE_NOTES file for more infos on the matter, if you don't
+  your Dwoo install will most likely break after the update anyway
 ! BC Break: {include} and {extends} now support the include path properly,
   which means that if you include "foo/bar.html" from _any_ template and you
   have an include path set on your template object, it will look in all those
@@ -19,6 +22,7 @@
   Dwoo_ITemplate objects or valid filenames are accepted
 * Foreach and other similar plugins that support "else" now only count()
   their input before processing when an else block follows
+* Various optimizations
 * Fixed compiler bug that created a parse error when you had comments in an
   extended template
 * Fixed extends bug when extending files in other directories using relative

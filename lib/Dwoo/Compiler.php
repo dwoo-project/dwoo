@@ -1,6 +1,6 @@
 <?php
 
-include 'Dwoo/Compilation/Exception.php';
+include dirname(__FILE__) . '/Compilation/Exception.php';
 
 /**
  * default dwoo compiler class, compiles dwoo templates into php

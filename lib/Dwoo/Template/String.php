@@ -81,6 +81,15 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	protected $compiler;
 
 	/**
+	 * chmod value for all files written (cached or compiled ones)
+	 *
+	 * set to null if you don't want any chmod operation to happen
+	 *
+	 * @var int
+	 */
+	protected $chmod = 0777;
+
+	/**
 	 * creates a template from a string
 	 *
 	 * @param string $templateString the template to use
@@ -137,6 +146,30 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	public function setCacheTime($seconds = null)
 	{
 		$this->cacheTime = $seconds;
+	}
+
+	/**
+	 * returns the chmod value for all files written (cached or compiled ones)
+	 *
+	 * defaults to 0777
+	 *
+	 * @return int|null
+	 */
+	public function getChmod()
+	{
+		return $this->chmod;
+	}
+
+	/**
+	 * set the chmod value for all files written (cached or compiled ones)
+	 *
+	 * set to null if you don't want to do any chmod() operation
+	 *
+	 * @param int $mask new bitmask to use for all files
+	 */
+	public function setChmod($mask = null)
+	{
+		$this->chmod = $mask;
 	}
 
 	/**
@@ -277,7 +310,9 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			@rename($temp, $cachedFile);
 		}
 
-		chmod($cachedFile, DWOO_CHMOD);
+		if ($this->chmod !== null) {
+			chmod($cachedFile, $this->chmod);
+		}
 
 		self::$cache['cached'][$this->cacheId] = true;
 
@@ -323,7 +358,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
 					if (class_exists('Dwoo_Compiler', false) === false) {
-						include 'Dwoo/Compiler.php';
+						include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
 					}
 					$compiler = Dwoo_Compiler::compilerFactory();
 				} else {
@@ -337,7 +372,9 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
 			$this->makeDirectory(dirname($compiledFile));
 			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
-			chmod($compiledFile, DWOO_CHMOD);
+			if ($this->chmod !== null) {
+				chmod($compiledFile, $this->chmod);
+			}
 
 			self::$cache['compiled'][$this->compileId] = true;
 		}
@@ -420,6 +457,10 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			return;
 		}
 
-		mkdir($path, DWOO_CHMOD, true);
+		if ($this->chmod !== null) {
+			mkdir($path, $this->chmod, true);
+		} else {
+			mkdir($path, 0777, true);
+		}
 	}
 }
