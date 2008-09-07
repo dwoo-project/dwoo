@@ -81,9 +81,6 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
      * Pre-serialization callback.
      *
      * Excludes the Dwoo instance to prevent excessive serialization load.
-     *
-     * @author     David Zülke <dz@bitxtender.com>
-     * @since      0.11.0
      */
     public function __sleep()
     {
@@ -96,9 +93,6 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
      * Grab a cleaned up dwoo instance.
      *
      * @return     Dwoo A Dwoo instance.
-     *
-     * @author     David Zülke <dz@bitxtender.com>
-     * @since      0.9.0
      */
     protected function getEngine()
     {
@@ -142,9 +136,6 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
      * @param      array              Associative array of additional assigns.
      *
      * @return     string A rendered result.
-     *
-     * @author     David Zülke <dz@bitxtender.com>
-     * @since      0.11.0
      */
     public function render(AgaviTemplateLayer $layer, array &$attributes = array(), array &$slots = array(), array &$moreAssigns = array())
     {
