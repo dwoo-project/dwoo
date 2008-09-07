@@ -20,3 +20,8 @@
 
  - add the renderer to app/config/autoload.xml as such :
     <autoload name="DwooRenderer">%core.lib_dir%/renderer/dwoo/Dwoo/Adapter/Agavi/DwooRenderer.php</autoload>
+
+ - you can copy the /Dwoo/Adapters/Agavi/dwoo_plugins directory to your agavi app's
+   lib directory, or change the plugin_dir parameter in the output_types.xml file.
+   these plugins are agavi-specific helpers that shortens the syntax to call common
+   agavi helpers (i18n, routing, ..)
