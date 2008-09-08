@@ -53,11 +53,11 @@ class Dwoo_Loader implements Dwoo_ILoader
 		$this->cacheDir = $cacheDir . DIRECTORY_SEPARATOR;
 
 		// include class paths or rebuild paths if the cache file isn't there
-		$foo = @file_get_contents($this->cacheDir.'classpath.cache.php');
+		$foo = @file_get_contents($this->cacheDir.'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php');
 		if ($foo) {
 			$this->classPath = unserialize($foo) + $this->classPath;
 		} else {
-			$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir.'classpath.cache.php');
+			$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir.'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php');
 		}
 	}
 
@@ -106,7 +106,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		// a new class was added or the include failed so we rebuild the cache
 		if (!isset($this->classPath[$class]) || !(include $this->classPath[$class])) {
 			if ($forceRehash) {
-				$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.php');
+				$this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php');
 				foreach ($this->paths as $path=>$file) {
 					$this->rebuildClassPathCache($path, $file);
 				}
