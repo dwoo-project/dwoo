@@ -592,7 +592,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				// strips comments
 				if (strstr($tpl, $this->ld.'*') !== false) {
-					$tpl = preg_replace('/'.$this->ldr.'\*.*?\*'.$this->rdr.'/s', '', $tpl);
+					$tpl = preg_replace(
+						'/(\r?\n)[\t ]*'.$this->ldr.'\*.*?\*'.$this->rdr.'[\t ]*\r?\n|'.
+						$this->ldr.'\*.*?\*'.$this->rdr.'/s', '$1', $tpl
+					);
 				}
 
 				// strips php tags if required by the security policy
