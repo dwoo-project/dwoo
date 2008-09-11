@@ -55,8 +55,45 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 			$opt['cache_dir'] = null;
 		}
 
-		$this->_engine = new Dwoo($opt['compile_dir'], $opt['cache_dir']);
-		$this->_data = new Dwoo_Data;
+		/*
+		 * Check for a custom engine
+		 */
+		if (isset($opt['engine'])) {
+			$engine = $opt['engine'];
+			// if param given as an object
+			if ($engine instanceof Dwoo) {
+				$this->_engine = $engine
+			}
+			// if param given as a string
+			elseif (is_subclass_of($engine, 'Dwoo')) {
+				$this->_engine = new $engine($opt['compile_dir'], $opt['cache_dir']);
+			}
+			else {
+				throw new Dwoo_Exception("Custom engine must be a subclass of Dwoo");
+			}
+		}
+		else {
+			$this->_engine = new Dwoo($opt['compile_dir'], $opt['cache_dir']);
+		}
+
+		/*
+		 * Check for a custom data provider
+		 */
+		if (isset($opt['data'])) {
+			$data = $opt['data'];
+			if ($data instanceof Dwoo_Data) {
+				$this->_data = $data;
+			}
+			elseif (is_subclass_of($data, 'Dwoo_Data')) {
+				$this->_data = new $data();
+			}
+			else {
+				throw new Dwoo_Exception("Custom data provider must be a subclass of Dwoo_Data");
+			}
+		}
+		else {
+			$this->_data = new Dwoo_Data;
+		}
 
 		$this->init();
 	}
