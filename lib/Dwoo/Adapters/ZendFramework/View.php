@@ -62,7 +62,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 			$engine = $opt['engine'];
 			// if param given as an object
 			if ($engine instanceof Dwoo) {
-				$this->_engine = $engine
+				$this->_engine = $engine;
 			}
 			// if param given as a string
 			elseif (is_subclass_of($engine, 'Dwoo')) {
