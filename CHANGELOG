@@ -1,3 +1,6 @@
+[2008--] 1.0.0
+* Lines containing only comments and whitespace are now entirely removed
+
 [2008-09-08] 1.0.0beta
 ! Important note : Dwoo.php should not be included directly anymore, please
   read the UPGRADE_NOTES file for more infos on the matter, if you don't
