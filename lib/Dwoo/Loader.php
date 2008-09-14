@@ -139,7 +139,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		if (!$pluginDir) {
 			throw new Dwoo_Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
 		}
-		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, '/\\', '--'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Dwoo::RELEASE_TAG.'.php';
+		$cacheFile = $this->cacheDir . 'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Dwoo::RELEASE_TAG.'.php';
 		$this->paths[$pluginDir] = $cacheFile;
 		$foo = @file_get_contents($cacheFile);
 		if ($foo) {
