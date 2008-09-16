@@ -42,9 +42,9 @@ function Dwoo_Plugin_url_compile(Dwoo_Compiler $compiler, $route = null, $params
 			$params = array();
 			foreach ($rest as $k=>$v) {
 				if (is_numeric($k)) {
-					$out[] = $k.'=>'.$v;
+					$params[] = $k.'=>'.$v;
 				} else {
-					$out[] = '"'.$k.'"=>'.$v;
+					$params[] = '"'.$k.'"=>'.$v;
 				}
 			}
 			$params = 'array('.implode(', ', $params).')';
