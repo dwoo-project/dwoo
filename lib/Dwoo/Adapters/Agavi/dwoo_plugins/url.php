@@ -8,6 +8,9 @@
  * <pre>
  *  * route : the route name, optional (by default the current url is returned)
  *  * params : an array with variables to build the route, optional
+ *  * options : an array of options to pass to the routing object, optional
+ *  * rest : for convenience, you can just pass named parameters that will be used as
+ *           the params array, but you must not provide the params array in this case
  * </pre>
  *
  * Examples:
@@ -32,7 +35,25 @@
  * @date       2008-09-08
  * @package    Dwoo
  */
-function Dwoo_Plugin_url_compile(Dwoo_Compiler $compiler, $route = null, $params = array())
+function Dwoo_Plugin_url_compile(Dwoo_Compiler $compiler, $route = null, $params = null, $options = null, array $rest = array())
 {
-	return '$this->data[\'ro\']->gen('.$route.', '.$params.')';
+	if ($params == 'null') {
+		if (count($rest)) {
+			$params = array();
+			foreach ($rest as $k=>$v) {
+				if (is_numeric($k)) {
+					$out[] = $k.'=>'.$v;
+				} else {
+					$out[] = '"'.$k.'"=>'.$v;
+				}
+			}
+			$params = 'array('.implode(', ', $params).')';
+		} else {
+			$params = 'array()';
+		}
+	}
+	if ($options == 'null') {
+		$options = 'array()';
+	}
+	return '$this->data[\'ro\']->gen('.$route.', '.$params.', '.$options.')';
 }
