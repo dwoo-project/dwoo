@@ -125,7 +125,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 			$this->compilationEnforced = false;
 
 			if ($compiler === null) {
-				$compiler = $dwoo->getDefaultCompilerFactory('string');
+				$compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
 
 				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
 					if (class_exists('Dwoo_Compiler', false) === false) {

@@ -1,11 +1,13 @@
 [2008--] 1.0.0
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
-  (thanks to Stephan Wentz for the patch)
+  - thanks to Stephan Wentz for the patch
 * Lines containing only comments and whitespace are now entirely removed
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
   or a custom data class (extends Dwoo_Data) - thanks to Maxime Mérian for
   the patch
+* Fixed file template class reading from the string compiler factory - thanks
+  to MrOxiMoron for the patch
 * Fixed a 1.0.0beta regression that messed with custom plugin directories
   on Windows
 
