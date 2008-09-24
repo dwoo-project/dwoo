@@ -1,4 +1,8 @@
 [2008--] 1.0.0
+! BC Break: Small one that probably won't affect anyone, but it makes the 
+  PluginProxy feature much stronger. Basically if you used a custom one you 
+  will get a fatal error and need to update it to conform to the new 
+  IPluginProxy interface, that's it
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch

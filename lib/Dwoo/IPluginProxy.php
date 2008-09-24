@@ -12,7 +12,8 @@
  * {@link http://www.gnu.org/copyleft/lesser.html}
  *
  * @author     Denis Arh <denis@arh.cc>
- * @copyright  Copyright (c) 2008, Denis Arh (this file + some patched bits here and there)
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Denis Arh, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    0.9.1
@@ -22,10 +23,48 @@
 interface Dwoo_IPluginProxy
 {
 	/**
-	 * loads a plugin or returns false on failure
+	 * returns true or false to say whether the given plugin is handled by this proxy or not
 	 *
 	 * @param string $name the plugin name
-	 * @return bool true if the plugin was successfully loaded
+	 * @return bool true if the plugin is known and usable, otherwise false
 	 */
-    public function loadPlugin($name);
+    public function handles($name);
+    
+    /**
+     * returns the code (as a string) to call the plugin 
+     * (this will be executed at runtime inside the Dwoo class)
+     * 
+     * @param string $name the plugin name
+     * @param array $params a parameter array, array key "*" is the rest array
+     * @return string
+     */
+    public function getCode($name, $params);
+    
+    /**
+     * returns a callback to the plugin, this is used with the reflection API to
+     * find out about the plugin's parameter names etc.
+     *
+     * should you need a rest array without the possibility to edit the 
+     * plugin's code, you can provide a callback to some
+     * other function with the correct parameter signature, i.e. :
+     * <code>
+     * return array($this, "callbackHelper");
+     * // and callbackHelper would be as such:
+     * public function callbackHelper(array $rest=array()){}
+     * </code>
+     *
+     * @param string $name the plugin name
+     * @return callback
+     */
+    public function getCallback($name);
+    
+    /**
+     * returns some code that will check if the plugin is loaded and if not load it
+     * this is optional, if your plugins are autoloaded or whatever, just return an 
+     * empty string
+     * 
+     * @param string $name the plugin name
+     * @return string
+     */
+    public function getLoader($name);
 }

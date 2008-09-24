@@ -13,7 +13,8 @@
  * {@link http://www.gnu.org/copyleft/lesser.html}
  *
  * @author	   Denis Arh <denis@arh.cc>
- * @copyright  Copyright (c) 2008, Denis Arh
+ * @author	   Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Denis Arh, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    1.0.0
@@ -44,7 +45,7 @@ class Dwoo_Adapters_ZendFramework_PluginProxy implements Dwoo_IPluginProxy
 	 * @param string $name
 	 * @return bool
 	 */
-	public function loadPlugin($name) {
+	public function handles($name) {
 		try {
 			$this->view->getHelper($name);
 		} catch (Zend_Loader_PluginLoader_Exception $e) {
@@ -54,15 +55,47 @@ class Dwoo_Adapters_ZendFramework_PluginProxy implements Dwoo_IPluginProxy
 		return true;
 	}
 
-	/**
-	 * Catch-all method for Zend view helpers. It generates code for
-	 * Dwoo templates.
-	 *
-	 * @param string $name Name of the view helper
-	 * @param array  $args Helper's parameters
-	 * @return string
-	 */
-	public function __call($name, $args) {
-		return '$this->getPluginProxy()->view->'. $name .'('.Dwoo_Compiler::implode_r($args).')';
+    /**
+     * returns the code (as a string) to call the plugin 
+     * (this will be executed at runtime inside the Dwoo class)
+     * 
+     * @param string $name the plugin name
+     * @param array $params a parameter array, array key "*" is the rest array
+     * @return string
+     */
+	public function getCode($name, $params) {
+		return '$this->getPluginProxy()->view->'. $name .'('.Dwoo_Compiler::implode_r($params).')';
 	}
+
+    /**
+     * returns a callback to the plugin, this is used with the reflection API to
+     * find out about the plugin's parameter names etc.
+     *
+     * should you need a rest array (i.e. for ZendFramework helpers) without the 
+     * possibility to edit the plugin's code, you can provide a callback to some
+     * other function with the correct parameter signature, i.e. :
+     * <code>
+     * return array($this, "callbackHelper");
+     * // and callbackHelper would be as such:
+     * public function callbackHelper(array $rest=array()){}
+     * </code>
+     *
+     * @param string $name the plugin name
+     * @return callback
+     */
+    public function getCallback($name) {
+        return array($this->view->getHelper($name), $name);
+    }
+    
+    /**
+     * returns some code that will check if the plugin is loaded and if not load it
+     * this is optional, if your plugins are autoloaded or whatever, just return an 
+     * empty string
+     * 
+     * @param string $name the plugin name
+     * @return string
+     */
+    public function getLoader($name) {
+        return '';
+    }
 }
