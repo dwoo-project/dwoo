@@ -556,6 +556,16 @@ replace="BAR"
 
 		$this->assertEquals('valid', $dwoo->get($tpl, array(), $this->compiler));
 	}
+
+	public function testCallingMethodOnPropery()
+	{
+		$tpl = new Dwoo_Template_String('{getobj()->instance->Bar("hoy")}');
+		$tpl->forceCompilation();
+		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
+
+		$this->assertEquals('HOY', $dwoo->get($tpl, array(), $this->compiler));
+	}
 }
 
 class ProxyHelper implements Dwoo_IPluginProxy
@@ -602,6 +612,12 @@ class ProxyHelper implements Dwoo_IPluginProxy
 class PluginHelper
 {
 	public $moo = "yay";
+	public $instance;
+
+	public function __construct()
+	{
+		$this->instance = $this;
+	}
 
 	public function callWithDwoo(Dwoo $dwoo)
 	{

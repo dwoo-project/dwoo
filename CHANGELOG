@@ -1,7 +1,7 @@
 [2008--] 1.0.0
-! BC Break: Small one that probably won't affect anyone, but it makes the 
-  PluginProxy feature much stronger. Basically if you used a custom one you 
-  will get a fatal error and need to update it to conform to the new 
+! BC Break: Small one that probably won't affect anyone, but it makes the
+  PluginProxy feature much stronger. Basically if you used a custom one you
+  will get a fatal error and need to update it to conform to the new
   IPluginProxy interface, that's it
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
@@ -10,6 +10,7 @@
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
   or a custom data class (extends Dwoo_Data) - thanks to Maxime Mérian for
   the patch
+* Fixed parsing bug in {func()->propertyOfReturnedObject}
 * Fixed file template class reading from the string compiler factory - thanks
   to MrOxiMoron for the patch
 * Fixed a 1.0.0beta regression that messed with custom plugin directories

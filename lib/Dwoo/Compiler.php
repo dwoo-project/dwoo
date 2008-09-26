@@ -1209,7 +1209,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if (isset($parsed) && $parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+)?#is', $substr, $match)) {
+		if (isset($parsed) && $parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+|->[a-z].*)?#is', $substr, $match)) {
 			$ptr = 0;
 
 			if (is_array($parsingParams)) {
