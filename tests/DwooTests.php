@@ -6,10 +6,22 @@ if (!ini_get('date.timezone'))
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
-require dirname(dirname(__FILE__)) . '/lib/dwooAutoload.php';
+require dirname(__FILE__) . '/'.DwooTests::getConfig('DWOO_PATH').'/dwooAutoload.php';
 define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests extends PHPUnit_Framework_TestSuite {
+
+	protected static $cfg;
+
+	public static function getConfig($var, $default=null) {
+		if (self::$cfg == null) {
+			self::$cfg = parse_ini_file(dirname(__FILE__) . '/config.ini');
+		}
+		if (isset(self::$cfg[$var])) {
+			return self::$cfg[$var];
+		}
+		return $default;
+	}
 
 	public static function suite() {
 		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'plugins/builtin');
@@ -22,7 +34,13 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
 			if (!$file->isDot() && !$file->isDir() && (string) $file !== 'DwooTests.php' && substr((string) $file, -4) === '.php') {
 				require_once $file->getPathname();
-				$suite->addTestSuite(basename($file, '.php'));
+				$class = basename($file, '.php');
+				// to have an optional test suite, it should implement a public static function isRunnable
+				// that returns true only if all the conditions are met to run it successfully, for example
+				// it can check that an external library is present
+				if (!method_exists($file, 'isRunnable') || call_user_func(array($file, 'isRunnable'))) {
+					$suite->addTestSuite($class);
+				}
 			}
 		}
 

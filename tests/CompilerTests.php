@@ -565,7 +565,7 @@ class ProxyHelper implements Dwoo_IPluginProxy
 		$this->params = func_get_args();
 	}
 
-	public function loadPlugin($name)
+	public function handles($name)
 	{
 		return $name === 'TestProxy';
 	}
@@ -575,9 +575,27 @@ class ProxyHelper implements Dwoo_IPluginProxy
 		return func_get_args() === $this->params ? 'valid' : 'fubar';
 	}
 
-	public function __call($m, $p)
+	public function getCode($m, $p)
 	{
-		return '$this->getPluginProxy()->check'.$m.'('.implode(',', $p).')';
+		if (isset($p['*'])) {
+			return '$this->getPluginProxy()->check'.$m.'('.implode(',', $p['*']).')';
+		} else {
+			return '$this->getPluginProxy()->check'.$m.'()';
+		}
+	}
+
+	public function getCallback($name)
+	{
+		return array($this, 'callbackHelper');
+	}
+
+	public function getLoader($name)
+	{
+		return '';
+	}
+
+	private function callbackHelper(array $rest = array()) {
+
 	}
 }
 
