@@ -55,47 +55,47 @@ class Dwoo_Adapters_ZendFramework_PluginProxy implements Dwoo_IPluginProxy
 		return true;
 	}
 
-    /**
-     * returns the code (as a string) to call the plugin 
-     * (this will be executed at runtime inside the Dwoo class)
-     * 
-     * @param string $name the plugin name
-     * @param array $params a parameter array, array key "*" is the rest array
-     * @return string
-     */
+	/**
+	 * returns the code (as a string) to call the plugin
+	 * (this will be executed at runtime inside the Dwoo class)
+	 *
+	 * @param string $name the plugin name
+	 * @param array $params a parameter array, array key "*" is the rest array
+	 * @return string
+	 */
 	public function getCode($name, $params) {
 		return '$this->getPluginProxy()->view->'. $name .'('.Dwoo_Compiler::implode_r($params).')';
 	}
 
-    /**
-     * returns a callback to the plugin, this is used with the reflection API to
-     * find out about the plugin's parameter names etc.
-     *
-     * should you need a rest array (i.e. for ZendFramework helpers) without the 
-     * possibility to edit the plugin's code, you can provide a callback to some
-     * other function with the correct parameter signature, i.e. :
-     * <code>
-     * return array($this, "callbackHelper");
-     * // and callbackHelper would be as such:
-     * public function callbackHelper(array $rest=array()){}
-     * </code>
-     *
-     * @param string $name the plugin name
-     * @return callback
-     */
-    public function getCallback($name) {
-        return array($this->view->getHelper($name), $name);
-    }
-    
-    /**
-     * returns some code that will check if the plugin is loaded and if not load it
-     * this is optional, if your plugins are autoloaded or whatever, just return an 
-     * empty string
-     * 
-     * @param string $name the plugin name
-     * @return string
-     */
-    public function getLoader($name) {
-        return '';
-    }
+	/**
+	 * returns a callback to the plugin, this is used with the reflection API to
+	 * find out about the plugin's parameter names etc.
+	 *
+	 * should you need a rest array (i.e. for ZendFramework helpers) without the
+	 * possibility to edit the plugin's code, you can provide a callback to some
+	 * other function with the correct parameter signature, i.e. :
+	 * <code>
+	 * return array($this, "callbackHelper");
+	 * // and callbackHelper would be as such:
+	 * public function callbackHelper(array $rest=array()){}
+	 * </code>
+	 *
+	 * @param string $name the plugin name
+	 * @return callback
+	 */
+	public function getCallback($name) {
+		return array($this->view->getHelper($name), $name);
+	}
+
+	/**
+	 * returns some code that will check if the plugin is loaded and if not load it
+	 * this is optional, if your plugins are autoloaded or whatever, just return an
+	 * empty string
+	 *
+	 * @param string $name the plugin name
+	 * @return string
+	 */
+	public function getLoader($name) {
+		return '';
+	}
 }

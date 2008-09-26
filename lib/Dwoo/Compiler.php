@@ -742,8 +742,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo::PROXY_PLUGIN:
-                $output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
-                break;
+				$output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
+				break;
 			default:
 				throw new Dwoo_Compilation_Exception($this, 'Type error for '.$plugin.' with type'.$type);
 
@@ -2405,10 +2405,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$output = $func.'('.$params.')';
 				}
 			} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
-                $params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($name), $state);
+				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($name), $state);
 				foreach ($params as &$p)
 					$p = $p[0];
-                $output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
+				$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
 			} elseif ($pluginType & Dwoo::SMARTY_MODIFIER) {
 				$params = $this->mapParams($params, null, $state);
 				$params = $params['*'][0];
