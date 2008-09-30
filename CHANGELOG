@@ -13,6 +13,7 @@
 * Fixed parsing bug in {func()->propertyOfReturnedObject}
 * Fixed file template class reading from the string compiler factory - thanks
   to MrOxiMoron for the patch
+* Fixed handling of variable variables that contained non standard characters
 * Fixed a 1.0.0beta regression that messed with custom plugin directories
   on Windows
 

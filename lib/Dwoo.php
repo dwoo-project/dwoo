@@ -1195,7 +1195,7 @@ class Dwoo
 		}
 
 		if (is_array($varstr) === false) {
-			preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
 		} else {
 			$m = $varstr;
 		}
@@ -1299,7 +1299,7 @@ class Dwoo
 				$varstr = 'dwoo'.$varstr;
 			}
 
-			preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
 		}
 
 		$i = $m[2][0];
@@ -1410,7 +1410,7 @@ class Dwoo
 			$this->scope[$scope] = $value;
 		} else {
 			// TODO handle _root/_parent scopes ?
-			preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $scope, $m);
+			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $scope, $m);
 
 			$cur =& $this->scope;
 			$last = array(array_pop($m[1]), array_pop($m[2]));
