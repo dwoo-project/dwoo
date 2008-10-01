@@ -82,7 +82,7 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 	 */
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
-		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.implode(', ', $compiler->getCompiledParams($params)).'));'.$append.Dwoo_Compiler::PHP_CLOSE;
+		return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.Dwoo_Compiler::implode_r($compiler->getCompiledParams($params)).'));'.$append.Dwoo_Compiler::PHP_CLOSE;
 	}
 
 	/**
