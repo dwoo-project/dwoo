@@ -3,6 +3,8 @@
   PluginProxy feature much stronger. Basically if you used a custom one you
   will get a fatal error and need to update it to conform to the new
   IPluginProxy interface, that's it
++ Compiler: the modifier syntax (|foo) can now be applied on functions and on
+  complex variables i.e. {$obj->getStuff()|upper} or {lower('foo')|upper}
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch

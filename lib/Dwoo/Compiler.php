@@ -1115,6 +1115,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 
 		if ($this->debug) echo '<br />PARSE CALL : PARSING "<b>'.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').'</b>" @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
+		$parsed = "";
 
 		if ($first==='$') {
 			// var
@@ -1190,26 +1191,46 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$substr = substr($in, $pointer, $to-$pointer);
-		if (isset($parsed) && $parsed==='var' && preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
-			$pointer += strlen($match[0]) - 1;
-			if (is_array($parsingParams)) {
-				if ($match[2] == '$') {
-					$expr = $this->parseVar($in, $pointer, $to, array(), $curBlock, $pointer);
+
+		// var parsed, check if any var-extension applies
+		if ($parsed==='var') {
+			if (preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
+				// parse expressions
+				$pointer += strlen($match[0]) - 1;
+				if (is_array($parsingParams)) {
+					if ($match[2] == '$') {
+						$expr = $this->parseVar($in, $pointer, $to, array(), $curBlock, $pointer);
+					} else {
+						$expr = $this->parseOthers($in, $pointer, $to, array(), 'expression', $pointer);
+					}
+					$out[count($out)-1][0] .= $match[1] . $expr[0];
+					$out[count($out)-1][1] .= $match[1] . $expr[1];
 				} else {
-					$expr = $this->parseOthers($in, $pointer, $to, array(), 'expression', $pointer);
-				}
-				$out[count($out)-1][0] .= $match[1] . $expr[0];
-				$out[count($out)-1][1] .= $match[1] . $expr[1];
-			} else {
-				if ($match[2] == '$') {
-					$out .= $match[1] . $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
-				} else {
-					$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+					if ($match[2] == '$') {
+						$out .= $match[1] . $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
+					} else {
+						$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+					}
 				}
 			}
 		}
 
-		if (isset($parsed) && $parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+|->[a-z].*)?#is', $substr, $match)) {
+		if ($curBlock !== 'modifier' && ($parsed === 'func' || $parsed === 'var') && preg_match('#^\|@?[a-z0-9_]+(:.*)?#i', $substr, $match)) {
+			// parse modifier on funcs or vars
+			$srcPointer = $pointer;
+			if (is_array($parsingParams)) {
+				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), 'var', $pointer);
+				$out[count($out)-1][0] = $tmp;
+				$out[count($out)-1][1] .= substr($substr, $srcPointer, $srcPointer - $pointer);
+				var_dump($out);
+			} else {
+				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), 'var', $pointer);
+			}
+		}
+
+		// func parsed, check if any func-extension applies
+		if ($parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+|->[a-z].*)?#is', $substr, $match)) {
+			// parse method call or property read
 			$ptr = 0;
 
 			if (is_array($parsingParams)) {
@@ -1920,7 +1941,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$ptr += 2;
 			}
 
-			if (in_array($methodCall[$ptr], array(';', '/', ' ', "\t", "\r", "\n", ')', '+', '*', '%', '=', '-')) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd) {
+			if (in_array($methodCall[$ptr], array(';', '/', ' ', "\t", "\r", "\n", ')', '+', '*', '%', '=', '-', '|')) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd) {
 				// break char found
 				break;
 			}
