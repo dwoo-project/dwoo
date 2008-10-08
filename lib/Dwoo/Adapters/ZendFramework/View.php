@@ -85,16 +85,16 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	public function setOptions(array $opt = array())
 	{
 		// Dwoo constructor exceptions + BC:
-		if (isset($opt['engine']['compileDir'])) {
-			$this->_compileDir = $opt['engine']['compileDir'];
-		} elseif (isset($opt['compileDir'])) {
-			 $this->_compileDir = $opt['compileDir'];
+		if (isset($opt['compileDir'])) {
+			$this->_compileDir = $opt['compileDir'];
+		} elseif (isset($opt['compile_dir'])) {
+			 $this->_compileDir = $opt['compile_dir'];
 		}
 
-		if (isset($opt['engine']['cacheDir'])) {
-			$this->_cacheDir = $opt['engine']['cacheDir'];
-		} elseif (isset($opt['cacheDir'])) {
+		if (isset($opt['cacheDir'])) {
 			$this->_cacheDir = $opt['cacheDir'];
+		} elseif (isset($opt['cache_dir'])) {
+			$this->_cacheDir = $opt['cache_dir'];
 		}
 
 		// Making sure that everything is loaded.
