@@ -5,15 +5,19 @@
   IPluginProxy interface, that's it
 + Compiler: the modifier syntax (|foo) can now be applied on functions and on
   complex variables i.e. {$obj->getStuff()|upper} or {lower('foo')|upper}
-* ZendFramework: major overhaul thanks to Denis Arh, templates files should
+* Adapters: Zend: major overhaul thanks to Denis Arh, templates files should
   probably be moved in the scripts subfolder after this update though
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch
-* Lines containing only comments and whitespace are now entirely removed
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
   or a custom data class (extends Dwoo_Data) - thanks to Maxime Mérian for
   the patch
+* Compiler: added Dwoo_Compiler->allowNestedComments() to enable parsing of
+  nested comments (i.e. {* {* *} *} becomes a valid comment, useful to comment
+  out big chunks of code containing comments)
+* Lines containing only comments and whitespace are now entirely removed
+* Removed comments do not mess up the line count anymore (for error messages)
 * Fixed parsing bug in {func()->propertyOfReturnedObject}
 * Fixed file template class reading from the string compiler factory - thanks
   to MrOxiMoron for the patch

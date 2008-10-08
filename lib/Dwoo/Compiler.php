@@ -77,6 +77,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected $rdr = '\\}';
 
 	/**
+	 * defines whether the nested comments should be parsed as nested or not
+	 *
+	 * defaults to false (classic block comment parsing as in all languages)
+	 *
+	 * @var bool
+	 */
+	protected $allowNestedComments = false;
+
+	/**
 	 * defines whether opening and closing tags can contain spaces before valid data or not
 	 *
 	 * turn to true if you want to be sloppy with the syntax, but when set to false it allows
@@ -234,6 +243,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * sets the way to handle nested comments, if set to true
+	 * {* foo {* some other *} comment *} will be stripped correctly.
+	 *
+	 * if false it will remove {* foo {* some other *} and leave "comment *}" alone,
+	 * this is the default behavior
+	 *
+	 * @param bool $allow allow nested comments or not, defaults to true (but the default internal value is false)
+	 */
+	public function allowNestedComments($allow = true) {
+		$this->allowNestedComments = (bool) $allow;
+	}
+
+	/**
 	 * sets the tag openings handling strictness, if set to true, template tags can
 	 * contain spaces before the first function/string/variable such as { $foo} is valid.
 	 *
@@ -272,7 +294,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function setAutoEscape($enabled)
 	{
-		$this->autoEscape = $enabled;
+		$this->autoEscape = (bool) $enabled;
 	}
 
 	/**
@@ -590,14 +612,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				// show template source if debug
 				if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre><hr />';
 
-				// strips comments
-				if (strstr($tpl, $this->ld.'*') !== false) {
-					$tpl = preg_replace(
-						'/(\r?\n)[\t ]*'.$this->ldr.'\*.*?\*'.$this->rdr.'[\t ]*\r?\n|'.
-						$this->ldr.'\*.*?\*'.$this->rdr.'/s', '$1', $tpl
-					);
-				}
-
 				// strips php tags if required by the security policy
 				if ($this->securityPolicy !== null) {
 					$search = array('{<\?php.*?\?>}');
@@ -680,9 +694,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						break;
 					}
 				}
-
-				$ptr += strlen($this->rd);
-				$this->setLine(substr_count($this->rd, "\n"), true);
 
 				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
 				if (substr($this->curBlock['buffer'], -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
@@ -1095,6 +1106,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		while ($first===" " || $first==="\n" || $first==="\t" || $first==="\r") {
 			if ($curBlock === 'root' && substr($in, $from, strlen($this->rd)) === $this->rd) {
 				// end template tag
+				$pointer += strlen($this->rd);
 				if ($this->debug) echo 'TEMPLATE PARSING ENDED<br />';
 				return false;
 			}
@@ -1116,6 +1128,71 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($this->debug) echo '<br />PARSE CALL : PARSING "<b>'.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').'</b>" @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
 		$parsed = "";
+
+		if ($curBlock === 'root' && $first === '*') {
+			$src = $this->getTemplateSource();
+			$startpos = $this->getPointer() - strlen($this->ld);
+			if (substr($src, $startpos, strlen($this->ld)) === $this->ld) {
+				do {
+					$char = substr($src, --$startpos, 1);
+					if ($char == "\n") {
+						$startpos++;
+						$whitespaceStart = true;
+						break;
+					}
+				} while ($char == ' ' || $char == "\t");
+
+				if (!isset($whitespaceStart)) {
+					$startpos = $this->getPointer();
+				} else {
+					$pointer -= $this->getPointer() - $startpos;
+				}
+
+				if ($this->allowNestedComments && strpos($src, $this->ld.'*', $this->getPointer()) !== false) {
+					$comOpen = $this->ld.'*';
+					$comClose = '*'.$this->rd;
+					$level = 1;
+					$start = $startpos;
+					$ptr = $this->getPointer() + '*';
+
+					while ($level > 0 && $ptr < strlen($src)) {
+						$open = strpos($src, $comOpen, $ptr);
+						$close = strpos($src, $comClose, $ptr);
+
+						if ($open !== false && $close !== false) {
+							if ($open < $close) {
+								$ptr = $open + strlen($comOpen);
+								$level++;
+							} else {
+								$ptr = $close + strlen($comClose);
+								$level--;
+							}
+						} elseif ($open !== false) {
+							$ptr = $open + strlen($comOpen);
+							$level++;
+						} elseif ($close !== false) {
+							$ptr = $close + strlen($comClose);
+							$level--;
+						} else {
+							$ptr = strlen($src);
+						}
+					}
+					$endpos = $ptr - strlen('*'.$this->rd);
+				} else {
+					$endpos = strpos($src, '*'.$this->rd, $startpos);
+					if ($endpos == false) {
+						throw new Dwoo_Compilation_Exception($this, 'Un-ended comment');
+					}
+				}
+				$pointer += $endpos - $startpos + strlen('*'.$this->rd);
+				if (isset($whitespaceStart) && preg_match('#^[\t ]*\r?\n#', substr($src, $endpos+strlen('*'.$this->rd)), $m)) {
+					$pointer += strlen($m[0]);
+					var_dump('x');
+					$this->curBlock['buffer'] = substr($this->curBlock['buffer'], 0, - ($this->getPointer() - $startpos - strlen($this->ld)));
+				}
+				return false;
+			}
+		}
 
 		if ($first==='$') {
 			// var
@@ -1162,6 +1239,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($curBlock === 'root' && substr($substr, 0, strlen($this->rd)) === $this->rd) {
 			// end template tag
 			if ($this->debug) echo 'TAG PARSING ENDED<br />';
+			$pointer += strlen($this->rd);
 			return false;
 		} elseif (is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) {
 			// named parameter
