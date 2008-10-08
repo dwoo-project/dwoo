@@ -346,7 +346,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
 			// already checked, return compiled file
-		} elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true) {
+		} elseif ($this->compilationEnforced !== true && $this->isValidCompiledFile($compiledFile)) {
 			// template is compiled
 			self::$cache['compiled'][$this->compileId] = true;
 		} else {
@@ -380,6 +380,16 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		}
 
 		return $compiledFile;
+	}
+	
+	/**
+	 * Checks if compiled file is valid (it exists)
+	 * 
+	 * @param string file
+	 * @return boolean True cache file existance
+	 */
+	protected function isValidCompiledFile($file) {
+		return file_exists($file);   
 	}
 
 	/**

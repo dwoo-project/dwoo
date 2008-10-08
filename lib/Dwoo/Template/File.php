@@ -103,54 +103,18 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	{
 		return $this->includePath;
 	}
+	
 
+	
 	/**
-	 * returns the compiled template file name
-	 *
-	 * @param Dwoo $dwoo the dwoo instance that requests it
-	 * @param Dwoo_ICompiler $compiler the compiler that must be used
-	 * @return string
+	 * Checks if compiled file is valid (exists and it's the modification is greater or 
+	 * equal to the modification time of the template file)
+	 * 
+	 * @param string file
+	 * @return boolean True cache file existance and it's modification time
 	 */
-	public function getCompiledTemplate(Dwoo $dwoo, Dwoo_ICompiler $compiler = null)
-	{
-		$compiledFile = $this->getCompiledFilename($dwoo);
-
-		if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
-			// already checked, return compiled file
-		} elseif ($this->compilationEnforced !== true && file_exists($compiledFile)===true && (int)$this->getUid() <= filemtime($compiledFile)) {
-			// template is compiled and has not been modified since the compilation
-			self::$cache['compiled'][$this->compileId] = true;
-		} else {
-			// compiles the template
-			$this->compilationEnforced = false;
-
-			if ($compiler === null) {
-				$compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
-
-				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
-					if (class_exists('Dwoo_Compiler', false) === false) {
-						include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-					}
-					$compiler = Dwoo_Compiler::compilerFactory();
-				} else {
-					$compiler = call_user_func($compiler);
-				}
-			}
-
-			$this->compiler = $compiler;
-
-			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
-			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
-			$this->makeDirectory(dirname($compiledFile));
-			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
-			if ($this->chmod !== null) {
-				chmod($compiledFile, $this->chmod);
-			}
-
-			self::$cache['compiled'][$this->compileId] = true;
-		}
-
-		return $compiledFile;
+	protected function isValidCompiledFile($file) {
+		return parent::isValidCompiledFile($file) && (int)$this->getUid() <= filemtime($file);
 	}
 
 	/**
