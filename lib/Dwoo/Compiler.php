@@ -1187,7 +1187,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer += $endpos - $startpos + strlen('*'.$this->rd);
 				if (isset($whitespaceStart) && preg_match('#^[\t ]*\r?\n#', substr($src, $endpos+strlen('*'.$this->rd)), $m)) {
 					$pointer += strlen($m[0]);
-					var_dump('x');
 					$this->curBlock['buffer'] = substr($this->curBlock['buffer'], 0, - ($this->getPointer() - $startpos - strlen($this->ld)));
 				}
 				return false;
@@ -1300,7 +1299,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), 'var', $pointer);
 				$out[count($out)-1][0] = $tmp;
 				$out[count($out)-1][1] .= substr($substr, $srcPointer, $srcPointer - $pointer);
-				var_dump($out);
 			} else {
 				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), 'var', $pointer);
 			}
