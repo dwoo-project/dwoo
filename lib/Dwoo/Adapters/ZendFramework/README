@@ -10,8 +10,8 @@
 // ------------------------
 
 $view = new Dwoo_Adapters_ZendFramework_View(array(
-       'compile_dir' => 'path/to/compile_dir' // set to null or remove this line to use defaults
-       'cache_dir'   => 'path/to/cache_dir' // set to null or remove this line to use defaults
+       'compileDir' => 'path/to/compile_dir' // set to null or remove this line to use defaults
+       'cacheDir'   => 'path/to/cache_dir' // set to null or remove this line to use defaults
 ));
 
 // This allows you to use ZF's helpers as if they were Dwoo plugins (i.e. {doctype} will call the doctype helper)
