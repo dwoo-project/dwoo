@@ -32,7 +32,12 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	/**
 	 * @var Dwoo_Data
 	 */
-	protected $_data = null;
+	protected $_dataProvider = null;
+
+	/**
+	 * @var Dwoo_Compiler
+	 */
+	protected $_compiler = null;
 
 	/**
 	 * @var Dwoo_IPluginProxy
@@ -40,62 +45,99 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	protected $_pluginProxy = null;
 
 	/**
+	 * (temp) storage for Dwoo's compile dir setting
+	 *
+	 * @var string
+	 */
+	protected $_compileDir = null;
+
+	/**
+	 * (temp) storage for Dwoo's cache dir setting
+	 *
+	 * @var string
+	 */
+	protected $_cacheDir   = null;
+
+	/**
 	 * Constructor method. Opt array::
 	 *  - compile_dir Where to store compiled template
 	 *  - cache_dir   Cache files location
 	 *
-	 * @param array $opt
+	 * @param array|Zend_Config List of options or Zend_Config instance
 	 */
-	public function __construct(array $opt = array())
+	public function __construct($opt)
 	{
-		if (!isset($opt['compile_dir'])) {
-			$opt['compile_dir'] = null;
-		}
-		if (!isset($opt['cache_dir'])) {
-			$opt['cache_dir'] = null;
-		}
-
-		/*
-		 * Check for a custom engine
-		 */
-		if (isset($opt['engine'])) {
-			$engine = $opt['engine'];
-			// if param given as an object
-			if ($engine instanceof Dwoo) {
-				$this->_engine = $engine;
-			}
-			// if param given as a string
-			elseif (is_subclass_of($engine, 'Dwoo')) {
-				$this->_engine = new $engine($opt['compile_dir'], $opt['cache_dir']);
-			}
-			else {
-				throw new Dwoo_Exception("Custom engine must be a subclass of Dwoo");
-			}
-		}
-		else {
-			$this->_engine = new Dwoo($opt['compile_dir'], $opt['cache_dir']);
-		}
-
-		/*
-		 * Check for a custom data provider
-		 */
-		if (isset($opt['data'])) {
-			$data = $opt['data'];
-			if ($data instanceof Dwoo_Data) {
-				$this->_data = $data;
-			}
-			elseif (is_subclass_of($data, 'Dwoo_Data')) {
-				$this->_data = new $data();
-			}
-			else {
-				throw new Dwoo_Exception("Custom data provider must be a subclass of Dwoo_Data");
-			}
-		}
-		else {
-			$this->_data = new Dwoo_Data;
+		if (is_array($opt)) {
+			$this->setOptions($opt);
+		} elseif ($opt instanceof Zend_Config) {
+			$this->setConfig($opt);
 		}
 
 		$this->init();
+	}
+
+	/**
+	 * Set object state from options array
+	 *
+	 * @param  array $options
+	 * @return Dwoo_Adapters_ZendFramework_View
+	 */
+	public function setOptions(array $opt = array())
+	{
+		// Dwoo constructor exceptions + BC:
+		if (isset($opt['engine']['compileDir'])) {
+			$this->_compileDir = $opt['engine']['compileDir'];
+		} elseif (isset($opt['compileDir'])) {
+			 $this->_compileDir = $opt['compileDir'];
+		}
+
+		if (isset($opt['engine']['cacheDir'])) {
+			$this->_cacheDir = $opt['engine']['cacheDir'];
+		} elseif (isset($opt['cacheDir'])) {
+			$this->_cacheDir = $opt['cacheDir'];
+		}
+
+		// Making sure that everything is loaded.
+		$opt = array_merge(array(
+			'engine'       => 'Dwoo',
+			'dataProvider' => 'Dwoo_Data',
+			'compiler'     => 'Dwoo_Compiler',
+		), $opt);
+
+		// Setting options to Dwoo objects...
+		foreach ($opt as $type => $settings) {
+			if (!method_exists($this, 'set' . $type)) {
+				throw new Dwoo_Exception("Unknown type $type");
+			}
+
+			if (is_string($settings) || is_object($settings)) {
+				call_user_func(array($this, 'set' . $type), $settings);
+			} elseif (is_array($settings)) {
+
+				if (array_key_exists('type', $settings)) {
+					call_user_func(array($this, 'set' . $type), $settings['type']);
+				}
+
+				$rel = call_user_func(array($this, 'get' . $type));
+
+				foreach ($settings as $method => $value) {
+					if (method_exists($rel, 'set' . $method)) {
+						call_user_func(array($rel, 'set' . $method), $value);
+					}
+				}
+			}
+		}
+	}
+
+  /**
+   * Set object state from Zend_Config object
+   *
+   * @param  Zend_Config $config
+   * @return Dwoo_Adapters_ZendFramework_View
+   */
+	public function setConfig(Zend_Config $config)
+	{
+		return $this->setOptions($config->toArray());
 	}
 
 	/**
@@ -108,7 +150,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	protected function preRender()
  	{
-		$this->_engine->setPluginProxy($this->getPluginProxy());
+		$this->getEngine()->setPluginProxy($this->getPluginProxy());
 	}
 
 	/**
@@ -121,7 +163,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
  	public function __set($name, $value)
  	{
- 		$this->_data->__set($name, $value);
+ 		$this->getDataProvider()->__set($name, $value);
  	}
 
  	/**
@@ -134,7 +176,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
  	public function __get($name)
  	{
-		 return $this->_data->__get($name);
+		 return $this->getDataProvider()->__get($name);
  	}
 
  	/**
@@ -146,7 +188,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
  	public function __isset($name)
  	{
- 		return $this->_data->__isset($name);
+ 		return $this->getDataProvider()->__isset($name);
  	}
 
 	/**
@@ -158,7 +200,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function __unset($name)
 	{
-		$this->_data->__unset($name);
+		$this->getDataProvider()->__unset($name);
 	}
 
 	/**
@@ -176,7 +218,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Adds plugin proxy
+	 * Sets plugin proxy
 	 *
 	 * @param Dwoo_IPluginProxy
 	 * @return Dwoo_Adapters_ZendFramework_View
@@ -188,13 +230,105 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Returns data object
+	 * Sets template engine
+	 *
+	 * @param string|Dwoo Object or name of the class
+	 */
+	public function setEngine($engine)
+	{
+		// if param given as an object
+		if ($engine instanceof Dwoo) {
+			$this->_engine = $engine;
+		}
+		//
+		elseif (is_subclass_of($engine, 'Dwoo') || 'Dwoo' === $engine) {
+			$this->_engine = new $engine($this->_compileDir, $this->_cacheDir);
+		}
+		else {
+			throw new Dwoo_Exception("Custom engine must be a subclass of Dwoo");
+		}
+	}
+
+	/**
+	 * Return the Dwoo template engine object
+	 *
+	 * @return Dwoo
+	 */
+	public function getEngine()
+	{
+		if (null === $this->_engine) {
+			$this->_engine = new Dwoo($this->_compileDir, $this->_cacheDir);
+		}
+
+		return $this->_engine;
+	}
+
+	/**
+	 * Sets Dwoo data object
+	 *
+	 * @param string|Dwoo_Data Object or name of the class
+	 */
+	public function setDataProvider($data)
+	{
+		if ($data instanceof Dwoo_IDataProvider) {
+			$this->_dataProvider = $data;
+		}
+		elseif (is_subclass_of($data, 'Dwoo_Data') || 'Dwoo_Data' == $data) {
+			$this->_dataProvider = new $data();
+		}
+		else {
+			throw new Dwoo_Exception("Custom data provider must be a subclass of Dwoo_Data or instance of Dwoo_IDataProvider");
+		}
+	}
+
+	/**
+	 * Return the Dwoo data object
 	 *
 	 * @return Dwoo_Data
 	 */
-	public function getData()
+	public function getDataProvider()
 	{
-		return $this->_data;
+		if (null === $this->_dataProvider) {
+			$this->_dataProvider = new Dwoo_Data;
+		}
+
+		return $this->_dataProvider;
+	}
+
+
+	/**
+	 * Sets Dwoo compiler
+	 *
+	 * @param string|Dwoo_Compiler Object or name of the class
+	 */
+	public function setCompiler($compiler)
+	{
+
+		// if param given as an object
+		if ($compiler instanceof Dwoo_ICompiler) {
+			$this->_compiler = $compiler;
+		}
+		// if param given as a string
+		elseif (is_subclass_of($compiler, 'Dwoo_Compiler') || 'Dwoo_Compiler' == $compiler) {
+			$this->_compiler = new $compiler;
+		}
+		else {
+			throw new Dwoo_Exception("Custom compiler must be a subclass of Dwoo_Compiler or instance of Dwoo_ICompiler");
+		}
+	}
+
+	/**
+	 * Return the Dwoo compiler object
+	 *
+	 * @return Dwoo_Data
+	 */
+	public function getCompiler()
+	{
+		if (null === $this->_compiler) {
+			$this->_compiler = new Dwoo_Compiler;
+		}
+
+		return $this->_compiler;
 	}
 
 	/**
@@ -207,18 +341,8 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function assign($name, $val = null)
 	{
-		$this->_data->assign($name, $val);
+		$this->getDataProvider()->assign($name, $val);
 		return $this;
-	}
-
-	/**
-	 * Return the Dwoo template engine object
-	 *
-	 * @return Dwoo
-	 */
-	public function getEngine()
-	{
-		return $this->_engine;
 	}
 
 	/**
@@ -232,11 +356,20 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function clearVars()
 	{
-		$this->_data->clear();
+		$this->getDataProvider()->clear();
 		return $this;
 	}
 
-	public function render($name) {
+	/**
+	 * Wraper for parent's render method so preRender method
+	 * can be called (that will bind the plugin proxy to the
+	 * engine.
+	 *
+	 * @see Zend_View_Abstract::render
+	 * @return string The script output.
+	 */
+	public function render($name)
+	{
 		$this->preRender();
 		return parent::render($name);
 	}
@@ -250,8 +383,13 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function _run()
 	{
-		$tpl = new Dwoo_Template_File(func_get_arg(0));
-		echo $this->_engine->get($tpl, $this->_data);
+		$template = new Dwoo_Template_File(func_get_arg(0));
+
+		echo $this->_engine->get(
+			$template,
+			$this->getDataProvider(),
+			$this->getCompiler()
+		);
 	}
 
 	/**
@@ -262,7 +400,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function addPluginDir($dir)
 	{
-		$this->_engine->getLoader()->addDirectory($dir);
+		$this->getEngine()->getLoader()->addDirectory($dir);
 		return $this;
 	}
 
@@ -274,7 +412,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function setCompileDir($dir)
 	{
-		$this->_engine->setCompileDir($dir);
+		$this->getEngine()->setCompileDir($dir);
 		return $this;
 	}
 
@@ -286,7 +424,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function setCacheDir($dir)
 	{
-		$this->_engine->setCacheDir($dir);
+		$this->getEngine()->setCacheDir($dir);
 		return $this;
 	}
 
@@ -298,7 +436,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function setCacheLifetime($seconds)
 	{
-		$this->_engine->setCacheTime($seconds);
+		$this->getEngine()->setCacheTime($seconds);
 		return $this;
 	}
 
@@ -313,56 +451,4 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		$this->_engine->setCharset($charset);
 		return $this;
 	}
-
-   /**
-     * Given a base path, add script, helper, and filter paths relative to it
-     *
-     * Assumes a directory structure of:
-     * <code>
-     * basePath/ (view scripts)
-     *     helpers/
-     *     filters/
-     * </code>
-     *
-     * @param  string $path
-     * @param  string $prefix Prefix to use for helper and filter paths
-     * @return Zend_View_Abstract
-     */
-    public function addBasePath($path, $classPrefix = 'Zend_View')
-    {
-        $path        = rtrim($path, '/');
-        $path        = rtrim($path, '\\');
-        $path       .= DIRECTORY_SEPARATOR;
-        $classPrefix = rtrim($classPrefix, '_') . '_';
-        $this->addScriptPath($path);
-        $this->addHelperPath($path . 'helpers', $classPrefix . 'Helper');
-        $this->addFilterPath($path . 'filters', $classPrefix . 'Filter');
-        return $this;
-    }
-
-    /**
-     * Given a base path, sets the script, helper, and filter paths relative to it
-     *
-     * Assumes a directory structure of:
-     * <code>
-     * basePath/ (view scripts)
-     *     helpers/
-     *     filters/
-     * </code>
-     *
-     * @param  string $path
-     * @param  string $prefix Prefix to use for helper and filter paths
-     * @return Zend_View_Abstract
-     */
-    public function setBasePath($path, $classPrefix = 'Zend_View')
-	{
-        $path        = rtrim($path, '/');
-        $path        = rtrim($path, '\\');
-        $path       .= DIRECTORY_SEPARATOR;
-        $classPrefix = rtrim($classPrefix, '_') . '_';
-        $this->setScriptPath($path);
-        $this->setHelperPath($path . 'helpers', $classPrefix . 'Helper');
-        $this->setFilterPath($path . 'filters', $classPrefix . 'Filter');
-        return $this;
-    }
 }
