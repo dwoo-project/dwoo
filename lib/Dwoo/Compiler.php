@@ -1187,7 +1187,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer += $endpos - $startpos + strlen('*'.$this->rd);
 				if (isset($whitespaceStart) && preg_match('#^[\t ]*\r?\n#', substr($src, $endpos+strlen('*'.$this->rd)), $m)) {
 					$pointer += strlen($m[0]);
-					$this->curBlock['buffer'] = substr($this->curBlock['buffer'], 0, - ($this->getPointer() - $startpos - strlen($this->ld)));
+					$this->curBlock['buffer'] = substr($this->curBlock['buffer'], 0, strlen($this->curBlock['buffer']) - ($this->getPointer() - $startpos - strlen($this->ld)));
 				}
 				return false;
 			}
@@ -2502,7 +2502,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$output = $func.'('.$params.')';
 				}
 			} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
-				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($name), $state);
+				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
 				foreach ($params as &$p)
 					$p = $p[0];
 				$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
