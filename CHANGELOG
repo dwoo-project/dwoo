@@ -18,9 +18,9 @@
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
   or a custom data class (extends Dwoo_Data) - thanks to Maxime Mérian for
   the patch
-* Compiler: added Dwoo_Compiler->allowNestedComments() to enable parsing of
-  nested comments (i.e. {* {* *} *} becomes a valid comment, useful to comment
-  out big chunks of code containing comments)
+* Compiler: added Dwoo_Compiler->setNestedCommentsHandling(true) to enable
+  parsing of nested comments (i.e. {* {* *} *} becomes a valid comment, useful
+  to comment out big chunks of code containing comments)
 * Lines containing only comments and whitespace are now entirely removed
 * Removed comments do not mess up the line count anymore (for error messages)
 * Fixed parsing bug in {func()->propertyOfReturnedObject}

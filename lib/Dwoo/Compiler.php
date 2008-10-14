@@ -251,8 +251,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 *
 	 * @param bool $allow allow nested comments or not, defaults to true (but the default internal value is false)
 	 */
-	public function allowNestedComments($allow = true) {
+	public function setNestedCommentsHandling($allow = true) {
 		$this->allowNestedComments = (bool) $allow;
+	}
+
+	/**
+	 * returns the nested comments handling setting
+	 *
+	 * @see setNestedCommentsHandling
+	 * @return bool true if nested comments are allowed
+	 */
+	public function getNestedCommentsHandling() {
+		return $this->allowNestedComments;
 	}
 
 	/**
