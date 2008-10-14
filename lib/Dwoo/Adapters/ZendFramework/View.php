@@ -45,27 +45,13 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	protected $_pluginProxy = null;
 
 	/**
-	 * (temp) storage for Dwoo's compile dir setting
+	 * Constructor method.
+	 * See setOptions for $opt details
 	 *
-	 * @var string
-	 */
-	protected $_compileDir = null;
-
-	/**
-	 * (temp) storage for Dwoo's cache dir setting
-	 *
-	 * @var string
-	 */
-	protected $_cacheDir   = null;
-
-	/**
-	 * Constructor method. Opt array::
-	 *  - compile_dir Where to store compiled template
-	 *  - cache_dir   Cache files location
-	 *
+	 * @see setOptions
 	 * @param array|Zend_Config List of options or Zend_Config instance
 	 */
-	public function __construct($opt)
+	public function __construct($opt = array())
 	{
 		if (is_array($opt)) {
 			$this->setOptions($opt);
@@ -78,24 +64,29 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 
 	/**
 	 * Set object state from options array
+	 *  - engine        = engine class name|engine object|array of options for engine
+	 *  - dataProvider  = data provider class name|data provider object|array of options for data provider
+	 *  - compiler      = compiler class name|compiler object|array of options for compiler
+	 *
+	 *  Array of options:
+	 *  - type class name or object for engine, dataProvider or compiler
+	 *  - any set* method (compileDir for setCompileDir ...)
 	 *
 	 * @param  array $options
 	 * @return Dwoo_Adapters_ZendFramework_View
 	 */
 	public function setOptions(array $opt = array())
 	{
-		// Dwoo constructor exceptions + BC:
-		if (isset($opt['compileDir'])) {
-			$this->_compileDir = $opt['compileDir'];
-		} elseif (isset($opt['compile_dir'])) {
-			 $this->_compileDir = $opt['compile_dir'];
+		// BC checks
+		// TODO remove in 1.1
+		if (isset($opt['compileDir']) || isset($opt['compile_dir'])) {
+			trigger_error('Dwoo ZF Adapter: the compile dir should be set in the $options[\'engine\'][\'compileDir\'] value the adapter settings', E_USER_WARNING);
 		}
 
-		if (isset($opt['cacheDir'])) {
-			$this->_cacheDir = $opt['cacheDir'];
-		} elseif (isset($opt['cache_dir'])) {
-			$this->_cacheDir = $opt['cache_dir'];
+		if (isset($opt['cacheDir']) || isset($opt['cache_dir'])) {
+			trigger_error('Dwoo ZF Adapter: the cache dir should be set in the $options[\'engine\'][\'cacheDir\'] value the adapter settings', E_USER_WARNING);
 		}
+		// end BC
 
 		// Making sure that everything is loaded.
 		$opt = array_merge(array(
@@ -242,7 +233,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		}
 		//
 		elseif (is_subclass_of($engine, 'Dwoo') || 'Dwoo' === $engine) {
-			$this->_engine = new $engine($this->_compileDir, $this->_cacheDir);
+			$this->_engine = new $engine();
 		}
 		else {
 			throw new Dwoo_Exception("Custom engine must be a subclass of Dwoo");
@@ -257,7 +248,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	public function getEngine()
 	{
 		if (null === $this->_engine) {
-			$this->_engine = new Dwoo($this->_compileDir, $this->_cacheDir);
+			$this->_engine = new Dwoo();
 		}
 
 		return $this->_engine;
