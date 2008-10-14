@@ -5,8 +5,13 @@
   IPluginProxy interface, that's it
 + Compiler: the modifier syntax (|foo) can now be applied on functions and on
   complex variables i.e. {$obj->getStuff()|upper} or {lower('foo')|upper}
+* The core Dwoo class doesn't need writable compile/cache dirs in the
+  constructor anymore so you can provide custom ones later through
+  ->setCompile(/Cache)Dir - thanks to Denis Arh for the patch
 * Adapters: Zend: major overhaul thanks to Denis Arh, templates files should
-  probably be moved in the scripts subfolder after this update though
+  probably be moved in the scripts subfolder after this update though, and
+  the settings array has changed a bit, you will get warnings if you don't
+  update the code anyway
 * Plugins: improved the dump plugin, it now displays object's properties
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch

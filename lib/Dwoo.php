@@ -264,22 +264,12 @@ class Dwoo
 	 */
 	public function __construct($compileDir = null, $cacheDir = null)
 	{
-		if ($cacheDir === null) {
-			$this->cacheDir = dirname(__FILE__).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR;
-		} else {
-			$this->cacheDir = $cacheDir.DIRECTORY_SEPARATOR;
+		if ($compileDir !== null) {
+			$this->setCompileDir($compileDir);
 		}
-
-		if ($compileDir === null) {
-			$this->compileDir = dirname(__FILE__).DIRECTORY_SEPARATOR.'compiled'.DIRECTORY_SEPARATOR;
-		} else {
-			$this->compileDir = $compileDir.DIRECTORY_SEPARATOR;
+		if ($cacheDir !== null) {
+			$this->setCacheDir($cacheDir);
 		}
-
-		if (is_writable($this->cacheDir) === false)
-			throw new Dwoo_Exception('Dwoo cache directory must be writable, chmod "'.$this->cacheDir.'" to make it writable');
-		if (is_writable($this->compileDir) === false)
-			throw new Dwoo_Exception('Dwoo compile directory must be writable, chmod "'.$this->compileDir.'" to make it writable');
 	}
 
 	/**
@@ -631,7 +621,7 @@ class Dwoo
 	public function getLoader()
 	{
 		if ($this->loader === null) {
-			$this->loader = new Dwoo_Loader($this->compileDir);
+			$this->loader = new Dwoo_Loader($this->getCompileDir());
 		}
 
 		return $this->loader;
@@ -656,6 +646,10 @@ class Dwoo
 	 */
 	public function getCacheDir()
 	{
+		if ($this->cacheDir === null) {
+			$this->setCacheDir(dirname(__FILE__).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR);
+		}
+
 		return $this->cacheDir;
 	}
 
@@ -679,6 +673,10 @@ class Dwoo
 	 */
 	public function getCompileDir()
 	{
+		if ($this->compileDir === null) {
+			$this->setCompileDir(dirname(__FILE__).DIRECTORY_SEPARATOR.'compiled'.DIRECTORY_SEPARATOR);
+		}
+
 		return $this->compileDir;
 	}
 
@@ -837,7 +835,7 @@ class Dwoo
 	 */
 	public function clearCache($olderThan=-1)
 	{
-		$cacheDirs = new RecursiveDirectoryIterator($this->cacheDir);
+		$cacheDirs = new RecursiveDirectoryIterator($this->getCacheDir());
 		$cache = new RecursiveIteratorIterator($cacheDirs);
 		$expired = time() - $olderThan;
 		$count = 0;
