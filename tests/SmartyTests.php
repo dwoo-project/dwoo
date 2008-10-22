@@ -21,6 +21,7 @@ class SmartyTests extends PHPUnit_Framework_TestCase
 
 	public function testSmartyCompat()
 	{
-		$this->assertEquals('{'.Dwoo::VERSION.'}', $this->dwoo->fetch('smartytest.html'));
+		$this->dwoo->assign('arr', array('ab','cd','ef'));
+		$this->assertEquals('{'.Dwoo::VERSION.'} ab cd ef', $this->dwoo->fetch('smartytest.html'));
 	}
 }

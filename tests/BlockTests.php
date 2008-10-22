@@ -264,21 +264,34 @@ baz"));
 		$this->assertEquals('true', $this->dwoo->get($tpl, array('moo'=>'i'), $this->compiler));
 	}
 
-	public function testFor ()
+	public function testFor()
 	{
 		$tpl = new Dwoo_Template_String('{for name=i from=$sub}{$i}.{$sub[$i]}{/for}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('0.foo1.bar2.baz3.qux', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
 
+		$tpl = new Dwoo_Template_String('{for name=i from=$sub to=2}{$i}.{$sub[$i]}{/for}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('0.foo1.bar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
+
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_for ($this->dwoo);
 		$fixCall->init(null,null);
 	}
 
+	public function testForVariations()
+	{
+		$tpl = new Dwoo_Template_String('{for i 1 1}-{$i}{/for}|{for i 1 2}-{$i}{/for}|{for i 1 3}-{$i}{/for}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('-1|-1-2|-1-2-3', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
+	}
+
 	public function testForElse()
 	{
-		$tpl = new Dwoo_Template_String('{for name=i from=0 to=0}{$i}{else}Narp!{/for}');
+		$tpl = new Dwoo_Template_String('{for name=i from=array()}{$i}{else}Narp!{/for}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals('Narp!', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -286,7 +299,7 @@ baz"));
 		$tpl = new Dwoo_Template_String('{for name=i from=0 to=0}{$i}{forelse}Narp!{/for}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals('Narp!', $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals('0', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		$tpl = new Dwoo_Template_String('{for name=i from=0 to=10 step=3}{$i}{else}Narp!{/for}');
 		$tpl->forceCompilation();

@@ -5,6 +5,8 @@
   IPluginProxy interface, that's it
 + Compiler: the modifier syntax (|foo) can now be applied on functions and on
   complex variables i.e. {$obj->getStuff()|upper} or {lower('foo')|upper}
++ SmartyCompat: Added a {section} plugin but I strongly discourage using it,
+  it was really made to support legacy templates
 * The core Dwoo class doesn't need writable compile/cache dirs in the
   constructor anymore so you can provide custom ones later through
   ->setCompile(/Cache)Dir - thanks to Denis Arh for the patch
@@ -16,7 +18,7 @@
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
-  or a custom data class (extends Dwoo_Data) - thanks to Maxime Mérian for
+  or a custom data class (extends Dwoo_Data) - thanks to Maxime Mï¿½rian for
   the patch
 * Compiler: added Dwoo_Compiler->setNestedCommentsHandling(true) to enable
   parsing of nested comments (i.e. {* {* *} *} becomes a valid comment, useful

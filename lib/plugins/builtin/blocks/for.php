@@ -86,7 +86,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 			$out.="\n);\n".'$_for'.$cnt.'_glob =& $this->globals["for"]['.$name.'];';
 		}
 		// checks if foreach must be looped
-		$out .= "\n".'if ($this->isArray($_for'.$cnt.'_from, true) || (is_numeric($_for'.$cnt.'_from) && abs(($_for'.$cnt.'_from - $_for'.$cnt.'_to)/$_for'.$cnt.'_step) !== 0))'."\n{";
+		$out .= "\n".'if ($this->isArray($_for'.$cnt.'_from, true) || (is_numeric($_for'.$cnt.'_from) && (abs(($_for'.$cnt.'_from - $_for'.$cnt.'_to)/$_for'.$cnt.'_step) !== 0 || $_for'.$cnt.'_from == $_for'.$cnt.'_to)))'."\n{";
 		// iterates over keys
 		$out .= "\n\t".'if ($this->isArray($_for'.$cnt.'_from, true)) {
 		$_for'.$cnt.'_from = 0;
