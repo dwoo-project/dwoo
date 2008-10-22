@@ -3,11 +3,10 @@
 /**
  * Similar to the php for block
  * <pre>
- *  * name : foreach name to access it's iterator variables through {$.foreach.name.var} see {@link http://wiki.dwoo.org/index.php/IteratorVariables} for details
+ *  * name : for name to access it's iterator variables through {$.for.name.var} see {@link http://wiki.dwoo.org/index.php/IteratorVariables} for details
  *  * from : array to iterate from (which equals 0) or a number as a start value
  *  * to : value to stop iterating at (equals count($array) by default if you set an array in from)
  *  * step : defines the incrementation of the pointer at each iteration
- *  * skip : allows you to skip some entries at the start, mostly useless excepted for smarty compatibility
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -51,7 +50,6 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		$from = $params['from'];
 		$name = $params['name'];
 		$step = $params['step'];
-		$skip = $params['skip'];
 		$to = $params['to'];
 
  		// evaluates which global variables have to be computed
@@ -69,11 +67,11 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		$cnt = self::$cnt++;
 
 		// builds pre processing output for
-		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_for'.$cnt.'_from = $_for'.$cnt.'_src = '.$from.';'.
+		$out = Dwoo_Compiler::PHP_OPEN . "\n".'$_for'.$cnt.'_from = '.$from.';'.
 										"\n".'$_for'.$cnt.'_to = '.$to.';'.
 										"\n".'$_for'.$cnt.'_step = abs('.$step.');'.
-										"\n".'$_for'.$cnt.'_skip = abs('.$skip.');'.
-										"\n".'if (is_numeric($_for'.$cnt.'_from) && !is_numeric($_for'.$cnt.'_to)) { $this->triggerError(\'For requires the <em>to</em> parameter when using a numerical <em>from</em>\'); }';
+										"\n".'if (is_numeric($_for'.$cnt.'_from) && !is_numeric($_for'.$cnt.'_to)) { $this->triggerError(\'For requires the <em>to</em> parameter when using a numerical <em>from</em>\'); }'.
+										"\n".'$tmp_shows = $this->isArray($_for'.$cnt.'_from, true) || (is_numeric($_for'.$cnt.'_from) && (abs(($_for'.$cnt.'_from - $_for'.$cnt.'_to)/$_for'.$cnt.'_step) !== 0 || $_for'.$cnt.'_from == $_for'.$cnt.'_to));';
 		// adds foreach properties
 		if ($usesAny) {
 			$out .= "\n".'$this->globals["for"]['.$name.'] = array'."\n(";
@@ -81,26 +79,24 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 			if ($usesIteration) $out .="\n\t".'"iteration"		=> 1,';
 			if ($usesFirst) $out .="\n\t".'"first"		=> null,';
 			if ($usesLast) $out .="\n\t".'"last"		=> null,';
-			if ($usesShow) $out .="\n\t".'"show"		=> ($this->isArray($_for'.$cnt.'_from, true)) || (is_numeric($_for'.$cnt.'_from) && $_for'.$cnt.'_from != $_for'.$cnt.'_to),';
-			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? count($_for'.$cnt.'_from) - $_for'.$cnt.'_skip : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
+			if ($usesShow) $out .="\n\t".'"show"		=> $tmp_shows,';
+			if ($usesTotal) $out .="\n\t".'"total"		=> $this->isArray($_for'.$cnt.'_from) ? floor(count($_for'.$cnt.'_from) / $_for'.$cnt.'_step) : (is_numeric($_for'.$cnt.'_from) ? abs(($_for'.$cnt.'_to + 1 - $_for'.$cnt.'_from)/$_for'.$cnt.'_step) : 0),';
 			$out.="\n);\n".'$_for'.$cnt.'_glob =& $this->globals["for"]['.$name.'];';
 		}
-		// checks if foreach must be looped
-		$out .= "\n".'if ($this->isArray($_for'.$cnt.'_from, true) || (is_numeric($_for'.$cnt.'_from) && (abs(($_for'.$cnt.'_from - $_for'.$cnt.'_to)/$_for'.$cnt.'_step) !== 0 || $_for'.$cnt.'_from == $_for'.$cnt.'_to)))'."\n{";
-		// iterates over keys
+		// checks if for must be looped
+		$out .= "\n".'if ($tmp_shows)'."\n{";
+		// set from/to to correct values if an array was given
 		$out .= "\n\t".'if ($this->isArray($_for'.$cnt.'_from, true)) {
+		$_for'.$cnt.'_to = is_numeric($_for'.$cnt.'_to) ? $_for'.$cnt.'_to - $_for'.$cnt.'_step : count($_for'.$cnt.'_from) - 1;
 		$_for'.$cnt.'_from = 0;
-		$_for'.$cnt.'_to = is_numeric($_for'.$cnt.'_to) ? $_for'.$cnt.'_to - $_for'.$cnt.'_step : count($_for'.$cnt.'_src)-1;
+	}';
+	// reverse from and to if needed
+	$out .= "\n\t".'if ($_for'.$cnt.'_from > $_for'.$cnt.'_to) {
+		$tmp = $_for'.$cnt.'_from;
+		$_for'.$cnt.'_from = $_for'.$cnt.'_to;
+		$_for'.$cnt.'_to = $tmp;
 	}
-	$_for'.$cnt.'_keys = array();
-	if (($_for'.$cnt.'_from + $_for'.$cnt.'_skip) <= $_for'.$cnt.'_to) {
-		for ($tmp=($_for'.$cnt.'_from + $_for'.$cnt.'_skip); $tmp <= $_for'.$cnt.'_to; $tmp += $_for'.$cnt.'_step)
-			$_for'.$cnt.'_keys[] = $tmp;
-	} else {
-		for ($tmp=($_for'.$cnt.'_from - $_for'.$cnt.'_skip); $tmp > $_for'.$cnt.'_to; $tmp -= $_for'.$cnt.'_step)
-			$_for'.$cnt.'_keys[] = $tmp;
-	}
-	foreach ($_for'.$cnt.'_keys as $this->scope['.$name.'])'."\n\t{";
+	for ($this->scope['.$name.'] = $_for'.$cnt.'_from; $this->scope['.$name.'] <= $_for'.$cnt.'_to; $this->scope['.$name.'] += $_for'.$cnt.'_step)'."\n\t{";
 		// updates properties
 		if ($usesIndex) {
 			$out.="\n\t\t".'$_for'.$cnt.'_glob["index"] = $this->scope['.$name.'];';
