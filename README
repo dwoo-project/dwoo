@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------
--- WHAT IS DWOO?                                      readme - version 0.9.0
+-- WHAT IS DWOO?                                      readme - version 1.0.0
 -----------------------------------------------------------------------------
 Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
@@ -23,11 +23,11 @@ The wiki/documentation pages are available at http://wiki.dwoo.org/
 -----------------------------------------------------------------------------
 -- LICENSE
 -----------------------------------------------------------------------------
-Dwoo is released under the GNU Lesser General Public License version 3.0.
+Dwoo is released under the Modified BSD license.
 See the LICENSE file included in the archive or go to the URL below to obtain
 a copy.
 
-http://www.gnu.org/licenses/lgpl.html
+http://dwoo.org/LICENSE
 
 -----------------------------------------------------------------------------
 -- QUICK START - RUNNING DWOO

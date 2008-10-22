@@ -7,7 +7,7 @@ define('DWOO_DIRECTORY', dirname(__FILE__) . DIRECTORY_SEPARATOR);
  *
  * <pre>
  * requirements :
- *  php 5.2.0 or above
+ *  php 5.2.0 or above (might work below, it's a rough estimate)
  *  SPL and PCRE extensions (for php versions prior to 5.3.0)
  *  mbstring extension for some string manipulation plugins (especially if you intend to use UTF-8)
  * recommended :
@@ -20,17 +20,12 @@ define('DWOO_DIRECTORY', dirname(__FILE__) . DIRECTORY_SEPARATOR);
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * This file is released under the LGPL
- * "GNU Lesser General Public License"
- * More information can be found here:
- * {@link http://www.gnu.org/copyleft/lesser.html}
- *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Jordi Boggiano
- * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
+ * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    0.9.2
- * @date       2008-06-28
+ * @version    1.0.0
+ * @date       2008-10-23
  * @package    Dwoo
  */
 class Dwoo
@@ -40,7 +35,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = "1.0.0beta";
+	const VERSION = '1.0.0';
 
 	/**
 	 * unique number of this dwoo release
@@ -49,7 +44,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 13;
+	const RELEASE_TAG = 14;
 
 	/**#@+
 	 * constants that represents all plugin types
