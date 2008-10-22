@@ -37,6 +37,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			'/'.$rl.'\s*php\s*'.$rr.'/',
 			'/'.$rl.'\s*\/php\s*'.$rr.'/',
 			'/\|(@?)strip/',
+			'/'.$rl.'\s*sectionelse\s*'.$rr.'/',
 		);
 
 		$dwoo = array
@@ -49,6 +50,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			'<?php ',
 			' ?>',
 			'|$1whitespace',
+			$l.'else'.$r,
 		);
 
 		if (preg_match('{\|@([a-z][a-z0-9_]*)}i', $input, $matches)) {
