@@ -2,16 +2,6 @@
 
 define('DWOO_DIRECTORY', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
-// TODO BC Checks, remove
-if (defined('DWOO_CACHE_DIRECTORY'))
-	throw new Dwoo_Exception('DWOO_CACHE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
-if (defined('DWOO_COMPILE_DIRECTORY'))
-	throw new Dwoo_Exception('DWOO_COMPILE_DIRECTORY is deprecated, you should now set this in Dwoo\'s constructor using new Dwoo([ $compileDir [, $cacheDir ]])');
-if (defined('DWOO_CHMOD')) {
-	throw new Dwoo_Exception('DWOO_CHMOD is deprecated, you should now set this on your template object using $tpl->setChmod('.DWOO_CHMOD.');');
-}
-// end
-
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
  *
