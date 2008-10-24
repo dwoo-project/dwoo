@@ -24,18 +24,18 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">base class for block plugins</p>
-<p class="description"><p>you have to implement the &lt;em&gt;init()&lt;/em&gt; method, it will receive the parameters that  are in the template code and is called when the block starts</p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="description"><p>you have to implement the &lt;em&gt;init()&lt;/em&gt; method, it will receive the parameters that  are in the template code and is called when the block starts</p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.1</li>
+				<li><span class="field">version:</span> 1.0.0</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
 				<li><span class="field">abstract:</span> </li>
-				<li><span class="field">date:</span> 2008-05-30</li>
-				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
+				<li><span class="field">date:</span> 2008-10-23</li>
+				<li><span class="field">license:</span> <a href="http://dwoo.org/LICENSE">Modified BSD License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_Dwoo---Block---Plugin.php.html">/Dwoo/Block/Plugin.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a25">25</a></span>)
+			Located in <a class="field" href="_Dwoo---Block---Plugin.php.html">/Dwoo/Block/Plugin.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a20">20</a></span>)
 		</p>
 		
 				
@@ -132,6 +132,12 @@
 					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_loop.html">Dwoo_Plugin_loop</a></td>
 					<td>
 											Loops over an array and moves the scope into each value, allowing for shorter loop constructs
+										</td>
+				</tr>
+								<tr>
+					<td style="padding-right: 2em"><a href="../Dwoo/Dwoo_Plugin_section.html">Dwoo_Plugin_section</a></td>
+					<td>
+											Compatibility plugin for smarty templates, do not use otherwise, this is deprecated.
 										</td>
 				</tr>
 								<tr>
@@ -265,7 +271,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$buffer</span>
-			 = <span class="var-default"> ''</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a32">32</a></span>)
+			 = <span class="var-default"> ''</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a27">27</a></span>)
 		</span>
 	</div>
 
@@ -308,7 +314,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a104">104</a></span>)
+		<span class="method-title">static postProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a99">99</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -389,6 +395,9 @@
 				<a href="../Dwoo/Dwoo_Plugin_loop.html#methodpostProcessing">Dwoo_Plugin_loop::postProcessing()</a>
 							</li>
 					<li>
+				<a href="../Dwoo/Dwoo_Plugin_section.html#methodpostProcessing">Dwoo_Plugin_section::postProcessing()</a>
+							</li>
+					<li>
 				<a href="../Dwoo/Dwoo_Plugin_smartyinterface.html#methodpostProcessing">Dwoo_Plugin_smartyinterface::postProcessing()</a>
 							</li>
 					<li>
@@ -409,7 +418,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a83">83</a></span>)
+		<span class="method-title">static preProcessing</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a78">78</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -489,6 +498,9 @@
 				<a href="../Dwoo/Dwoo_Plugin_loop.html#methodpreProcessing">Dwoo_Plugin_loop::preProcessing()</a>
 							</li>
 					<li>
+				<a href="../Dwoo/Dwoo_Plugin_section.html#methodpreProcessing">Dwoo_Plugin_section::preProcessing()</a>
+							</li>
+					<li>
 				<a href="../Dwoo/Dwoo_Plugin_smartyinterface.html#methodpreProcessing">Dwoo_Plugin_smartyinterface::preProcessing()</a>
 							</li>
 					<li>
@@ -509,7 +521,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">buffer</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a39">39</a></span>)
+		<span class="method-title">buffer</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a34">34</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -539,7 +551,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">end</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a52">52</a></span>)
+		<span class="method-title">end</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a47">47</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -563,7 +575,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">process</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a63">63</a></span>)
+		<span class="method-title">process</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooBlockPlugin.php.html#a58">58</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -605,7 +617,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 07 Sep 2008 23:57:55 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 24 Oct 2008 20:56:46 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

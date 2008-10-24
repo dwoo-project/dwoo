@@ -23,17 +23,17 @@
 	<div class="info-box-body">
         		<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">represents a Dwoo template contained in a file</p>
-<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p><p>This file is released under the LGPL  &quot;GNU Lesser General Public License&quot;  More information can be found here:  <a href="http://www.gnu.org/copyleft/lesser.html">http://www.gnu.org/copyleft/lesser.html</a></p></p>
+<p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 0.9.1</li>
+				<li><span class="field">version:</span> 1.0.0</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-05-30</li>
-				<li><span class="field">license:</span> <a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser General Public License</a></li>
+				<li><span class="field">date:</span> 2008-10-23</li>
+				<li><span class="field">license:</span> <a href="http://dwoo.org/LICENSE">Modified BSD License</a></li>
 			</ul>
 		<p class="notes">
-			Located in <a class="field" href="_Dwoo---Template---File.php.html">/Dwoo/Template/File.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a22">22</a></span>)
+			Located in <a class="field" href="_Dwoo---Template---File.php.html">/Dwoo/Template/File.php</a> (line <span class="field"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a17">17</a></span>)
 		</p>
 		
 				
@@ -106,12 +106,6 @@
 									</div>
 														
 				<div class="method-definition">
-											<span class="method-result">string</span>
-										<a href="#getCompiledTemplate" title="details" class="method-name">getCompiledTemplate</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, [<span class="var-type"><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></span>&nbsp;<span class="var-name">$compiler</span> = <span class="var-default">null</span>])
-									</div>
-														
-				<div class="method-definition">
 											<span class="method-result">array</span>
 										<a href="#getIncludePath" title="details" class="method-name">getIncludePath</a>
 										()
@@ -139,6 +133,12 @@
 											<span class="method-result">string</span>
 										<a href="#getUid" title="details" class="method-name">getUid</a>
 										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">boolean</span>
+										<a href="#isValidCompiledFile" title="details" class="method-name">isValidCompiledFile</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
 									</div>
 														
 				<div class="method-definition">
@@ -171,7 +171,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$file</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a29">29</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a24">24</a></span>)
 		</span>
 	</div>
 
@@ -193,7 +193,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$includePath</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a36">36</a></span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a31">31</a></span>)
 		</span>
 	</div>
 
@@ -215,7 +215,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$resolvedPath</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a45">45</a></span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a40">40</a></span>)
 		</span>
 	</div>
 
@@ -279,7 +279,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a228">228</a></span>)
+		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a187">187</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -329,7 +329,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a61">61</a></span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a56">56</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -376,7 +376,7 @@
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a288">288</a></span>)
+		<span class="method-title">getCompiledFilename</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a247">247</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -408,49 +408,11 @@
 					</dl>
 			
 	</div>
-<a name="methodgetCompiledTemplate" id="getCompiledTemplate"><!-- --></a>
+<a name="methodgetIncludePath" id="getIncludePath"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompiledTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a114">114</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">returns the compiled template file name</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">string</span>
-		<span class="method-name">
-			getCompiledTemplate
-		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>&nbsp;<span class="var-name">$dwoo</span>, [<span class="var-type"><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></span>&nbsp;<span class="var-name">$compiler</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"><a href="../Dwoo/Dwoo.html">Dwoo</a></span>
-				<span class="var-name">$dwoo</span><span class="var-description">: the dwoo instance that requests it</span>			</li>
-					<li>
-				<span class="var-type"><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></span>
-				<span class="var-name">$compiler</span><span class="var-description">: the compiler that must be used</span>			</li>
-				</ul>
-		
-			<hr class="separator" />
-		<div class="notes">Redefinition of:</div>
-		<dl>
-			<dt><a href="../Dwoo/Dwoo_Template_String.html#methodgetCompiledTemplate">Dwoo_Template_String::getCompiledTemplate()</a></dt>
-						<dd>returns the compiled template file name</dd>
-					</dl>
-			
-	</div>
-<a name="methodgetIncludePath" id="getIncludePath"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">getIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a102">102</a></span>)
+		<span class="method-title">getIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a97">97</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -471,10 +433,10 @@
 			
 	</div>
 <a name="methodgetResourceIdentifier" id="getResourceIdentifier"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a181">181</a></span>)
+		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a140">140</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -501,10 +463,10 @@
 			
 	</div>
 <a name="methodgetResourceName" id="getResourceName"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a171">171</a></span>)
+		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a130">130</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -531,10 +493,10 @@
 			
 	</div>
 <a name="methodgetSource" id="getSource"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a161">161</a></span>)
+		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a120">120</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -561,10 +523,10 @@
 			
 	</div>
 <a name="methodgetUid" id="getUid"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a205">205</a></span>)
+		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a164">164</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -590,11 +552,47 @@
 					</dl>
 			
 	</div>
+<a name="methodisValidCompiledFile" id="isValidCompiledFile"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">isValidCompiledFile</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a111">111</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Checks if compiled file is valid (exists and it's the modification is greater or  equal to the modification time of the template file)</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> True cache file existance and it's modification time</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">boolean</span>
+		<span class="method-name">
+			isValidCompiledFile
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$file</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$file</span><span class="var-description">: file</span>			</li>
+				</ul>
+		
+			<hr class="separator" />
+		<div class="notes">Redefinition of:</div>
+		<dl>
+			<dt><a href="../Dwoo/Dwoo_Template_String.html#methodisValidCompiledFile">Dwoo_Template_String::isValidCompiledFile()</a></dt>
+						<dd>Checks if compiled file is valid (it exists)</dd>
+					</dl>
+			
+	</div>
 <a name="methodsetIncludePath" id="setIncludePath"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a87">87</a></span>)
+		<span class="method-title">setIncludePath</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooTemplateFile.php.html#a82">82</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -640,6 +638,7 @@
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodgetResourceName">Dwoo_Template_String::getResourceName()</a></span><br>
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodgetSource">Dwoo_Template_String::getSource()</a></span><br>
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodgetUid">Dwoo_Template_String::getUid()</a></span><br>
+													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodisValidCompiledFile">Dwoo_Template_String::isValidCompiledFile()</a></span><br>
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodmakeDirectory">Dwoo_Template_String::makeDirectory()</a></span><br>
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodsetCacheTime">Dwoo_Template_String::setCacheTime()</a></span><br>
 													<span class="method-name"><a href="../Dwoo/Dwoo_Template_String.html#methodsetChmod">Dwoo_Template_String::setChmod()</a></span><br>
@@ -651,7 +650,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sun, 07 Sep 2008 23:57:47 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Fri, 24 Oct 2008 20:56:38 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>
