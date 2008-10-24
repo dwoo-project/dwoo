@@ -36,7 +36,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			'/\$smarty\./',
 			'/'.$rl.'\s*php\s*'.$rr.'/',
 			'/'.$rl.'\s*\/php\s*'.$rr.'/',
-			'/\|(@?)strip/',
+			'/\|(@?)strip(\||'.$rr.')/',
 			'/'.$rl.'\s*sectionelse\s*'.$rr.'/',
 		);
 
@@ -49,7 +49,7 @@ class Dwoo_Processor_smarty_compat extends Dwoo_Processor
 			'$dwoo.',
 			'<?php ',
 			' ?>',
-			'|$1whitespace',
+			'|$1whitespace$2',
 			$l.'else'.$r,
 		);
 

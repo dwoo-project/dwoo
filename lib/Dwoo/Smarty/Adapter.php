@@ -150,7 +150,7 @@ class Dwoo_Smarty__Adapter extends Dwoo
 	protected $dataProvider;
 	protected $_filters = array('pre'=>array(), 'post'=>array(), 'output'=>array());
 	protected static $tplCache = array();
-	protected $compiler;
+	protected $compiler = null;
 
 	public function __construct()
 	{
@@ -158,7 +158,6 @@ class Dwoo_Smarty__Adapter extends Dwoo
 		$this->charset = 'iso-8859-1';
 		$this->dataProvider = new Dwoo_Data();
 		$this->compiler = new Dwoo_Compiler();
-		$this->compiler->smartyCompat = true;
 	}
 
 	public function display($filename, $cacheId=null, $compileId=null)
@@ -232,6 +231,14 @@ class Dwoo_Smarty__Adapter extends Dwoo
 		$this->compiler->setDelimiters($this->left_delimiter, $this->right_delimiter);
 
 		return $this->get($tpl, $this->dataProvider, $this->compiler, $display===true);
+	}
+	
+	public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
+	{
+		if ($_compiler === null) {
+			$_compiler = $this->compiler;
+		}
+		return parent::get($_tpl, $data, $_compiler, $_output);
 	}
 
 	public function register_function($name, $callback, $cacheable=true, $cache_attrs=null)
@@ -361,7 +368,16 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 	public function template_exists($filename)
 	{
-		return file_exists($this->template_dir.DIRECTORY_SEPARATOR.$filename);
+		if (!is_array($this->template_dir)) {
+			return file_exists($this->template_dir.DIRECTORY_SEPARATOR.$filename);
+		} else {
+			foreach ($this->template_dir as $tpl_dir) {
+				if (file_exists($tpl_dir.DIRECTORY_SEPARATOR.$filename)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
    	public function is_cached($tpl, $cacheId = null, $compileId = null)
@@ -445,6 +461,14 @@ class Dwoo_Smarty__Adapter extends Dwoo
 			}
 		}
 		return self::$tplCache[$hash];
+	}
+
+	public function triggerError($message, $level=E_USER_NOTICE)
+	{
+		if (is_object($this->template)) {
+			return parent::triggerError($message, $level);
+		}
+		trigger_error('Dwoo error : '.$message, $level);
 	}
 }
 

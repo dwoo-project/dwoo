@@ -1,4 +1,4 @@
-[2008--] 1.0.0
+[2008-10-23] 1.0.0
 ! BC Break: Small one that probably won't affect anyone, but it makes the
   PluginProxy feature much stronger. Basically if you used a custom one you
   will get a fatal error and need to update it to conform to the new
@@ -20,7 +20,7 @@
   and optionally public methods (if the new show_methods arg is set to true)
   - thanks to Stephan Wentz for the patch
 * Adapters: Zend: Added parameters to provide a custom engine (extends Dwoo)
-  or a custom data class (extends Dwoo_Data) - thanks to Maxime M�rian for
+  or a custom data class (extends Dwoo_Data) - thanks to Maxime Merian for
   the patch
 * Compiler: added Dwoo_Compiler->setNestedCommentsHandling(true) to enable
   parsing of nested comments (i.e. {* {* *} *} becomes a valid comment, useful
@@ -33,6 +33,8 @@
 * Fixed handling of variable variables that contained non standard characters
 * Fixed a 1.0.0beta regression that messed with custom plugin directories
   on Windows
+* SmartyCompat: Fixed a few bugs in the adapter and processor - thanks to 
+  Stefan Moonen for the patches
 
 [2008-09-08] 1.0.0beta
 ! Important note : Dwoo.php should not be included directly anymore, please
