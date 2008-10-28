@@ -71,6 +71,9 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 	 */
 	protected $defaultExtension = '.html';
 
+	/**
+	 * stores the (optional) plugin directory to add to the Dwoo_Loader
+	 */
 	protected $plugin_dir = null;
 
 	/**
