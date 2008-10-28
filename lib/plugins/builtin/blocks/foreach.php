@@ -89,6 +89,8 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 			$implode = $params['implode'];
 			$usesAny = true;
 			$usesLast = true;
+			$usesIteration = true;
+			$usesTotal = true;
 		}
 
 		// gets foreach id
