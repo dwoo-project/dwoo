@@ -1275,7 +1275,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $pointer, $to-$pointer);
 
 		// var parsed, check if any var-extension applies
-		if ($parsed==='var') {
+		if ($parsed==='var' && $curBlock !== 'condition') {
 			if (preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
 				// parse expressions
 				$pointer += strlen($match[0]) - 1;
@@ -1285,8 +1285,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					} else {
 						$expr = $this->parseOthers($in, $pointer, $to, array(), 'expression', $pointer);
 					}
-					$out[count($out)-1][0] .= $match[1] . $expr[0];
-					$out[count($out)-1][1] .= $match[1] . $expr[1];
+					$out[count($out)-1][0] .= $match[1] . $expr[0][0];
+					$out[count($out)-1][1] .= $match[1] . $expr[0][1];
 				} else {
 					if ($match[2] == '$') {
 						$out .= $match[1] . $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
