@@ -1,6 +1,7 @@
 [2008--] 1.0.1
 * Fixed a {foreach} bug with the implode argument
 * Fixed modulo operator in if statements
+* Fixed date_format handling of negative and small unix timestamps
 
 [2008-10-23] 1.0.0
 ! BC Break: Small one that probably won't affect anyone, but it makes the
