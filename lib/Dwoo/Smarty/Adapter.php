@@ -38,6 +38,10 @@ class Dwoo_Smarty__Adapter extends Dwoo
 			$this->scope = $v;
 			return;
 		}
+		if ($p==='data') {
+			$this->data = $v;
+			return;
+		}
 		if (array_key_exists($p, $this->compat['properties']) !== false) {
 			if ($this->show_compat_errors) {
 				$this->triggerError('Property '.$p.' is not available in the Dwoo_Smarty_Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
