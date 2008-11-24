@@ -1277,6 +1277,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		// var parsed, check if any var-extension applies
 		if ($parsed==='var' && $curBlock !== 'condition') {
 			if (preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
+				if($this->debug) echo 'PARSING POST-VAR EXPRESSION '.$substr.'<br />';
 				// parse expressions
 				$pointer += strlen($match[0]) - 1;
 				if (is_array($parsingParams)) {
@@ -1294,6 +1295,34 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
 					}
 				}
+			} else if ($curBlock === 'root' && preg_match('#^(\s*[+/*%=-]{1,2}\s*)(.*)#', $substr, $match)) {
+				if($this->debug) echo 'PARSING POST-VAR ASSIGNMENT '.$substr.'<br />';
+				// parse assignment
+				$value = $match[2];
+				$operator = trim($match[1]);
+				if (substr($value, 0, 1) == '=') {
+					throw new Dwoo_Compilation_Exception($this, 'Unexpected "=" in <em>'.$substr.'</em>');
+				}
+
+				if ($pointer !== null) {
+					$pointer += strlen($match[1]);
+				}
+				$parts = array();
+				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $pointer);
+
+				// load if plugin
+				try {
+					$this->getPluginType('if');
+				} catch (Dwoo_Exception $e) {
+					throw new Dwoo_Compilation_Exception($this, 'Assignments require the "if" plugin to be accessible');
+				}
+
+				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
+				$parts = $this->getCompiledParams($parts);
+
+				$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
+
+				$out = Dwoo_Compiler::PHP_OPEN. $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
 			}
 		}
 
@@ -1917,7 +1946,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 							throw new Dwoo_Compilation_Exception($this, 'Invalid expression <em>'.$substr.'</em>, can not use "==" in expressions');
 						}
 						if ($curBlock !== 'root') {
-							throw new Dwoo_Compilation_Exception($this, 'Invalid expression <em>'.$substr.'</em>, "=" can only be used in pure expressions like {$foo+=3}, {$foo="bar"}');
+							throw new Dwoo_Compilation_Exception($this, 'Invalid expression <em>'.$substr.'</em>, assignments can only be used in top level expressions like {$foo+=3} or {$foo="bar"}');
 						}
 						$operator .= '=';
 						$expMatch[2][$k] = substr($expMatch[2][$k], 1);
@@ -1940,30 +1969,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						throw new Dwoo_Compilation_Exception($this, 'Unfinished expression <em>'.$substr.'</em>, missing var or number after math operator');
 					}
 				}
-			} elseif ($curBlock === 'root' && substr(trim(substr($substr, $matchedLength)), 0, 1) === '=') {
-				// var assignment
-				$value = trim(substr(trim(substr($substr, $matchedLength)), 1));
-
-				if ($pointer !== null) {
-					$pointer++;
-				}
-				$parts = array();
-				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $pointer);
-
-				// load if plugin
-				try {
-					$this->getPluginType('if');
-				} catch (Dwoo_Exception $e) {
-					throw new Dwoo_Compilation_Exception($this, 'Assignments require the "if" plugin to be accessible');
-				}
-
-				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
-				$parts = $this->getCompiledParams($parts);
-
-				$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
-
-				$output .= '='.implode(' ', $value);
-				$assign = true;
 			}
 
 			if ($this->autoEscape === true) {

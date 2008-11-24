@@ -1,4 +1,5 @@
 [2008--] 1.0.1
+* Direct assignments like {$foo = 5} now allow spaces around the operator
 * Fixed a {foreach} bug with the implode argument
 * Fixed modulo operator in if statements
 * Fixed date_format handling of negative and small unix timestamps
