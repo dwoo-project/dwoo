@@ -1295,7 +1295,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
 					}
 				}
-			} else if ($curBlock === 'root' && preg_match('#^(\s*[+/*%=-]{1,2}\s*)(.*)#', $substr, $match)) {
+			} else if ($curBlock === 'root' && preg_match('#^(\s*(?:[+/*%-]=|=|\+\+|--)\s*)(.*)#', $substr, $match)) {
 				if($this->debug) echo 'PARSING POST-VAR ASSIGNMENT '.$substr.'<br />';
 				// parse assignment
 				$value = $match[2];
