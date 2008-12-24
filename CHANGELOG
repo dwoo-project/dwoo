@@ -1,9 +1,9 @@
-[2008--] 1.0.1
+[2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
 * Fixed a {foreach} bug with the implode argument
 * Fixed modulo operator in if statements
 * Fixed date_format handling of negative and small unix timestamps
-* Fixed a weird reference bug with ZF and includes.. whatever but thanks 
+* Fixed a weird reference bug with ZF and includes.. whatever but thanks
   to Denis Arh for the patch
 
 [2008-10-23] 1.0.0
@@ -15,7 +15,7 @@
   complex variables i.e. {$obj->getStuff()|upper} or {lower('foo')|upper}
 + SmartyCompat: Added a {section} plugin but I strongly discourage using it,
   it was really made to support legacy templates, since {for} doesn't have to
-  handle {section}-BC anymore, it has been cleaned up a lot and the last 
+  handle {section}-BC anymore, it has been cleaned up a lot and the last
   $skip parameter has been dropped
 * The core Dwoo class doesn't need writable compile/cache dirs in the
   constructor anymore so you can provide custom ones later through
@@ -41,7 +41,7 @@
 * Fixed handling of variable variables that contained non standard characters
 * Fixed a 1.0.0beta regression that messed with custom plugin directories
   on Windows
-* SmartyCompat: Fixed a few bugs in the adapter and processor - thanks to 
+* SmartyCompat: Fixed a few bugs in the adapter and processor - thanks to
   Stefan Moonen for the patches
 
 [2008-09-08] 1.0.0beta
