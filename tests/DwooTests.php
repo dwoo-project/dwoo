@@ -7,6 +7,8 @@ define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
 require dirname(__FILE__) . '/'.DwooTests::getConfig('DWOO_PATH').'/dwooAutoload.php';
+//require dirname(__FILE__) . '/'.DwooTests::getConfig('DWOO_PATH').'/Dwoo.compiled.php';
+//set_include_path(get_include_path().';'.DWOO_DIRECTORY);
 define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests extends PHPUnit_Framework_TestSuite {
