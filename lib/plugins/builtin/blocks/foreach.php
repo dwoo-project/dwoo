@@ -25,8 +25,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.0.1
+ * @date       2008-12-24
  * @package    Dwoo
  */
 class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable

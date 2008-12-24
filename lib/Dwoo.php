@@ -24,8 +24,8 @@ define('DWOO_DIRECTORY', dirname(__FILE__) . DIRECTORY_SEPARATOR);
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.0.1
+ * @date       2008-12-24
  * @package    Dwoo
  */
 class Dwoo
@@ -35,7 +35,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.0.0';
+	const VERSION = '1.0.1';
 
 	/**
 	 * unique number of this dwoo release
@@ -44,7 +44,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 14;
+	const RELEASE_TAG = 15;
 
 	/**#@+
 	 * constants that represents all plugin types

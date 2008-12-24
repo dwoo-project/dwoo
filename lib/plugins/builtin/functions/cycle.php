@@ -18,8 +18,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.0.1
+ * @date       2008-12-24
  * @package    Dwoo
  */
 class Dwoo_Plugin_cycle extends Dwoo_Plugin

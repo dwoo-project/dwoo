@@ -25,8 +25,8 @@ if (class_exists('Dwoo_Compiler', false) === false) {
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.0.1
+ * @date       2008-12-24
  * @package    Dwoo
  */
 class Dwoo_Smarty__Adapter extends Dwoo
@@ -236,7 +236,7 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 		return $this->get($tpl, $this->dataProvider, $this->compiler, $display===true);
 	}
-	
+
 	public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
 	{
 		if ($_compiler === null) {
