@@ -18,12 +18,18 @@ class BlockTests extends PHPUnit_Framework_TestCase
 	{
 		$tpl = new Dwoo_Template_String('{a "http://foo/" test="foo" bar="bar"; "Foo!" /}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">Foo!</a>', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{a "http://foo/" /}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<a href="http://foo/">http://foo/</a>', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{a "http://foo/"; $link /}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<a href="http://foo/">moo</a>', $this->dwoo->get($tpl, array('link'=>'moo'), $this->compiler));
 
 		$tpl = new Dwoo_Template_String('{a $url test="foo" bar="bar"}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('<a href="http://foo/" test="foo" bar="bar">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
 
 		$tpl = new Dwoo_Template_String('{a $url foo="bar"; "text" /}
@@ -31,11 +37,14 @@ class BlockTests extends PHPUnit_Framework_TestCase
 {a $url; /}
 {a $url}{/}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('<a href="http://foo/" foo="bar">text</a>
 <a href="http://foo/"></a>
 <a href="http://foo/">http://foo/</a>
 <a href="http://foo/">http://foo/</a>', $this->dwoo->get($tpl, array('url'=>'http://foo/'), $this->compiler));
+
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_a($this->dwoo);
+		$fixCall->init('');
 	}
 
 	public function testAutoEscape()
@@ -73,13 +82,17 @@ class BlockTests extends PHPUnit_Framework_TestCase
 	{
 		$tpl = new Dwoo_Template_String('{capture name="foo" assign="foo"}BAR{/capture}{$dwoo.capture.foo}-{$foo}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('BAR-BAR', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		$tpl = new Dwoo_Template_String('{capture "foo" "foo" true}BAR{/capture}{capture "foo" "foo" true}BAR{/capture}{$foo}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('BARBAR', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{capture "foo" "foo" false true}
+
+BAZZ       {/capture}{$foo}');
+		$tpl->forceCompilation();
+		$this->assertEquals('BAZZ', $this->dwoo->get($tpl, array(), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_capture($this->dwoo);
@@ -281,6 +294,13 @@ baz"));
 		$fixCall->init(null,null);
 	}
 
+	public function testForVars()
+	{
+		$tpl = new Dwoo_Template_String('{for name=i from=3 to=6}{$.for.i.index}|{$.for.i.iteration}|{$.for.i.first}|{$.for.i.last}|{$.for.i.show}|{$.for.i.total}||{/for}');
+		$tpl->forceCompilation();
+		$this->assertEquals('3|1|1||1|4||'.'4|2|||1|4||'.'5|3|||1|4||'.'6|4||1|1|4||', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testForVariations()
 	{
 		$tpl = new Dwoo_Template_String('{for i 1 1}-{$i}{/for}|{for i 1 2}-{$i}{/for}|{for i 1 3}-{$i}{/for}');
@@ -344,6 +364,13 @@ baz"));
 		$tpl->forceCompilation();
 
 		$this->assertEquals('0.foo1.bar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
+	}
+
+	public function testForeachImplode()
+	{
+		$tpl = new Dwoo_Template_String('{foreach $sub item implode=", "}{$item}{/foreach}');
+		$tpl->forceCompilation();
+		$this->assertEquals('foo, bar', $this->dwoo->get($tpl, array('sub'=>array('foo','bar')), $this->compiler));
 	}
 
 	public function testForeachWithGlobalVars()
@@ -422,11 +449,35 @@ baz"));
 		$fixCall->init('');
 	}
 
+	public function testLoopVars()
+	{
+		$tpl = new Dwoo_Template_String('{loop $foo name=i}{$.loop.i.index}|{$.loop.i.iteration}|{$.loop.i.first}|{$.loop.i.last}|{$.loop.i.show}|{$.loop.i.total}||{/}');
+		$tpl->forceCompilation();
+		$this->assertEquals('0|1|1||1|4||'.'1|2|||1|4||'.'2|3|||1|4||'.'3|4||1|1|4||', $this->dwoo->get($tpl, array('foo'=>array('a','b','c','d')), $this->compiler));
+	}
+
 	public function testStrip()
 	{
 		$tpl = new Dwoo_Template_String("{strip}a\nb\nc{/strip}a\nb\nc");
 		$tpl->forceCompilation();
 		$this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_strip($this->dwoo);
+		$fixCall->init('');
+	}
+
+	public function testStripJavascript()
+	{
+		$tpl = new Dwoo_Template_String("{strip js}function() { // does bleh
+bleh();
+/* block comment
+
+*/
+}
+{/strip}");
+		$tpl->forceCompilation();
+		$this->assertEquals("function() {bleh();}", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testStripWithPhp()
@@ -434,6 +485,18 @@ baz"));
 		$tpl = new Dwoo_Template_String("{strip}a\nb{\$foo=\"\\n\"}{if \$foo}>{\$foo}<{/if}\nc{/strip}a\nb\nc");
 		$tpl->forceCompilation();
 		$this->assertEquals("ab>\n<ca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testSubTemplates()
+	{
+		$tpl = new Dwoo_Template_String('{load_templates "file:'.TEST_DIRECTORY.'/resources/templates.html"}{menu $menu}{load_templates ""}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<ul class="level0"><li>foo</li><li>bar</li><ul class="level1"><li>baz</li><li>qux</li></ul><li>boo</li><ul class="level1"><li>far</li><ul class="level2"><li>faz</li><li>mux</li></ul></ul><li>duck</li></ul>',
+			$this->dwoo->get($tpl, array('menu'=>array('foo', 'bar'=>array('baz','qux'), 'boo'=>array('far'=>array('faz','mux')), 'duck')), $this->compiler));
+
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_template($this->dwoo);
+		$fixCall->init('');
 	}
 
 	public function testTextFormat()

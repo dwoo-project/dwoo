@@ -43,9 +43,8 @@ function Dwoo_Plugin_fetch(Dwoo $dwoo, $file, $assign = null)
 
 	$out = file_get_contents($file);
 
-	if ($assign !== null) {
-		$dwoo->assignInScope($out, $assign);
-	} else {
+	if ($assign === null) {
 		return $out;
 	}
+	$dwoo->assignInScope($out, $assign);
 }

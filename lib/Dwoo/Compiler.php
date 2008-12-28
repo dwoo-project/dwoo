@@ -115,6 +115,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected $customPlugins = array();
 
 	/**
+	 * stores the template plugins registered with this compiler
+	 *
+	 * @var array
+	 */
+	protected $templatePlugins = array();
+
+	/**
 	 * stores the pre- and post-processors callbacks
 	 *
 	 * @var array
@@ -145,6 +152,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @var int
 	 */
 	protected $pointer;
+
+	/**
+	 * stores the current line count inside the template for debugging purposes
+	 *
+	 * @var int
+	 */
+	protected $line;
+
+	/**
+	 * stores the current template source while compiling it
+	 *
+	 * @var string
+	 */
+	protected $templateSource;
 
 	/**
 	 * stores the data within which the scope moves
@@ -440,6 +461,35 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * adds a template plugin, this is reserved for use by the {function} plugin
+	 *
+	 * this is required because the template functions are not declared yet
+	 * during compilation, so we must have a way of validating their argument
+	 * signature without using the reflection api
+	 *
+	 * @private
+	 * @param string $name function name
+	 * @param array $params parameter array to help validate the function call
+	 * @param string $uuid unique id of the function
+	 * @param string $body function php code
+	 */
+	public function addTemplatePlugin($name, array $params, $uuid, $body = null)
+	{
+		$this->templatePlugins[$name] = array('params'=> $params, 'body' => $body, 'uuid' => $uuid);
+	}
+
+	/**
+	 * returns all the parsed sub-templates
+	 *
+	 * @private
+	 * @return array the parsed sub-templates
+	 */
+	public function getTemplatePlugins()
+	{
+		return $this->templatePlugins;
+	}
+
+	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
 	 *
 	 * @see Dwoo::addPlugin
@@ -568,6 +618,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * resets the compilation pointer, effectively restarting the compilation process
+	 *
+	 * this is useful if a plugin modifies the template source since it might need to be recompiled
+	 */
+	public function recompile()
+	{
+		$this->setPointer(0);
+	}
+
+	/**
 	 * compiles the provided string down to php code
 	 *
 	 * @param string $tpl the template to compile
@@ -593,6 +653,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$this->scopeTree = array();
 				$this->stack = array();
 				$this->line = 1;
+				$this->templatePlugins = array();
 				// add top level block
 				$compiled = $this->addBlock('topLevelBlock', array(), 0);
 				$this->stack[0]['buffer'] = '';
@@ -767,6 +828,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$output .= $compiled."\n?>";
+		foreach ($this->templatePlugins as $function) {
+			if (isset($function['called']) && $function['called'] === true) {
+				$output .= $function['body'];
+			}
+		}
 
 		$output = preg_replace('/(?<!;|\}|\*\/|\n|\{)(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
@@ -866,18 +932,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		return $old;
-	}
-
-	/**
-	 * forces an absolute scope
-	 *
-	 * @deprecated
-	 * @param mixed $scope a scope as a string or array
-	 * @return array the current scope tree
-	 */
-	public function forceScope($scope)
-	{
-		return $this->setScope($scope, true);
 	}
 
 	/**
@@ -1275,7 +1329,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $pointer, $to-$pointer);
 
 		// var parsed, check if any var-extension applies
-		if ($parsed==='var' && $curBlock !== 'condition') {
+		if ($parsed==='var') {
 			if (preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
 				if($this->debug) echo 'PARSING POST-VAR EXPRESSION '.$substr.'<br />';
 				// parse expressions
@@ -1290,9 +1344,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$out[count($out)-1][1] .= $match[1] . $expr[0][1];
 				} else {
 					if ($match[2] == '$') {
-						$out .= $match[1] . $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
+						$expr = $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
 					} else {
-						$out .= $match[1] . $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+						$expr = $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+					}
+					if (is_array($out) && is_array($expr)) {
+						$out[0] .= $match[1] . $expr[0];
+						$out[1] .= $match[1] . $expr[1];
+					} elseif (is_array($out)) {
+						$out[0] .= $match[1] . $expr;
+						$out[1] .= $match[1] . $expr;
+					} elseif (is_array($expr)) {
+						$out .= $match[1] . $expr[0];
+					} else {
+						$out .= $match[1] . $expr;
 					}
 				}
 			} else if ($curBlock === 'root' && preg_match('#^(\s*(?:[+/*%-]=|=|\+\+|--)\s*)(.*)#', $substr, $match)) {
@@ -1308,7 +1373,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$pointer += strlen($match[1]);
 				}
 				$parts = array();
-				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $pointer);
+				$ptr = 0;
+				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $ptr);
+				$pointer += $ptr;
 
 				// load if plugin
 				try {
@@ -1549,11 +1616,43 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$output = 'smarty_modifier_'.$func.'('.implode(', ', $params).')';
 		} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
 			$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
+		} elseif ($pluginType & Dwoo::TEMPLATE_PLUGIN) {
+			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
+			$ps = $params;
+			$map = array();
+			foreach ($this->templatePlugins[$func]['params'] as $param=>$defValue) {
+				$map[] = array($param, $defValue !== null, $defValue);
+			}
+			$paramlist = array();
+			// loops over the param map and assigns values from the template or default value for unset optional params
+			while (list($k,$v) = each($map)) {
+				if (isset($ps[$v[0]])) {
+					// parameter is defined as named param
+					$paramlist[$v[0]] = $ps[$v[0]];
+					unset($ps[$v[0]]);
+				} elseif (isset($ps[$k])) {
+					// parameter is defined as ordered param
+					$paramlist[$v[0]] = $ps[$k];
+					unset($ps[$k]);
+				} elseif ($v[1]===false) {
+					// parameter is not defined and not optional, throw error
+					throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for template function '.$func);
+				} elseif ($v[2]===null) {
+					// enforce lowercased null if default value is null (php outputs NULL with var export)
+					$paramlist[$v[0]] = array('null', null);
+				} else {
+					// outputs default value with var_export
+					$paramlist[$v[0]] = array($v[2], $v[2]);
+				}
+			}
+			$params = $paramlist;
+			unset($ps, $map, $paramlist, $v, $k);
 		}
 
 		// only keep php-syntax-safe values for non-block plugins
-		foreach ($params as &$p)
+		foreach ($params as &$p) {
 			$p = $p[0];
+		}
 		if ($pluginType & Dwoo::NATIVE_PLUGIN) {
 			if ($func === 'do') {
 				if (isset($params['*'])) {
@@ -1665,6 +1764,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				$output = 'smarty_function_'.$func.'(array('.$params.'), $this)';
 			}
+		} elseif ($pluginType & Dwoo::TEMPLATE_PLUGIN) {
+			array_unshift($params, '$this');
+			$params = self::implode_r($params);
+			$output = 'Dwoo_Plugin_'.$func.'_'.$this->templatePlugins[$func]['uuid'].'('.$params.')';
+			$this->templatePlugins[$func]['called'] = true;
 		}
 
 		if (is_array($parsingParams)) {
@@ -2675,7 +2779,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		while ($pluginType <= 0) {
-			if (isset($this->customPlugins[$name])) {
+			if (isset($this->templatePlugins[$name])) {
+				$pluginType = Dwoo::TEMPLATE_PLUGIN | Dwoo::COMPILABLE_PLUGIN;
+			} elseif (isset($this->customPlugins[$name])) {
 				$pluginType = $this->customPlugins[$name]['type'] | Dwoo::CUSTOM_PLUGIN;
 			} elseif (class_exists('Dwoo_Plugin_'.$name, false) !== false) {
 				if (is_subclass_of('Dwoo_Plugin_'.$name, 'Dwoo_Block_Plugin')) {

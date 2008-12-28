@@ -298,4 +298,130 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$dwoo->setPluginProxy($proxy);
 		$this->assertEquals($proxy, $dwoo->getPluginProxy());
 	}
+
+	public function testIsArrayArray()
+	{
+		$dwoo = new Dwoo();
+		$data = array();
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$data = array('moo');
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(true, $dwoo->isArray($data, true));
+	}
+
+	public function testIsArrayIterator()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestIterator(array());
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$data = new TestIterator(array('moo'));
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(true, $dwoo->isArray($data, true));
+	}
+
+	public function testIsArrayCountableIterator()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestCountableIterator(array());
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$data = new TestCountableIterator(array('moo'));
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(true, $dwoo->isArray($data, true));
+	}
+
+	public function testIsArrayArrayAccess()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestArrayAccess(array());
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$data = new TestArrayAccess(array('moo'));
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(true, $dwoo->isArray($data, true));
+	}
+
+	public function testIsArrayCountableArrayAccess()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestCountableArrayAccess(array());
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$data = new TestCountableArrayAccess(array('moo'));
+		$this->assertEquals(true, $dwoo->isArray($data));
+		$this->assertEquals(true, $dwoo->isArray($data, true));
+	}
+}
+
+class TestIterator implements Iterator
+{
+	protected $data;
+	protected $idx = 0;
+	public function __construct($data)
+	{
+		$this->data = $data;
+	}
+	public function current()
+	{
+		return $this->data[$this->idx];
+	}
+	public function next()
+	{
+		$this->idx++;
+	}
+	public function rewind()
+	{
+		$this->idx = 0;
+	}
+	public function key()
+	{
+		return $this->idx;
+	}
+	public function valid()
+	{
+		return isset($this->data[$this->idx]);
+	}
+}
+
+class TestCountableIterator extends TestIterator implements Countable
+{
+	public function count()
+	{
+		return count($this->data);
+	}
+}
+
+class TestArrayAccess implements ArrayAccess
+{
+	protected $data;
+	public function __construct($data)
+	{
+		$this->data = $data;
+	}
+	public function offsetExists($k)
+	{
+		return isset($this->data[$k]);
+	}
+	public function offsetGet($k)
+	{
+		return $this->data[$k];
+	}
+	public function offsetUnset($k)
+	{
+		unset($this->data[$k]);
+	}
+	public function offsetSet($k,$v)
+	{
+		$this->data[$k] = $v;
+	}
+}
+
+class TestCountableArrayAccess extends TestArrayAccess implements Countable
+{
+	public function count()
+	{
+		return count($this->data);
+	}
 }

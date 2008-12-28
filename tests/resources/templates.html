@@ -1,0 +1,13 @@
+{template menu data level=0}
+{strip}
+  <ul class="level{$level}">
+  {foreach $data id entry}
+    {if is_array($entry)}
+	  	<li>{$id}</li>
+		{menu $entry $level+1}
+    {else}
+      <li>{$entry}</li>
+    {/if}
+  {/foreach}
+  </ul>
+{/template}

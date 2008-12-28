@@ -64,6 +64,7 @@ class Dwoo
 	const SMARTY_BLOCK = 128;
 	const SMARTY_FUNCTION = 256;
 	const PROXY_PLUGIN = 512;
+	const TEMPLATE_PLUGIN = 1024;
 	/**#@-*/
 
 	/**
@@ -91,9 +92,10 @@ class Dwoo
 	 * on top of that, foreach and other plugins can store special values in there,
 	 * see their documentation for more details.
 	 *
+	 * @private
 	 * @var array
 	 */
-	protected $globals;
+	public $globals;
 
 	/**
 	 * directory where the compiled templates are stored
@@ -202,9 +204,12 @@ class Dwoo
 	/**
 	 * stores the current scope during template runtime
 	 *
+	 * this should ideally not be accessed directly from outside template code
+	 *
 	 * @var mixed
+	 * @private
 	 */
-	protected $scope;
+	public $scope;
 
 	/**
 	 * stores the scope tree during template runtime
@@ -860,14 +865,11 @@ class Dwoo
 	 * [util function] checks if the input is an array or an iterator object, optionally it can also check if it's empty
 	 *
 	 * @param mixed $value the variable to check
-	 * @param bool $checkIsEmpty if true, the function will also check if the array is empty
-	 * @param bool $allowNonCountable if true, the function will return true if
-	 * an object is not empty but does not implement Countable, by default a
-	 * non- countable object is considered empty, this setting is only used if
-	 * $checkIsEmpty is true
+	 * @param bool $checkIsEmpty if true, the function will also check if the array is empty,
+	 * 								and return true only if it's not empty
 	 * @return bool true if it's an array (and not empty) or false if it's not an array (or if it's empty)
 	 */
-	public function isArray($value, $checkIsEmpty=false, $allowNonCountable=false)
+	public function isArray($value, $checkIsEmpty=false)
 	{
 		if (is_array($value) === true) {
 			if ($checkIsEmpty === false) {
@@ -875,20 +877,22 @@ class Dwoo
 			} else {
 				return count($value) > 0;
 			}
-		} elseif ($value instanceof Iterator || $value instanceof ArrayAccess) {
+		} elseif ($value instanceof Iterator) {
 			if ($checkIsEmpty === false) {
 				return true;
+			} elseif ($value instanceof Countable) {
+				return count($value) > 0;
 			} else {
-				if ($allowNonCountable === false) {
-					return count($value) > 0;
-				} else {
-					if ($value instanceof Countable) {
-						return count($value) > 0;
-					} else	{
-						$value->rewind();
-						return $value->valid();
-					}
-				}
+				$value->rewind();
+				return $value->valid();
+			}
+		} elseif ($value instanceof ArrayAccess) {
+			if ($checkIsEmpty === false) {
+				return true;
+			} elseif ($value instanceof Countable) {
+				return count($value) > 0;
+			} else {
+				return $value->offsetExists(0);
 			}
 		}
 		return false;
@@ -1494,18 +1498,5 @@ class Dwoo
 	public function &getScope()
 	{
 		return $this->scope;
-	}
-
-	/**
-	 * [runtime function] forces an absolute scope
-	 *
-	 * @deprecated
-	 * @see setScope
-	 * @param mixed $scope a scope as a string or array
-	 * @return array the current scope tree
-	 */
-	public function forceScope($scope)
-	{
-		return $this->setScope($scope, true);
 	}
 }

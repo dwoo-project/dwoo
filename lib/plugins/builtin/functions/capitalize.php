@@ -21,9 +21,6 @@ function Dwoo_Plugin_capitalize(Dwoo $dwoo, $value, $numwords=false)
 {
 	if ($numwords || preg_match('#^[^0-9]+$#',$value))
 	{
-		if ($dwoo->getCharset() === 'iso-8859-1') {
-			return ucwords((string) $value);
-		}
 		return mb_convert_case((string) $value,MB_CASE_TITLE, $dwoo->getCharset());
 	} else {
 		$bits = explode(' ', (string) $value);

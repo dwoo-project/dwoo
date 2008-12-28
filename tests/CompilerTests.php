@@ -566,6 +566,99 @@ replace="BAR"
 
 		$this->assertEquals('HOY', $dwoo->get($tpl, array(), $this->compiler));
 	}
+
+	public function testNestedCommentHandlingGetSet()
+	{
+		$cmp = new Dwoo_Compiler();
+		$this->assertEquals(false, $cmp->getNestedCommentsHandling());
+		$cmp->setNestedCommentsHandling(true);
+		$this->assertEquals(true, $cmp->getNestedCommentsHandling());
+	}
+
+	public function testNestedCommentHandling()
+	{
+		$tpl = new Dwoo_Template_String('{* foo {* bar *} baz *}');
+		$tpl->forceCompilation();
+		$cmp = new Dwoo_Compiler();
+		$cmp->setNestedCommentsHandling(true);
+		$this->assertEquals('', $this->dwoo->get($tpl, array(), $cmp));
+	}
+
+	public function testSecurityPolicyGetSet()
+	{
+		$cmp = new Dwoo_Compiler();
+		$policy = new Dwoo_Security_Policy();
+		$this->assertEquals(null, $cmp->getSecurityPolicy());
+		$cmp->setSecurityPolicy($policy);
+		$this->assertEquals($policy, $cmp->getSecurityPolicy());
+	}
+
+	public function testPointerGetSet()
+	{
+		$cmp = new Dwoo_Compiler();
+		$this->assertEquals(null, $cmp->getPointer());
+		$cmp->setPointer(5);
+		$this->assertEquals(5, $cmp->getPointer());
+		$cmp->setPointer(5, true);
+		$this->assertEquals(10, $cmp->getPointer());
+	}
+
+	public function testLineGetSet()
+	{
+		$cmp = new Dwoo_Compiler();
+		$this->assertEquals(null, $cmp->getLine());
+		$cmp->setLine(5);
+		$this->assertEquals(5, $cmp->getLine());
+		$cmp->setLine(5, true);
+		$this->assertEquals(10, $cmp->getLine());
+	}
+
+	public function testTemplateSourceGetSet()
+	{
+		$cmp = new Dwoo_Compiler();
+		$this->assertEquals(null, $cmp->getTemplateSource());
+		$cmp->setTemplateSource("foobar");
+		$cmp->setPointer(3);
+		$this->assertEquals('foobar', $cmp->getTemplateSource());
+		$this->assertEquals('bar', $cmp->getTemplateSource(true));
+		$this->assertEquals('r', $cmp->getTemplateSource(5));
+		$cmp->setTemplateSource("baz", true);
+		$this->assertEquals('foobaz', $cmp->getTemplateSource());
+		$this->assertEquals('baz', $cmp->getTemplateSource(true));
+		$this->assertEquals('z', $cmp->getTemplateSource(5));
+		$cmp->setTemplateSource("baz");
+		$this->assertEquals('baz', $cmp->getTemplateSource());
+		$this->assertEquals('', $cmp->getTemplateSource(true));
+		$this->assertEquals('az', $cmp->getTemplateSource(1));
+	}
+
+	public function testEndInstruction()
+	{
+		$tpl = new Dwoo_Template_String('{$foo = 4; $bar = 5; $foo; $bar}');
+		$tpl->forceCompilation();
+		$this->assertEquals('45', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testExpressionAsParameter()
+	{
+		$tpl = new Dwoo_Template_String('{$foo = 4; $bar = 8; lower value=$foo + $bar}');
+		$tpl->forceCompilation();
+		$this->assertEquals('12', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testExpressionAsAssignment()
+	{
+		$tpl = new Dwoo_Template_String('{$foo = 4; $bar = $foo + 5; $bar}');
+		$tpl->forceCompilation();
+		$this->assertEquals('9', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testModifierOnFunc()
+	{
+		$tpl = new Dwoo_Template_String('{upper("fOo")|lower}');
+		$tpl->forceCompilation();
+		$this->assertEquals('foo', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
 }
 
 class ProxyHelper implements Dwoo_IPluginProxy

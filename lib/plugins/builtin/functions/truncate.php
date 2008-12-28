@@ -36,7 +36,7 @@ function Dwoo_Plugin_truncate(Dwoo $dwoo, $value, $length=80, $etc='...', $break
 
 	$length = max($length - strlen($etc), 0);
 	if ($break === false && $middle === false) {
-		$value = preg_replace('#\s*(\S*)?$#', '', substr($value, 0, $length+1));
+		$value = preg_replace('#\s+(\S*)?$#', '', substr($value, 0, $length+1));
 	}
 	if ($middle === false) {
 		return substr($value, 0, $length) . $etc;

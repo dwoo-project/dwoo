@@ -24,7 +24,7 @@ function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file, $uid)
 try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
 } catch (Dwoo_Exception $e) {
-	$this->triggerError(\'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not include <em>'.$identifier.'</em>\', E_USER_WARNING);
+	$this->triggerError(\'Extends : Resource <em>'.$resource.'</em> was not added to Dwoo, can not extend <em>'.$identifier.'</em>\', E_USER_WARNING);
 }
 if ($tpl === null)
 	$this->triggerError(\'Extends : Resource "'.$resource.':'.$identifier.'" was not found.\', E_USER_WARNING);

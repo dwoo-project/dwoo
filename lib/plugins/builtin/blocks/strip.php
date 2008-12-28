@@ -37,7 +37,7 @@ class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 		switch ($mode) {
 			case 'js':
 			case 'javascript':
-				$content = preg_replace('#(?<!:)//\s[^\r\n]*|/\*.*?\*/#','', $content);
+				$content = preg_replace('#(?<!:)//\s[^\r\n]*|/\*.*?\*/#s','', $content);
 
 			case 'default':
 			default:

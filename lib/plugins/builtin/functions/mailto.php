@@ -45,7 +45,7 @@ function Dwoo_Plugin_mailto(Dwoo $dwoo, $address, $text=null, $subject=null, $en
 	if (!empty($bcc)) {
 		$address .= 'bcc='.rawurlencode($bcc).'&';
 	}
-	if (!empty($newsgroup)) {
+	if (!empty($newsgroups)) {
 		$address .= 'newsgroups='.rawurlencode($newsgroups).'&';
 	}
 	if (!empty($followupto)) {

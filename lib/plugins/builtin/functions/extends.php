@@ -91,6 +91,9 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			if (!isset($newSource)) {
 				$newSource = $parent['source'];
 			}
+
+			// TODO parse blocks tree for child source and new source
+			// TODO replace blocks that are found in the child and in the parent recursively
 			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
 
 			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'" "'.str_replace('"', '\\"', $parent['uid']).'")'.$r.$newSource;
@@ -101,7 +104,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		}
 
 		$compiler->setTemplateSource($newSource);
-		$compiler->setPointer(0);
+		$compiler->recompile();
 	}
 
 	protected static function replaceBlock(array $matches)

@@ -1,3 +1,10 @@
+[2009--] 1.1.0
++ Added {template} plugin that allows you to define sub-templates and then
+  call them (even recursively)
++ Added {load_templates} to load external sub-templates into your file
+* Many new unit tests to improve code coverage and a bunch of bug fixes 
+  that resulted, but I didn't really keep track of them
+
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
 * Fixed a {foreach} bug with the implode argument

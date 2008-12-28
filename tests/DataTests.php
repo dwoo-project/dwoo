@@ -72,4 +72,40 @@ class DataTests extends PHPUnit_Framework_TestCase
 		$data->append(array('var'=>'moo', 'var2'=>'bar'));
 		$this->assertEquals(array('var'=>array('val','moo'), 'var2'=>array('bar')), $data->getData());
 	}
+
+	public function testMagicGetSetStuff()
+	{
+		$data = new Dwoo_Data();
+
+		$data->variable = 'val';
+		$data->append('variable', 'moo');
+
+		$this->assertEquals(array('val','moo'), $data->get('variable'));
+		$this->assertEquals(array('val','moo'), $data->variable);
+		$this->assertEquals(true, $data->isAssigned('variable'));
+	}
+
+	/**
+	 * @expectedException Dwoo_Exception
+	 */
+	public function testUnset()
+	{
+		$data = new Dwoo_Data();
+		$data->variable = 'val';
+		$this->assertEquals(true, isset($data->variable));
+		unset($data->variable);
+		$data->get('variable');
+	}
+
+	/**
+	 * @expectedException Dwoo_Exception
+	 */
+	public function testUnassign()
+	{
+		$data = new Dwoo_Data();
+		$data->variable = 'val';
+		$this->assertEquals(true, isset($data->variable));
+		$data->unassign('variable');
+		$data->get('variable');
+	}
 }

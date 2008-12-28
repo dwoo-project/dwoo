@@ -38,6 +38,12 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals('Hello World 1st-Hello World 1St', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$this->dwoo->setCharset('iso-8859-1');
+		$tpl = new Dwoo_Template_String('{capitalize "hello world 1st"}-{capitalize "hello world 1st" true}');
+		$tpl->forceCompilation();
+		$this->assertEquals('Hello World 1st-Hello World 1St', $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->dwoo->setCharset('utf-8');
 	}
 
 	public function testCat()
@@ -69,6 +75,10 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals('12', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{counter start=0 skip=3 print=false}{counter skip=1 start=10 assign=moo direction=down}{$moo}/{counter}{$moo}');
+		$tpl->forceCompilation();
+		$this->assertEquals('10/9', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testCountChars()
@@ -109,14 +119,26 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals('foobarfoofoofoofoo', $this->dwoo->get($tpl, array('foo'=>"sfsdf.smdf\nmkoep\tsdlk sdfsdf"), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{cycle "hoy" "foo,bar"}{cycle hoy}{cycle hoy assign="moo"}|{$moo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('foobar|foo', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testDateFormat()
 	{
 		$tpl = new Dwoo_Template_String('{date_format $dwoo.now "%Y%H:%M:%S"}{date_format $foo "%Y%H:%M:%S" "one hour ago"}{date_format ""}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals(strftime("%Y%H:%M:%S", $_SERVER['REQUEST_TIME']).strftime('%Y%H:%M:%S', strtotime("one hour ago")), $this->dwoo->get($tpl, array('foo'=>''), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{date_format "'.date('Y-m-d H:i:s', $_SERVER['REQUEST_TIME'] - 10).'" "%Y:%H:%M:%S"}');
+		$tpl->forceCompilation();
+		$this->assertEquals(strftime("%Y:%H:%M:%S", $_SERVER['REQUEST_TIME'] - 10), $this->dwoo->get($tpl, array('foo'=>''), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{date_format "" "%Y%H:%M:%S" '.($_SERVER['REQUEST_TIME'] - 10).'}');
+		$tpl->forceCompilation();
+		$this->assertEquals(strftime("%Y%H:%M:%S", $_SERVER['REQUEST_TIME'] - 10), $this->dwoo->get($tpl, array('foo'=>''), $this->compiler));
 	}
 
 	public function testDefault()
@@ -206,7 +228,7 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 	public function testEval()
 	{
-		$tpl = new Dwoo_Template_String('{eval $foo}{assign "baz" test}{eval $foo bar}+{$bar}');
+		$tpl = new Dwoo_Template_String('{eval $foo}{assign "baz" test}{eval $foo bar}+{$bar}{eval ""}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("moo+baz", $this->dwoo->get($tpl, array('foo'=>'{$test}', 'test'=>'moo'), $this->compiler));
@@ -230,10 +252,10 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 	public function testFetch()
 	{
-		$tpl = new Dwoo_Template_String('{fetch file="'.TEST_DIRECTORY.'/resources/test.html"}');
+		$tpl = new Dwoo_Template_String('{fetch file="'.TEST_DIRECTORY.'/resources/test.html"}{fetch ""}{fetch file="'.TEST_DIRECTORY.'/resources/test.html" assign="boo"}|{$boo}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals('{$foo}{$bar}', $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals('{$foo}{$bar}|{$foo}{$bar}', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testInclude()
@@ -242,6 +264,10 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals("AB", $this->dwoo->get($tpl, array('a'=>'A', 'b'=>'B')));
+
+		$tpl = new Dwoo_Template_String('{include file="" foo=$a bar=$b}');
+		$tpl->forceCompilation();
+		$this->assertEquals("", $this->dwoo->get($tpl, array('a'=>'A', 'b'=>'B')));
 
 		$tpl = new Dwoo_Template_String('{include file=\'file:'.TEST_DIRECTORY.'/resources/test.html\'}');
 		$tpl->forceCompilation();
@@ -319,8 +345,15 @@ class FuncTests extends PHPUnit_Framework_TestCase
 
 		$tpl = new Dwoo_Template_String('{mailto address="me@example.com" subject="Hello to you!" cc="you@example.com,they@example.com" extra=\'class="email"\'}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals('<a href="mailto:me@example.com?subject=Hello%20to%20you%21&cc=you%40example.com%2Cthey%40example.com" class="email">me@example.com</a>', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{mailto address="" subject="Hello to you!" cc="you@example.com,they@example.com" extra=\'class="email"\'}');
+		$tpl->forceCompilation();
+		$this->assertEquals('', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{mailto address="me@example.com" subject="Hello to you!" bcc="moo" newsgroups="bleh" followupto="meh"}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<a href="mailto:me@example.com?subject=Hello%20to%20you%21&bcc=moo&newsgroups=bleh&followupto=meh" >me@example.com</a>', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testMath()
@@ -349,6 +382,16 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals('-'.(3+5+(cos(1) + max(3,2))), $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{math equation="max((1+2),2)"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('3', $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{math equation="1/3" format="%.4f"}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('0.3333', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testNl2br()
@@ -397,6 +440,12 @@ a"}');
 		$tpl->forceCompilation();
 
 		$this->assertEquals("cba", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{reverse "abc"}');
+		$tpl->forceCompilation();
+		$this->dwoo->setCharset('iso-8859-1');
+		$this->assertEquals("cba", $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->dwoo->setCharset('utf-8');
 	}
 
 	public function testSpacify()
@@ -483,13 +532,27 @@ a"}');
 	{
 		$tpl = new Dwoo_Template_String('{truncate "abcdefghijklmnopqrstuvwxyz" 20 "..." true}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals("abcdefghijklmnopq...", $this->dwoo->get($tpl, array(), $this->compiler));
 
 		$tpl = new Dwoo_Template_String('{truncate "abcdefghijklmnopqrstuvwxyz" 20 "..." true true}');
 		$tpl->forceCompilation();
-
 		$this->assertEquals("abcdefghi...stuvwxyz", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{truncate "" 20 "..." true true}');
+		$tpl->forceCompilation();
+		$this->assertEquals("", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{truncate "a" 20 "..." true true}');
+		$tpl->forceCompilation();
+		$this->assertEquals("a", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{truncate "abcdefghijklmnopqrstuvwxyz abcdef" 20 "..."}');
+		$tpl->forceCompilation();
+		$this->assertEquals("abcdefghijklmnopq...", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{truncate "abc abc abc abc abc abc" 10 "..."}');
+		$tpl->forceCompilation();
+		$this->assertEquals("abc abc...", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testUpper()
