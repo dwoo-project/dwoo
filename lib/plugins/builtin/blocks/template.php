@@ -52,7 +52,7 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 		$paramstr = 'Dwoo $dwoo';
 		$init = 'static $_callCnt = 0;'."\n".
 		'$dwoo->scope[\' '.$params['uuid'].'\'.$_callCnt] = array();'."\n".
-		'$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n/* -- template start output */";
+		'$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n";
 		$cleanup = '/* -- template end output */ $dwoo->setScope($_scope, true);';
 		foreach ($params['*'] as $param=>$defValue) {
 			if ($defValue === null) {
@@ -62,6 +62,7 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 			}
 			$init .= '$dwoo->scope[\''.$param.'\'] = $'.$param.";\n";
 		}
+		$init .= '/* -- template start output */';
 		$body = Dwoo_Compiler::PHP_OPEN.'function Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'].'('.$paramstr.') {'."\n$init".Dwoo_Compiler::PHP_CLOSE.
 			$prepend.str_replace(array('$this->','$this,'), array('$dwoo->', '$dwoo,'), $content).$append.
 			Dwoo_Compiler::PHP_OPEN.$cleanup."\n}".Dwoo_Compiler::PHP_CLOSE;
