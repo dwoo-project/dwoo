@@ -1618,11 +1618,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
 		} elseif ($pluginType & Dwoo::TEMPLATE_PLUGIN) {
 			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
-			$ps = $params;
 			$map = array();
 			foreach ($this->templatePlugins[$func]['params'] as $param=>$defValue) {
 				$map[] = array($param, $defValue !== null, $defValue);
 			}
+
+			$ps = array();
+			foreach ($params as $p) {
+				if (is_array($p[1])) {
+					$ps[$p[0]] = $p[1];
+				} else {
+					$ps[] = $p;
+				}
+			}
+
 			$paramlist = array();
 			// loops over the param map and assigns values from the template or default value for unset optional params
 			while (list($k,$v) = each($map)) {
@@ -1645,6 +1654,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$paramlist[$v[0]] = array($v[2], $v[2]);
 				}
 			}
+
 			$params = $paramlist;
 			unset($ps, $map, $paramlist, $v, $k);
 		}
