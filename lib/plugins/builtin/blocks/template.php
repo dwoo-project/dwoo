@@ -52,8 +52,8 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 		$paramstr = 'Dwoo $dwoo';
 		$init = 'static $_callCnt = 0;'."\n".
 		'$dwoo->scope[\' '.$params['uuid'].'\'.$_callCnt] = array();'."\n".
-		'$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n";
-		$cleanup = '$dwoo->setScope($_scope, true);';
+		'$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n/* -- template start output */";
+		$cleanup = '/* -- template end output */ $dwoo->setScope($_scope, true);';
 		foreach ($params['*'] as $param=>$defValue) {
 			if ($defValue === null) {
 				$paramstr.=', $'.$param;
