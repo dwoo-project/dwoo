@@ -102,6 +102,22 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 	}
 
 	/**
+	 * provides a custom compiler to the dwoo renderer with optional settings
+	 * you can set in the agavi output_types.xml config file
+	 *
+	 * @return Dwoo_Compiler
+	 */
+	public function compilerFactory()
+	{
+		if (class_exists('Dwoo_Compiler', false) === false) {
+			include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
+		}
+		$compiler = Dwoo_Compiler::compilerFactory();
+		$compiler->setAutoEscape((bool) $this->getParameter('auto_escape', false));
+		return $compiler;
+	}
+
+	/**
 	 * Grab a cleaned up dwoo instance.
 	 *
 	 * @return     Dwoo A Dwoo instance.
@@ -135,6 +151,8 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 		if (!empty($this->plugin_dir)) {
 			$this->dwoo->getLoader()->addDirectory($this->plugin_dir);
 		}
+
+		$this->dwoo->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
 
 		return $this->dwoo;
 	}
