@@ -77,4 +77,36 @@ class BugTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("-3", $this->dwoo->get($tpl, array()));
     }
+
+    public function testUppercasePlugin()
+    {
+        $tpl = new Dwoo_Template_String('{X foo}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("foo", $this->dwoo->get($tpl, array()));
+    }
+
+    public function testMultilineAssignments()
+    {
+        $tpl = new Dwoo_Template_String('{$foo = array(
+moo=bar
+foo=baz
+)}{foreach $foo k v}{$k; $v}.{/foreach}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("moobar.foobaz.", $this->dwoo->get($tpl, array()));
+    }
+
+    public function testAndOrOperatorsFollowedWithRoundBrackets()
+    {
+        $tpl = new Dwoo_Template_String('{if 1 AND (0 OR 1)}true{/if}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("true", $this->dwoo->get($tpl, array()));
+    }
+}
+
+function Dwoo_Plugin_X_compile(Dwoo_Compiler $cmp, $text)
+{
+	return $text;
 }

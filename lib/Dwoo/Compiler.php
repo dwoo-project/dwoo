@@ -1663,11 +1663,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$param = '*';
 				}
 				$hasDefault = $defValue !== null;
-				if ($defValue == 'null') {
+				if ($defValue === 'null') {
 					$defValue = null;
-				} elseif ($defValue == 'false') {
+				} elseif ($defValue === 'false') {
 					$defValue = false;
-				} elseif ($defValue == 'true') {
+				} elseif ($defValue === 'true') {
 					$defValue = true;
 				} elseif (preg_match('#^([\'"]).*?\1$#', $defValue)) {
 					$defValue = substr($defValue, 1, -1);
