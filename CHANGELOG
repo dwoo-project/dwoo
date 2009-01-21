@@ -6,6 +6,7 @@
   that resulted, but I didn't really keep track of them
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
+* Fixed assignments not handling multi-line values correctly
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
