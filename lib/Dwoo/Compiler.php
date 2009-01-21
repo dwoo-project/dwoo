@@ -1487,6 +1487,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			}
 		} else {
+			if ($curBlock === 'condition') {
+				// load if plugin
+				$this->getPluginType('if');
+				if (Dwoo_Plugin_if::replaceKeywords(array($func), $this) !== array($func)) {
+					return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
+				}
+			}
 			$whitespace = strlen(substr($cmdstr, strlen($func), $paramspos-strlen($func)));
 			$paramstr = substr($cmdstr, $paramspos+1);
 			if (substr($paramstr, -1, 1) === $paramsep) {

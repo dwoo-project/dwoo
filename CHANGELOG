@@ -4,6 +4,8 @@
 + Added {load_templates} to load external sub-templates into your file
 * Many new unit tests to improve code coverage and a bunch of bug fixes 
   that resulted, but I didn't really keep track of them
+* Fixed a bug with parsing AND/OR keywords in conditionals when they were
+  followed by round brackets
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
