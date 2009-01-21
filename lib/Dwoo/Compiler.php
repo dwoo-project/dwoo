@@ -1494,7 +1494,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (is_array($parsingParams) || $curBlock != 'root') {
 			$paramspos = strpos($cmdstr, '(');
 			$paramsep = ')';
-		} elseif(preg_match_all('#[a-z0-9_]+(\s*\(|\s+[^(])#', $cmdstr, $match, PREG_OFFSET_CAPTURE)) {
+		} elseif(preg_match_all('#[a-z0-9_]+(\s*\(|\s+[^(])#i', $cmdstr, $match, PREG_OFFSET_CAPTURE)) {
 			$paramspos = $match[1][0][1];
 			$paramsep = substr($match[1][0][0], -1) === '(' ? ')':'';
 			if($paramsep === ')') {

@@ -7,6 +7,7 @@
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
+* Fixed parameter parsing issue when a plugin name was all uppercased
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
