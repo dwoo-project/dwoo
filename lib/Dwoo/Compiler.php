@@ -490,6 +490,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * marks a template plugin as being called, which means its source must be included in the compiled template
+	 *
+	 * @param string $name function name
+	 */
+	public function useTemplatePlugin($name)
+	{
+		$this->templatePlugins[$name]['called'] = true;
+	}
+
+	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
 	 *
 	 * @see Dwoo::addPlugin
@@ -828,6 +838,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$output .= $compiled."\n?>";
+		foreach ($this->templatePlugins as $function => $attr) {
+			if (isset($attr['called']) && $attr['called'] === true && !isset($attr['checked'])) {
+				$this->resolveSubTemplateDependencies($function);
+			}
+		}
 		foreach ($this->templatePlugins as $function) {
 			if (isset($function['called']) && $function['called'] === true) {
 				$output .= $function['body'];
@@ -854,6 +869,23 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$tpl = null;
 
 		return $output;
+	}
+
+	/**
+	 * checks what sub-templates are used in every sub-template so that we're sure they are all compiled
+	 *
+	 * @param string $function the sub-template name
+	 */
+	protected function resolveSubTemplateDependencies($function)
+	{
+		$body = $this->templatePlugins[$function]['body'];
+		foreach ($this->templatePlugins as $func => $attr) {
+			if ($func !== $function && !isset($attr['called']) && strpos($body, 'Dwoo_Plugin_'.$func) !== false) {
+				$this->templatePlugins[$func]['called'] = true;
+				$this->resolveSubTemplateDependencies($func);
+			}
+		}
+		$this->templatePlugins[$function]['checked'] = true;
 	}
 
 	/**
@@ -1627,43 +1659,23 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
 			$map = array();
 			foreach ($this->templatePlugins[$func]['params'] as $param=>$defValue) {
-				$map[] = array($param, $defValue !== null, $defValue);
-			}
-
-			$ps = array();
-			foreach ($params as $p) {
-				if (is_array($p[1])) {
-					$ps[$p[0]] = $p[1];
-				} else {
-					$ps[] = $p;
+				if ($param == 'rest') {
+					$param = '*';
 				}
-			}
-
-			$paramlist = array();
-			// loops over the param map and assigns values from the template or default value for unset optional params
-			while (list($k,$v) = each($map)) {
-				if (isset($ps[$v[0]])) {
-					// parameter is defined as named param
-					$paramlist[$v[0]] = $ps[$v[0]];
-					unset($ps[$v[0]]);
-				} elseif (isset($ps[$k])) {
-					// parameter is defined as ordered param
-					$paramlist[$v[0]] = $ps[$k];
-					unset($ps[$k]);
-				} elseif ($v[1]===false) {
-					// parameter is not defined and not optional, throw error
-					throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for template function '.$func);
-				} elseif ($v[2]===null) {
-					// enforce lowercased null if default value is null (php outputs NULL with var export)
-					$paramlist[$v[0]] = array('null', null);
-				} else {
-					// outputs default value with var_export
-					$paramlist[$v[0]] = array($v[2], $v[2]);
+				$hasDefault = $defValue !== null;
+				if ($defValue == 'null') {
+					$defValue = null;
+				} elseif ($defValue == 'false') {
+					$defValue = false;
+				} elseif ($defValue == 'true') {
+					$defValue = true;
+				} elseif (preg_match('#^([\'"]).*?\1$#', $defValue)) {
+					$defValue = substr($defValue, 1, -1);
 				}
+				$map[] = array($param, $hasDefault, $defValue);
 			}
 
-			$params = $paramlist;
-			unset($ps, $map, $paramlist, $v, $k);
+			$params = $this->mapParams($params, null, $state, $map);
 		}
 
 		// only keep php-syntax-safe values for non-block plugins
@@ -2849,6 +2861,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * allows a plugin to load another one at compile time, this will also mark
+	 * it as used by this template so it will be loaded at runtime (which can be
+	 * useful for compiled plugins that rely on another plugin when their compiled
+	 * code runs)
+	 *
+	 * @param string $name the plugin name
+	 */
+	public function loadPlugin($name) {
+		$this->getPluginType($name);
+	}
+
+	/**
 	 * runs htmlentities over the matched <?php ?> blocks when the security policy enforces that
 	 *
 	 * @param array $match matched php block
@@ -2865,11 +2889,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @param array $params the array of parameters
 	 * @param callback $callback the function or method to reflect on to find out the required parameters
 	 * @param int $callType the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call
+	 * @param array $map the parameter map to use, if not provided it will be built from the callback
 	 * @return array parameters sorted in the correct order with missing optional parameters filled
 	 */
-	protected function mapParams(array $params, $callback, $callType=2)
+	protected function mapParams(array $params, $callback, $callType=2, $map = null)
 	{
-		$map = $this->getParamMap($callback);
+		if (!$map) {
+			$map = $this->getParamMap($callback);
+		}
 
 		$paramlist = array();
 
