@@ -39,6 +39,9 @@ function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = 
 	}
 
 	try {
+		if (!is_numeric($cache_time)) {
+			$cache_time = null;
+		}
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (Dwoo_Security_Exception $e) {
 		return $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
