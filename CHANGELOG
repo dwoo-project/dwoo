@@ -8,6 +8,7 @@
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
 * Fixed parameter parsing issue when a plugin name was all uppercased
+* Fixes assignments failing with autoEscape enabled
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator

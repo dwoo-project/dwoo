@@ -1421,6 +1421,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
 
+				if ($this->autoEscape) {
+					$out = preg_replace('#\(is_string\(\$tmp=(.+?)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $out);
+				}
 				$out = Dwoo_Compiler::PHP_OPEN. $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
 			}
 		}
