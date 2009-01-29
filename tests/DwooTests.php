@@ -3,6 +3,7 @@
 error_reporting(E_ALL|E_STRICT);
 if (!ini_get('date.timezone'))
 	date_default_timezone_set('CET');
+
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
@@ -34,7 +35,7 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		$suite = new self('Dwoo - Unit Tests Report');
 
 		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
-			if (!$file->isDot() && !$file->isDir() && (string) $file !== 'DwooTests.php' && substr((string) $file, -4) === '.php') {
+			if (!$file->isDir() && substr((string) $file, -4) == '.php' && (string) $file !== 'DwooTests.php' && (string) $file !== 'run-tests.php' && substr((string) $file, -4) === '.php') {
 				require_once $file->getPathname();
 				$class = basename($file, '.php');
 				// to have an optional test suite, it should implement a public static function isRunnable

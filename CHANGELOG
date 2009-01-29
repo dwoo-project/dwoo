@@ -2,6 +2,7 @@
 + Added {template} plugin that allows you to define sub-templates and then
   call them (even recursively)
 + Added {load_templates} to load external sub-templates into your file
++ Allowed string concatenation assignments with {$foo.="bar"}  
 * Many new unit tests to improve code coverage and a bunch of bug fixes 
   that resulted, but I didn't really keep track of them
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were

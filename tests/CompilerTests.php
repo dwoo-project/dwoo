@@ -394,6 +394,19 @@ replace="BAR"
 		$this->assertEquals("moo8", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
 	}
 
+	public function testAssignAndConcatenate()
+	{
+		$tpl = new Dwoo_Template_String('{$foo="test"}{$foo.="test"}{$foo}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("testtest", $this->dwoo->get($tpl, array('foo'=>0), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{$foo.="baz"}{$foo|upper}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("BARBAZ", $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
+	}
+
 	public function testSetStringValToTrueWhenUsingNamedParams()
 	{
 		$this->dwoo->addPlugin('test', create_function('Dwoo $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
