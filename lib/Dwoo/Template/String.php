@@ -475,7 +475,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		// enforce the correct mode for all directories created
 		if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
 			$path = strtr(str_replace($baseDir, '', $path), '\\', '/');
-			$folders = explode('/', $path);
+			$folders = explode('/', trim($path, '/');
 			foreach ($folders as $folder) {
 				$baseDir .= $folder . DIRECTORY_SEPARATOR;
 				chmod($baseDir, $chmod);
