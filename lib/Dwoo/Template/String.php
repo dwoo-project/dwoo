@@ -299,7 +299,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		fwrite($file, $output);
 		fclose($file);
 
-		$this->makeDirectory(dirname($cachedFile));
+		$this->makeDirectory(dirname($cachedFile), $cacheDir);
 		if (!@rename($temp, $cachedFile)) {
 			@unlink($cachedFile);
 			@rename($temp, $cachedFile);
@@ -365,7 +365,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 			$compiler->setCustomPlugins($dwoo->getCustomPlugins());
 			$compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
-			$this->makeDirectory(dirname($compiledFile));
+			$this->makeDirectory(dirname($compiledFile), $dwoo->getCompileDir());
 			file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
 			if ($this->chmod !== null) {
 				chmod($compiledFile, $this->chmod);
@@ -455,17 +455,31 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * ensures the given path exists
 	 *
 	 * @param string $path any path
+	 * @param string $baseDir the base directory where the directory is created 
+	 *                        ($path must still contain the full path, $baseDir 
+	 *                        is only used for unix permissions)
 	 */
-	protected function makeDirectory($path)
+	protected function makeDirectory($path, $baseDir = null)
 	{
 		if (is_dir($path) === true) {
 			return;
 		}
-
-		if ($this->chmod !== null) {
-			mkdir($path, $this->chmod, true);
+		
+		if ($this->chmod === null) {
+			$chmod = 0777;
 		} else {
-			mkdir($path, 0777, true);
+			$chmod = $this->chmod;
+		}
+		mkdir($path, $chmod, true);
+		
+		// enforce the correct mode for all directories created
+		if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
+			$path = strtr(str_replace($baseDir, '', $path), '\\', '/');
+			$folders = explode('/', $path);
+			foreach ($folders as $folder) {
+				$baseDir .= $folder . DIRECTORY_SEPARATOR;
+				chmod($baseDir, $chmod);
+			}
 		}
 	}
 }

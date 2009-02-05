@@ -10,6 +10,7 @@
 * Fixed assignments not handling multi-line values correctly
 * Fixed parameter parsing issue when a plugin name was all uppercased
 * Fixes assignments failing with autoEscape enabled
+* Dwoo_Template::$chmod is now enforced for directories as well (#18)
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
