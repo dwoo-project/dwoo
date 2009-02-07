@@ -35,6 +35,16 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	protected $_compiler = null;
 
 	/**
+	 * @var string
+	 */
+	protected $_templateFileClass = 'Dwoo_Template_File';
+
+	/**
+	 * @var array
+	 */
+	protected $_templateFileSettings = array();
+
+	/**
 	 * @var Dwoo_IPluginProxy
 	 */
 	protected $_pluginProxy = null;
@@ -48,6 +58,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function __construct($opt = array())
 	{
+		
 		if (is_array($opt)) {
 			$this->setOptions($opt);
 		} elseif ($opt instanceof Zend_Config) {
@@ -62,6 +73,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 *  - engine        = engine class name|engine object|array of options for engine
 	 *  - dataProvider  = data provider class name|data provider object|array of options for data provider
 	 *  - compiler      = compiler class name|compiler object|array of options for compiler
+	 *  - templateFile  = 
 	 *
 	 *  Array of options:
 	 *  - type class name or object for engine, dataProvider or compiler
@@ -84,14 +96,16 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		// end BC
 
 		// Making sure that everything is loaded.
-		$opt = array_merge(array(
+		$defaults = array(
 			'engine'       => 'Dwoo',
 			'dataProvider' => 'Dwoo_Data',
 			'compiler'     => 'Dwoo_Compiler',
-		), $opt);
-
+		);
+		
+		$opt = array_merge($defaults, $opt);		
+		
 		// Setting options to Dwoo objects...
-		foreach ($opt as $type => $settings) {
+		foreach ($opt as $type => $settings) {			
 			if (!method_exists($this, 'set' . $type)) {
 				throw new Dwoo_Exception("Unknown type $type");
 			}
@@ -99,17 +113,24 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 			if (is_string($settings) || is_object($settings)) {
 				call_user_func(array($this, 'set' . $type), $settings);
 			} elseif (is_array($settings)) {
-
+				// Set requested class
 				if (array_key_exists('type', $settings)) {
 					call_user_func(array($this, 'set' . $type), $settings['type']);
 				}
-
-				$rel = call_user_func(array($this, 'get' . $type));
-
-				foreach ($settings as $method => $value) {
-					if (method_exists($rel, 'set' . $method)) {
-						call_user_func(array($rel, 'set' . $method), $value);
+				
+				if (array_key_exists($type, $defaults)) {
+					// Call get so that the class is initialized
+					$rel = call_user_func(array($this, 'get' . $type));
+	
+					// Call set*() methods so that all the settings are set.
+					foreach ($settings as $method => $value) {
+						if (method_exists($rel, 'set' . $method)) {
+							call_user_func(array($rel, 'set' . $method), $value);
+						}
 					}
+				} elseif ('templateFile' == $type) {
+					// Remember the settings for the templateFile
+					$this->_templateFileSettings = $settings;
 				}
 			}
 		}
@@ -316,6 +337,41 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 
 		return $this->_compiler;
 	}
+	
+	/**
+	 * Initializes Dwoo_ITemplate type of class and sets properties from _templateFileSettings
+	 * 
+	 * @param  string Template location
+	 * @return Dwoo_ITemplate
+	 */
+	public function getTemplateFile($template) {
+		$templateFileClass = $this->_templateFileClass;		
+
+		$dwooTemplateFile = new $templateFileClass($template);
+		
+		if (!($dwooTemplateFile instanceof Dwoo_ITemplate)) {
+			throw new Dwoo_Exception("Custom templateFile class must be a subclass of Dwoo_ITemplate");
+		}
+
+		foreach ($this->_templateFileSettings as $method => $value) {
+			if (method_exists($dwooTemplateFile, 'set' . $method)) {
+				call_user_func(array($dwooTemplateFile, 'set' . $method), $value);
+			}
+		}
+		
+		return $dwooTemplateFile;
+	}
+
+	/**
+	 * Dwoo_ITemplate type of class
+	 *   
+	 * @param string Name of the class
+	 * @return void
+	 */
+	public function setTemplateFile($tempateFileClass) {
+		dbg($tempateFileClass);
+		$this->_templateFileClass = $tempateFileClass;
+	}
 
 	/**
 	 * Passes data to Dwoo_Data object
@@ -369,10 +425,8 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function _run()
 	{
-		$template = new Dwoo_Template_File(func_get_arg(0));
-
 		echo $this->_engine->get(
-			$template,
+			$this->getTemplateFile(func_get_arg(0)),
 			$this->getDataProvider(),
 			$this->getCompiler()
 		);
