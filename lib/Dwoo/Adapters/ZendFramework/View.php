@@ -386,6 +386,16 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		$this->getDataProvider()->assign($name, $val);
 		return $this;
 	}
+	
+	/**
+	 * Return list of all assigned variables
+	 *
+	 * @return array	
+	 */	
+	public function getVars()
+	{
+		return $this->_dataProvider->getData();
+	}
 
 	/**
 	 * Clear all assigned variables
