@@ -369,7 +369,6 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * @return void
 	 */
 	public function setTemplateFile($tempateFileClass) {
-		dbg($tempateFileClass);
 		$this->_templateFileClass = $tempateFileClass;
 	}
 
