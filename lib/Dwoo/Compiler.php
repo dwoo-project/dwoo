@@ -1956,7 +1956,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	{
 		$substr = substr($in, $from, $to-$from);
 
-		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*\2)\]))*)' . // var key
+		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\(.*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
@@ -2253,7 +2253,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 				}
 			} else {
-				preg_match_all('#(\[|->|\.)?([a-z0-9_]+|(\\\?[\'"])[^\3]*\3)\]?#i', $key, $m);
+				preg_match_all('#(\[|->|\.)?([a-z0-9_]+|(\\\?[\'"])[^\3]*?\3)\]?#i', $key, $m);
 
 				$i = $m[2][0];
 				if ($i === '_parent' || $i === '_') {

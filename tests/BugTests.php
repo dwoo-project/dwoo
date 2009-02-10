@@ -97,12 +97,30 @@ foo=baz
         $this->assertEquals("moobar.foobaz.", $this->dwoo->get($tpl, array()));
     }
 
+    public function testAssignmentsWithAutoEscape()
+    {
+    	$cmp = new Dwoo_Compiler();
+    	$cmp->setAutoEscape(true);
+        $tpl = new Dwoo_Template_String('{$foo = $bar}>{$foo}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals(">moo", $this->dwoo->get($tpl, array('bar'=>'moo'), $cmp));
+    }
+
     public function testAndOrOperatorsFollowedWithRoundBrackets()
     {
         $tpl = new Dwoo_Template_String('{if 1 AND (0 OR 1)}true{/if}');
         $tpl->forceCompilation();
 
         $this->assertEquals("true", $this->dwoo->get($tpl, array()));
+    }
+
+    public function testMultipleVarsWithStringKey()
+    {
+        $tpl = new Dwoo_Template_String('{$foo["bar"]}{$foo["baz"]}');
+        $tpl->forceCompilation();
+
+        $this->assertEquals("12", $this->dwoo->get($tpl, array('foo'=>array('bar'=>1, 'baz'=>2))));
     }
 }
 

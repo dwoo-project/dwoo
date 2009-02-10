@@ -1,16 +1,17 @@
 [2009--] 1.1.0
 + Added {template} plugin that allows you to define sub-templates and then
-  call them (even recursively)
+  call them (works recursively too, good for menus and lists)
 + Added {load_templates} to load external sub-templates into your file
 + Allowed string concatenation assignments with {$foo.="bar"}  
-* Many new unit tests to improve code coverage and a bunch of bug fixes 
-  that resulted, but I didn't really keep track of them
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
 * Fixed parameter parsing issue when a plugin name was all uppercased
-* Fixes assignments failing with autoEscape enabled
+* Fixed assignments failing with autoEscape enabled
+* Fixed parsing of vars with string keys that was too greedy
 * Dwoo_Template::$chmod is now enforced for directories as well (#18)
+* Many new unit tests to improve code coverage and a bunch of bug fixes 
+  that resulted, but I didn't really keep track of them
 
 [2008-12-24] 1.0.1
 * Direct assignments like {$foo = 5} now allow spaces around the operator
