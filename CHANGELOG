@@ -1,4 +1,12 @@
 [2009--] 1.1.0
+! BC Break: Dwoo::initGlobals() is only called once during the Dwoo object
+  construction. If you had overriden it and need to update global data 
+  before each template is executed you should instead override 
+  Dwoo::initRuntimeVars() and push stuff in the globals array there. Also
+  be aware that this means captured data, foreach values and so-on will 
+  persist from a parent template to an included one (but the include's 
+  changes will not be reflected on the parent), and from a template 
+  to the next if you render several in series.
 + Added {template} plugin that allows you to define sub-templates and then
   call them (works recursively too, good for menus and lists)
 + Added {load_templates} to load external sub-templates into your file

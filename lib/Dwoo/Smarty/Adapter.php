@@ -438,9 +438,9 @@ class Dwoo_Smarty__Adapter extends Dwoo
 		$this->triggerError($error_msg, $error_type);
 	}
 
-	protected function initGlobals(Dwoo_ITemplate $tpl)
+	protected function initGlobals()
 	{
-		parent::initGlobals($tpl);
+		parent::initGlobals();
 		$this->globals['ldelim'] = '{';
 		$this->globals['rdelim'] = '}';
 	}

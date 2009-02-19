@@ -260,6 +260,7 @@ class Dwoo
 		if ($cacheDir !== null) {
 			$this->setCacheDir($cacheDir);
 		}
+		$this->initGlobals();
 	}
 
 	/**
@@ -331,8 +332,8 @@ class Dwoo
 		} else {
 			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s data argument must be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array', E_USER_NOTICE);
 		}
-
-		$this->initGlobals($_tpl);
+		
+		$this->globals['template'] = $_tpl->getName();
 		$this->initRuntimeVars($_tpl);
 
 		// try to get cached template
@@ -417,22 +418,24 @@ class Dwoo
 	/**
 	 * re-initializes the globals array before each template run
 	 *
-	 * @param Dwoo_ITemplate $tpl the template that is going to be rendered
+	 * this method is only callede once when the Dwoo object is created
 	 */
-	protected function initGlobals(Dwoo_ITemplate $tpl)
+	protected function initGlobals()
 	{
 		$this->globals = array
 		(
 			'version'	=>	self::VERSION,
 			'ad'		=>	'<a href="http://dwoo.org/">Powered by Dwoo</a>',
 			'now'		=>	$_SERVER['REQUEST_TIME'],
-			'template'	=>	$tpl->getName(),
 			'charset'	=>	$this->charset,
 		);
 	}
 
 	/**
 	 * re-initializes the runtime variables before each template run
+	 * 
+	 * override this method to inject data in the globals array if needed, this
+	 * method is called before each template execution
 	 *
 	 * @param Dwoo_ITemplate $tpl the template that is going to be rendered
 	 */
