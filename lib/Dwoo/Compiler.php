@@ -1346,7 +1346,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			$parsingParams[] = $output;
 			return $parsingParams;
-		} elseif ($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition')) {
+		} elseif (preg_match('#^([a-z0-9_]+::\$[a-z0-9_]+)#i', $substr, $match)) {
+			// static member access
+			$parsed = 'var';
+			if (is_array($parsingParams)) {
+				$parsingParams[] = array($match[1], $match[1]);
+				$out = $parsingParams;
+			} else {
+				$out = $match[1];
+			}
+			$pointer += strlen($match[1]);
+		} elseif ($substr!=='' && (is_array($parsingParams) || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'expression')) {
 			// unquoted string, bool or number
 			$out = $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} else {
@@ -1362,7 +1372,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// var parsed, check if any var-extension applies
 		if ($parsed==='var') {
-			if (preg_match('#^\s*([/%+*-])\s*([0-9]|\$)#', $substr, $match)) {
+			if (preg_match('#^\s*([/%+*-])\s*([a-z0-9]|\$)#i', $substr, $match)) {
 				if($this->debug) echo 'PARSING POST-VAR EXPRESSION '.$substr.'<br />';
 				// parse expressions
 				$pointer += strlen($match[0]) - 1;
@@ -1370,7 +1380,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					if ($match[2] == '$') {
 						$expr = $this->parseVar($in, $pointer, $to, array(), $curBlock, $pointer);
 					} else {
-						$expr = $this->parseOthers($in, $pointer, $to, array(), 'expression', $pointer);
+						$expr = $this->parse($in, $pointer, $to, array(), 'expression', $pointer);
 					}
 					$out[count($out)-1][0] .= $match[1] . $expr[0][0];
 					$out[count($out)-1][1] .= $match[1] . $expr[0][1];
@@ -1378,7 +1388,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					if ($match[2] == '$') {
 						$expr = $this->parseVar($in, $pointer, $to, false, $curBlock, $pointer);
 					} else {
-						$expr = $this->parseOthers($in, $pointer, $to, false, 'expression', $pointer);
+						$expr = $this->parse($in, $pointer, $to, false, 'expression', $pointer);
 					}
 					if (is_array($out) && is_array($expr)) {
 						$out[0] .= $match[1] . $expr[0];
@@ -1404,27 +1414,34 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if ($pointer !== null) {
 					$pointer += strlen($match[1]);
 				}
-				$parts = array();
-				$ptr = 0;
-				$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $ptr);
-				$pointer += $ptr;
+				
+				if ($operator !== '++' && $operator !== '--') {
+					$parts = array();
+					$ptr = 0;
+					$parts = $this->parse($value, 0, strlen($value), $parts, 'condition', $ptr);
+					$pointer += $ptr;
 
-				// load if plugin
-				try {
-					$this->getPluginType('if');
-				} catch (Dwoo_Exception $e) {
-					throw new Dwoo_Compilation_Exception($this, 'Assignments require the "if" plugin to be accessible');
+					// load if plugin
+					try {
+						$this->getPluginType('if');
+					} catch (Dwoo_Exception $e) {
+						throw new Dwoo_Compilation_Exception($this, 'Assignments require the "if" plugin to be accessible');
+					}
+					
+					$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
+					$parts = $this->getCompiledParams($parts);
+
+					$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
+					$echo = '';
+				} else {
+					$value = array();
+					$echo = 'echo ';
 				}
-
-				$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
-				$parts = $this->getCompiledParams($parts);
-
-				$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
 
 				if ($this->autoEscape) {
 					$out = preg_replace('#\(is_string\(\$tmp=(.+?)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $out);
 				}
-				$out = Dwoo_Compiler::PHP_OPEN. $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
+				$out = Dwoo_Compiler::PHP_OPEN. $echo . $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
 			}
 		}
 

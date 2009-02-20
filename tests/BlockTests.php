@@ -84,7 +84,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 		$this->assertEquals('BAR-BAR', $this->dwoo->get($tpl, array(), $this->compiler));
 
-		$tpl = new Dwoo_Template_String('{capture "foo" "foo" true}BAR{/capture}{capture "foo" "foo" true}BAR{/capture}{$foo}');
+		$tpl = new Dwoo_Template_String('{capture "foo" "foo"}BAR{/capture}{capture "foo" "foo" true}BAR{/capture}{$foo}');
 		$tpl->forceCompilation();
 		$this->assertEquals('BARBAR', $this->dwoo->get($tpl, array(), $this->compiler));
 

@@ -10,7 +10,8 @@
 + Added {template} plugin that allows you to define sub-templates and then
   call them (works recursively too, good for menus and lists)
 + Added {load_templates} to load external sub-templates into your file
-+ Allowed string concatenation assignments with {$foo.="bar"}  
++ Allowed string concatenation assignments with {$foo.="bar"}
++ Allowed access of static properties as {Foo::$bar}
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly

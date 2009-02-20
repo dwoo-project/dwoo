@@ -672,6 +672,17 @@ replace="BAR"
 		$tpl->forceCompilation();
 		$this->assertEquals('foo', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
+	
+	public function testStaticPropertyAccess()
+	{
+		$tpl = new Dwoo_Template_String('{StaticHelper::$foo}/{StaticHelper::$foo * StaticHelper::$foo + 5}/{upper StaticHelper::$foo}/{StaticHelper::$foo++}/{StaticHelper::$foo}');
+		$tpl->forceCompilation();
+		$this->assertEquals('33/1094/33/33/34', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+}
+
+class StaticHelper {
+	static $foo = 33;
 }
 
 class ProxyHelper implements Dwoo_IPluginProxy
