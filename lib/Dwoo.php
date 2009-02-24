@@ -1502,4 +1502,15 @@ class Dwoo
 	{
 		return $this->scope;
 	}
+	
+	/**
+	 * Redirects all calls to unexisting to plugin proxy.
+	 * 
+	 * @param string Method name
+	 * @param array  List of arguments
+	 * @return mixed
+	 */
+	public function __call($method, $args) {
+		return call_user_func_array($this->getPluginProxy()->getCallback($method), $args);
+	}
 }
