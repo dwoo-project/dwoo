@@ -2951,6 +2951,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				foreach ($ps as $i=>$p) {
 					$tmp[$i] = $p[0];
 					$tmp2[$i] = $p[1];
+					unset($ps[$i]);
 				}
 				$paramlist[$v[0]] = array($tmp, $tmp2);
 				unset($tmp, $tmp2, $i, $p);
@@ -2972,6 +2973,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				// outputs default value with var_export
 				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
+			}
+		}
+		
+		if (count($ps)) {
+			foreach ($ps as $i=>$p) {
+				array_push($paramlist, $p);
 			}
 		}
 

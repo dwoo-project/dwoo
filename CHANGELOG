@@ -12,6 +12,9 @@
 + Added {load_templates} to load external sub-templates into your file
 + Allowed string concatenation assignments with {$foo.="bar"}
 + Allowed access of static properties as {Foo::$bar}
++ Plugins/Helpers that use a dynamic number of arguments through 
+  func_get_args are now working since the compiler lets any arguments in 
+  excess pass through
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly

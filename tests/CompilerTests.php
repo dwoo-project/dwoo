@@ -679,6 +679,18 @@ replace="BAR"
 		$tpl->forceCompilation();
 		$this->assertEquals('33/1094/33/33/34', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
+
+	public function testExcessiveArguments()
+	{
+		$tpl = new Dwoo_Template_String('{excessArgsHelper a b c d e f}');
+		$tpl->forceCompilation();
+		$this->assertEquals('a:b:c:d:e:f', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+}
+
+function excessArgsHelper($a) {
+	$args = func_get_args();
+	return implode(':', $args);
 }
 
 class StaticHelper {
