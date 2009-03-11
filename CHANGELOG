@@ -15,6 +15,10 @@
 + Plugins/Helpers that use a dynamic number of arguments through 
   func_get_args are now working since the compiler lets any arguments in 
   excess pass through
++ Adapters: CodeIgniter: the adapter by Stefan Verstege has been added to
+  core and he will be its maintainer from now on
+* Adapters: Zend: Denis Arh is now appointed maintainer of that part and
+  fixed a few things since 1.0.1
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
