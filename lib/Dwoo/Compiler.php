@@ -1224,14 +1224,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$src = $this->getTemplateSource();
 			$startpos = $this->getPointer() - strlen($this->ld);
 			if (substr($src, $startpos, strlen($this->ld)) === $this->ld) {
-				do {
-					$char = substr($src, --$startpos, 1);
-					if ($char == "\n") {
-						$startpos++;
-						$whitespaceStart = true;
-						break;
-					}
-				} while ($char == ' ' || $char == "\t");
+				if ($startpos > 0) {
+					do {
+						$char = substr($src, --$startpos, 1);
+						if ($char == "\n") {
+							$startpos++;
+							$whitespaceStart = true;
+							break;
+						}
+					} while ($startpos > 0 && ($char == ' ' || $char == "\t"));
+				}
 
 				if (!isset($whitespaceStart)) {
 					$startpos = $this->getPointer();
