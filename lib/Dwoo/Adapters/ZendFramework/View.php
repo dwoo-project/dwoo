@@ -33,6 +33,14 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * @var Dwoo_Compiler
 	 */
 	protected $_compiler = null;
+	
+	/**
+	 * Changing Filter's scope to play nicely
+	 *
+	 * @var array
+	 */
+	protected $_filter = array();
+	
 
 	/**
 	 * @var string
@@ -95,14 +103,8 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		}
 		// end BC
 
-		// Making sure that everything is loaded.
-		$defaults = array(
-			'engine'       => 'Dwoo',
-			'dataProvider' => 'Dwoo_Data',
-			'compiler'     => 'Dwoo_Compiler',
-		);
-		
-		$opt = array_merge($defaults, $opt);		
+		// Making sure that everything is loaded.		
+		$classes = array('engine', 'dataProvider', 'compiler');
 		
 		// Setting options to Dwoo objects...
 		foreach ($opt as $type => $settings) {			
@@ -118,7 +120,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 					call_user_func(array($this, 'set' . $type), $settings['type']);
 				}
 				
-				if (array_key_exists($type, $defaults)) {
+				if (in_array($type, $classes)) {
 					// Call get so that the class is initialized
 					$rel = call_user_func(array($this, 'get' . $type));
 	
@@ -330,9 +332,9 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * @return Dwoo_Data
 	 */
 	public function getCompiler()
-	{
-		if (null === $this->_compiler) {
-			$this->_compiler = new Dwoo_Compiler;
+	{	
+		if (null === $this->_compiler) {	
+			$this->_compiler = Dwoo_Compiler::compilerFactory();
 		}
 
 		return $this->_compiler;
