@@ -2322,7 +2322,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 				if (count($m[2])) {
 					unset($m[0]);
-					$output = '$this->readVarInto('.str_replace("\n", '', var_export($m, true)).', '.$output.')';
+					$output = '$this->readVarInto('.str_replace("\n", '', var_export($m, true)).', '.$output.', '.($curBlock == 'root' ? 'false': 'true').')';
 				}
 			}
 		} else {
@@ -2389,7 +2389,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 			}
 		}
-		$out .= $recursed ? ')."' : '';
+		$out .= $recursed ? ', true)."' : '';
 		return $out;
 	}
 

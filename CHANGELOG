@@ -19,6 +19,11 @@
   core and he will be its maintainer from now on
 * Adapters: Zend: Denis Arh is now appointed maintainer of that part and
   fixed a few things since 1.0.1
+* User classes extending Dwoo_Template_File are now supporter better with
+  regard to includes - Thanks to the Kayako.com team for the patch
+* Objects now act like arrays when you access non-existing properties on 
+  them (i.e. it outputs a notice only if it's output straight, and none
+  when passed to a function)
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
