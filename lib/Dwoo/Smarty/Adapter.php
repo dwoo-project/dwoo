@@ -171,6 +171,9 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 	public function fetch($filename, $cacheId=null, $compileId=null, $display=false)
 	{
+		$this->setCacheDir($this->cache_dir);
+		$this->setCompileDir($this->compile_dir);
+
 		if ($this->security) {
 			$policy = new Dwoo_Security_Policy();
 			$policy->addPhpFunction(array_merge($this->security_settings['IF_FUNCS'], $this->security_settings['MODIFIER_FUNCS']));
@@ -447,9 +450,6 @@ class Dwoo_Smarty__Adapter extends Dwoo
 
 	protected function makeTemplate($file, $cacheId, $compileId)
 	{
-		$this->setCacheDir($this->cache_dir);
-		$this->setCompileDir($this->compile_dir);
-
    		if ($compileId === null)
    			$compileId = $this->compile_id;
 
