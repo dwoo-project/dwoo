@@ -17,6 +17,8 @@
   excess pass through
 + Adapters: CodeIgniter: the adapter by Stefan Verstege has been added to
   core and he will be its maintainer from now on
++ Adapters: CakePHP: this adapter is now added to core and is designed to
+  work with CakePHP 1.2
 * Adapters: Zend: Denis Arh is now appointed maintainer of that part and
   fixed a few things since 1.0.1
 * User classes extending Dwoo_Template_File are now supporter better with
