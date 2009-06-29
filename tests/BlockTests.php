@@ -307,6 +307,11 @@ baz"));
 		$tpl->forceCompilation();
 
 		$this->assertEquals('-1|-1-2|-1-2-3', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
+
+		$tpl = new Dwoo_Template_String('{for i 10 7}-{$i}{/for}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('-10-9-8-7', $this->dwoo->get($tpl, array('sub'=>array('foo','bar','baz','qux')), $this->compiler));
 	}
 
 	public function testForElse()
