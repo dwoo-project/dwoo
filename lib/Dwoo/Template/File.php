@@ -256,4 +256,16 @@ class Dwoo_Template_File extends Dwoo_Template_String
 		}
 		return $dwoo->getCompileDir() . $this->compileId.'.d'.Dwoo::RELEASE_TAG.'.php';
 	}
+
+	/**
+	 * returns some php code that will check if this template has been modified or not
+	 * 
+	 * if the function returns null, the template will be instanciated and then the Uid checked
+	 * 
+	 * @return string
+	 */
+	public function getIsModifiedCode()
+	{
+		return '"'.$this->getUid().'" == filemtime('.var_export($this->getResourceIdentifier(), true).')';
+	}
 }

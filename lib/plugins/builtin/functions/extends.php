@@ -72,7 +72,6 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			if (array_search($newParent, $inheritanceTree, true) !== false) {
 				throw new Dwoo_Compilation_Exception($compiler, 'Extends : Recursive template inheritance detected');
 			}
-
 			$inheritanceTree[] = $newParent;
 
 			if (preg_match('/^'.self::$l.'extends\s+(?:file=)?\s*(\S+?|(["\']).+?\2)'.self::$r.'/i', $parent->getSource(), $match)) {
@@ -96,7 +95,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 			// TODO replace blocks that are found in the child and in the parent recursively
 			$newSource = preg_replace_callback('/'.self::$l.'block (["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)(.*?)(?:\r?\n?)'.self::$l.'\/block'.self::$r.'/is', array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
 
-			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'" "'.str_replace('"', '\\"', $parent['uid']).'")'.$r.$newSource;
+			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.$r.$newSource;
 
 			if (self::$lastReplacement) {
 				break;

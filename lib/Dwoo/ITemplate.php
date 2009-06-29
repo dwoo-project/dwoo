@@ -117,6 +117,15 @@ interface Dwoo_ITemplate
 	public function getCompiler();
 
 	/**
+	 * returns some php code that will check if this template has been modified or not
+	 * 
+	 * if the function returns null, the template will be instanciated and then the Uid checked
+	 * 
+	 * @return string
+	 */
+	public function getIsModifiedCode();
+
+	/**
 	 * returns a new template object from the given resource identifier, null if no include is
 	 * possible (resource not found), or false if include is not permitted by this resource type
 	 *

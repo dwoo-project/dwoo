@@ -48,8 +48,14 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
 		$compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body']);
 	}
 
-	return '\'\';// checking for modification in '.$resource.':'.$identifier.'
-try {
+	$out = '\'\';// checking for modification in '.$resource.':'.$identifier."\r\n";
+	
+	$modCheck = $tpl->getIsModifiedCode();
+	
+	if ($modCheck) {
+		$out .= 'if (!('.$modCheck.')) { ob_end_clean(); return false; }';
+	} else {
+		$out .= 'try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
 } catch (Dwoo_Exception $e) {
 	$this->triggerError(\'Load Templates : Resource <em>'.$resource.'</em> was not added to Dwoo, can not extend <em>'.$identifier.'</em>\', E_USER_WARNING);
@@ -59,4 +65,7 @@ if ($tpl === null)
 elseif ($tpl === false)
 	$this->triggerError(\'Load Templates : Resource "'.$resource.'" does not support extends.\', E_USER_WARNING);
 if ($tpl->getUid() != "'.$tpl->getUid().'") { ob_end_clean(); return false; }';
+	}
+	
+	return $out;
 }

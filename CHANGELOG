@@ -26,6 +26,7 @@
   when passed to a function)
 * For can now iterate backwards if you input numbers, it won't work with 
   variables though
+* Slight performance improvement with big inheritance trees
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
