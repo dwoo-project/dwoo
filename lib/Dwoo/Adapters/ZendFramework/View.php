@@ -211,6 +211,13 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	{
 		$this->getDataProvider()->__unset($name);
 	}
+	
+	/**
+	 * Catches clone request and clones data provider
+	 */
+	public function __clone() {
+		$this->setDataProvider(clone $this->getDataProvider());
+	}
 
 	/**
 	 * Returns plugin proxy interface
