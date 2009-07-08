@@ -65,9 +65,12 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 			$init .= '$dwoo->scope[\''.$param.'\'] = $'.$param.";\n";
 		}
 		$init .= '/* -- template start output */';
-		$body = Dwoo_Compiler::PHP_OPEN.'function Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'].'('.$paramstr.') {'."\n$init".Dwoo_Compiler::PHP_CLOSE.
+
+		$funcName = 'Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'];
+
+		$body = 'if (!function_exists(\''.$funcName."')) {\nfunction ".$funcName.'('.$paramstr.') {'."\n$init".Dwoo_Compiler::PHP_CLOSE.
 			$prepend.str_replace(array('$this->','$this,'), array('$dwoo->', '$dwoo,'), $content).$append.
-			Dwoo_Compiler::PHP_OPEN.$cleanup."\n}".Dwoo_Compiler::PHP_CLOSE;
+			Dwoo_Compiler::PHP_OPEN.$cleanup."\n}\n}";
 		$compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
 	}
 }

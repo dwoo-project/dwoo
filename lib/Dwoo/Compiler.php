@@ -837,7 +837,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		$output .= $compiled."\n?>";
 		foreach ($this->templatePlugins as $function => $attr) {
 			if (isset($attr['called']) && $attr['called'] === true && !isset($attr['checked'])) {
 				$this->resolveSubTemplateDependencies($function);
@@ -845,9 +844,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 		foreach ($this->templatePlugins as $function) {
 			if (isset($function['called']) && $function['called'] === true) {
-				$output .= $function['body'];
+				$output .= $function['body'].PHP_EOL;
 			}
 		}
+
+		$output .= $compiled."\n?>";
 
 		$output = preg_replace('/(?<!;|\}|\*\/|\n|\{)(\s*'.preg_quote(self::PHP_CLOSE, '/') . preg_quote(self::PHP_OPEN, '/').')/', ";\n", $output);
 		$output = str_replace(self::PHP_CLOSE . self::PHP_OPEN, "\n", $output);
@@ -1416,7 +1417,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if ($pointer !== null) {
 					$pointer += strlen($match[1]);
 				}
-				
+
 				if ($operator !== '++' && $operator !== '--') {
 					$parts = array();
 					$ptr = 0;
@@ -1429,7 +1430,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					} catch (Dwoo_Exception $e) {
 						throw new Dwoo_Compilation_Exception($this, 'Assignments require the "if" plugin to be accessible');
 					}
-					
+
 					$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
 					$parts = $this->getCompiledParams($parts);
 
@@ -2977,7 +2978,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
 			}
 		}
-		
+
 		if (count($ps)) {
 			foreach ($ps as $i=>$p) {
 				array_push($paramlist, $p);
