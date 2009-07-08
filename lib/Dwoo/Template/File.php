@@ -98,13 +98,11 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	{
 		return $this->includePath;
 	}
-	
 
-	
 	/**
-	 * Checks if compiled file is valid (exists and it's the modification is greater or 
+	 * Checks if compiled file is valid (exists and it's the modification is greater or
 	 * equal to the modification time of the template file)
-	 * 
+	 *
 	 * @param string file
 	 * @return boolean True cache file existance and it's modification time
 	 */
@@ -145,6 +143,7 @@ class Dwoo_Template_File extends Dwoo_Template_String
 			return $this->file;
 		} else {
 			foreach ($this->includePath as $path) {
+				$path = rtrim($path, DIRECTORY_SEPARATOR);
 				if (file_exists($path.DIRECTORY_SEPARATOR.$this->file) === true) {
 					$this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
 					return $this->resolvedPath;
@@ -259,9 +258,9 @@ class Dwoo_Template_File extends Dwoo_Template_String
 
 	/**
 	 * returns some php code that will check if this template has been modified or not
-	 * 
+	 *
 	 * if the function returns null, the template will be instanciated and then the Uid checked
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getIsModifiedCode()

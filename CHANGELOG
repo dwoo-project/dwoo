@@ -1,19 +1,19 @@
 [2009--] 1.1.0
 ! BC Break: Dwoo::initGlobals() is only called once during the Dwoo object
-  construction. If you had overriden it and need to update global data 
-  before each template is executed you should instead override 
+  construction. If you had overriden it and need to update global data
+  before each template is executed you should instead override
   Dwoo::initRuntimeVars() and push stuff in the globals array there. Also
-  be aware that this means captured data, foreach values and so-on will 
-  persist from a parent template to an included one (but the include's 
-  changes will not be reflected on the parent), and from a template 
+  be aware that this means captured data, foreach values and so-on will
+  persist from a parent template to an included one (but the include's
+  changes will not be reflected on the parent), and from a template
   to the next if you render several in series.
 + Added {template} plugin that allows you to define sub-templates and then
   call them (works recursively too, good for menus and lists)
 + Added {load_templates} to load external sub-templates into your file
 + Allowed string concatenation assignments with {$foo.="bar"}
 + Allowed access of static properties as {Foo::$bar}
-+ Plugins/Helpers that use a dynamic number of arguments through 
-  func_get_args are now working since the compiler lets any arguments in 
++ Plugins/Helpers that use a dynamic number of arguments through
+  func_get_args are now working since the compiler lets any arguments in
   excess pass through
 + Adapters: CodeIgniter: the adapter by Stefan Verstege has been added to
   core and he will be its maintainer from now on
@@ -24,22 +24,24 @@
 * The include_path isn't altered anymore, hopefully saving some stat calls
 * User classes extending Dwoo_Template_File are now supported better with
   regard to includes - Thanks to the Kayako.com team for the patch
-* Objects now act like arrays when you access non-existing properties on 
+* Objects now act like arrays when you access non-existing properties on
   them (i.e. it outputs a notice only if it's output straight, and none
   when passed to a function)
-* For can now iterate backwards if you input numbers, it won't work with 
+* For can now iterate backwards if you input numbers, it won't work with
   variables though
 * Slight performance improvement with big inheritance trees
+* No more double-slashes in template paths since this seemed to cause
+  slight performance issues
 * Fixed a bug with parsing AND/OR keywords in conditionals when they were
   followed by round brackets
 * Fixed assignments not handling multi-line values correctly
 * Fixed parameter parsing issue when a plugin name was all uppercased
 * Fixed assignments failing with autoEscape enabled
 * Fixed parsing of vars with string keys that was too greedy
-* Fixed parsing of comments that were on top of the file when there are 
+* Fixed parsing of comments that were on top of the file when there are
   spaces at the end of it
 * Dwoo_Template::$chmod is now enforced for directories as well (#18)
-* Many new unit tests to improve code coverage and a bunch of bug fixes 
+* Many new unit tests to improve code coverage and a bunch of bug fixes
   that resulted, but I didn't really keep track of them
 
 [2008-12-24] 1.0.1

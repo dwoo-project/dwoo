@@ -289,7 +289,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		// thanks for his help on avoiding concurency issues
 		$temp = tempnam($cacheDir, 'temp');
 		if (!($file = @fopen($temp, 'wb'))) {
-			$temp = $cacheDir . DIRECTORY_SEPARATOR . uniqid('temp');
+			$temp = $cacheDir . uniqid('temp');
 			if (!($file = @fopen($temp, 'wb'))) {
 				trigger_error('Error writing temporary file \''.$temp.'\'', E_USER_WARNING);
 				return false;
@@ -376,15 +376,15 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 		return $compiledFile;
 	}
-	
+
 	/**
 	 * Checks if compiled file is valid (it exists)
-	 * 
+	 *
 	 * @param string file
 	 * @return boolean True cache file existance
 	 */
 	protected function isValidCompiledFile($file) {
-		return file_exists($file);   
+		return file_exists($file);
 	}
 
 	/**
@@ -453,9 +453,9 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 	/**
 	 * returns some php code that will check if this template has been modified or not
-	 * 
+	 *
 	 * if the function returns null, the template will be instanciated and then the Uid checked
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getIsModifiedCode()
@@ -467,8 +467,8 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * ensures the given path exists
 	 *
 	 * @param string $path any path
-	 * @param string $baseDir the base directory where the directory is created 
-	 *                        ($path must still contain the full path, $baseDir 
+	 * @param string $baseDir the base directory where the directory is created
+	 *                        ($path must still contain the full path, $baseDir
 	 *                        is only used for unix permissions)
 	 */
 	protected function makeDirectory($path, $baseDir = null)
@@ -476,14 +476,14 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		if (is_dir($path) === true) {
 			return;
 		}
-		
+
 		if ($this->chmod === null) {
 			$chmod = 0777;
 		} else {
 			$chmod = $this->chmod;
 		}
 		mkdir($path, $chmod, true);
-		
+
 		// enforce the correct mode for all directories created
 		if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
 			$path = strtr(str_replace($baseDir, '', $path), '\\', '/');

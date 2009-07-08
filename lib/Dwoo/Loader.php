@@ -45,7 +45,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 	public function __construct($cacheDir)
 	{
 		$this->corePluginDir = DWOO_DIRECTORY . 'plugins';
-		$this->cacheDir = $cacheDir . DIRECTORY_SEPARATOR;
+		$this->cacheDir = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		// include class paths or rebuild paths if the cache file isn't there
 		$foo = @file_get_contents($this->cacheDir.'classpath.cache.d'.Dwoo::RELEASE_TAG.'.php');
@@ -70,7 +70,7 @@ class Dwoo_Loader implements Dwoo_ILoader
 		}
 
 		// iterates over all files/folders
-		$list = glob($path.DIRECTORY_SEPARATOR.'*');
+		$list = glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*');
 		if (is_array($list)) {
 			foreach ($list as $f) {
 				if (is_dir($f)) {
