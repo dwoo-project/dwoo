@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Dwoo/Compiler.php';
+require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
 
 class TemplateTests extends PHPUnit_Framework_TestCase
 {

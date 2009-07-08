@@ -1,6 +1,6 @@
 <?php
 
-require_once 'Dwoo/Compiler.php';
+require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
 
 function testphpfunc($input) { return $input.'OK'; }
 

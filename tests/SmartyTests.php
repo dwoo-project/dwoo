@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Dwoo/Compiler.php';
-require 'Dwoo/Smarty/Adapter.php';
+require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
+require DWOO_DIRECTORY . 'Dwoo/Smarty/Adapter.php';
 
 class SmartyTests extends PHPUnit_Framework_TestCase
 {

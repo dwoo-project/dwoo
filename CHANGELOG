@@ -21,7 +21,8 @@
   work with CakePHP 1.2
 * Adapters: Zend: Denis Arh is now appointed maintainer of that part and
   fixed a few things since 1.0.1
-* User classes extending Dwoo_Template_File are now supporter better with
+* The include_path isn't altered anymore, hopefully saving some stat calls
+* User classes extending Dwoo_Template_File are now supported better with
   regard to includes - Thanks to the Kayako.com team for the patch
 * Objects now act like arrays when you access non-existing properties on 
   them (i.e. it outputs a notice only if it's output straight, and none
