@@ -27,6 +27,8 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 	{
 		$params = $compiler->getCompiledParams($params);
 		$parsedParams = array();
+		if (!isset($params['*']))
+			$params['*'] = array();
 		foreach ($params['*'] as $param=>$defValue) {
 			if (is_numeric($param)) {
 				$param = $defValue;
