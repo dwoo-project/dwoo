@@ -37,10 +37,10 @@
   2008-01-05</pre></p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 1.0.1</li>
+				<li><span class="field">version:</span> 1.1.0</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-12-24</li>
+				<li><span class="field">date:</span> 2009-07-18</li>
 				<li><span class="field">license:</span> <a href="http://dwoo.org/LICENSE">Modified BSD License</a></li>
 			</ul>
 		<p class="notes">
@@ -134,7 +134,7 @@
 				</div>
 								<div class="const-title">
 					<img src="../media/images/Constant.png" alt=" " />
-					<a href="#RELEASE_TAG" title="details" class="const-name">RELEASE_TAG</a> = 					<span class="var-type"> 15</span>
+					<a href="#RELEASE_TAG" title="details" class="const-name">RELEASE_TAG</a> = 					<span class="var-type"> 16</span>
 
 				</div>
 								<div class="const-title">
@@ -154,7 +154,12 @@
 				</div>
 								<div class="const-title">
 					<img src="../media/images/Constant.png" alt=" " />
-					<a href="#VERSION" title="details" class="const-name">VERSION</a> = 					<span class="var-type"> '1.0.1'</span>
+					<a href="#TEMPLATE_PLUGIN" title="details" class="const-name">TEMPLATE_PLUGIN</a> = 					<span class="var-type"> 1024</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../media/images/Constant.png" alt=" " />
+					<a href="#VERSION" title="details" class="const-name">VERSION</a> = 					<span class="var-type"> '1.1.0'</span>
 
 				</div>
 							</div>
@@ -273,12 +278,6 @@
 			<div class="method-summary">
 																																																																																																																																																																																																																																																																																																																																																																																																																														
 				<div class="method-definition">
-											<span class="method-result">Dwoo</span>
-										<a href="#__construct" title="details" class="method-name">__construct</a>
-											([<span class="var-type">string</span>&nbsp;<span class="var-name">$compileDir</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheDir</span> = <span class="var-default">null</span>])
-									</div>
-														
-				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#addFilter" title="details" class="method-name">addFilter</a>
 											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
@@ -339,9 +338,9 @@
 									</div>
 														
 				<div class="method-definition">
-											<span class="method-result">array</span>
-										<a href="#forceScope" title="details" class="method-name">forceScope</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$scope</span>)
+											<span class="method-result">Dwoo</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type">string</span>&nbsp;<span class="var-name">$compileDir</span> = <span class="var-default">null</span>], [<span class="var-type">string</span>&nbsp;<span class="var-name">$cacheDir</span> = <span class="var-default">null</span>])
 									</div>
 														
 				<div class="method-definition">
@@ -437,7 +436,7 @@
 				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#initGlobals" title="details" class="method-name">initGlobals</a>
-											(<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$tpl</span>)
+										()
 									</div>
 														
 				<div class="method-definition">
@@ -449,7 +448,7 @@
 				<div class="method-definition">
 											<span class="method-result">bool</span>
 										<a href="#isArray" title="details" class="method-name">isArray</a>
-											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$checkIsEmpty</span> = <span class="var-default">false</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$allowNonCountable</span> = <span class="var-default">false</span>])
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$checkIsEmpty</span> = <span class="var-default">false</span>])
 									</div>
 														
 				<div class="method-definition">
@@ -479,7 +478,7 @@
 				<div class="method-definition">
 											<span class="method-result">mixed</span>
 										<a href="#readVarInto" title="details" class="method-name">readVarInto</a>
-											(<span class="var-type">string</span>&nbsp;<span class="var-name">$varstr</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>)
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$varstr</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$safeRead</span> = <span class="var-default">false</span>])
 									</div>
 														
 				<div class="method-definition">
@@ -567,6 +566,12 @@
 									</div>
 														
 				<div class="method-definition">
+											<span class="method-result">mixed</span>
+										<a href="#__call" title="details" class="method-name">__call</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$args</span>)
+									</div>
+														
+				<div class="method-definition">
 											<span class="method-result">void</span>
 										<a href="#__clone" title="details" class="method-name">__clone</a>
 										()
@@ -599,7 +604,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$buffer</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a235">235</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a240">240</a></span>)
 		</span>
 	</div>
 
@@ -621,7 +626,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$cacheDir</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a114">114</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a116">116</a></span>)
 		</span>
 	</div>
 
@@ -644,7 +649,7 @@
 		<span class="var-title">
 			<span class="var-type">int</span>
 			<span class="var-name">$cacheTime</span>
-			 = <span class="var-default"> 0</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a127">127</a></span>)
+			 = <span class="var-default"> 0</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a129">129</a></span>)
 		</span>
 	</div>
 
@@ -667,7 +672,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$charset</span>
-			 = <span class="var-default"> 'utf-8'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a78">78</a></span>)
+			 = <span class="var-default"> 'utf-8'</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a79">79</a></span>)
 		</span>
 	</div>
 
@@ -692,7 +697,7 @@
 		<span class="var-title">
 			<span class="var-type">string</span>
 			<span class="var-name">$compileDir</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a105">105</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a107">107</a></span>)
 		</span>
 	</div>
 
@@ -715,7 +720,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
 			<span class="var-name">$curBlock</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a228">228</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a233">233</a></span>)
 		</span>
 	</div>
 
@@ -737,7 +742,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$data</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a200">200</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a202">202</a></span>)
 		</span>
 	</div>
 
@@ -759,7 +764,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$filters</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a152">152</a></span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a154">154</a></span>)
 		</span>
 	</div>
 
@@ -783,7 +788,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$globals</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a96">96</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a98">98</a></span>)
 		</span>
 	</div>
 
@@ -791,7 +796,8 @@
 <p class="short-description">global variables that are accessible through $dwoo.* in the templates</p>
 <p class="description"><p>default values include:</p><p>$dwoo.version - current version number  $dwoo.ad - a Powered by Dwoo link pointing to dwoo.org  $dwoo.now - the current time  $dwoo.template - the current template filename  $dwoo.charset - the character set used by the template</p><p>on top of that, foreach and other plugins can store special values in there,  see their documentation for more details.</p></p>
 	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">private:</span> </li>
+				<li><span class="field">access:</span> public</li>
 			</ul>
 	
 	
@@ -806,7 +812,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Dwoo/Dwoo_ILoader.html">Dwoo_ILoader</a></span>
 			<span class="var-name">$loader</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a179">179</a></span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a181">181</a></span>)
 		</span>
 	</div>
 
@@ -828,7 +834,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Dwoo/Dwoo_IPluginProxy.html">Dwoo_IPluginProxy</a></span>
 			<span class="var-name">$pluginProxy</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a242">242</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a247">247</a></span>)
 		</span>
 	</div>
 
@@ -850,7 +856,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$plugins</span>
-			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a143">143</a></span>)
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a145">145</a></span>)
 		</span>
 	</div>
 
@@ -874,7 +880,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$resources</span>
-			 = <span class="var-default">array<br />	(<br />		'file'		=&gt;	array<br />		(<br />			'class'		=&gt;	'Dwoo_Template_File',<br />			'compiler'	=&gt;	null<br />		),'string'=&gt;array('class'=&gt;'Dwoo_Template_String','compiler'=&gt;null))</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a160">160</a></span>)
+			 = <span class="var-default">array<br />	(<br />		'file'		=&gt;	array<br />		(<br />			'class'		=&gt;	'Dwoo_Template_File',<br />			'compiler'	=&gt;	null<br />		),'string'=&gt;array('class'=&gt;'Dwoo_Template_String','compiler'=&gt;null))</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a162">162</a></span>)
 		</span>
 	</div>
 
@@ -896,7 +902,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$runtimePlugins</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a193">193</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a195">195</a></span>)
 		</span>
 	</div>
 
@@ -918,14 +924,16 @@
 		<span class="var-title">
 			<span class="var-type">mixed</span>
 			<span class="var-name">$scope</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a207">207</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a212">212</a></span>)
 		</span>
 	</div>
 
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">stores the current scope during template runtime</p>
+<p class="description"><p>this should ideally not be accessed directly from outside template code</p></p>
 	<ul class="tags">
-				<li><span class="field">access:</span> protected</li>
+				<li><span class="field">private:</span> </li>
+				<li><span class="field">access:</span> public</li>
 			</ul>
 	
 	
@@ -940,7 +948,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$scopeTree</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a214">214</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a219">219</a></span>)
 		</span>
 	</div>
 
@@ -962,7 +970,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Dwoo/Dwoo_Security_Policy.html">Dwoo_Security_Policy</a></span>
 			<span class="var-name">$securityPolicy</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a134">134</a></span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a136">136</a></span>)
 		</span>
 	</div>
 
@@ -984,7 +992,7 @@
 		<span class="var-title">
 			<span class="var-type">array</span>
 			<span class="var-name">$stack</span>
-						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a221">221</a></span>)
+						(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a226">226</a></span>)
 		</span>
 	</div>
 
@@ -1006,7 +1014,7 @@
 		<span class="var-title">
 			<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>
 			<span class="var-name">$template</span>
-			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a186">186</a></span>)
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a188">188</a></span>)
 		</span>
 	</div>
 
@@ -1039,11 +1047,330 @@
 		</div>
 		<div class="info-box-body">
 			<A NAME='method_detail'></A>
+<a name="methodaddFilter" id="addFilter"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addFilter</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a505">505</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a filter to this Dwoo instance, it will be used to filter the output of all the templates rendered by this instance</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addFilter
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$callback</span><span class="var-description">: a callback or a filter name if it is autoloaded from a plugin directory</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$autoload</span><span class="var-description">: if true, the first parameter must be a filter name from one of the plugin directories</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddPlugin" id="addPlugin"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a465">465</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a custom plugin that is not in one of the plugin directories</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addPlugin
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$compilable</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: the plugin name to be used in the templates</span>			</li>
+					<li>
+				<span class="var-type">callback</span>
+				<span class="var-name">$callback</span><span class="var-description">: the plugin callback, either a function name,                               a class name or an array containing an object                               or class name and a method name</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$compilable</span><span class="var-description">: if set to true, the plugin is assumed to be compilable</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddResource" id="addResource"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addResource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a565">565</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">adds a resource or overrides a default one</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addResource
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, [<span class="var-type">callback</span>&nbsp;<span class="var-name">$compilerFactory</span> = <span class="var-default">null</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$name</span><span class="var-description">: the resource name</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$class</span><span class="var-description">: the resource class (which must implement Dwoo_ITemplate)</span>			</li>
+					<li>
+				<span class="var-type">callback</span>
+				<span class="var-name">$compilerFactory</span><span class="var-description">: the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a Dwoo_Compiler object</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddStack" id="addStack"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addStack</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a929">929</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] adds a block to the block stack</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the newly created block</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
+		<span class="method-name">
+			addStack
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$blockName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$args</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$blockName</span><span class="var-description">: the block name (without Dwoo_Plugin_ prefix)</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$args</span><span class="var-description">: the arguments to be passed to the block's init() function</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodarrayMap" id="arrayMap"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">arrayMap</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1098">1098</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] calls a php function</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the return value of the called function</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			arrayMap
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$callback</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$callback</span><span class="var-description">: the function to call</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: an array of parameters to send to the function</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodassignInScope" id="assignInScope"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">assignInScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1396">1396</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] assign the value to the given variable</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> true if assigned correctly or false if a problem occured while parsing the var string</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">bool</span>
+		<span class="method-name">
+			assignInScope
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$value</span><span class="var-description">: the value to assign</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$scope</span><span class="var-description">: the variable string, using dwoo variable syntax (i.e. &quot;var.subvar[subsubvar]-&gt;property&quot;)</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodclassCall" id="classCall"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">classCall</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1069">1069</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] calls the process() method of the given class-plugin name</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the process() return value</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			classCall
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$plugName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$plugName</span><span class="var-description">: the class plugin name (without Dwoo_Plugin_ prefix)</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: an array of parameters to send to the process() method</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodclearCache" id="clearCache"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">clearCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a830">830</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[util function] clears the cached templates if they are older than the given time</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> the amount of templates cleared</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">int</span>
+		<span class="method-name">
+			clearCache
+		</span>
+					([<span class="var-type">int</span>&nbsp;<span class="var-name">$olderThan</span> = <span class="var-default">-1</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$olderThan</span><span class="var-description">: minimum time (in seconds) required for a cached template to be cleared</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddelStack" id="delStack"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">delStack</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a972">972</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] removes the plugin at the top of the block stack</p>
+<p class="description"><p>calls the block buffer() function, followed by a call to end()  and finally a call to process()</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			delStack
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodfindBlock" id="findBlock"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">findBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1028">1028</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">[runtime function] finds the closest block of the given type, starting at the top of the stack</p>
+	<ul class="tags">
+				<li><span class="field">return:</span> or false if no plugin of such type is in the stack</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
+		<span class="method-name">
+			findBlock
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$type</span><span class="var-description">: the type of plugin you want to find</span>			</li>
+				</ul>
+		
+			
+	</div>
 <a name="method__construct" id="__construct"><!-- --></a>
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a250">250</a></span>)
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a255">255</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1078,362 +1405,11 @@
 							</li>
 				</ul>
 	</div>
-<a name="methodaddFilter" id="addFilter"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">addFilter</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a497">497</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">adds a filter to this Dwoo instance, it will be used to filter the output of all the templates rendered by this instance</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addFilter
-		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$autoload</span> = <span class="var-default">false</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">mixed</span>
-				<span class="var-name">$callback</span><span class="var-description">: a callback or a filter name if it is autoloaded from a plugin directory</span>			</li>
-					<li>
-				<span class="var-type">bool</span>
-				<span class="var-name">$autoload</span><span class="var-description">: if true, the first parameter must be a filter name from one of the plugin directories</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddPlugin" id="addPlugin"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a457">457</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">adds a custom plugin that is not in one of the plugin directories</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addPlugin
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">callback</span>&nbsp;<span class="var-name">$callback</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$compilable</span> = <span class="var-default">false</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$name</span><span class="var-description">: the plugin name to be used in the templates</span>			</li>
-					<li>
-				<span class="var-type">callback</span>
-				<span class="var-name">$callback</span><span class="var-description">: the plugin callback, either a function name,                               a class name or an array containing an object                               or class name and a method name</span>			</li>
-					<li>
-				<span class="var-type">bool</span>
-				<span class="var-name">$compilable</span><span class="var-description">: if set to true, the plugin is assumed to be compilable</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddResource" id="addResource"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">addResource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a557">557</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">adds a resource or overrides a default one</p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			addResource
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$name</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$class</span>, [<span class="var-type">callback</span>&nbsp;<span class="var-name">$compilerFactory</span> = <span class="var-default">null</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$name</span><span class="var-description">: the resource name</span>			</li>
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$class</span><span class="var-description">: the resource class (which must implement Dwoo_ITemplate)</span>			</li>
-					<li>
-				<span class="var-type">callback</span>
-				<span class="var-name">$compilerFactory</span><span class="var-description">: the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a Dwoo_Compiler object</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodaddStack" id="addStack"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">addStack</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a922">922</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] adds a block to the block stack</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> the newly created block</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
-		<span class="method-name">
-			addStack
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$blockName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$args</span> = <span class="var-default">array()</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$blockName</span><span class="var-description">: the block name (without Dwoo_Plugin_ prefix)</span>			</li>
-					<li>
-				<span class="var-type">array</span>
-				<span class="var-name">$args</span><span class="var-description">: the arguments to be passed to the block's init() function</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodarrayMap" id="arrayMap"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">arrayMap</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1091">1091</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] calls a php function</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> the return value of the called function</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">mixed</span>
-		<span class="method-name">
-			arrayMap
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$callback</span>, <span class="var-type"></span>&nbsp;<span class="var-name">$params</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$callback</span><span class="var-description">: the function to call</span>			</li>
-					<li>
-				<span class="var-type">array</span>
-				<span class="var-name">$params</span><span class="var-description">: an array of parameters to send to the function</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodassignInScope" id="assignInScope"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">assignInScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1388">1388</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] assign the value to the given variable</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> true if assigned correctly or false if a problem occured while parsing the var string</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">bool</span>
-		<span class="method-name">
-			assignInScope
-		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$scope</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">mixed</span>
-				<span class="var-name">$value</span><span class="var-description">: the value to assign</span>			</li>
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$scope</span><span class="var-description">: the variable string, using dwoo variable syntax (i.e. &quot;var.subvar[subsubvar]-&gt;property&quot;)</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodclassCall" id="classCall"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">classCall</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1062">1062</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] calls the process() method of the given class-plugin name</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> the process() return value</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">string</span>
-		<span class="method-name">
-			classCall
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$plugName</span>, [<span class="var-type"></span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$plugName</span><span class="var-description">: the class plugin name (without Dwoo_Plugin_ prefix)</span>			</li>
-					<li>
-				<span class="var-type">array</span>
-				<span class="var-name">$params</span><span class="var-description">: an array of parameters to send to the process() method</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodclearCache" id="clearCache"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">clearCache</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a822">822</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[util function] clears the cached templates if they are older than the given time</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> the amount of templates cleared</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">int</span>
-		<span class="method-name">
-			clearCache
-		</span>
-					([<span class="var-type">int</span>&nbsp;<span class="var-name">$olderThan</span> = <span class="var-default">-1</span>])
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">int</span>
-				<span class="var-name">$olderThan</span><span class="var-description">: minimum time (in seconds) required for a cached template to be cleared</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methoddelStack" id="delStack"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">delStack</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a965">965</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] removes the plugin at the top of the block stack</p>
-<p class="description"><p>calls the block buffer() function, followed by a call to end()  and finally a call to process()</p></p>
-	<ul class="tags">
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">void</span>
-		<span class="method-name">
-			delStack
-		</span>
-				()
-			</div>
-	
-		
-			
-	</div>
-<a name="methodfindBlock" id="findBlock"><!-- --></a>
-<div class="evenrow">
-	
-	<div class="method-header">
-		<span class="method-title">findBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1021">1021</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] finds the closest block of the given type, starting at the top of the stack</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> or false if no plugin of such type is in the stack</li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result"><a href="../Dwoo/Dwoo_Block_Plugin.html">Dwoo_Block_Plugin</a></span>
-		<span class="method-name">
-			findBlock
-		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$type</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">string</span>
-				<span class="var-name">$type</span><span class="var-description">: the type of plugin you want to find</span>			</li>
-				</ul>
-		
-			
-	</div>
-<a name="methodforceScope" id="forceScope"><!-- --></a>
-<div class="oddrow">
-	
-	<div class="method-header">
-		<span class="method-title">forceScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1507">1507</a></span>)
-	</div> 
-	
-	<!-- ========== Info from phpDoc block ========= -->
-<p class="short-description">[runtime function] forces an absolute scope</p>
-	<ul class="tags">
-				<li><span class="field">return:</span> the current scope tree</li>
-				<li><span class="field">see:</span> <a href="../Dwoo/Dwoo.html#methodsetScope">Dwoo::setScope()</a></li>
-				<li><span class="field">deprecated:</span> </li>
-				<li><span class="field">access:</span> public</li>
-			</ul>
-	
-	<div class="method-signature">
-		<span class="method-result">array</span>
-		<span class="method-name">
-			forceScope
-		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$scope</span>)
-			</div>
-	
-			<ul class="parameters">
-					<li>
-				<span class="var-type">mixed</span>
-				<span class="var-name">$scope</span><span class="var-description">: a scope as a string or array</span>			</li>
-				</ul>
-		
-			
-	</div>
 <a name="methodget" id="get"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">get</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a300">300</a></span>)
+		<span class="method-title">get</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a306">306</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1485,10 +1461,10 @@
 				</ul>
 	</div>
 <a name="methodgetCacheDir" id="getCacheDir"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCacheDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a633">633</a></span>)
+		<span class="method-title">getCacheDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a641">641</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1509,10 +1485,10 @@
 			
 	</div>
 <a name="methodgetCacheTime" id="getCacheTime"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a687">687</a></span>)
+		<span class="method-title">getCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a695">695</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1534,10 +1510,10 @@
 			
 	</div>
 <a name="methodgetCharset" id="getCharset"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCharset</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a709">709</a></span>)
+		<span class="method-title">getCharset</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a717">717</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1559,10 +1535,10 @@
 			
 	</div>
 <a name="methodgetCompileDir" id="getCompileDir"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCompileDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a660">660</a></span>)
+		<span class="method-title">getCompileDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a668">668</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1583,10 +1559,10 @@
 			
 	</div>
 <a name="methodgetCustomPlugins" id="getCustomPlugins"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getCustomPlugins</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a623">623</a></span>)
+		<span class="method-title">getCustomPlugins</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a631">631</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1608,10 +1584,10 @@
 			
 	</div>
 <a name="methodgetData" id="getData"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getData</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1484">1484</a></span>)
+		<span class="method-title">getData</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1492">1492</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1632,10 +1608,10 @@
 			
 	</div>
 <a name="methodgetDefaultCompilerFactory" id="getDefaultCompilerFactory"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getDefaultCompilerFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a755">755</a></span>)
+		<span class="method-title">getDefaultCompilerFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a763">763</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1662,10 +1638,10 @@
 			
 	</div>
 <a name="methodgetLoader" id="getLoader"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getLoader</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a607">607</a></span>)
+		<span class="method-title">getLoader</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a615">615</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1691,10 +1667,10 @@
 			
 	</div>
 <a name="methodgetObjectPlugin" id="getObjectPlugin"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getObjectPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1047">1047</a></span>)
+		<span class="method-title">getObjectPlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1054">1054</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1722,10 +1698,10 @@
 			
 	</div>
 <a name="methodgetParentBlock" id="getParentBlock"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getParentBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1006">1006</a></span>)
+		<span class="method-title">getParentBlock</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1013">1013</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1752,10 +1728,10 @@
 			
 	</div>
 <a name="methodgetPluginProxy" id="getPluginProxy"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getPluginProxy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a797">797</a></span>)
+		<span class="method-title">getPluginProxy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a805">805</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1781,10 +1757,10 @@
 			
 	</div>
 <a name="methodgetScope" id="getScope"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1494">1494</a></span>)
+		<span class="method-title">getScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1502">1502</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1805,10 +1781,10 @@
 			
 	</div>
 <a name="methodgetSecurityPolicy" id="getSecurityPolicy"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">getSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a777">777</a></span>)
+		<span class="method-title">getSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a785">785</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1830,10 +1806,10 @@
 			
 	</div>
 <a name="methodgetTemplate" id="getTemplate"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">getTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a731">731</a></span>)
+		<span class="method-title">getTemplate</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a739">739</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1854,14 +1830,15 @@
 			
 	</div>
 <a name="methodinitGlobals" id="initGlobals"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">initGlobals</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a417">417</a></span>)
+		<span class="method-title">initGlobals</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a423">423</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">re-initializes the globals array before each template run</p>
+<p class="description"><p>this method is only callede once when the Dwoo object is created</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -1871,14 +1848,9 @@
 		<span class="method-name">
 			initGlobals
 		</span>
-					(<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>&nbsp;<span class="var-name">$tpl</span>)
+				()
 			</div>
 	
-			<ul class="parameters">
-					<li>
-				<span class="var-type"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a></span>
-				<span class="var-name">$tpl</span><span class="var-description">: the template that is going to be rendered</span>			</li>
-				</ul>
 		
 			
 			<hr class="separator" />
@@ -1890,14 +1862,15 @@
 				</ul>
 	</div>
 <a name="methodinitRuntimeVars" id="initRuntimeVars"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">initRuntimeVars</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a434">434</a></span>)
+		<span class="method-title">initRuntimeVars</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a442">442</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
 <p class="short-description">re-initializes the runtime variables before each template run</p>
+<p class="description"><p>override this method to inject data in the globals array if needed, this  method is called before each template execution</p></p>
 	<ul class="tags">
 				<li><span class="field">access:</span> protected</li>
 			</ul>
@@ -1919,10 +1892,10 @@
 			
 	</div>
 <a name="methodisArray" id="isArray"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">isArray</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a870">870</a></span>)
+		<span class="method-title">isArray</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a875">875</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1937,7 +1910,7 @@
 		<span class="method-name">
 			isArray
 		</span>
-					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$checkIsEmpty</span> = <span class="var-default">false</span>], [<span class="var-type">bool</span>&nbsp;<span class="var-name">$allowNonCountable</span> = <span class="var-default">false</span>])
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$value</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$checkIsEmpty</span> = <span class="var-default">false</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -1946,19 +1919,16 @@
 				<span class="var-name">$value</span><span class="var-description">: the variable to check</span>			</li>
 					<li>
 				<span class="var-type">bool</span>
-				<span class="var-name">$checkIsEmpty</span><span class="var-description">: if true, the function will also check if the array is empty</span>			</li>
-					<li>
-				<span class="var-type">bool</span>
-				<span class="var-name">$allowNonCountable</span><span class="var-description">: if true, the function will return true if  an object is not empty but does not implement Countable, by default a  non- countable object is considered empty, this setting is only used if  $checkIsEmpty is true</span>			</li>
+				<span class="var-name">$checkIsEmpty</span><span class="var-description">: if true, the function will also check if the array is empty,                                  and return true only if it's not empty</span>			</li>
 				</ul>
 		
 			
 	</div>
 <a name="methodisCached" id="isCached"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">isCached</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a811">811</a></span>)
+		<span class="method-title">isCached</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a819">819</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -1984,10 +1954,10 @@
 			
 	</div>
 <a name="methodoutput" id="output"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">output</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a282">282</a></span>)
+		<span class="method-title">output</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a288">288</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2021,10 +1991,10 @@
 			
 	</div>
 <a name="methodreadParentVar" id="readParentVar"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">readParentVar</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1214">1214</a></span>)
+		<span class="method-title">readParentVar</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1222">1222</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2053,10 +2023,10 @@
 			
 	</div>
 <a name="methodreadVar" id="readVar"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">readVar</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1244">1244</a></span>)
+		<span class="method-title">readVar</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1252">1252</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2082,10 +2052,10 @@
 			
 	</div>
 <a name="methodreadVarInto" id="readVarInto"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">readVarInto</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1175">1175</a></span>)
+		<span class="method-title">readVarInto</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1183">1183</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2099,7 +2069,7 @@
 		<span class="method-name">
 			readVarInto
 		</span>
-					(<span class="var-type">string</span>&nbsp;<span class="var-name">$varstr</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>)
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$varstr</span>, <span class="var-type">mixed</span>&nbsp;<span class="var-name">$data</span>, [<span class="var-type">bool</span>&nbsp;<span class="var-name">$safeRead</span> = <span class="var-default">false</span>])
 			</div>
 	
 			<ul class="parameters">
@@ -2109,15 +2079,18 @@
 					<li>
 				<span class="var-type">mixed</span>
 				<span class="var-name">$data</span><span class="var-description">: the data array or object to read from</span>			</li>
+					<li>
+				<span class="var-type">bool</span>
+				<span class="var-name">$safeRead</span><span class="var-description">: if true, the function will check whether the index exists to prevent any notices from being output</span>			</li>
 				</ul>
 		
 			
 	</div>
 <a name="methodremoveFilter" id="removeFilter"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">removeFilter</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a533">533</a></span>)
+		<span class="method-title">removeFilter</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a541">541</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2143,10 +2116,10 @@
 			
 	</div>
 <a name="methodremovePlugin" id="removePlugin"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">removePlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a484">484</a></span>)
+		<span class="method-title">removePlugin</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a492">492</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2172,10 +2145,10 @@
 			
 	</div>
 <a name="methodremoveResource" id="removeResource"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">removeResource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a580">580</a></span>)
+		<span class="method-title">removeResource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a588">588</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2201,10 +2174,10 @@
 			
 	</div>
 <a name="methodsetCacheDir" id="setCacheDir"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCacheDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a647">647</a></span>)
+		<span class="method-title">setCacheDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a655">655</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2230,10 +2203,10 @@
 			
 	</div>
 <a name="methodsetCacheTime" id="setCacheTime"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a697">697</a></span>)
+		<span class="method-title">setCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a705">705</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2259,10 +2232,10 @@
 			
 	</div>
 <a name="methodsetCharset" id="setCharset"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCharset</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a721">721</a></span>)
+		<span class="method-title">setCharset</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a729">729</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2289,10 +2262,10 @@
 			
 	</div>
 <a name="methodsetCompileDir" id="setCompileDir"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setCompileDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a674">674</a></span>)
+		<span class="method-title">setCompileDir</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a682">682</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2318,10 +2291,10 @@
 			
 	</div>
 <a name="methodsetDefaultCompilerFactory" id="setDefaultCompilerFactory"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setDefaultCompilerFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a744">744</a></span>)
+		<span class="method-title">setDefaultCompilerFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a752">752</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2351,10 +2324,10 @@
 			
 	</div>
 <a name="methodsetLoader" id="setLoader"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setLoader</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a597">597</a></span>)
+		<span class="method-title">setLoader</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a605">605</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2380,10 +2353,10 @@
 			
 	</div>
 <a name="methodsetPluginProxy" id="setPluginProxy"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setPluginProxy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a788">788</a></span>)
+		<span class="method-title">setPluginProxy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a796">796</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2409,10 +2382,10 @@
 			
 	</div>
 <a name="methodsetScope" id="setScope"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">setScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1444">1444</a></span>)
+		<span class="method-title">setScope</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1452">1452</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2442,10 +2415,10 @@
 			
 	</div>
 <a name="methodsetSecurityPolicy" id="setSecurityPolicy"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">setSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a767">767</a></span>)
+		<span class="method-title">setSecurityPolicy</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a775">775</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2472,10 +2445,10 @@
 			
 	</div>
 <a name="methodtemplateFactory" id="templateFactory"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a849">849</a></span>)
+		<span class="method-title">templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a857">857</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2516,10 +2489,10 @@
 			
 	</div>
 <a name="methodtriggerError" id="triggerError"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">triggerError</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a903">903</a></span>)
+		<span class="method-title">triggerError</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a910">910</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2554,11 +2527,50 @@
 							</li>
 				</ul>
 	</div>
+<a name="method__call" id="__call"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">__call</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a1514">1514</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Redirects all calls to unexisting to plugin proxy.</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">mixed</span>
+		<span class="method-name">
+			__call
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$method</span>, <span class="var-type">array</span>&nbsp;<span class="var-name">$args</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$method</span><span class="var-description">: Method name</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$args</span><span class="var-description">: List of arguments</span>			</li>
+				</ul>
+		
+			
+			<hr class="separator" />
+		<div class="notes">Redefined in descendants as:</div>
+		<ul class="redefinitions">
+					<li>
+				<a href="../Dwoo/Dwoo_Smarty__Adapter.html#method__call">Dwoo_Smarty__Adapter::__call()</a>
+							</li>
+				</ul>
+	</div>
 <a name="method__clone" id="__clone"><!-- --></a>
 <div class="oddrow">
 	
 	<div class="method-header">
-		<span class="method-title">__clone</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a263">263</a></span>)
+		<span class="method-title">__clone</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a269">269</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -2730,7 +2742,7 @@
 		<img src="../media/images/Variable.png" />
 		<span class="const-title">
 			<span class="const-name">RELEASE_TAG</span>
-			 = <span class="const-default"> 15</span>
+			 = <span class="const-default"> 16</span>
 			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a47">47</a></span>)
 		</span>
 	</div>
@@ -2795,14 +2807,32 @@
 	
 	
 </div>
-<a name="constVERSION" id="VERSION"><!-- --></A>
+<a name="constTEMPLATE_PLUGIN" id="TEMPLATE_PLUGIN"><!-- --></A>
 <div class="oddrow">
 
 	<div class="const-header">
 		<img src="../media/images/Variable.png" />
 		<span class="const-title">
+			<span class="const-name">TEMPLATE_PLUGIN</span>
+			 = <span class="const-default"> 1024</span>
+			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a67">67</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">constants that represents all plugin types</p>
+<p class="description"><p>these are bitwise-operation-safe values to allow multiple types  on a single plugin</p></p>
+	
+	
+</div>
+<a name="constVERSION" id="VERSION"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../media/images/Variable.png" />
+		<span class="const-title">
 			<span class="const-name">VERSION</span>
-			 = <span class="const-default"> '1.0.1'</span>
+			 = <span class="const-default"> '1.1.0'</span>
 			(line <span class="line-number"><a href="../__filesource/fsource_Dwoo__Dwoo.php.html#a38">38</a></span>)
 		</span>
 	</div>
@@ -2817,7 +2847,7 @@
 	</div>
 
 	<p class="notes" id="credit">
-		Documentation generated on Wed, 24 Dec 2008 02:13:26 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 18 Jul 2009 21:04:54 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>

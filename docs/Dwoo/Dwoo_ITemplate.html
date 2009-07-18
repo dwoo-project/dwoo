@@ -25,10 +25,10 @@
 <p class="description"><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
-				<li><span class="field">version:</span> 1.0.0</li>
+				<li><span class="field">version:</span> 1.1.0</li>
 				<li><span class="field">copyright:</span> Copyright (c) 2008, Jordi Boggiano</li>
 				<li><span class="field">link:</span> <a href="http://dwoo.org/">http://dwoo.org/</a></li>
-				<li><span class="field">date:</span> 2008-10-23</li>
+				<li><span class="field">date:</span> 2009-07-18</li>
 				<li><span class="field">license:</span> <a href="http://dwoo.org/LICENSE">Modified BSD License</a></li>
 			</ul>
 		<p class="notes">
@@ -53,7 +53,7 @@
 		</div>
 		<div class="info-box-body">			
 			<div class="method-summary">
-																																																																																																										
+																																																																																																																		
 				<div class="method-definition">
 					static 						<span class="method-result"><a href="../Dwoo/Dwoo_ITemplate.html">Dwoo_ITemplate</a>|null|false</span>
 										<a href="#templateFactory" title="details" class="method-name">templateFactory</a>
@@ -93,6 +93,12 @@
 				<div class="method-definition">
 											<span class="method-result"><a href="../Dwoo/Dwoo_ICompiler.html">Dwoo_ICompiler</a></span>
 										<a href="#getCompiler" title="details" class="method-name">getCompiler</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#getIsModifiedCode" title="details" class="method-name">getIsModifiedCode</a>
 										()
 									</div>
 														
@@ -150,7 +156,7 @@
 <div class="evenrow">
 	
 	<div class="method-header">
-		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a140">140</a></span>)
+		<span class="method-title">static templateFactory</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a149">149</a></span>)
 	</div> 
 	
 	<!-- ========== Info from phpDoc block ========= -->
@@ -367,8 +373,33 @@
 		
 			
 	</div>
-<a name="methodgetName" id="getName"><!-- --></a>
+<a name="methodgetIsModifiedCode" id="getIsModifiedCode"><!-- --></a>
 <div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">getIsModifiedCode</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a126">126</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">returns some php code that will check if this template has been modified or not</p>
+<p class="description"><p>if the function returns null, the template will be instanciated and then the Uid checked</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			getIsModifiedCode
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodgetName" id="getName"><!-- --></a>
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">getName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a81">81</a></span>)
@@ -392,7 +423,7 @@
 			
 	</div>
 <a name="methodgetResourceIdentifier" id="getResourceIdentifier"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">getResourceIdentifier</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a95">95</a></span>)
@@ -416,7 +447,7 @@
 			
 	</div>
 <a name="methodgetResourceName" id="getResourceName"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">getResourceName</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a88">88</a></span>)
@@ -440,7 +471,7 @@
 			
 	</div>
 <a name="methodgetSource" id="getSource"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">getSource</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a102">102</a></span>)
@@ -464,7 +495,7 @@
 			
 	</div>
 <a name="methodgetUid" id="getUid"><!-- --></a>
-<div class="oddrow">
+<div class="evenrow">
 	
 	<div class="method-header">
 		<span class="method-title">getUid</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a110">110</a></span>)
@@ -488,7 +519,7 @@
 			
 	</div>
 <a name="methodsetCacheTime" id="setCacheTime"><!-- --></a>
-<div class="evenrow">
+<div class="oddrow">
 	
 	<div class="method-header">
 		<span class="method-title">setCacheTime</span> (line <span class="line-number"><a href="../__filesource/fsource_Dwoo__DwooITemplate.php.html#a38">38</a></span>)
@@ -523,7 +554,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Wed, 24 Dec 2008 02:13:30 +0100 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sat, 18 Jul 2009 21:05:11 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>
