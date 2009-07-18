@@ -75,6 +75,10 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
 		$usesShow = strpos($tpl, $varName.'show') !== false || strpos($tpl, $shortVarName.'show') !== false;
 		$usesTotal = $usesLast || strpos($tpl, $varName.'total') !== false || strpos($tpl, $shortVarName.'total') !== false;
 
+		if (strpos($name, '$this->scope[') !== false) {
+			$usesAny = $usesFirst = $usesLast = $usesIndex = $usesIteration = $usesShow = $usesTotal = true;
+		}
+
 		// gets foreach id
 		$cnt = self::$cnt++;
 

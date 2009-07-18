@@ -38,6 +38,8 @@
 * Fixed parameter parsing issue when a plugin name was all uppercased
 * Fixed assignments failing with autoEscape enabled
 * Fixed parsing of vars with string keys that was too greedy
+* Fixed an optimization causing foreach/for/loop variables not being
+  accessible when the foreach/.. name was set dynamically
 * Fixed parsing of comments that were on top of the file when there are
   spaces at the end of it
 * Dwoo_Template::$chmod is now enforced for directories as well (#18)

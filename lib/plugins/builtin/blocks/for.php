@@ -58,6 +58,10 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		$usesShow = strpos($tpl, $varName.'show') !== false || strpos($tpl, $shortVarName.'show') !== false;
 		$usesTotal = $usesLast || strpos($tpl, $varName.'total') !== false || strpos($tpl, $shortVarName.'total') !== false;
 
+		if (strpos($name, '$this->scope[') !== false) {
+			$usesAny = $usesFirst = $usesLast = $usesIndex = $usesIteration = $usesShow = $usesTotal = true;
+		}
+
 		// gets foreach id
 		$cnt = self::$cnt++;
 
@@ -85,7 +89,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 		$_for'.$cnt.'_to = is_numeric($_for'.$cnt.'_to) ? $_for'.$cnt.'_to - $_for'.$cnt.'_step : count($_for'.$cnt.'_from) - 1;
 		$_for'.$cnt.'_from = 0;
 	}';
-	
+
 		// if input are pure numbers it shouldn't reorder them, if it's variables it gets too messy though so in that case a counter should be used
 		$reverse = false;
 		$condition = '<=';
@@ -100,7 +104,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
 				$incrementer = '-';
 			}
 		}
-			
+
 		// reverse from and to if needed
 		if (!$reverse) {
 			$out .= "\n\t".'if ($_for'.$cnt.'_from > $_for'.$cnt.'_to) {
