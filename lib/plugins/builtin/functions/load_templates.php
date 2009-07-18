@@ -12,8 +12,8 @@
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.1
- * @date       2008-12-24
+ * @version    1.1.0
+ * @date       2009-07-18
  * @package    Dwoo
  */
 function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)

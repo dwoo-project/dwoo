@@ -21,8 +21,8 @@ App::import('vendor', 'dwoo', array("file" => 'dwoo/dwooAutoload.php'));
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-08-17
+ * @version    1.1.0
+ * @date       2009-07-18
  * @package    Dwoo
  */
 class DwooView extends View
