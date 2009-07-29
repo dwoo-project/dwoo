@@ -332,7 +332,7 @@ class Dwoo
 		} else {
 			throw new Dwoo_Exception('Dwoo->get/Dwoo->output\'s data argument must be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array', E_USER_NOTICE);
 		}
-		
+
 		$this->globals['template'] = $_tpl->getName();
 		$this->initRuntimeVars($_tpl);
 
@@ -433,7 +433,7 @@ class Dwoo
 
 	/**
 	 * re-initializes the runtime variables before each template run
-	 * 
+	 *
 	 * override this method to inject data in the globals array if needed, this
 	 * method is called before each template execution
 	 *
@@ -739,6 +739,16 @@ class Dwoo
 	public function getTemplate()
 	{
 		return $this->template;
+	}
+
+	/**
+	 * sets the current template being rendered
+	 *
+	 * @param Dwoo_ITemplate $tpl template object
+	 */
+	public function setTemplate(Dwoo_ITemplate $tpl)
+	{
+		$this->template = $tpl;
 	}
 
 	/**
@@ -1503,10 +1513,10 @@ class Dwoo
 	{
 		return $this->scope;
 	}
-	
+
 	/**
 	 * Redirects all calls to unexisting to plugin proxy.
-	 * 
+	 *
 	 * @param string Method name
 	 * @param array  List of arguments
 	 * @return mixed
