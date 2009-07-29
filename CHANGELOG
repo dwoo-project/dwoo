@@ -1,4 +1,7 @@
-[2009--] 1.1.0
+[2009--] 1.1.1
++ Added Dwoo::setTemplate() for testing purposes mostly
+
+[2009-07-18] 1.1.0
 ! BC Break: Dwoo::initGlobals() is only called once during the Dwoo object
   construction. If you had overriden it and need to update global data
   before each template is executed you should instead override
