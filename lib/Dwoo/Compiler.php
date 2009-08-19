@@ -2969,7 +2969,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				unset($ps[$k]);
 			} elseif ($v[1]===false) {
 				// parameter is not defined and not optional, throw error
-				throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', (is_array($callback) ? $callback[0] : $callback)));
+				if (is_array($callback)) {
+					if (is_object($callback[0])) {
+						$name = get_class($callback[0]) . '::' . $callback[1];
+					} else {
+						$name = $callback[0];
+					}
+				} else {
+					$name = $callback;
+				}
+				
+				throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', $name));
 			} elseif ($v[2]===null) {
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
 				$paramlist[$v[0]] = array('null', null);
