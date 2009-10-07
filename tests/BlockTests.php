@@ -56,7 +56,8 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
-
+		
+		$cmp->setAutoEscape(false);
 		$tpl = new Dwoo_Template_String('{$foo}{auto_escape true}{$foo}{/}');
 		$tpl->forceCompilation();
 
