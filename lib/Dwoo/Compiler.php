@@ -230,6 +230,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @var Dwoo_Compiler
 	 */
 	protected static $instance;
+	
+	/**
+	 * constructor
+	 *
+	 * saves the created instance so that child templates get the same one
+	 */
+	public function __construct()
+	{
+		self::$instance = $this;
+	}
 
 	/**
 	 * sets the delimiters to use in the templates
@@ -3042,7 +3052,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	public static function compilerFactory()
 	{
 		if (self::$instance === null) {
-			self::$instance = new self;
+			new self;
 		}
 		return self::$instance;
 	}

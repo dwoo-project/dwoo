@@ -12,7 +12,7 @@ if (!defined('SMARTY_PHP_PASSTHRU')) {
 }
 
 if (class_exists('Dwoo_Compiler', false) === false) {
-	require 'Dwoo/Compiler.php';
+	require dirname(dirname(__FILE__)) . '/Compiler.php';
 }
 
 /**
