@@ -198,8 +198,9 @@ class Dwoo
 	 * stores the data during template runtime
 	 *
 	 * @var array
+	 * @private
 	 */
-	protected $data;
+	public $data;
 
 	/**
 	 * stores the current scope during template runtime
