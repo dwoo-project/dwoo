@@ -890,7 +890,7 @@ class Dwoo
 				return $this->count($value);
 			}
 		}
-    }
+	}
 
 	/**
 	 * [util function] checks if the input is an array or a traversable object, optionally it can also check if it's empty
@@ -918,30 +918,30 @@ class Dwoo
 		return false;
 	}
 
-    /**
-     * [util function] counts an array or arrayaccess/traversable object
-     * @param mixed $value
-     * @return int|bool the count for arrays and objects that implement countable, true for other objects that don't, and 0 for empty elements
-     */
-    public function count($value)
-    {
-        if (is_array($value) === true || $value instanceof Countable) {
-            return count($value);
-        } elseif ($value instanceof ArrayAccess) {
-            if ($value->offsetExists(0)) {
-                return true;
-            }
-        } elseif ($value instanceof Iterator) {
-            $value->rewind();
-            if ($value->valid()) {
-                return true;
-            }
-        } elseif ($value instanceof Traversable) {
-            foreach ($value as $dummy) {
-                return true;
-            }
-        }
-        return 0;
+	/**
+	 * [util function] counts an array or arrayaccess/traversable object
+	 * @param mixed $value
+	 * @return int|bool the count for arrays and objects that implement countable, true for other objects that don't, and 0 for empty elements
+	 */
+	public function count($value)
+	{
+		if (is_array($value) === true || $value instanceof Countable) {
+			return count($value);
+		} elseif ($value instanceof ArrayAccess) {
+			if ($value->offsetExists(0)) {
+				return true;
+			}
+		} elseif ($value instanceof Iterator) {
+			$value->rewind();
+			if ($value->valid()) {
+				return true;
+			}
+		} elseif ($value instanceof Traversable) {
+			foreach ($value as $dummy) {
+				return true;
+			}
+		}
+		return 0;
 	}
 
 	/**
