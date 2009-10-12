@@ -1211,7 +1211,7 @@ class Dwoo
 					return null;
 				}
 			} else {
-				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
+				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]) || is_callable(array($data, '__get')))) {
 					$data = $data->$m[2][$k];
 				} else {
 					return null;
