@@ -354,7 +354,6 @@ class Dwoo
 			}
 		} else {
 			// no cache present
-
 			if ($doCache === true) {
 				$dynamicId = uniqid();
 			}
@@ -875,14 +874,33 @@ class Dwoo
 	}
 
 	/**
-	 * [util function] checks if the input is an array or an iterator object, optionally it can also check if it's empty
+	 * [util function] checks if the input is an array or arrayaccess object, optionally it can also check if it's empty
 	 *
 	 * @param mixed $value the variable to check
-	 * @param bool $checkIsEmpty if true, the function will also check if the array is empty,
+	 * @param bool $checkIsEmpty if true, the function will also check if the array|arrayaccess is empty,
 	 * 								and return true only if it's not empty
-	 * @return bool true if it's an array (and not empty) or false if it's not an array (or if it's empty)
+	 * @return int|bool true if it's an array|arrayaccess (or the item count if $checkIsEmpty is true) or false if it's not an array|arrayaccess (or 0 if $checkIsEmpty is true)
 	 */
 	public function isArray($value, $checkIsEmpty=false)
+	{
+		if (is_array($value) === true || $value instanceof ArrayAccess) {
+			if ($checkIsEmpty === false) {
+				return true;
+			} else {
+				return $this->count($value);
+			}
+		}
+    }
+
+	/**
+	 * [util function] checks if the input is an array or a traversable object, optionally it can also check if it's empty
+	 *
+	 * @param mixed $value the variable to check
+	 * @param bool $checkIsEmpty if true, the function will also check if the array|traversable is empty,
+	 * 								and return true only if it's not empty
+	 * @return int|bool true if it's an array|traversable (or the item count if $checkIsEmpty is true) or false if it's not an array|traversable (or 0 if $checkIsEmpty is true)
+	 */
+	public function isTraversable($value, $checkIsEmpty=false)
 	{
 		if (is_array($value) === true) {
 			if ($checkIsEmpty === false) {
@@ -890,25 +908,40 @@ class Dwoo
 			} else {
 				return count($value) > 0;
 			}
-		} elseif ($value instanceof Iterator) {
+		} elseif ($value instanceof Traversable) {
 			if ($checkIsEmpty === false) {
 				return true;
-			} elseif ($value instanceof Countable) {
-				return count($value) > 0;
 			} else {
-				$value->rewind();
-				return $value->valid();
-			}
-		} elseif ($value instanceof ArrayAccess) {
-			if ($checkIsEmpty === false) {
-				return true;
-			} elseif ($value instanceof Countable) {
-				return count($value) > 0;
-			} else {
-				return $value->offsetExists(0);
+				return $this->count($value);
 			}
 		}
 		return false;
+	}
+
+    /**
+     * [util function] counts an array or arrayaccess/traversable object
+     * @param mixed $value
+     * @return int|bool the count for arrays and objects that implement countable, true for other objects that don't, and 0 for empty elements
+     */
+    public function count($value)
+    {
+        if (is_array($value) === true || $value instanceof Countable) {
+            return count($value);
+        } elseif ($value instanceof ArrayAccess) {
+            if ($value->offsetExists(0)) {
+                return true;
+            }
+        } elseif ($value instanceof Iterator) {
+            $value->rewind();
+            if ($value->valid()) {
+                return true;
+            }
+        } elseif ($value instanceof Traversable) {
+            foreach ($value as $dummy) {
+                return true;
+            }
+        }
+        return 0;
 	}
 
 	/**

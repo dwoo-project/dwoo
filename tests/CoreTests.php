@@ -304,32 +304,10 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$dwoo = new Dwoo();
 		$data = array();
 		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$this->assertEquals(0, $dwoo->isArray($data, true));
 		$data = array('moo');
 		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(true, $dwoo->isArray($data, true));
-	}
-
-	public function testIsArrayIterator()
-	{
-		$dwoo = new Dwoo();
-		$data = new TestIterator(array());
-		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(false, $dwoo->isArray($data, true));
-		$data = new TestIterator(array('moo'));
-		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(true, $dwoo->isArray($data, true));
-	}
-
-	public function testIsArrayCountableIterator()
-	{
-		$dwoo = new Dwoo();
-		$data = new TestCountableIterator(array());
-		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(false, $dwoo->isArray($data, true));
-		$data = new TestCountableIterator(array('moo'));
-		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(true, $dwoo->isArray($data, true));
+		$this->assertEquals(1, $dwoo->isArray($data, true));
 	}
 
 	public function testIsArrayArrayAccess()
@@ -337,7 +315,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$dwoo = new Dwoo();
 		$data = new TestArrayAccess(array());
 		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$this->assertEquals(0, $dwoo->isArray($data, true));
 		$data = new TestArrayAccess(array('moo'));
 		$this->assertEquals(true, $dwoo->isArray($data));
 		$this->assertEquals(true, $dwoo->isArray($data, true));
@@ -348,10 +326,32 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$dwoo = new Dwoo();
 		$data = new TestCountableArrayAccess(array());
 		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(false, $dwoo->isArray($data, true));
+		$this->assertEquals(0, $dwoo->isArray($data, true));
 		$data = new TestCountableArrayAccess(array('moo'));
 		$this->assertEquals(true, $dwoo->isArray($data));
-		$this->assertEquals(true, $dwoo->isArray($data, true));
+		$this->assertEquals(1, $dwoo->isArray($data, true));
+	}
+
+	public function testIsTraversableIterator()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestIterator(array());
+		$this->assertEquals(true, $dwoo->isTraversable($data));
+		$this->assertEquals(0, $dwoo->isTraversable($data, true));
+		$data = new TestIterator(array('moo'));
+		$this->assertEquals(true, $dwoo->isTraversable($data));
+		$this->assertEquals(true, $dwoo->isTraversable($data, true));
+	}
+
+	public function testIsTraversableCountableIterator()
+	{
+		$dwoo = new Dwoo();
+		$data = new TestCountableIterator(array());
+		$this->assertEquals(true, $dwoo->isTraversable($data));
+		$this->assertEquals(0, $dwoo->isTraversable($data, true));
+		$data = new TestCountableIterator(array('moo'));
+		$this->assertEquals(true, $dwoo->isTraversable($data));
+		$this->assertEquals(1, $dwoo->isTraversable($data, true));
 	}
 }
 
