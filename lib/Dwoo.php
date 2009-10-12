@@ -1230,7 +1230,7 @@ class Dwoo
 		}
 
 		if (is_array($varstr) === false) {
-			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?((?:[^.[\]-]|-(?!>))+)\]?#i', $varstr, $m);
 		} else {
 			$m = $varstr;
 		}
@@ -1334,7 +1334,7 @@ class Dwoo
 				$varstr = 'dwoo'.$varstr;
 			}
 
-			preg_match_all('#(\[|->|\.)?([^.[\]-]+)\]?#i', $varstr, $m);
+			preg_match_all('#(\[|->|\.)?((?:[^.[\]-]|-(?!>))+)\]?#i', $varstr, $m);
 		}
 
 		$i = $m[2][0];

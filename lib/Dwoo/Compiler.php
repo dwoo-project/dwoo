@@ -2283,7 +2283,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 				}
 			} else {
-				preg_match_all('#(\[|->|\.)?([a-z0-9_]+|(\\\?[\'"])[^\3]*?\3)\]?#i', $key, $m);
+				preg_match_all('#(\[|->|\.)?((?:[a-z0-9_]|-(?!>))+|(\\\?[\'"])[^\3]*?\3)\]?#i', $key, $m);
 
 				$i = $m[2][0];
 				if ($i === '_parent' || $i === '_') {
@@ -2337,7 +2337,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 			}
 		} else {
-			preg_match_all('#(\[|->|\.)?([a-z0-9_]+)\]?#i', $key, $m);
+			preg_match_all('#(\[|->|\.)?((?:[a-z0-9_]|-(?!>))+)\]?#i', $key, $m);
 			unset($m[0]);
 			$output = '$this->readVar('.str_replace("\n", '', var_export($m, true)).')';
 		}
