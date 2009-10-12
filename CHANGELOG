@@ -12,6 +12,7 @@
   resulting in a fatal error)
 * Fixed a property reading bug on objects that implemented __get but not
   __isset, implementing __isset is however very much recommended
+* Fixed a bug when accessing global vars from a sub-template
 
 [2009-07-18] 1.1.0
 ! BC Break: Dwoo::initGlobals() is only called once during the Dwoo object
