@@ -28,7 +28,11 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 			throw new Dwoo_Compilation_Exception($compiler, 'Tif: the if plugin is required to use Tif');
 		}
 	}
-
+	
+	if (count($rest) == 1) {
+		return $rest[0];
+	}
+	
 	// fetch false result and remove the ":" if it was present
 	$falseResult = array_pop($rest);
 
