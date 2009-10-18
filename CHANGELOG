@@ -23,6 +23,8 @@
   resulting in a fatal error)
 * Fixed a property reading bug on objects that implemented __get but not
   __isset, implementing __isset is however very much recommended
+* Fixed a Dwoo_Data bug in the append method when the index didn't exist
+  yet it threw a notice
 * Fixed a bug when accessing global vars from a sub-template
 * Removed a couple of @-operator calls to file_get_contents
 
