@@ -9,6 +9,8 @@
 + Added {optional} plugin that just prints an optional var without any
   notice if it doesn't exist
 + Added Dwoo::setTemplate() for testing purposes mostly
+* Fixed an {extends} parsing bug that prevented the use of single-quotes
+  around the parent template's filename
 * Fixed a security issue, if you didn't use a custom compiler factory but
   passed the compiler directly to the get method with autoEscape enabled,
   the autoEscape was disabled in included templates - Thanks to Fabien 
