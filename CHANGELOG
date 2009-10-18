@@ -6,6 +6,8 @@
   check all works fine still
 
 [2009--] 1.1.1
++ Added {optional} plugin that just prints an optional var without any
+  notice if it doesn't exist
 + Added Dwoo::setTemplate() for testing purposes mostly
 * Fixed a security issue, if you didn't use a custom compiler factory but
   passed the compiler directly to the get method with autoEscape enabled,
