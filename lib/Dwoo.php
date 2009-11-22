@@ -409,9 +409,8 @@ class Dwoo
 				// output
 				if ($_output === true) {
 					echo $out;
-				} else {
-					return $out;
 				}
+				return $out;
 			}
 		}
 	}
