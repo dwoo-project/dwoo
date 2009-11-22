@@ -19,6 +19,8 @@
 * Fixed a Dwoo_Data bug in the append method when the index didn't exist
   yet it threw a notice
 * Fixed a bug when accessing global vars from a sub-template
+* Cached templates now check the source template for modification before 
+  outputting the cached version
 * Removed a couple of @-operator calls to file_get_contents
 
 [2009-07-18] 1.1.0
