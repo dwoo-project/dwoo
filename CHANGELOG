@@ -19,7 +19,8 @@
 * Fixed a Dwoo_Data bug in the append method when the index didn't exist
   yet it threw a notice
 * Fixed a bug when accessing global vars from a sub-template
-* Fixed a bug in the {dynamic} plugin
+* Fixed a couple bugs in the {dynamic} plugin with regard to using plugins
+  within a dynamic block
 * Cached templates now check the source template for modification before 
   outputting the cached version
 * Removed a couple of @-operator calls to file_get_contents

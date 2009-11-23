@@ -361,12 +361,14 @@ class Dwoo
 			}
 
 			// render template
-			$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+			$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
+			$out = include $compiledTemplate;
 
 			// template returned false so it needs to be recompiled
 			if ($out === false) {
 				$_tpl->forceCompilation();
-				$out = include $_tpl->getCompiledTemplate($this, $_compiler);
+				$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
+				$out = include $compiledTemplate;
 			}
 
 			if ($doCache === true) {
@@ -374,7 +376,7 @@ class Dwoo
 				if (!class_exists('Dwoo_plugin_dynamic', false)) {
 					$this->getLoader()->loadPlugin('dynamic');
 				}
-				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId);
+				$out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId, $compiledTemplate);
 			}
 
 			// process filters
