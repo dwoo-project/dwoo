@@ -812,7 +812,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($this->debug) echo 'COMPILATION COMPLETE : MEM USAGE : '.memory_get_usage().'<br>';
 
-		$output = "<?php\n";
+		$output = "<?php\n/* template head */\n";
 
 		// build plugin preloader
 		foreach ($this->usedPlugins as $plugin=>$type) {

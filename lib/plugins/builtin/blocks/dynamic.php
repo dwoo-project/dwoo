@@ -48,9 +48,14 @@ class Dwoo_Plugin_dynamic extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 		return $output;
 	}
 
-	public static function unescape($output, $dynamicId)
+	public static function unescape($output, $dynamicId, $compiledFile)
 	{
-		return preg_replace_callback('/<dwoo:dynamic_('.$dynamicId.')>(.+?)<\/dwoo:dynamic_'.$dynamicId.'>/s', array('self', 'unescapePhp'), $output);
+		$output = preg_replace_callback('/<dwoo:dynamic_('.$dynamicId.')>(.+?)<\/dwoo:dynamic_'.$dynamicId.'>/s', array('self', 'unescapePhp'), $output, -1, $count);
+		// re-add the includes on top of the file
+		if ($count && preg_match('#/\* template head \*/(.+?)/\* end template head \*/#s', file_get_contents($compiledFile), $m)) {
+			$output = '<?php '.$m[1].' ?>'.$output;
+		}
+		return $output;
 	}
 
 	public static function unescapePhp($match)
