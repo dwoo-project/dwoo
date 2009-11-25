@@ -471,7 +471,33 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
-	 * adds a template plugin, this is reserved for use by the {function} plugin
+	 * adds an used plugin, this is reserved for use by the {template} plugin
+	 *
+	 * this is required so that plugin loading bubbles up from loaded
+	 * template files to the current one
+	 *
+	 * @private
+	 * @param string $name function name
+	 * @param int $type plugin type (Dwoo::*_PLUGIN)
+	 */
+	public function addUsedPlugin($name, $type)
+	{
+		$this->usedPlugins[$name] = $type;
+	}
+
+	/**
+	 * returns all the plugins this template uses
+	 *
+	 * @private
+	 * @return array the list of used plugins in the parsed template
+	 */
+	public function getUsedPlugins()
+	{
+		return $this->usedPlugins;
+	}
+
+	/**
+	 * adds a template plugin, this is reserved for use by the {template} plugin
 	 *
 	 * this is required because the template functions are not declared yet
 	 * during compilation, so we must have a way of validating their argument
@@ -2892,7 +2918,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		if (($pluginType & Dwoo::COMPILABLE_PLUGIN) === 0 && ($pluginType & Dwoo::NATIVE_PLUGIN) === 0 && ($pluginType & Dwoo::PROXY_PLUGIN) === 0) {
-			$this->usedPlugins[$name] = $pluginType;
+			$this->addUsedPlugin($name, $pluginType);
 		}
 
 		return $pluginType;
