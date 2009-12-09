@@ -11,6 +11,8 @@
 * Fixed a bug when accessing array indices that contain a minus sign, it 
   is now possible to access those using {$var[index-foo]}, 
   {$var['index-foo']} or {$index="index-foo"} {$var[$index]}
+* Fixed a bug in {tif} that didn't work when 0 was given as the true or 
+  false value
 * Fixed a bug when using the autoEscape feature with sub-templates (the 
   compiled sub-template couldn't access the dwoo charset property, 
   resulting in a fatal error)

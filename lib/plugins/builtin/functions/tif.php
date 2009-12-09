@@ -28,7 +28,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 			throw new Dwoo_Compilation_Exception($compiler, 'Tif: the if plugin is required to use Tif');
 		}
 	}
-	
+
 	if (count($rest) == 1) {
 		return $rest[0];
 	}
@@ -40,6 +40,9 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 		// remove the ':' if present
 		array_pop($rest);
 	} elseif (trim(end($rest), '"\'') === '?' || count($rest) === 1) {
+		if ($falseResult === '?' || $falseResult === ':') {
+			throw new Dwoo_Compilation_Exception($compiler, 'Tif: incomplete tif statement, value missing after '.$falseResult);
+		}
 		// there was in fact no false result provided, so we move it to be the true result instead
 		$trueResult = $falseResult;
 		$falseResult = "''";
@@ -60,12 +63,12 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest)
 	}
 
 	// check params were correctly provided
-	if (empty($rest) || empty($trueResult) || empty($falseResult)) {
+	if (empty($rest) || $trueResult === null || $falseResult === null) {
 		throw new Dwoo_Compilation_Exception($compiler, 'Tif: you must provide three parameters serving as <expression> ? <true value> : <false value>');
 	}
 
 	// parse condition
 	$condition = Dwoo_Plugin_if::replaceKeywords($rest, $compiler);
 
-    return '(('.implode(' ', $condition).') ? '.($trueResult===true ? implode(' ', $condition) : $trueResult).' : '.$falseResult.')';
+	return '(('.implode(' ', $condition).') ? '.($trueResult===true ? implode(' ', $condition) : $trueResult).' : '.$falseResult.')';
 }
