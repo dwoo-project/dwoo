@@ -230,7 +230,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @var Dwoo_Compiler
 	 */
 	protected static $instance;
-	
+
 	/**
 	 * constructor
 	 *
@@ -3014,7 +3014,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					$name = $callback;
 				}
-				
+
 				throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', $name));
 			} elseif ($v[2]===null) {
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
