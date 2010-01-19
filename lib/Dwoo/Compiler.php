@@ -2493,6 +2493,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		$src = $substr;
+		$substr = trim($substr);
 
 		if (strtolower($substr) === 'false' || strtolower($substr) === 'no' || strtolower($substr) === 'off') {
 			if ($this->debug) echo 'BOOLEAN(FALSE) PARSED<br />';
