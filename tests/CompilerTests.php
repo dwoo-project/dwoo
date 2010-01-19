@@ -672,7 +672,7 @@ replace="BAR"
 		$tpl->forceCompilation();
 		$this->assertEquals('foo', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
 	public function testStaticPropertyAccess()
 	{
 		$tpl = new Dwoo_Template_String('{StaticHelper::$foo}/{StaticHelper::$foo * StaticHelper::$foo + 5}/{upper StaticHelper::$foo}/{StaticHelper::$foo++}/{StaticHelper::$foo}');
@@ -685,6 +685,16 @@ replace="BAR"
 		$tpl = new Dwoo_Template_String('{excessArgsHelper a b c d e f}');
 		$tpl->forceCompilation();
 		$this->assertEquals('a:b:c:d:e:f', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
+	public function testParsingOfMultilineIf()
+	{
+		$tpl = new Dwoo_Template_String('{if 0
+|| $null == "aa"}
+fail
+{/if}');
+		$tpl->forceCompilation();
+		$this->assertEquals('', trim($this->dwoo->get($tpl, array(), $this->compiler)));
 	}
 }
 
