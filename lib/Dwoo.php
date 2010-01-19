@@ -1558,6 +1558,10 @@ class Dwoo
 	 * @return mixed
 	 */
 	public function __call($method, $args) {
-		return call_user_func_array($this->getPluginProxy()->getCallback($method), $args);
+		$proxy = $this->getPluginProxy();
+		if (!$proxy) {
+			throw new Dwoo_Exception('Call to undefined method '.__CLASS__.'::'.$method.'()');
+		}
+		return call_user_func_array($proxy->getCallback($method), $args);
 	}
 }
