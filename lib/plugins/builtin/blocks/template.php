@@ -67,15 +67,15 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
 		$init .= '/* -- template start output */';
 
 		$funcName = 'Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'];
-		
+
 		$search = array(
-			'$this->charset', 
-			'$this->', 
+			'$this->charset',
+			'$this->',
 			'$this,',
 		);
 		$replacement = array(
-			'$dwoo->getCharset()', 
-			'$dwoo->', 
+			'$dwoo->getCharset()',
+			'$dwoo->',
 			'$dwoo,',
 		);
 		$content = str_replace($search, $replacement, $content);

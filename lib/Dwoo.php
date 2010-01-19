@@ -355,7 +355,6 @@ class Dwoo
 			}
 		} else {
 			// no cache present
-
 			if ($doCache === true) {
 				$dynamicId = uniqid();
 			}
@@ -1060,10 +1059,11 @@ class Dwoo
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
 	 *
+	 * @private
 	 * @param string $class the class name
 	 * @return mixed an object of the given class
 	 */
-	protected function getObjectPlugin($class)
+	public function getObjectPlugin($class)
 	{
 		if (isset($this->runtimePlugins[$class])) {
 			return $this->runtimePlugins[$class];
@@ -1524,6 +1524,10 @@ class Dwoo
 	 * @return mixed
 	 */
 	public function __call($method, $args) {
-		return call_user_func_array($this->getPluginProxy()->getCallback($method), $args);
+		$proxy = $this->getPluginProxy();
+		if (!$proxy) {
+			throw new Dwoo_Exception('Call to undefined method '.__CLASS__.'::'.$method.'()');
+		}
+		return call_user_func_array($proxy->getCallback($method), $args);
 	}
 }

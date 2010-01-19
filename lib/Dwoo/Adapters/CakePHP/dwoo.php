@@ -58,13 +58,13 @@ class DwooView extends View
 
 		$this->_sv_compile_dir = TMP . 'dwoo' . DS . 'compile';
 		$this->_sv_cache_dir = TMP . 'dwoo' . DS . 'cache';
-		
+
 		$this->_dwoo = new Dwoo($this->_sv_compile_dir, $this->_sv_cache_dir);
 
 		$this->_sv_compile_id = $controller->name;
 
 		$this->_dwoo->sv_this = $this;
-        $this->_dwoo->setSecurityPolicy();      
+        $this->_dwoo->setSecurityPolicy();
 
 		return;
 	}

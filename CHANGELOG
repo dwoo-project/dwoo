@@ -26,7 +26,7 @@
 * Fixed a couple bugs in the {dynamic} plugin with regard to using plugins
   within a dynamic block
 * Fixed a {load_templates} bug, plugins used in external templates were not
-  loaded correctly
+  loaded correctly, same for custom user plugins
 * Cached templates now check the source template for modification before 
   outputting the cached version
 * Removed a couple of @-operator calls to file_get_contents
