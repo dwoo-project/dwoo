@@ -1093,10 +1093,11 @@ class Dwoo
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
 	 *
+	 * @private
 	 * @param string $class the class name
 	 * @return mixed an object of the given class
 	 */
-	protected function getObjectPlugin($class)
+	public function getObjectPlugin($class)
 	{
 		if (isset($this->runtimePlugins[$class])) {
 			return $this->runtimePlugins[$class];
