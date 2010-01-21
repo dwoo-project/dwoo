@@ -232,6 +232,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected static $instance;
 
 	/**
+	 * token types
+	 * @var int
+	 */
+	const T_UNQUOTED_STRING = 1;
+	const T_NUMERIC = 2;
+	const T_NULL = 4;
+	const T_BOOL = 8;
+	const T_MATH = 16;
+	const T_BREAKCHAR = 32;
+
+	/**
 	 * constructor
 	 *
 	 * saves the created instance so that child templates get the same one
@@ -1210,6 +1221,22 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	}
 
 	/**
+	 * returns the token of each parameter out of the given parameter array
+	 *
+	 * @param array $params parameter array
+	 * @return array tokens
+	 */
+	public function getParamTokens(array $params)
+	{
+		foreach ($params as $k=>$p) {
+			if (is_array($p)) {
+				$params[$k] = isset($p[2]) ? $p[2] : 0;
+			}
+		}
+		return $params;
+	}
+
+	/**
 	 * entry point of the parser, it redirects calls to other parse* functions
 	 *
 	 * @param string $in the string within which we must parse something
@@ -1468,9 +1495,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 
 					$parts = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
+					$tokens = $this->getParamTokens($parts);
 					$parts = $this->getCompiledParams($parts);
 
-					$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $this);
+					$value = Dwoo_Plugin_if::replaceKeywords($parts['*'], $tokens['*'], $this);
 					$echo = '';
 				} else {
 					$value = array();
@@ -1581,7 +1609,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($curBlock === 'condition') {
 				// load if plugin
 				$this->getPluginType('if');
-				if (Dwoo_Plugin_if::replaceKeywords(array($func), $this) !== array($func)) {
+
+				if (Dwoo_Plugin_if::replaceKeywords(array($func), array(self::T_UNQUOTED_STRING), $this) !== array($func)) {
 					return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
 				}
 			}
@@ -1738,8 +1767,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// only keep php-syntax-safe values for non-block plugins
-		foreach ($params as &$p) {
-			$p = $p[0];
+		$tokens = array();
+		foreach ($params as $k => $p) {
+			$tokens[$k] = isset($p[2]) ? $p[2] : 0;
+			$params[$k] = $p[0];
 		}
 		if ($pluginType & Dwoo::NATIVE_PLUGIN) {
 			if ($func === 'do') {
@@ -1769,6 +1800,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
 				}
 				array_unshift($params, $this);
+				if ($func === 'tif') {
+					$params[] = $tokens;
+				}
 				$output = call_user_func_array($funcCompiler, $params);
 			} else {
 				array_unshift($params, '$this');
@@ -2498,35 +2532,41 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		if (strtolower($substr) === 'false' || strtolower($substr) === 'no' || strtolower($substr) === 'off') {
 			if ($this->debug) echo 'BOOLEAN(FALSE) PARSED<br />';
 			$substr = 'false';
+			$type = self::T_BOOL;
 		} elseif (strtolower($substr) === 'true' || strtolower($substr) === 'yes' || strtolower($substr) === 'on') {
 			if ($this->debug) echo 'BOOLEAN(TRUE) PARSED<br />';
 			$substr = 'true';
+			$type = self::T_BOOL;
 		} elseif ($substr === 'null' || $substr === 'NULL') {
 			if ($this->debug) echo 'NULL PARSED<br />';
 			$substr = 'null';
+			$type = self::T_NULL;
 		} elseif (is_numeric($substr)) {
 			$substr = (float) $substr;
 			if ((int) $substr == $substr) {
 				$substr = (int) $substr;
 			}
+			$type = self::T_NUMERIC;
 			if ($this->debug) echo 'NUMBER ('.$substr.') PARSED<br />';
 		} elseif (preg_match('{^-?(\d+|\d*(\.\d+))\s*([/*%+-]\s*-?(\d+|\d*(\.\d+)))+$}', $substr)) {
 			if ($this->debug) echo 'SIMPLE MATH PARSED<br />';
+			$type = self::T_MATH;
 			$substr = '('.$substr.')';
 		} elseif ($curBlock === 'condition' && array_search($substr, $breakChars, true) !== false) {
 			if ($this->debug) echo 'BREAKCHAR ('.$substr.') PARSED<br />';
+			$type = self::T_BREAKCHAR;
 			//$substr = '"'.$substr.'"';
 		} else {
 			$substr = $this->replaceStringVars('\''.str_replace('\'', '\\\'', $substr).'\'', '\'', $curBlock);
-
+			$type = self::T_UNQUOTED_STRING;
 			if ($this->debug) echo 'BLABBER ('.$substr.') CASTED AS STRING<br />';
 		}
 
 		if (is_array($parsingParams)) {
-			$parsingParams[] = array($substr, $src);
+			$parsingParams[] = array($substr, $src, $type);
 			return $parsingParams;
 		} elseif ($curBlock === 'namedparam') {
-			return array($substr, $src);
+			return array($substr, $src, $type);
 		} elseif ($curBlock === 'expression') {
 			return $substr;
 		} else {
@@ -2988,12 +3028,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				$tmp = array();
 				$tmp2 = array();
+				$tmp3 = array();
 				foreach ($ps as $i=>$p) {
 					$tmp[$i] = $p[0];
 					$tmp2[$i] = $p[1];
+					$tmp3[$i] = isset($p[2]) ? $p[2] : 0;
 					unset($ps[$i]);
 				}
-				$paramlist[$v[0]] = array($tmp, $tmp2);
+				$paramlist[$v[0]] = array($tmp, $tmp2, $tmp3);
 				unset($tmp, $tmp2, $i, $p);
 				break;
 			} elseif (isset($ps[$v[0]])) {
@@ -3019,7 +3061,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				throw new Dwoo_Compilation_Exception($this, 'Argument '.$k.'/'.$v[0].' missing for '.str_replace(array('Dwoo_Plugin_', '_compile'), '', $name));
 			} elseif ($v[2]===null) {
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
-				$paramlist[$v[0]] = array('null', null);
+				$paramlist[$v[0]] = array('null', null, self::T_NULL);
 			} else {
 				// outputs default value with var_export
 				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);

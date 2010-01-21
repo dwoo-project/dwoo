@@ -1,9 +1,12 @@
 [2009--] 1.2.0
 ! BC Break: Dwoo::isArray had to be fixed and it has been split up in 3
-  methods, isArray (for array access), isTraversable (for foreach) and 
+  methods, isArray (for array access), isTraversable (for foreach) and
   count (just a helper that counts anything). It won't affect you unless
   you built some plugin depending on isArray, in which case you should
   check all works fine still
+* Fixed parsing of quoted keywords in if statements, like 'not' was
+  parsed as ! because using {if not $foo} is valid, but it was impossible
+  to use them even as string.
 
 [2009--] 1.1.1
 + Added {optional} plugin that just prints an optional var without any
@@ -13,17 +16,17 @@
   around the parent template's filename
 * Fixed a security issue, if you didn't use a custom compiler factory but
   passed the compiler directly to the get method with autoEscape enabled,
-  the autoEscape was disabled in included templates - Thanks to Fabien 
+  the autoEscape was disabled in included templates - Thanks to Fabien
   Potencier for notifying me.
-* Fixed a bug in {safe} when using variable-variables it would sometimes 
+* Fixed a bug in {safe} when using variable-variables it would sometimes
   corrupt the var name resulting in blank output
-* Fixed a bug when accessing array indices that contain a minus sign, it 
-  is now possible to access those using {$var[index-foo]}, 
+* Fixed a bug when accessing array indices that contain a minus sign, it
+  is now possible to access those using {$var[index-foo]},
   {$var['index-foo']} or {$index="index-foo"} {$var[$index]}
-* Fixed a bug in {tif} that didn't work when 0 was given as the true or 
+* Fixed a bug in {tif} that didn't work when 0 was given as the true or
   false value
-* Fixed a bug when using the autoEscape feature with sub-templates (the 
-  compiled sub-template couldn't access the dwoo charset property, 
+* Fixed a bug when using the autoEscape feature with sub-templates (the
+  compiled sub-template couldn't access the dwoo charset property,
   resulting in a fatal error)
 * Fixed a property reading bug on objects that implemented __get but not
   __isset, implementing __isset is however very much recommended
@@ -34,7 +37,7 @@
   within a dynamic block
 * Fixed a {load_templates} bug, plugins used in external templates were not
   loaded correctly, same for custom user plugins
-* Cached templates now check the source template for modification before 
+* Cached templates now check the source template for modification before
   outputting the cached version
 * Removed a couple of @-operator calls to file_get_contents
 
