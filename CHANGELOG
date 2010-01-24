@@ -25,6 +25,7 @@
 * Fixed a bug when accessing global vars from a sub-template
 * Fixed a couple bugs in the {dynamic} plugin with regard to using plugins
   within a dynamic block
+* Fixed a compilation bug when using a PluginProxy with highly nested calls
 * Fixed a {load_templates} bug, plugins used in external templates were not
   loaded correctly, same for custom user plugins
 * Cached templates now check the source template for modification before 
