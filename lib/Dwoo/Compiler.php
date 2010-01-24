@@ -1532,8 +1532,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if (is_array($parsingParams)) {
 				$output = $this->parseMethodCall($out[count($out)-1][1], $match[0], $curBlock, $ptr);
 
-				$out[count($out)-1][0] .= substr($match[0], 0, $ptr);
-				$out[count($out)-1][1] .= $output;
+				$out[count($out)-1][0] = $output;
+				$out[count($out)-1][1] .= substr($match[0], 0, $ptr);
 			} else {
 				$out = $this->parseMethodCall($out, $match[0], $curBlock, $ptr);
 			}
