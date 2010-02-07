@@ -105,7 +105,7 @@
 <li><div class="src-line"><a name="a92"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($usesFirst)&nbsp;$output&nbsp;.=&quot;\n\t&quot;.'&quot;first&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;null,';</span></div></li>
 <li><div class="src-line"><a name="a93"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($usesLast)&nbsp;$output&nbsp;.=&quot;\n\t&quot;.'&quot;last&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;null,';</span></div></li>
 <li><div class="src-line"><a name="a94"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($usesShow)&nbsp;$output&nbsp;.=&quot;\n\t&quot;.'&quot;show&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;($this-&gt;isArray($_for'.$cnt.'_from,&nbsp;true))&nbsp;||&nbsp;(is_numeric($_for'.$cnt.'_from)&nbsp;&amp;&amp;&nbsp;$_for'.$cnt.'_from&nbsp;!=&nbsp;$_for'.$cnt.'_to),';</span></div></li>
-<li><div class="src-line"><a name="a95"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($usesTotal)&nbsp;$output&nbsp;.=&quot;\n\t&quot;.'&quot;total&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;$this-&gt;isArray($_for'.$cnt.'_from)&nbsp;?&nbsp;count($_for'.$cnt.'_from)&nbsp;-&nbsp;$_for'.$cnt.'_skip&nbsp;:&nbsp;(is_numeric($_for'.$cnt.'_from)&nbsp;?&nbsp;abs(($_for'.$cnt.'_to&nbsp;+&nbsp;1&nbsp;-&nbsp;$_for'.$cnt.'_from)/$_for'.$cnt.'_step)&nbsp;:&nbsp;0),';</span></div></li>
+<li><div class="src-line"><a name="a95"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if&nbsp;($usesTotal)&nbsp;$output&nbsp;.=&quot;\n\t&quot;.'&quot;total&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=&gt;&nbsp;$this-&gt;isArray($_for'.$cnt.'_from)&nbsp;?&nbsp;$this-&gt;count($_for'.$cnt.'_from)&nbsp;-&nbsp;$_for'.$cnt.'_skip&nbsp;:&nbsp;(is_numeric($_for'.$cnt.'_from)&nbsp;?&nbsp;abs(($_for'.$cnt.'_to&nbsp;+&nbsp;1&nbsp;-&nbsp;$_for'.$cnt.'_from)/$_for'.$cnt.'_step)&nbsp;:&nbsp;0),';</span></div></li>
 <li><div class="src-line"><a name="a96"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$out.=&quot;\n);\n&quot;.'$_section'.$cnt.'[\'glob\']&nbsp;=&amp;&nbsp;$this-&gt;globals[&quot;section&quot;]['.$name.'];'.&quot;\n\n&quot;;</span></div></li>
 <li><div class="src-line"><a name="a97"></a><span class="src-comm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></div></li>
 <li><div class="src-line"><a name="a98"></a><span class="src-comm">*/</span></div></li>
@@ -145,7 +145,7 @@
 </ol></div>
 </div>
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 18 Jul 2009 21:05:19 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Feb 2010 17:04:07 +0000 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</body>
 </html>
