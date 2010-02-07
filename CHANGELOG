@@ -1,4 +1,4 @@
-[2009--] 1.2.0
+[2010--] 1.2.0
 ! BC Break: Dwoo::isArray had to be fixed and it has been split up in 3
   methods, isArray (for array access), isTraversable (for foreach) and
   count (just a helper that counts anything). It won't affect you unless
@@ -8,7 +8,7 @@
   parsed as ! because using {if not $foo} is valid, but it was impossible
   to use them even as string.
 
-[2009--] 1.1.1
+[2010-02-07] 1.1.1
 + Added {optional} plugin that just prints an optional var without any
   notice if it doesn't exist
 + Added Dwoo::setTemplate() for testing purposes mostly
