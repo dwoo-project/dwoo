@@ -35,7 +35,7 @@ class Dwoo
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.1.0';
+	const VERSION = '1.1.1';
 
 	/**
 	 * unique number of this dwoo release
@@ -44,7 +44,7 @@ class Dwoo
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
 	 */
-	const RELEASE_TAG = 16;
+	const RELEASE_TAG = 17;
 
 	/**#@+
 	 * constants that represents all plugin types

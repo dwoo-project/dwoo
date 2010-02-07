@@ -31,9 +31,9 @@
 <p class="description"><p><pre>  * name : capture name, used to read the value afterwards
   * assign : if set, the value is also saved in the given variable
   * cat : if true, the value is appended to the previous one (if any) instead of overwriting it</pre>  If the cat parameter is true, the content  will be appended to the existing content</p><p>Example :</p><p><div class="src-code"><ol><li><div class="src-line">&nbsp;<span class="src-sym">{</span><span class="src-id">capture&nbsp;</span><span class="src-str">&quot;foo&quot;</span><span class="src-sym">}</span></div></li>
-<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-id">Anything&nbsp;in&nbsp;here&nbsp;wont&nbsp;show</span><span class="src-sym">,&nbsp;</span><span class="src-id">it&nbsp;will&nbsp;be&nbsp;saved&nbsp;</span><span class="src-key">for&nbsp;</span><span class="src-id">later&nbsp;</span>use..</div></li>
-<li><div class="src-line">&nbsp;<span class="src-sym">{</span>/<span class="src-id">capture</span><span class="src-sym">}</span></div></li>
-<li><div class="src-line">&nbsp;<span class="src-id">Output&nbsp;was&nbsp;</span>:&nbsp;<span class="src-sym">{</span>$.<span class="src-id">capture</span>.<span class="src-id">foo</span><span class="src-sym">}</span></div></li>
+<li><div class="src-line">&nbsp;&nbsp;&nbsp;<span class="src-id">Anything&nbsp;in&nbsp;here&nbsp;won</span>'t&nbsp;show,&nbsp;it&nbsp;will&nbsp;be&nbsp;saved&nbsp;for&nbsp;later&nbsp;use..</div></li>
+<li><div class="src-line">&nbsp;{/capture}</div></li>
+<li><div class="src-line">&nbsp;Output&nbsp;was&nbsp;:&nbsp;{$.capture.foo}</div></li>
 </ol></div></p><p>This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.</p></p>
 	<ul class="tags">
 				<li><span class="field">author:</span> Jordi Boggiano &lt;<a href="mailto:j.boggiano@seld.be">j.boggiano@seld.be</a>&gt;</li>
@@ -289,7 +289,7 @@
 
 
 	<p class="notes" id="credit">
-		Documentation generated on Sat, 18 Jul 2009 21:04:39 +0200 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
+		Documentation generated on Sun, 07 Feb 2010 17:53:13 +0000 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.0</a>
 	</p>
 	</div></body>
 </html>
