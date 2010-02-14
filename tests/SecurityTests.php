@@ -69,6 +69,17 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	/**
+	 * @expectedException Dwoo_Exception
+	 */
+	public function testNotAllowedPhpFunction()
+	{
+		$tpl = new Dwoo_Template_String('{strtotime("2000-01-01")}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
 	public function testAllowDirectoryGetSet()
 	{
 		$old = $this->policy->getAllowedDirectories();
