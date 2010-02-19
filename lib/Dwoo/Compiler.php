@@ -2258,7 +2258,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$ptr += 2;
 			}
 
-			if (in_array($methodCall[$ptr], array(';', '/', ' ', "\t", "\r", "\n", ')', '+', '*', '%', '=', '-', '|')) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd) {
+			if (in_array($methodCall[$ptr], array(';', ',', '/', ' ', "\t", "\r", "\n", ')', '+', '*', '%', '=', '-', '|')) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd) {
 				// break char found
 				break;
 			}

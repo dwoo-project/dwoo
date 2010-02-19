@@ -7,6 +7,8 @@
 * Fixed parsing of quoted keywords in if statements, like 'not' was
   parsed as ! because using {if not $foo} is valid, but it was impossible
   to use them even as string.
+* Fixed parsing bug with method calls used as arguments with a comma
+  following.
 
 [2010-02-07] 1.1.1
 + Added {optional} plugin that just prints an optional var without any

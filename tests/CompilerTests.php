@@ -696,6 +696,13 @@ fail
 		$tpl->forceCompilation();
 		$this->assertEquals('', trim($this->dwoo->get($tpl, array(), $this->compiler)));
 	}
+
+	public function testParsingOfMethodWithFollowingArgs()
+	{
+		$tpl = new Dwoo_Template_String('{lower cat($obj->Bar("test"), "TEST")}');
+		$tpl->forceCompilation();
+		$this->assertEquals('testtest', $this->dwoo->get($tpl, array('obj'=>new PluginHelper()), $this->compiler));
+	}
 }
 
 function excessArgsHelper($a) {
