@@ -4,6 +4,9 @@
   count (just a helper that counts anything). It won't affect you unless
   you built some plugin depending on isArray, in which case you should
   check all works fine still
++ Improved parsing of array() to support real php array syntax as well
+  as variables as array keys, thanks to acecream for the help
++ Improved parsing of named parameters that can now be quoted
 * Fixed parsing of quoted keywords in if statements, like 'not' was
   parsed as ! because using {if not $foo} is valid, but it was impossible
   to use them even as string.

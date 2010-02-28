@@ -1357,7 +1357,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($first==='%' && preg_match('#^%[a-z]#i', $substr)) {
 			// const
 			$out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif ($first==='"' || $first==="'") {
+		} elseif (($first==='"' || $first==="'") && !(is_array($parsingParams) && preg_match('#^([\'"])[a-z0-9_]+\1\s*=>?(?:\s+|[^=])#i', $substr))) {
 			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} elseif (preg_match('/^[a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
@@ -1397,7 +1397,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($this->debug) echo 'TAG PARSING ENDED<br />';
 			$pointer += strlen($this->rd);
 			return false;
-		} elseif (is_array($parsingParams) && preg_match('#^([a-z0-9_]+\s*=)(?:\s+|[^=]).*#i', $substr, $match)) {
+		} elseif (is_array($parsingParams) && preg_match('#^(([\'"]?)[a-z0-9_]+\2\s*='.($curBlock === 'array' ? '>?':'').')(?:\s+|[^=]).*#i', $substr, $match)) {
 			// named parameter
 			if ($this->debug) echo 'NAMED PARAM FOUND<br />';
 			$len = strlen($match[1]);
@@ -1408,7 +1408,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer += $len;
 			}
 
-			$output = array(trim(substr(trim($match[1]), 0, -1)), $this->parse($in, $from+$len, $to, false, 'namedparam', $pointer));
+			$output = array(trim($match[1], " \t\r\n=>'\""), $this->parse($in, $from+$len, $to, false, 'namedparam', $pointer));
 
 			$parsingParams[] = $output;
 			return $parsingParams;
@@ -1509,6 +1509,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$out = preg_replace('#\(is_string\(\$tmp=(.+?)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $out);
 				}
 				$out = Dwoo_Compiler::PHP_OPEN. $echo . $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
+			} else if ($curBlock === 'array' && is_array($parsingParams) && preg_match('#^(\s*=>?\s*)#', $substr, $match)) {
+				// parse namedparam with var as name (only for array)
+				if ($this->debug) echo 'VARIABLE NAMED PARAM (FOR ARRAY) FOUND<br />';
+				$len = strlen($match[1]);
+				$var = $out[count($out)-1];
+				$pointer += $len;
+
+				$output = array($var[0], $this->parse($substr, $len, null, false, 'namedparam', $pointer));
+
+				$parsingParams[] = $output;
+				return $parsingParams;
 			}
 		}
 
@@ -1661,6 +1672,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 						if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
 							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'condition', $ptr);
+						} elseif ($func === 'array') {
+							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'array', $ptr);
 						} else {
 							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'function', $ptr);
 						}
@@ -1674,10 +1687,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					if (is_array($p) && is_array($p[1])) {
 						$state |= 2;
 					} else {
-						if (($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m)) {
+						if (($state & 2) && preg_match('#^(["\'])(.+?)\1$#', $p[0], $m) && $func !== 'array') {
 							$params[$k] = array($m[2], array('true', 'true'));
 						} else {
-							if ($state & 2) {
+							if ($state & 2 && $func !== 'array') {
 								throw new Dwoo_Compilation_Exception($this, 'You can not use an unnamed parameter after a named one');
 							}
 							$state |= 1;

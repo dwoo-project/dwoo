@@ -119,6 +119,14 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('34boo5foo3', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testQuotedNamedParameters()
+	{
+		$tpl = new Dwoo_Template_String('{assign \'value\'=reverse(array("foo"=3,boo=5, 3=4), true) "var"=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('34boo5foo3', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testMixedParameters()
 	{
 		$tpl = new Dwoo_Template_String('{assign value=array(3, boo=5, 3=4) var=arr}{foreach $arr k v}{$k}{$v}{/foreach}');
@@ -132,7 +140,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	 */
 	public function testMixedParametersWrongOrder()
 	{
-		$tpl = new Dwoo_Template_String("{array(boo=5, 3)}");
+		$tpl = new Dwoo_Template_String("{assign value=5, 3)}");
 		$tpl->forceCompilation();
 		$this->dwoo->get($tpl, array(), $this->compiler);
 	}
@@ -570,7 +578,7 @@ replace="BAR"
 		$this->assertEquals('valid', $dwoo->get($tpl, array(), $this->compiler));
 	}
 
-	public function testCallingMethodOnPropery()
+	public function testCallingMethodOnProperty()
 	{
 		$tpl = new Dwoo_Template_String('{getobj()->instance->Bar("hoy")}');
 		$tpl->forceCompilation();
