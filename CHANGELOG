@@ -7,6 +7,9 @@
 + Improved parsing of array() to support real php array syntax as well
   as variables as array keys, thanks to acecream for the help
 + Improved parsing of named parameters that can now be quoted
+* Added $this->viewParam support to ZendFramework adapter through a
+  Dwoo_Adapters_ZendFramework_Dwoo class that extends Dwoo, you should use
+  this if you called setEngine() on the ZF view
 * Fixed parsing of quoted keywords in if statements, like 'not' was
   parsed as ! because using {if not $foo} is valid, but it was impossible
   to use them even as string.
