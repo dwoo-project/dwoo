@@ -11,7 +11,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testA()
@@ -56,7 +56,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals("a&lt;b&gt;ca<b>c", $this->dwoo->get($tpl, array('foo'=>'a<b>c'), $cmp));
-		
+
 		$cmp->setAutoEscape(false);
 		$tpl = new Dwoo_Template_String('{$foo}{auto_escape true}{$foo}{/}');
 		$tpl->forceCompilation();

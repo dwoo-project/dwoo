@@ -10,7 +10,7 @@ class TemplateTests extends PHPUnit_Framework_TestCase
 	public function __construct()
 	{
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testIncludePath()

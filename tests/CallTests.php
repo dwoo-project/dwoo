@@ -11,7 +11,7 @@ class CallTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testCustomFunctionPlugin()
@@ -92,7 +92,7 @@ class CallTests extends PHPUnit_Framework_TestCase
 	}
 }
 
-function plugin_custom_name(Dwoo $dwoo, $foo, $bar="bar")
+function plugin_custom_name(Dwoo_Core $dwoo, $foo, $bar="bar")
 {
 	return $foo.$bar;
 }

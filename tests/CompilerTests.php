@@ -12,7 +12,7 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testVarReplacement()
@@ -254,10 +254,10 @@ replace="BAR"
 		if (!defined('TEST')) {
 			define('TEST', 'Test');
 		}
-		$tpl = new Dwoo_Template_String('{$dwoo.const.TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*$dwoo.const.Dwoo::BLOCK_PLUGIN}');
+		$tpl = new Dwoo_Template_String('{$dwoo.const.TEST} {$dwoo.const.Dwoo_Core::FUNC_PLUGIN*$dwoo.const.Dwoo_Core::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals(TEST.' '.(Dwoo_Core::FUNC_PLUGIN*Dwoo_Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testShortConstants()
@@ -265,10 +265,10 @@ replace="BAR"
 		if (!defined('TEST')) {
 			define('TEST', 'Test');
 		}
-		$tpl = new Dwoo_Template_String('{%TEST} {$dwoo.const.Dwoo::FUNC_PLUGIN*%Dwoo::BLOCK_PLUGIN}');
+		$tpl = new Dwoo_Template_String('{%TEST} {$dwoo.const.Dwoo_Core::FUNC_PLUGIN*%Dwoo_Core::BLOCK_PLUGIN}');
 		$tpl->forceCompilation();
 
-		$this->assertEquals(TEST.' '.(Dwoo::FUNC_PLUGIN*Dwoo::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+		$this->assertEquals(TEST.' '.(Dwoo_Core::FUNC_PLUGIN*Dwoo_Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
 	public function testShortClassConstants()
@@ -417,7 +417,7 @@ replace="BAR"
 
 	public function testSetStringValToTrueWhenUsingNamedParams()
 	{
-		$this->dwoo->addPlugin('test', create_function('Dwoo $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
+		$this->dwoo->addPlugin('test', create_function('Dwoo_Core $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
 		$tpl = new Dwoo_Template_String('{test name="Name"}{test name="Name" bool}');
 		$tpl->forceCompilation();
 
@@ -561,7 +561,7 @@ replace="BAR"
 	{
 		$tpl = new Dwoo_Template_String('{getobj()->foo()->Bar("hoy") getobj()->moo}');
 		$tpl->forceCompilation();
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
 
 		$this->assertEquals('HOYyay', $dwoo->get($tpl, array(), $this->compiler));
@@ -570,7 +570,7 @@ replace="BAR"
 	public function testPluginProxy()
 	{
 		$proxy = new ProxyHelper('baz',true,3);
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->setPluginProxy($proxy);
 		$tpl = new Dwoo_Template_String('{TestProxy("baz", true, 3)}');
 		$tpl->forceCompilation();
@@ -582,7 +582,7 @@ replace="BAR"
 	{
 		$tpl = new Dwoo_Template_String('{getobj()->instance->Bar("hoy")}');
 		$tpl->forceCompilation();
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$dwoo->addPlugin('getobj', array(new PluginHelper(), 'call'));
 
 		$this->assertEquals('HOY', $dwoo->get($tpl, array(), $this->compiler));
@@ -773,7 +773,7 @@ class PluginHelper
 		$this->instance = $this;
 	}
 
-	public function callWithDwoo(Dwoo $dwoo)
+	public function callWithDwoo(Dwoo_Core $dwoo)
 	{
 		return $this;
 	}

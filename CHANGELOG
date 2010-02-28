@@ -4,6 +4,9 @@
   count (just a helper that counts anything). It won't affect you unless
   you built some plugin depending on isArray, in which case you should
   check all works fine still
++ Moved Dwoo code to Dwoo_Core that is extended by Dwoo, so you can use
+  the Dwoo directory as an svn:externals without problems now and just
+  use Dwoo_Core in place of Dwoo in your code
 + Improved parsing of array() to support real php array syntax as well
   as variables as array keys, thanks to acecream for the help
 + Improved parsing of named parameters that can now be quoted

@@ -489,7 +489,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 *
 	 * @private
 	 * @param string $name function name
-	 * @param int $type plugin type (Dwoo::*_PLUGIN)
+	 * @param int $type plugin type (Dwoo_Core::*_PLUGIN)
 	 */
 	public function addUsedPlugin($name, $type)
 	{
@@ -549,7 +549,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * adds the custom plugins loaded into Dwoo to the compiler so it can load them
 	 *
-	 * @see Dwoo::addPlugin
+	 * @see Dwoo_Core::addPlugin
 	 * @param array $customPlugins an array of custom plugins
 	 */
 	public function setCustomPlugins(array $customPlugins)
@@ -690,7 +690,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * @param string $tpl the template to compile
 	 * @return string a compiled php string
 	 */
-	public function compile(Dwoo $dwoo, Dwoo_ITemplate $template)
+	public function compile(Dwoo_Core $dwoo, Dwoo_ITemplate $template)
 	{
 		// init vars
 		$tpl = $template->getSource();
@@ -853,29 +853,29 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// build plugin preloader
 		foreach ($this->usedPlugins as $plugin=>$type) {
-			if ($type & Dwoo::CUSTOM_PLUGIN) {
+			if ($type & Dwoo_Core::CUSTOM_PLUGIN) {
 				continue;
 			}
 
 			switch($type) {
 
-			case Dwoo::BLOCK_PLUGIN:
-			case Dwoo::CLASS_PLUGIN:
+			case Dwoo_Core::BLOCK_PLUGIN:
+			case Dwoo_Core::CLASS_PLUGIN:
 				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
-			case Dwoo::FUNC_PLUGIN:
+			case Dwoo_Core::FUNC_PLUGIN:
 				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
-			case Dwoo::SMARTY_MODIFIER:
+			case Dwoo_Core::SMARTY_MODIFIER:
 				$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
-			case Dwoo::SMARTY_FUNCTION:
+			case Dwoo_Core::SMARTY_FUNCTION:
 				$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
-			case Dwoo::SMARTY_BLOCK:
+			case Dwoo_Core::SMARTY_BLOCK:
 				$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
-			case Dwoo::PROXY_PLUGIN:
+			case Dwoo_Core::PROXY_PLUGIN:
 				$output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
 				break;
 			default:
@@ -1090,7 +1090,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$output = '';
 
 		$pluginType = $this->getPluginType($type);
-		if ($pluginType & Dwoo::SMARTY_BLOCK) {
+		if ($pluginType & Dwoo_Core::SMARTY_BLOCK) {
 			$type = 'smartyinterface';
 		}
 		while (true) {
@@ -1706,22 +1706,22 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		if ($curBlock === 'method' || $func === 'do' || strstr($func, '::') !== false) {
-			$pluginType = Dwoo::NATIVE_PLUGIN;
+			$pluginType = Dwoo_Core::NATIVE_PLUGIN;
 		} else {
 			$pluginType = $this->getPluginType($func);
 		}
 
 		// blocks
-		if ($pluginType & Dwoo::BLOCK_PLUGIN) {
+		if ($pluginType & Dwoo_Core::BLOCK_PLUGIN) {
 			if ($curBlock !== 'root' || is_array($parsingParams)) {
 				throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
 			}
-			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+			if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 				return $this->addCustomBlock($func, $params, $state);
 			} else {
 				return $this->addBlock($func, $params, $state);
 			}
-		} elseif ($pluginType & Dwoo::SMARTY_BLOCK) {
+		} elseif ($pluginType & Dwoo_Core::SMARTY_BLOCK) {
 			if ($curBlock !== 'root' || is_array($parsingParams)) {
 				throw new Dwoo_Compilation_Exception($this, 'Block plugins can not be used as other plugin\'s arguments');
 			}
@@ -1738,25 +1738,25 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// funcs
-		if ($pluginType & Dwoo::NATIVE_PLUGIN || $pluginType & Dwoo::SMARTY_FUNCTION || $pluginType & Dwoo::SMARTY_BLOCK) {
+		if ($pluginType & Dwoo_Core::NATIVE_PLUGIN || $pluginType & Dwoo_Core::SMARTY_FUNCTION || $pluginType & Dwoo_Core::SMARTY_BLOCK) {
 			$params = $this->mapParams($params, null, $state);
-		} elseif ($pluginType & Dwoo::CLASS_PLUGIN) {
-			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::CLASS_PLUGIN) {
+			if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 				$params = $this->mapParams($params, array($this->customPlugins[$func]['class'], $this->customPlugins[$func]['function']), $state);
 			} else {
-				$params = $this->mapParams($params, array('Dwoo_Plugin_'.$func, ($pluginType & Dwoo::COMPILABLE_PLUGIN) ? 'compile' : 'process'), $state);
+				$params = $this->mapParams($params, array('Dwoo_Plugin_'.$func, ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'), $state);
 			}
-		} elseif ($pluginType & Dwoo::FUNC_PLUGIN) {
-			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::FUNC_PLUGIN) {
+			if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 				$params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
 			} else {
-				$params = $this->mapParams($params, 'Dwoo_Plugin_'.$func.(($pluginType & Dwoo::COMPILABLE_PLUGIN) ? '_compile' : ''), $state);
+				$params = $this->mapParams($params, 'Dwoo_Plugin_'.$func.(($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) ? '_compile' : ''), $state);
 			}
-		} elseif ($pluginType & Dwoo::SMARTY_MODIFIER) {
+		} elseif ($pluginType & Dwoo_Core::SMARTY_MODIFIER) {
 			$output = 'smarty_modifier_'.$func.'('.implode(', ', $params).')';
-		} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::PROXY_PLUGIN) {
 			$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
-		} elseif ($pluginType & Dwoo::TEMPLATE_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::TEMPLATE_PLUGIN) {
 			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
 			$map = array();
 			foreach ($this->templatePlugins[$func]['params'] as $param=>$defValue) {
@@ -1785,7 +1785,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$tokens[$k] = isset($p[2]) ? $p[2] : 0;
 			$params[$k] = $p[0];
 		}
-		if ($pluginType & Dwoo::NATIVE_PLUGIN) {
+		if ($pluginType & Dwoo_Core::NATIVE_PLUGIN) {
 			if ($func === 'do') {
 				if (isset($params['*'])) {
 					$output = implode(';', $params['*']).';';
@@ -1805,9 +1805,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$output = $func.'()';
 				}
 			}
-		} elseif ($pluginType & Dwoo::FUNC_PLUGIN) {
-			if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::FUNC_PLUGIN) {
+			if ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$funcCompiler = $this->customPlugins[$func]['callback'];
 				} else {
 					$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
@@ -1821,16 +1821,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				array_unshift($params, '$this');
 				$params = self::implode_r($params);
 
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					$output = 'call_user_func(\''.$callback.'\', '.$params.')';
 				} else {
 					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
 				}
 			}
-		} elseif ($pluginType & Dwoo::CLASS_PLUGIN) {
-			if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::CLASS_PLUGIN) {
+			if ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					if (!is_array($callback)) {
 						if (!method_exists($callback, 'compile')) {
@@ -1851,7 +1851,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$output = call_user_func_array($funcCompiler, $params);
 			} else {
 				$params = self::implode_r($params);
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					if (!is_array($callback)) {
 						if (!method_exists($callback, 'process')) {
@@ -1876,16 +1876,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$output = '$this->classCall(\''.$func.'\', array('.$params.'))';
 				}
 			}
-		} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::PROXY_PLUGIN) {
 			$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
-		} elseif ($pluginType & Dwoo::SMARTY_FUNCTION) {
+		} elseif ($pluginType & Dwoo_Core::SMARTY_FUNCTION) {
 			if (isset($params['*'])) {
 				$params = self::implode_r($params['*'], true);
 			} else {
 				$params = '';
 			}
 
-			if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+			if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 				$callback = $this->customPlugins[$func]['callback'];
 				if (is_array($callback)) {
 					if (is_object($callback[0])) {
@@ -1899,7 +1899,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				$output = 'smarty_function_'.$func.'(array('.$params.'), $this)';
 			}
-		} elseif ($pluginType & Dwoo::TEMPLATE_PLUGIN) {
+		} elseif ($pluginType & Dwoo_Core::TEMPLATE_PLUGIN) {
 			array_unshift($params, '$this');
 			$params = self::implode_r($params);
 			$output = 'Dwoo_Plugin_'.$func.'_'.$this->templatePlugins[$func]['uuid'].'('.$params.')';
@@ -2750,7 +2750,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				array_unshift($params, array($output, $output));
 			}
 
-			if ($pluginType & Dwoo::NATIVE_PLUGIN) {
+			if ($pluginType & Dwoo_Core::NATIVE_PLUGIN) {
 				$params = $this->mapParams($params, null, $state);
 
 				$params = $params['*'][0];
@@ -2762,18 +2762,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					$output = $func.'('.$params.')';
 				}
-			} elseif ($pluginType & Dwoo::PROXY_PLUGIN) {
+			} elseif ($pluginType & Dwoo_Core::PROXY_PLUGIN) {
 				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
 				foreach ($params as &$p)
 					$p = $p[0];
 				$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
-			} elseif ($pluginType & Dwoo::SMARTY_MODIFIER) {
+			} elseif ($pluginType & Dwoo_Core::SMARTY_MODIFIER) {
 				$params = $this->mapParams($params, null, $state);
 				$params = $params['*'][0];
 
 				$params = self::implode_r($params);
 
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					if (is_array($callback)) {
 						if (is_object($callback[0])) {
@@ -2792,16 +2792,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$output = 'smarty_modifier_'.$func.'('.$params.')';
 				}
 			} else {
-				if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
 					$pluginName = $callback;
 				} else {
 					$pluginName = 'Dwoo_Plugin_'.$func;
 
-					if ($pluginType & Dwoo::CLASS_PLUGIN) {
-						$callback = array($pluginName, ($pluginType & Dwoo::COMPILABLE_PLUGIN) ? 'compile' : 'process');
+					if ($pluginType & Dwoo_Core::CLASS_PLUGIN) {
+						$callback = array($pluginName, ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
 					} else {
-						$callback = $pluginName . (($pluginType & Dwoo::COMPILABLE_PLUGIN) ? '_compile' : '');
+						$callback = $pluginName . (($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) ? '_compile' : '');
 					}
 				}
 
@@ -2810,12 +2810,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				foreach ($params as &$p)
 					$p = $p[0];
 
-				if ($pluginType & Dwoo::FUNC_PLUGIN) {
-					if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
+				if ($pluginType & Dwoo_Core::FUNC_PLUGIN) {
+					if ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) {
 						if ($mapped) {
 							throw new Dwoo_Compilation_Exception($this, 'The @ operator can not be used on compiled plugins.');
 						}
-						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+						if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 							$funcCompiler = $this->customPlugins[$func]['callback'];
 						} else {
 							$funcCompiler = 'Dwoo_Plugin_'.$func.'_compile';
@@ -2833,11 +2833,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						}
 					}
 				} else {
-					if ($pluginType & Dwoo::COMPILABLE_PLUGIN) {
+					if ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) {
 						if ($mapped) {
 							throw new Dwoo_Compilation_Exception($this, 'The @ operator can not be used on compiled plugins.');
 						}
-						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+						if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 							$callback = $this->customPlugins[$func]['callback'];
 							if (!is_array($callback)) {
 								if (!method_exists($callback, 'compile')) {
@@ -2859,7 +2859,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					} else {
 						$params = self::implode_r($params);
 
-						if ($pluginType & Dwoo::CUSTOM_PLUGIN) {
+						if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 							if (is_object($callback[0])) {
 								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array').'(array($this->plugins[\''.$func.'\'][\'callback\'][0], \''.$callback[1].'\'), array('.$params.'))';
 							} else {
@@ -2927,38 +2927,38 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		while ($pluginType <= 0) {
 			if (isset($this->templatePlugins[$name])) {
-				$pluginType = Dwoo::TEMPLATE_PLUGIN | Dwoo::COMPILABLE_PLUGIN;
+				$pluginType = Dwoo_Core::TEMPLATE_PLUGIN | Dwoo_Core::COMPILABLE_PLUGIN;
 			} elseif (isset($this->customPlugins[$name])) {
-				$pluginType = $this->customPlugins[$name]['type'] | Dwoo::CUSTOM_PLUGIN;
+				$pluginType = $this->customPlugins[$name]['type'] | Dwoo_Core::CUSTOM_PLUGIN;
 			} elseif (class_exists('Dwoo_Plugin_'.$name, false) !== false) {
 				if (is_subclass_of('Dwoo_Plugin_'.$name, 'Dwoo_Block_Plugin')) {
-					$pluginType = Dwoo::BLOCK_PLUGIN;
+					$pluginType = Dwoo_Core::BLOCK_PLUGIN;
 				} else {
-					$pluginType = Dwoo::CLASS_PLUGIN;
+					$pluginType = Dwoo_Core::CLASS_PLUGIN;
 				}
 				$interfaces = class_implements('Dwoo_Plugin_'.$name, false);
 				if (in_array('Dwoo_ICompilable', $interfaces) !== false || in_array('Dwoo_ICompilable_Block', $interfaces) !== false) {
-					$pluginType |= Dwoo::COMPILABLE_PLUGIN;
+					$pluginType |= Dwoo_Core::COMPILABLE_PLUGIN;
 				}
 			} elseif (function_exists('Dwoo_Plugin_'.$name) !== false) {
-				$pluginType = Dwoo::FUNC_PLUGIN;
+				$pluginType = Dwoo_Core::FUNC_PLUGIN;
 			} elseif (function_exists('Dwoo_Plugin_'.$name.'_compile')) {
-				$pluginType = Dwoo::FUNC_PLUGIN | Dwoo::COMPILABLE_PLUGIN;
+				$pluginType = Dwoo_Core::FUNC_PLUGIN | Dwoo_Core::COMPILABLE_PLUGIN;
 			} elseif (function_exists('smarty_modifier_'.$name) !== false) {
-				$pluginType = Dwoo::SMARTY_MODIFIER;
+				$pluginType = Dwoo_Core::SMARTY_MODIFIER;
 			} elseif (function_exists('smarty_function_'.$name) !== false) {
-				$pluginType = Dwoo::SMARTY_FUNCTION;
+				$pluginType = Dwoo_Core::SMARTY_FUNCTION;
 			} elseif (function_exists('smarty_block_'.$name) !== false) {
-				$pluginType = Dwoo::SMARTY_BLOCK;
+				$pluginType = Dwoo_Core::SMARTY_BLOCK;
 			} else {
 				if ($pluginType===-1) {
 					try {
 						$this->dwoo->getLoader()->loadPlugin($name, isset($phpFunc)===false);
 					} catch (Exception $e) {
 						if (isset($phpFunc)) {
-							$pluginType = Dwoo::NATIVE_PLUGIN;
+							$pluginType = Dwoo_Core::NATIVE_PLUGIN;
 						} elseif (is_object($this->dwoo->getPluginProxy()) && $this->dwoo->getPluginProxy()->handles($name)) {
-							$pluginType = Dwoo::PROXY_PLUGIN;
+							$pluginType = Dwoo_Core::PROXY_PLUGIN;
 							break;
 						} else {
 							throw $e;
@@ -2971,7 +2971,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if (($pluginType & Dwoo::COMPILABLE_PLUGIN) === 0 && ($pluginType & Dwoo::NATIVE_PLUGIN) === 0 && ($pluginType & Dwoo::PROXY_PLUGIN) === 0) {
+		if (($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) === 0 && ($pluginType & Dwoo_Core::NATIVE_PLUGIN) === 0 && ($pluginType & Dwoo_Core::PROXY_PLUGIN) === 0) {
 			$this->addUsedPlugin($name, $pluginType);
 		}
 
@@ -3109,7 +3109,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$out = array();
 		foreach ($ref->getParameters() as $param) {
-			if (($class = $param->getClass()) !== null && $class->name === 'Dwoo') {
+			if (($class = $param->getClass()) !== null && ($class->name === 'Dwoo' || $class->name === 'Dwoo_Core')) {
 				continue;
 			}
 			if (($class = $param->getClass()) !== null && $class->name === 'Dwoo_Compiler') {
@@ -3128,7 +3128,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 * returns a default instance of this compiler, used by default by all Dwoo templates that do not have a
 	 * specific compiler assigned and when you do not override the default compiler factory function
 	 *
-	 * @see Dwoo::setDefaultCompilerFactory()
+	 * @see Dwoo_Core::setDefaultCompilerFactory()
 	 * @return Dwoo_Compiler
 	 */
 	public static function compilerFactory()

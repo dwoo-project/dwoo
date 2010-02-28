@@ -24,7 +24,7 @@
  * @date       2008-10-23
  * @package    Dwoo
  */
-function Dwoo_Plugin_eval(Dwoo $dwoo, $var, $assign = null)
+function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 {
 	if ($var == '') {
 		return;

@@ -144,7 +144,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * Binds plugin proxy to the Dwoo.
 	 *
 	 * @see Dwoo_Adapters_ZendFramework_View::getPluginProxy();
-	 * @see Dwoo::setPluginProxy();
+	 * @see Dwoo_Core::setPluginProxy();
 	 */
 	protected function preRender()
 	{

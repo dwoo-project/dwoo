@@ -146,7 +146,7 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 		$cacheDir = AgaviConfig::get('core.cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_DIR;
 		AgaviToolkit::mkdir($cacheDir, $parentMode, true);
 
-		$this->dwoo = new Dwoo($compileDir, $cacheDir);
+		$this->dwoo = new Dwoo_Core($compileDir, $cacheDir);
 
 		if (!empty($this->plugin_dir)) {
 			$this->dwoo->getLoader()->addDirectory($this->plugin_dir);

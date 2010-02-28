@@ -16,7 +16,7 @@
  * @date       2010-02-28
  * @package    Dwoo
  */
-class Dwoo_Adapters_ZendFramework_Dwoo extends Dwoo
+class Dwoo_Adapters_ZendFramework_Dwoo extends Dwoo_Core
 {
 	/**
 	 * Redirects all unknown properties to plugin proxy

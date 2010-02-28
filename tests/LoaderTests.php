@@ -11,12 +11,12 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
 	public function testLoaderGetSet()
 	{
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
@@ -25,7 +25,7 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
 	public function testPluginLoad()
 	{
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
@@ -38,12 +38,12 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
 	public function testRebuildClassPath()
 	{
-		$dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
 		$loader->addDirectory(TEST_DIRECTORY.'/resources/plugins');
-		file_put_contents(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php', '<?php function Dwoo_Plugin_loaderTest2(Dwoo $dwoo) { return "It works!"; }');
+		file_put_contents(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php', '<?php function Dwoo_Plugin_loaderTest2(Dwoo_Core $dwoo) { return "It works!"; }');
 
 		$tpl = new Dwoo_Template_String('{loaderTest2}');
 		$tpl->forceCompilation();

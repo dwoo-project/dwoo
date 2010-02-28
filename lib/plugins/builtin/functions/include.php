@@ -22,7 +22,7 @@
  * @date       2009-07-18
  * @package    Dwoo
  */
-function Dwoo_Plugin_include(Dwoo $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
+function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
 	if ($file === '') {
 		return;

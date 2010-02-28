@@ -11,7 +11,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 	{
 		// extend this class and override this in your constructor to test a modded compiler
 		$this->compiler = new Dwoo_Compiler();
-		$this->dwoo = new Dwoo(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 		$this->tpl = new Dwoo_Template_String('{$var}{$var2}{$var3}{$var4}');
 		$this->tpl->forceCompilation();
 	}
