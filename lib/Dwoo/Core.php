@@ -642,7 +642,7 @@ class Dwoo_Core
     public function getCacheDir()
     {
         if ($this->cacheDir === null) {
-            $this->setCacheDir(dirname(__FILE__).DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR);
+            $this->setCacheDir(DWOO_DIRECTORY.'cache'.DIRECTORY_SEPARATOR);
         }
 
         return $this->cacheDir;
@@ -669,7 +669,7 @@ class Dwoo_Core
     public function getCompileDir()
     {
         if ($this->compileDir === null) {
-            $this->setCompileDir(dirname(__FILE__).DIRECTORY_SEPARATOR.'compiled'.DIRECTORY_SEPARATOR);
+            $this->setCompileDir(DWOO_DIRECTORY.'compiled'.DIRECTORY_SEPARATOR);
         }
 
         return $this->compileDir;
