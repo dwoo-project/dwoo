@@ -1706,7 +1706,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		if ($curBlock === 'method' || $func === 'do' || strstr($func, '::') !== false) {
-			$pluginType = Dwoo_Core::NATIVE_PLUGIN;
+			// handle static method calls with security policy
+			if (strstr($func, '::') !== false && $this->securityPolicy !== null && $this->securityPolicy->isMethodAllowed(explode('::', strtolower($func))) !== true) {
+				throw new Dwoo_Security_Exception('Call to a disallowed php function : '.$func);
+			}
+			$pluginType = Dwoo::NATIVE_PLUGIN;
 		} else {
 			$pluginType = $this->getPluginType($func);
 		}
@@ -2291,15 +2295,26 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				// method
 				if (substr($methMatch[2], 0, 2) === '()') {
-					$parsedCall = '->'.$methMatch[1].'()';
+					$parsedCall = $methMatch[1].'()';
 					$ptr += strlen($methMatch[1]) + 2;
 				} else {
-					$parsedCall = '->'.$this->parseFunction($methodCall, $ptr, strlen($methodCall), false, 'method', $ptr);
+					$parsedCall = $this->parseFunction($methodCall, $ptr, strlen($methodCall), false, 'method', $ptr);
 				}
-				if ($curBlock === 'root') {
-					$output .= $parsedCall;
+				if ($this->securityPolicy !== null) {
+					$argPos = strpos($parsedCall, '(');
+					$method = strtolower(substr($parsedCall, 0, $argPos));
+					$args = substr($parsedCall, $argPos);
+					if ($curBlock === 'root') {
+						$output = '$this->getSecurityPolicy()->callMethod($this, '.$output.', '.var_export($method, true).', array'.$args.')';
+					} else {
+						$output = '(($tmp = '.$output.') ? $this->getSecurityPolicy()->callMethod($this, $tmp, '.var_export($method, true).', array'.$args.') : null)';
+					}
 				} else {
-					$output = '(($tmp = '.$output.') ? $tmp'.$parsedCall.' : null)';
+					if ($curBlock === 'root') {
+						$output .= '->'.$parsedCall;
+					} else {
+						$output = '(($tmp = '.$output.') ? $tmp->'.$parsedCall.' : null)';
+					}
 				}
 			}
 		}
@@ -2921,8 +2936,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$pluginType = -1;
 
 		if (($this->securityPolicy === null && (function_exists($name) || strtolower($name) === 'isset' || strtolower($name) === 'empty')) ||
-			($this->securityPolicy !== null && in_array(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false)) {
+			($this->securityPolicy !== null && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false)) {
 			$phpFunc = true;
+		} elseif ($this->securityPolicy !== null && function_exists($name) && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) === false) {
+			throw new Dwoo_Security_Exception('Call to a disallowed php function : '.$name);
 		}
 
 		while ($pluginType <= 0) {

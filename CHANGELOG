@@ -10,6 +10,10 @@
 + Improved parsing of array() to support real php array syntax as well
   as variables as array keys, thanks to acecream for the help
 + Improved parsing of named parameters that can now be quoted
++ Added support for instance and static method calls white-listing in
+  Dwoo_Security_Policy (see allowMethod()), this is hardly efficient
+  though for instance calls since it has to do runtime checks so use
+  it with caution
 * Added $this->viewParam support to ZendFramework adapter through a
   Dwoo_Adapters_ZendFramework_Dwoo class that extends Dwoo, you should use
   this if you called setEngine() on the ZF view

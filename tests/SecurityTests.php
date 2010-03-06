@@ -2,8 +2,6 @@
 
 require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
 
-function testphpfunc($input) { return $input.'OK'; }
-
 class SecurityTests extends PHPUnit_Framework_TestCase
 {
 	protected $compiler;
@@ -67,17 +65,76 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 		$tpl->forceCompilation();
 
 		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$this->policy->disallowPhpFunction('testphpfunc');
 	}
 
 	/**
-	 * @expectedException Dwoo_Exception
+	 * @expectedException Dwoo_Security_Exception
 	 */
 	public function testNotAllowedPhpFunction()
 	{
-		$tpl = new Dwoo_Template_String('{strtotime("2000-01-01")}');
+		$tpl = new Dwoo_Template_String('{testphpfunc("foo")}');
 		$tpl->forceCompilation();
 
 		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	public function testAllowMethod()
+	{
+		$this->policy->allowMethod('testSecurityClass','testOK');
+
+		$tpl = new Dwoo_Template_String('{$obj->testOK("foo")}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array('obj' => new testSecurityClass), $this->compiler));
+
+		$this->policy->disallowMethod('testSecurityClass','test');
+	}
+
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function testNotAllowedMethod()
+	{
+		$tpl = new Dwoo_Template_String('{$obj->testOK("foo")}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array('obj' => new testSecurityClass), $this->compiler);
+	}
+
+	public function testAllowStaticMethod()
+	{
+		$this->policy->allowMethod('testSecurityClass','testStatic');
+
+		$tpl = new Dwoo_Template_String('{testSecurityClass::testStatic("foo")}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("fooOK", $this->dwoo->get($tpl, array(), $this->compiler));
+
+		$this->policy->disallowMethod('testSecurityClass','testStatic');
+	}
+
+	/**
+	 * @expectedException Dwoo_Security_Exception
+	 */
+	public function testNotAllowedStaticMethod()
+	{
+		$tpl = new Dwoo_Template_String('{testSecurityClass::testStatic("foo")}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
+
+	/**
+	 * @expectedException Dwoo_Security_Exception
+	 */
+	public function testNotAllowedSubExecution()
+	{
+		$tpl = new Dwoo_Template_String('{$obj->test(preg_replace_callback("{.}", "mail", "f"))}');
+		$tpl->forceCompilation();
+
+		$this->dwoo->get($tpl, array('obj' => new testSecurityClass), $this->compiler);
 	}
 
 	public function testAllowDirectoryGetSet()
@@ -102,5 +159,21 @@ class SecurityTests extends PHPUnit_Framework_TestCase
 		$this->policy->disallowPhpFunction(array('a', 'b'));
 		$this->policy->disallowPhpFunction('c');
 		$this->assertEquals($old, $this->policy->getAllowedPhpFunctions());
+	}
+}
+
+function testphpfunc($input) { return $input.'OK'; }
+
+class testSecurityClass {
+	public static function testStatic($input) {
+		return $input.'OK';
+	}
+
+	public function testOK($input) {
+		return $input.'OK';
+	}
+
+	public function test($input) {
+		throw new Exception('can not call');
 	}
 }
