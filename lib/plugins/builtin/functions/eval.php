@@ -31,7 +31,8 @@ function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 	}
 
 	$tpl = new Dwoo_Template_String($var);
-	$out = $dwoo->get($tpl, $dwoo->readVar('_parent'));
+	$clone = $dwoo->get(null);
+	$out = $clone->get($tpl, $dwoo->readVar('_parent'));
 
 	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);

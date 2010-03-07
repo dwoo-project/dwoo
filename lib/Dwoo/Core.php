@@ -195,6 +195,13 @@ class Dwoo_Core
     protected $runtimePlugins;
 
     /**
+     * stores the returned values during template runtime
+     *
+     * @var array
+     */
+    protected $returnData;
+
+    /**
      * stores the data during template runtime
      *
      * @var array
@@ -271,6 +278,7 @@ class Dwoo_Core
     {
         $this->template = null;
         unset($this->data);
+        unset($this->returnData);
     }
 
     /**
@@ -308,8 +316,7 @@ class Dwoo_Core
     {
         // a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
         if ($this->template instanceof Dwoo_ITemplate) {
-            $proxy = clone $this;
-            return $proxy->get($_tpl, $data, $_compiler, $_output);
+            return clone $this;
         }
 
         // auto-create template if required
@@ -448,6 +455,7 @@ class Dwoo_Core
         $this->stack = array();
         $this->curBlock = null;
         $this->buffer = '';
+        $this->returnData = array();
     }
 
     /*
@@ -1538,6 +1546,27 @@ class Dwoo_Core
     public function getData()
     {
         return $this->data;
+    }
+
+    /**
+     * [runtime function] sets a return value for the currently running template
+     *
+     * @param string $name var name
+     * @param mixed $value var value
+     */
+    public function setReturnValue($name, $value)
+    {
+        $this->returnData[$name] = $value;
+    }
+
+    /**
+     * [runtime function] retrieves the return values set by the template
+     *
+     * @return array
+     */
+    public function getReturnValues()
+    {
+        return $this->returnData;
     }
 
     /**

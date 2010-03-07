@@ -62,11 +62,18 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 		$vars = $rest + $vars;
 	}
 
-	$out = $dwoo->get($include, $vars);
+	$clone = $dwoo->get(null);
+	$out = $clone->get($include, $vars);
 
 	if ($assign !== null) {
 		$dwoo->assignInScope($out, $assign);
-	} else {
+	}
+
+	foreach ($clone->getReturnValues() as $name => $value) {
+		$dwoo->assignInScope($value, $name);
+	}
+
+	if ($assign === null) {
 		return $out;
 	}
 }

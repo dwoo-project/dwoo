@@ -429,6 +429,23 @@ a"}');
 		$this->assertEquals("FlMl", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testReturn()
+	{
+		$tpl = new Dwoo_Template_String('{return bar=$foo}');
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array('foo' => 'FOO'), $this->compiler);
+
+		$this->assertEquals(array('bar'=>'FOO'), $this->dwoo->getReturnValues());
+	}
+
+	public function testReturnViaInclude()
+	{
+		$tpl = new Dwoo_Template_String('{include cat("file:" %TEST_DIRECTORY "/resources/returnTest.html") val="foo"}{$bar}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('FOO', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testReverse()
 	{
 		$tpl = new Dwoo_Template_String('{reverse "abc"}');
