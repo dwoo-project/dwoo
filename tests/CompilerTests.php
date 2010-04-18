@@ -317,11 +317,11 @@ replace="BAR"
 
 	public function testMethodCalls()
 	{
-		$tpl = new Dwoo_Template_String('{$a} {$a->foo()} {$b[$c]->foo()} {$a->bar()+$a->bar()} {$a->baz(5, $foo)} {$a->make(5)->getInt()} {$a->make(5)->getInt()/2}');
+		$tpl = new Dwoo_Template_String('{$a} {$a->foo()} {$b[$c]->foo()} {$a->bar()+$a->bar()} {$a->baz(5, $foo)} {$a->make(5)->getInt()} {$a->make(5)->getInt()/2} {$a->_foo($foo, 5)} {$a->_fooChain()->_foo(5, $foo)}');
 		$tpl->forceCompilation();
 
 		$a = new MethodCallsHelper();
-		$this->assertEquals('obj 0 1 7 10bar 5 2.5', $this->dwoo->get($tpl, array('a'=>$a, 'b'=>array('test'=>$a), 'c'=>'test', 'foo'=>'bar'), $this->compiler));
+		$this->assertEquals('obj 0 1 7 10bar 5 2.5 -5bar- -bar5-', $this->dwoo->get($tpl, array('a'=>$a, 'b'=>array('test'=>$a), 'c'=>'test', 'foo'=>'bar'), $this->compiler));
 	}
 
 	public function testLooseTagHandling()
@@ -711,11 +711,27 @@ fail
 		$tpl->forceCompilation();
 		$this->assertEquals('testtest', $this->dwoo->get($tpl, array('obj'=>new PluginHelper()), $this->compiler));
 	}
+	
+	public function testFunctionCanStartWithUnderscore()
+	{
+		$tpl = new Dwoo_Template_String('{_underscoreHelper("test", _underscoreHelper("bar", 10))|_underscoreModifierHelper}');
+		$tpl->forceCompilation();
+		$this->assertEquals('_--10bar-test-_', $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+	
 }
 
 function excessArgsHelper($a) {
 	$args = func_get_args();
 	return implode(':', $args);
+}
+
+function _underscoreHelper($foo, $bar) {
+	return "-$bar$foo-";
+}
+
+function _underscoreModifierHelper($value) {
+	return "_${value}_";
 }
 
 class StaticHelper {
@@ -820,5 +836,13 @@ class MethodCallsHelper
 
 	public static function staticFoo($bar, $baz) {
 		return "-$baz$bar-";
+	}
+	
+	public function _foo($bar, $baz) {
+		return "-$baz$bar-";
+	}
+	
+	public function _fooChain() {
+		return $this;
 	}
 }

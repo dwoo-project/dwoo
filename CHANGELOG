@@ -29,6 +29,8 @@
   to use them even as string.
 * Fixed parsing bug with method calls used as arguments with a comma
   following.
+* Fixed parsing of function/constants that start with an underscore, 
+  thanks to Dominik del Bondio for the patch
 
 [2010-02-07] 1.1.1
 + Added {optional} plugin that just prints an optional var without any

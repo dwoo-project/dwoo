@@ -1354,13 +1354,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			// var
 			$out = $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			$parsed = 'var';
-		} elseif ($first==='%' && preg_match('#^%[a-z]#i', $substr)) {
+		} elseif ($first==='%' && preg_match('#^%[a-z_]#i', $substr)) {
 			// const
 			$out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
 		} elseif (($first==='"' || $first==="'") && !(is_array($parsingParams) && preg_match('#^([\'"])[a-z0-9_]+\1\s*=>?(?:\s+|[^=])#i', $substr))) {
 			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (preg_match('/^[a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
+		} elseif (preg_match('/^[a-z_][a-z0-9_]*(?:::[a-z_][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
 			// func
 			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			$parsed = 'func';
@@ -1371,7 +1371,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer++;
 			}
 			return $this->parse($in, $from+1, $to, false, 'root', $pointer);
-		} elseif ($curBlock === 'root' && preg_match('#^/([a-z][a-z0-9_]*)?#i', $substr, $match)) {
+		} elseif ($curBlock === 'root' && preg_match('#^/([a-z_][a-z0-9_]*)?#i', $substr, $match)) {
 			// close block
 			if (!empty($match[1]) && $match[1] == 'else') {
 				throw new Dwoo_Compilation_Exception($this, 'Else blocks must not be closed explicitly, they are automatically closed when their parent block is closed');
@@ -1536,7 +1536,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 
 		// func parsed, check if any func-extension applies
-		if ($parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+|->[a-z].*)?#is', $substr, $match)) {
+		if ($parsed==='func' && preg_match('#^->[a-z0-9_]+(\s*\(.+|->[a-z_].*)?#is', $substr, $match)) {
 			// parse method call or property read
 			$ptr = 0;
 
@@ -1573,7 +1573,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected function parseFunction($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
 		$cmdstr = substr($in, $from, $to-$from);
-		preg_match('/^([a-z][a-z0-9_]*(?:::[a-z][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
+		preg_match('/^([a-z_][a-z0-9_]*(?:::[a-z_][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
 
 		if (empty($match[1])) {
 			throw new Dwoo_Compilation_Exception($this, 'Parse error, invalid function name : '.substr($cmdstr, 0, 15));
@@ -2687,7 +2687,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 			$cmdstr = $cmdstrsrc;
 			$paramsep = ':';
-			if (!preg_match('/^(@{0,2}[a-z][a-z0-9_]*)(:)?/i', $cmdstr, $match)) {
+			if (!preg_match('/^(@{0,2}[a-z_][a-z0-9_]*)(:)?/i', $cmdstr, $match)) {
 				throw new Dwoo_Compilation_Exception($this, 'Invalid modifier name, started with : '.substr($cmdstr, 0, 10));
 			}
 			$paramspos = !empty($match[2]) ? strlen($match[1]) : false;
