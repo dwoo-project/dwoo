@@ -254,7 +254,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		}
 
 		// file is not cacheable
-		if ($cacheLength === 0) {
+		if ($cacheLength == 0) {
 			return false;
 		}
 
