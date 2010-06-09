@@ -1249,6 +1249,9 @@ class Dwoo_Core
 
         while (list($k, $sep) = each($m[1])) {
             if ($sep === '.' || $sep === '[' || $sep === '') {
+                // strip enclosing quotes if present
+                $m[2][$k] = preg_replace('#^(["\']?)(.*?)\1$#', '$2', $m[2][$k]);
+
                 if ((is_array($data) || $data instanceof ArrayAccess) && ($safeRead === false || isset($data[$m[2][$k]]))) {
                     $data = $data[$m[2][$k]];
                 } else {

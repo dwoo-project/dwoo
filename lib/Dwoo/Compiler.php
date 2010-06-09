@@ -2094,8 +2094,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pointer += $matchedLength;
 			}
 
-			// replace useless brackets by dot accessed vars
-			$key = preg_replace('#\[([^$%\[.>-]+)\]#', '.$1', $key);
+			// replace useless brackets by dot accessed vars and strip enclosing quotes if present
+			$key = preg_replace('#\[(["\']?)([^$%\[.>-]+)\1\]#', '.$2', $key);
 
 			// prevent $foo->$bar calls because it doesn't seem worth the trouble
 			if (strpos($key, '->$') !== false) {
