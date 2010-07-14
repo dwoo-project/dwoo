@@ -3134,6 +3134,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 			if ($param->getName() === 'rest' && $param->isArray() === true) {
 				$out[] = array('*', $param->isOptional(), null);
+				continue;
 			}
 			$out[] = array($param->getName(), $param->isOptional(), $param->isOptional() ? $param->getDefaultValue() : null);
 		}
