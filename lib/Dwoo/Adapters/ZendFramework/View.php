@@ -391,7 +391,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function getVars()
 	{
-		return $this->_dataProvider->getData();
+		return $this->getDataProvider()->getData();
 	}
 
 	/**
