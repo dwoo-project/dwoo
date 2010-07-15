@@ -484,7 +484,7 @@ class Dwoo_Core
             if (is_subclass_of($callback, 'Dwoo_Block_Plugin')) {
                 $this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback);
             } else {
-                $this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback, 'function'=>'process');
+                $this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback, 'function'=>($compilable ? 'compile' : 'process'));
             }
         } elseif (function_exists($callback)) {
             $this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
