@@ -27,25 +27,30 @@ class Dwoo_Plugin_dynamic extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
 
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{
-		$output = Dwoo_Compiler::PHP_OPEN .
-			'if($doCache) {'."\n\t".
-				'echo \'<dwoo:dynamic_\'.$dynamicId.\'>'.
-				str_replace('\'', '\\\'', $content) .
-				'</dwoo:dynamic_\'.$dynamicId.\'>\';'.
-			"\n} else {\n\t";
-				if(substr($content, 0, strlen(Dwoo_Compiler::PHP_OPEN)) == Dwoo_Compiler::PHP_OPEN) {
-					$output .= substr($content, strlen(Dwoo_Compiler::PHP_OPEN));
-				} else {
-					$output .= Dwoo_Compiler::PHP_CLOSE . $content;
-				}
-				if(substr($output, -strlen(Dwoo_Compiler::PHP_CLOSE)) == Dwoo_Compiler::PHP_CLOSE) {
-					$output = substr($output, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
-				} else {
-					$output .= Dwoo_Compiler::PHP_OPEN;
-				}
-			$output .= "\n}". Dwoo_Compiler::PHP_CLOSE;
+		try {
+			$compiler->findBlock('dynamic');
+			$output = Dwoo_Compiler::PHP_OPEN .
+				'if($doCache) {'."\n\t".
+					'echo \'<dwoo:dynamic_\'.$dynamicId.\'>'.
+					str_replace('\'', '\\\'', $content) .
+					'</dwoo:dynamic_\'.$dynamicId.\'>\';'.
+				"\n} else {\n\t";
+					if(substr($content, 0, strlen(Dwoo_Compiler::PHP_OPEN)) == Dwoo_Compiler::PHP_OPEN) {
+						$output .= substr($content, strlen(Dwoo_Compiler::PHP_OPEN));
+					} else {
+						$output .= Dwoo_Compiler::PHP_CLOSE . $content;
+					}
+					if(substr($output, -strlen(Dwoo_Compiler::PHP_CLOSE)) == Dwoo_Compiler::PHP_CLOSE) {
+						$output = substr($output, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
+					} else {
+						$output .= Dwoo_Compiler::PHP_OPEN;
+					}
+				$output .= "\n}". Dwoo_Compiler::PHP_CLOSE;
 
-		return $output;
+			return $output;
+		} catch (Dwoo_Compilation_Exception $e) {
+			return $content;
+		}
 	}
 
 	public static function unescape($output, $dynamicId, $compiledFile)

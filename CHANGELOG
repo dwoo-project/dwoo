@@ -25,6 +25,8 @@
   Dwoo_Security_Policy (see allowMethod()), this is hardly efficient
   though for instance calls since it has to do runtime checks so use
   it with caution
+* Fixed PHP parse errors being generated in compiled templates when
+  {dynamic} was nested
 * Added $this->viewParam support to ZendFramework adapter through a
   Dwoo_Adapters_ZendFramework_Dwoo class that extends Dwoo, you should use
   this if you called setEngine() on the ZF view
