@@ -4,6 +4,10 @@
   and count (just a helper that counts anything). It won't affect you
   unless you built some plugin depending on isArray, in which case you
   should check all works fine still
+! BC Break: The fix for objects implemented __get but not __isset that was
+  applied in 1.1.1 was causing problems for people implementing it
+  correctly, therefore it had to be reverted. If you are affected you must
+  implement __isset() properly
 ! BC Break: Dwoo_Core::get now returns a new Dwoo_Core instance if it's
   evaluating a template already, this only affects you if you built your
   own include-like plugin, see the changes to include plugin in revision

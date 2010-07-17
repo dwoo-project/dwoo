@@ -1258,7 +1258,7 @@ class Dwoo_Core
                     return null;
                 }
             } else {
-                if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]) || is_callable(array($data, '__get')))) {
+                if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
                     $data = $data->$m[2][$k];
                 } else {
                     return null;
