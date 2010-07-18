@@ -141,9 +141,23 @@ aaa
  ');
         $tpl->forceCompilation();
 
-        $this->assertEquals(' 
-aaa
- ', $this->dwoo->get($tpl, array()));
+        $this->assertEquals(" \naaa\n ", $this->dwoo->get($tpl, array()));
+    }
+
+    public function testNestedDynamicTags()
+    {
+        $tpl = new Dwoo_Template_String('
+        {dynamic}
+        {dynamic}
+        {foreach $foo member}
+        {/foreach}
+        {/dynamic}
+        {/dynamic}
+        ');
+
+        $tpl->forceCompilation();
+
+        $this->dwoo->get($tpl, array());
     }
 }
 
