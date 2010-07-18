@@ -15,6 +15,7 @@
 + Added {return} plugin that allows any included template to return
   variables into the one that included it, or to the main controller
   code via $dwoo->getReturnValues()
++ Added support for static vars and methods access on namespaced classes
 + Moved Dwoo code to Dwoo_Core that is extended by Dwoo, so you can use
   the Dwoo directory as an svn:externals without problems now and just
   use Dwoo_Core in place of Dwoo in your code

@@ -711,14 +711,35 @@ fail
 		$tpl->forceCompilation();
 		$this->assertEquals('testtest', $this->dwoo->get($tpl, array('obj'=>new PluginHelper()), $this->compiler));
 	}
-	
+
 	public function testFunctionCanStartWithUnderscore()
 	{
 		$tpl = new Dwoo_Template_String('{_underscoreHelper("test", _underscoreHelper("bar", 10))|_underscoreModifierHelper}');
 		$tpl->forceCompilation();
 		$this->assertEquals('_--10bar-test-_', $this->dwoo->get($tpl, array(), $this->compiler));
 	}
-	
+
+	public function testNamespaceStaticMethodAccess()
+	{
+		if (version_compare(phpversion(), '5.3.0', '<')) {
+			$this->markTestSkipped();
+		}
+		include_once __DIR__.'/resources/namespace.php';
+		$tpl = new Dwoo_Template_String('{\Dwoo\TestHelper::execute(foo)}');
+		$tpl->forceCompilation();
+		$this->assertEquals('foo', $this->dwoo->get($tpl, array()));
+	}
+
+	public function testNamespaceStaticVarAccess()
+	{
+		if (version_compare(phpversion(), '5.3.0', '<')) {
+			$this->markTestSkipped();
+		}
+		include_once __DIR__.'/resources/namespace.php';
+		$tpl = new Dwoo_Template_String('{\Dwoo\TestHelper::$var}');
+		$tpl->forceCompilation();
+		$this->assertEquals('foo', $this->dwoo->get($tpl, array()));
+	}
 }
 
 function excessArgsHelper($a) {
@@ -837,11 +858,11 @@ class MethodCallsHelper
 	public static function staticFoo($bar, $baz) {
 		return "-$baz$bar-";
 	}
-	
+
 	public function _foo($bar, $baz) {
 		return "-$baz$bar-";
 	}
-	
+
 	public function _fooChain() {
 		return $this;
 	}

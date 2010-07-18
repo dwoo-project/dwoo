@@ -1360,7 +1360,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif (($first==='"' || $first==="'") && !(is_array($parsingParams) && preg_match('#^([\'"])[a-z0-9_]+\1\s*=>?(?:\s+|[^=])#i', $substr))) {
 			// string
 			$out = $this->parseString($in, $from, $to, $parsingParams, $curBlock, $pointer);
-		} elseif (preg_match('/^[a-z_][a-z0-9_]*(?:::[a-z_][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
+		} elseif (preg_match('/^\\\\?[a-z_](?:\\\\?[a-z0-9_]+)*(?:::[a-z_][a-z0-9_]*)?('.(is_array($parsingParams)||$curBlock!='root'?'':'\s+[^(]|').'\s*\(|\s*'.$this->rdr.'|\s*;)/i', $substr)) {
 			// func
 			$out = $this->parseFunction($in, $from, $to, $parsingParams, $curBlock, $pointer);
 			$parsed = 'func';
@@ -1412,7 +1412,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			$parsingParams[] = $output;
 			return $parsingParams;
-		} elseif (preg_match('#^([a-z0-9_]+::\$[a-z0-9_]+)#i', $substr, $match)) {
+		} elseif (preg_match('#^(\\\\?[a-z_](?:\\\\?[a-z0-9_]+)*::\$[a-z0-9_]+)#i', $substr, $match)) {
 			// static member access
 			$parsed = 'var';
 			if (is_array($parsingParams)) {
@@ -1573,7 +1573,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected function parseFunction($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
 		$cmdstr = substr($in, $from, $to-$from);
-		preg_match('/^([a-z_][a-z0-9_]*(?:::[a-z_][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
+		preg_match('/^(\\\\?[a-z_](?:\\\\?[a-z0-9_]+)*(?:::[a-z_][a-z0-9_]*)?)(\s*'.$this->rdr.'|\s*;)?/i', $cmdstr, $match);
 
 		if (empty($match[1])) {
 			throw new Dwoo_Compilation_Exception($this, 'Parse error, invalid function name : '.substr($cmdstr, 0, 15));
