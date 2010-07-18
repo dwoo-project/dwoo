@@ -2097,11 +2097,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			// replace useless brackets by dot accessed vars and strip enclosing quotes if present
 			$key = preg_replace('#\[(["\']?)([^$%\[.>-]+)\1\]#', '.$2', $key);
 
-			// prevent $foo->$bar calls because it doesn't seem worth the trouble
-			if (strpos($key, '->$') !== false) {
-				throw new Dwoo_Compilation_Exception($this, 'You can not access an object\'s property using a variable name.');
-			}
-
 			if ($this->debug) {
 				if ($hasMethodCall) {
 					echo 'METHOD CALL FOUND : $'.$key.substr($methodCall, 0, 30).'<br />';

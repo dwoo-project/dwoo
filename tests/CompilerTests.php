@@ -23,6 +23,14 @@ class CompilerTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals('bar', $this->dwoo->get($tpl, array('foo'=>'bar'), $this->compiler));
 	}
 
+	public function testVariableObjectPropertyAccess()
+	{
+		$tpl = new Dwoo_Template_String('{$obj->$var}');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('yay', $this->dwoo->get($tpl, array('obj'=>new PluginHelper, 'var' => 'moo'), $this->compiler));
+	}
+
 	public function testComplexVarReplacement()
 	{
 		$tpl = new Dwoo_Template_String('{$_root[$a].0}{$_[$a][0]}{$_[$c.d].0}{$_.$a.0}{$_[$c[$x.0]].0}{$_[$c.$y.0].0}');
