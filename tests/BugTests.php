@@ -159,6 +159,16 @@ aaa
 
         $this->dwoo->get($tpl, array());
     }
+
+    public function testDoubleEscapingOnAssignments()
+    {
+        $tpl = new Dwoo_Template_String('{$bar = $foo}{$foo}{$bar}');
+        $tpl->forceCompilation();
+        $cmp = new Dwoo_Compiler();
+        $cmp->setAutoEscape(true);
+
+        $this->assertEquals('a&#039;ba&#039;b', $this->dwoo->get($tpl, array('foo' => "a'b"), $cmp));
+    }
 }
 
 function Dwoo_Plugin_X_compile(Dwoo_Compiler $cmp, $text)

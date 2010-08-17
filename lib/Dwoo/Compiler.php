@@ -2214,7 +2214,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 			}
 
-			if ($this->autoEscape === true) {
+			if ($this->autoEscape === true && $curBlock !== 'condition') {
 				$output = '(is_string($tmp='.$output.') ? htmlspecialchars($tmp, ENT_QUOTES, $this->charset) : $tmp)';
 			}
 
