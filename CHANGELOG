@@ -28,6 +28,7 @@
   it with caution
 * Fixed PHP parse errors being generated in compiled templates when
   {dynamic} was nested
+* Fixed extends bug when calling {extends} with parenthesis
 * Fixed a double escaping bug when a variable was assigned to another one
 * Added $this->viewParam support to ZendFramework adapter through a
   Dwoo_Adapters_ZendFramework_Dwoo class that extends Dwoo, you should use
