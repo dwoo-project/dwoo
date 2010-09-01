@@ -242,6 +242,14 @@ class FuncTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals("<html>ThirdLevel</html>", $this->dwoo->get($tpl, array(), $this->compiler));
 	}
 
+	public function testExtendsWithBraces()
+	{
+		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/extends_braces/sub/test.html');
+		$tpl->forceCompilation();
+
+		$this->assertEquals("<html>ThirdLevel</html>", $this->dwoo->get($tpl, array(), $this->compiler));
+	}
+
 	public function testExtendsVariation2()
 	{
 		$tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/extends/root.html');
