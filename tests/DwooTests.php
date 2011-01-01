@@ -7,30 +7,18 @@ if (!ini_get('date.timezone'))
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
-require dirname(__FILE__) . '/'.DwooTests::getConfig('DWOO_PATH').'/dwooAutoload.php';
-//require dirname(__FILE__) . '/'.DwooTests::getConfig('DWOO_PATH').'/Dwoo.compiled.php';
-//set_include_path(get_include_path().';'.DWOO_DIRECTORY);
+require dirname(__FILE__) . '/../lib/dwooAutoload.php';
+//require dirname(__FILE__) . '/../lib/Dwoo.compiled.php';
+//set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../lib/');
+
 define('TEST_DIRECTORY', dirname(__FILE__));
 
-class DwooTests extends PHPUnit_Framework_TestSuite {
-
+class DwooTests extends PHPUnit_Framework_TestSuite
+{
 	protected static $cfg;
 
-	public static function getConfig($var, $default=null) {
-		if (self::$cfg == null) {
-			self::$cfg = parse_ini_file(dirname(__FILE__) . '/config.ini');
-		}
-		if (isset(self::$cfg[$var])) {
-			return self::$cfg[$var];
-		}
-		return $default;
-	}
-
-	public static function suite() {
-		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'plugins/builtin');
-		PHPUnit_Util_Filter::addDirectoryToWhitelist(DWOO_DIRECTORY.'Dwoo');
-		PHPUnit_Util_Filter::removeDirectoryFromWhitelist(DWOO_DIRECTORY.'Dwoo/Adapters');
-
+	public static function suite()
+	{
 		$suite = new self('Dwoo - Unit Tests Report');
 
 		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
@@ -49,7 +37,8 @@ class DwooTests extends PHPUnit_Framework_TestSuite {
 		return $suite;
 	}
 
-	protected function tearDown() {
+	protected function tearDown()
+	{
 		$this->clearDir(TEST_DIRECTORY.'/temp/cache', true);
 		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
