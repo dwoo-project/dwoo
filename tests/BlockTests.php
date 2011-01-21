@@ -103,14 +103,31 @@ BAZZ       {/capture}{$foo}');
 	public function testDynamic()
 	{
 		$preTime = time();
-		$tpl = new Dwoo_Template_String('{$pre}{dynamic}{$pre}{/}', 10, 'testDynamic');
+		$tpl = new Dwoo_Template_String('t{$pre}{dynamic}{$pre}{/}', 10, 'testDynamic');
 		$tpl->forceCompilation();
 
-		$this->assertEquals($preTime . $preTime, $this->dwoo->get($tpl, array('pre'=>$preTime), $this->compiler));
+		$this->assertEquals('t'.$preTime . $preTime, $this->dwoo->get($tpl, array('pre'=>$preTime), $this->compiler));
 
 		sleep(1);
 		$postTime = time();
-		$this->assertEquals($preTime . $postTime, $this->dwoo->get($tpl, array('pre'=>$postTime), $this->compiler));
+		$this->assertEquals('t'.$preTime . $postTime, $this->dwoo->get($tpl, array('pre'=>$postTime), $this->compiler));
+
+		// fixes the init call not being called (which is normal)
+		$fixCall = new Dwoo_Plugin_dynamic($this->dwoo);
+		$fixCall->init('');
+	}
+
+	public function testDynamicNested()
+	{
+		$preTime = time();
+		$tpl = new Dwoo_Template_String('t{$pre}{dynamic}{$pre}{dynamic}{$pre}{/}{/}', 10, 'testDynamicNested');
+		$tpl->forceCompilation();
+
+		$this->assertEquals('t'.$preTime . $preTime . $preTime, $this->dwoo->get($tpl, array('pre'=>$preTime), $this->compiler));
+
+		sleep(1);
+		$postTime = time();
+		$this->assertEquals('t'.$preTime . $postTime . $postTime, $this->dwoo->get($tpl, array('pre'=>$postTime), $this->compiler));
 
 		// fixes the init call not being called (which is normal)
 		$fixCall = new Dwoo_Plugin_dynamic($this->dwoo);
