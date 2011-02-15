@@ -33,6 +33,7 @@
 * Added $this->viewParam support to ZendFramework adapter through a
   Dwoo_Adapters_ZendFramework_Dwoo class that extends Dwoo, you should use
   this if you called setEngine() on the ZF view
+* Fixed parsing of blocks with a huge (25K+) content
 * Fixed parsing of quoted keywords in if statements, like 'not' was
   parsed as ! because using {if not $foo} is valid, but it was impossible
   to use them even as string.
