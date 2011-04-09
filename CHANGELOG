@@ -1,4 +1,4 @@
-[2010--] 1.2.0
+[2011--] 1.2.0
 ! BC Break: Dwoo_Core::isArray had to be fixed and it has been split up
   in 3 methods, isArray (for array access), isTraversable (for foreach)
   and count (just a helper that counts anything). It won't affect you
@@ -12,6 +12,9 @@
   evaluating a template already, this only affects you if you built your
   own include-like plugin, see the changes to include plugin in revision
   346 [http://bugs.dwoo.org/dwoo/browse_code/revision/345] for more infos
++ Added support for nested blocks for template inheritance, block names
+  must be unique, overriding of any block is done at the top level, thanks
+  to Ian Carpenter for the patch
 + Added {return} plugin that allows any included template to return
   variables into the one that included it, or to the main controller
   code via $dwoo->getReturnValues()

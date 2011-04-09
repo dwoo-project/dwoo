@@ -179,6 +179,36 @@ FOObartoplevelContent2
 baz"));
 	}
 
+	public function testExtendsWithNestedBlocks()
+	{
+		$tpl = new Dwoo_Template_File(dirname(__FILE__).'/resources/extends_nested/child.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("<html>
+    Root
+    Child Header
+
+            Root Subcontent
+    "."
+lala
+Parent Footer
+</html>
+"));
+	}
+
+	public function testExtendsWithNestedBlocks2()
+	{
+		$tpl = new Dwoo_Template_File(dirname(__FILE__).'/resources/extends_nested/child2.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("<html>
+Parent Content
+lala
+Root Footer
+</html>
+"));
+	}
+
 	public function testIf ()
 	{
 		$tpl = new Dwoo_Template_String('{if "BAR"==reverse($foo|reverse|upper)}true{/if}');
