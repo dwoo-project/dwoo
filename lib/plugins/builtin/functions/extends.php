@@ -29,20 +29,20 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		list($l, $r) = $compiler->getDelimiters();
 		self::$l = preg_quote($l,'/');
 		self::$r = preg_quote($r,'/');
-		self::$regex = '%
+		self::$regex = '/
 			'.self::$l.'block\s(["\']?)(.+?)\1'.self::$r.'(?:\r?\n?)
 			((?:
 				(?R)
 				|
 				[^'.self::$l.']*
 				(?:
-					(?! '.self::$l.'/?block\b )
+					(?! '.self::$l.'\/?block\b )
 					'.self::$l.'
 					[^'.self::$l.']*+
 				)*
 			)*)
 			'.self::$l.'\/block'.self::$r.'
-			%six';
+			/six';
 
 		if ($compiler->getLooseOpeningHandling()) {
 			self::$l .= '\s*';
