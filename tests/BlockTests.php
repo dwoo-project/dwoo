@@ -147,6 +147,14 @@ toplevelContent2
 baz"));
 	}
 
+	public function testExtendsHugeBlock()
+	{
+		$tpl = new Dwoo_Template_File(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources/extends_huge/home.html');
+		$tpl->forceCompilation();
+
+		$this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals("<html>".str_repeat('A', 40000).str_repeat('a', 40000)."</html>"));
+	}
+
 	public function testNonExtendedBlocksFromParent()
 	{
 		$tpl = new Dwoo_Template_File(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'toplevel.html');

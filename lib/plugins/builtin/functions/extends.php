@@ -112,7 +112,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 				$newSource = $parent['source'];
 			}
 			$newSource = preg_replace_callback(self::$regex, array('Dwoo_Plugin_extends', 'replaceBlock'), $newSource);
-			$newSource = $l.'do extendsCheck("'.$parent['resource'].':'.$parent['identifier'].'")'.$r.$newSource;
+			$newSource = $l.'do extendsCheck('.var_export($parent['resource'].':'.$parent['identifier'], true).')'.$r.$newSource;
 
 			if (self::$lastReplacement) {
 				break;
