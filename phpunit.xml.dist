@@ -2,7 +2,7 @@
 
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
-         colors="false"
+         colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -12,16 +12,16 @@
 >
     <testsuites>
         <testsuite name="Dwoo Test Suite">
-            <file>DwooTests.php</file>
+            <file>tests/DwooTests.php</file>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory>../lib/plugins/builtin</directory>
-            <directory>../lib/Dwoo</directory>
+            <directory suffix=".php">./lib/plugins/builtin</directory>
+            <directory suffix=".php">./lib/Dwoo</directory>
             <exclude>
-                <directory>../lib/Dwoo/Adapters</directory>
+                <directory>./lib/Dwoo/Adapters/</directory>
             </exclude>
         </whitelist>
     </filter>
