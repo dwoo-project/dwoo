@@ -46,6 +46,7 @@
   thanks to Dominik del Bondio for the patch
 * Adapters: Agavi: Added support for multiple plugin directories in the
   config, thanks to Mike Seth for the patch
+* Fixed endless loop when parsing an invalid else block
 * Fixed custom compilable plugins not being recognized as such
 
 [2010-02-07] 1.1.1

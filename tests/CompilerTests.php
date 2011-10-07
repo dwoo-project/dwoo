@@ -748,6 +748,16 @@ fail
 		$tpl->forceCompilation();
 		$this->assertEquals('foo', $this->dwoo->get($tpl, array()));
 	}
+
+	/**
+	 * @expectedException Dwoo_Compilation_Exception
+	 */
+	public function testElseWithoutIfIsInvalid()
+	{
+		$tpl = new Dwoo_Template_String('{else}1{/}');
+		$tpl->forceCompilation();
+		$this->dwoo->get($tpl, array(), $this->compiler);
+	}
 }
 
 function excessArgsHelper($a) {
