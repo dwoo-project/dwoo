@@ -68,7 +68,7 @@ class DwooConstraintStringEquals extends PHPUnit_Framework_Constraint
 		$this->target = preg_replace('#(\r\n|\r)#', "\n", $target);
 	}
 
-	public function evaluate($other)
+	public function evaluate($other, $description = '', $returnResult = false)
 	{
 		$this->other = preg_replace('#(\r\n|\r)#', "\n", $other);
 		return $this->target == $this->other;
@@ -89,7 +89,7 @@ class DwooConstraintPathEquals extends PHPUnit_Framework_Constraint
 		$this->target = preg_replace('#([\\\\/]{1,2})#', '/', $target);
 	}
 
-	public function evaluate($other)
+	public function evaluate($other, $description = '', $returnResult = false)
 	{
 		$this->other = preg_replace('#([\\\\/]{1,2})#', '/', $other);
 		return $this->target == $this->other;
