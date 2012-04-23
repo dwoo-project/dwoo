@@ -482,7 +482,15 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 		} else {
 			$chmod = $this->chmod;
 		}
-		mkdir($path, $chmod, true);
+
+		$retries = 3;
+		while ($retries--) {
+			@mkdir($path, $chmod, true);
+			if (is_dir($path)) {
+				break;
+			}
+			usleep(20);
+		}
 
 		// enforce the correct mode for all directories created
 		if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
