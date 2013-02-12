@@ -73,7 +73,6 @@ abstract class Dwoo_Plugin
 			$out .= ' '.$attr.'=';
 			if (trim($val, '"\'')=='' || $val=='null') {
 				$out .= str_replace($delim, '\\'.$delim, '""');
-				// $out .= ' '.$delim.'.htmlentities('.$attr.').'.$delim.'=';
 			} elseif (substr($val, 0, 1) === $delim && substr($val, -1) === $delim) {
 				$out .= str_replace($delim, '\\'.$delim, '"'.substr($val, 1, -1).'"');
 			} else {
