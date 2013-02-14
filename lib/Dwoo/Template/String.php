@@ -498,7 +498,12 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 			$folders = explode('/', trim($path, '/'));
 			foreach ($folders as $folder) {
 				$baseDir .= $folder . DIRECTORY_SEPARATOR;
-				chmod($baseDir, $chmod);
+				if (!chmod($baseDir, $chmod))
+				{
+					throw new Exception("Unable to chmod ".
+						"$baseDir to $chmod: ".
+						print_r(error_get_last(), TRUE));
+				}
 			}
 		}
 	}
