@@ -47,6 +47,27 @@ class BlockTests extends PHPUnit_Framework_TestCase
 		$fixCall->init('');
 	}
 
+	public function testAEscaping()
+	{
+		$data['url'] = 'foo" onclick="alert(document.window)" foo="';
+		$data['var'] = '"';
+		$tpl = new Dwoo_Template_String('{a $url attr="str\"withquotes" attr2="str\'$var"; "text" /}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<a href="foo&quot; onclick=&quot;alert(document.window)&quot; foo=&quot;" attr="str&quot;withquotes" attr2="str&#039;&quot;">text</a>', $this->dwoo->get($tpl, $data, $this->compiler));
+	}
+
+	public function testAEscapingWithAutoEscape()
+	{
+		$cmp = new Dwoo_Compiler();
+		$cmp->setAutoEscape(true);
+
+		$data['url'] = 'foo" onclick="alert(document.window)" foo="';
+		$data['var'] = '"';
+		$tpl = new Dwoo_Template_String('{a $url attr="str\"withquotes" attr2="str\'$var"; "text" /}');
+		$tpl->forceCompilation();
+		$this->assertEquals('<a href="foo&quot; onclick=&quot;alert(document.window)&quot; foo=&quot;" attr="str&quot;withquotes" attr2="str\'&quot;">text</a>', $this->dwoo->get($tpl, $data, $cmp));
+	}
+
 	public function testAutoEscape()
 	{
 		$cmp = new Dwoo_Compiler();
