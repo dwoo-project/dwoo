@@ -295,6 +295,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	{
 		if (null === $this->_dataProvider) {
 			$this->_dataProvider = new Dwoo_Data;
+
+			// Satisfy Zend_View_Abstract wishes to access this unexisting property
+			// by setting it to empty array (see Zend_View_Abstract::_filter)
+			$this->_dataProvider->_filter = array();
 		}
 
 		return $this->_dataProvider;
