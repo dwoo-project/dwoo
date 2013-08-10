@@ -1523,7 +1523,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if ($curBlock !== 'modifier' && ($parsed === 'func' || $parsed === 'var') && preg_match('#^\|@?[a-z0-9_]+(:.*)?#i', $substr, $match)) {
+		if ($curBlock !== 'modifier' && ($parsed === 'func' || $parsed === 'var') && preg_match('#^(\|@?[a-z0-9_]+(:.*)?)+#i', $substr, $match)) {
 			// parse modifier on funcs or vars
 			$srcPointer = $pointer;
 			if (is_array($parsingParams)) {
