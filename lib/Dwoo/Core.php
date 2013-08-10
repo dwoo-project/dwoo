@@ -1053,6 +1053,10 @@ class Dwoo_Core
             $this->curBlock = end($this->stack);
             $this->curBlock->buffer($tmp->process());
         } else {
+            if($this->buffer !== '') {
+                echo $this->buffer;
+                $this->buffer = '';
+            }
             $this->curBlock = null;
             echo $tmp->process();
         }
