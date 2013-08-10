@@ -2275,10 +2275,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				break;
 			}
 
-			if(!preg_match('/^([a-z0-9_]+)(\(.*?\))?/i', substr($methodCall, $ptr), $methMatch)) {
-				throw new Dwoo_Compilation_Exception($this, 'Invalid method name : '.substr($methodCall, $ptr, 20));
-			}
-
 			if (empty($methMatch[2])) {
 				// property
 				if ($curBlock === 'root') {
