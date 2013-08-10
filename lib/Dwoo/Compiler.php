@@ -817,17 +817,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						break;
 					}
 				}
-
-				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
-				if (substr($this->curBlock['buffer'], -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
-					if ($m[3] === '') {
-						$ptr+=1;
-						$this->push($m[1].$m[1], 1);
-					} else {
-						$ptr+=2;
-						$this->push($m[1]."\n", 2);
-					}
-				}
 			}
 		}
 
@@ -902,6 +891,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// handle <?xml tag at the beginning
 		$output = preg_replace('#(/\* template body \*/ \?>\s*)<\?xml#is', '$1<?php echo \'<?xml\'; ?>', $output);
+
+		// add another line break after PHP closing tags that have a line break following,
+		// as we do not know whether it's intended, and PHP will strip it otherwise
+		$output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
 		if ($this->debug) {
 			echo '<hr><pre>';
