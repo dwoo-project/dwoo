@@ -2268,6 +2268,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				break;
 			}
 
+			if(!preg_match('/^([a-z0-9_]+)(\(.*?\))?/i', substr($methodCall, $ptr), $methMatch)) {
+				break;
+			}
+
 			if (empty($methMatch[2])) {
 				// property
 				if ($curBlock === 'root') {
