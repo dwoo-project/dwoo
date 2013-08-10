@@ -1527,11 +1527,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			// parse modifier on funcs or vars
 			$srcPointer = $pointer;
 			if (is_array($parsingParams)) {
-				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), 'var', $pointer);
+				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), $curBlock, $pointer);
 				$out[count($out)-1][0] = $tmp;
 				$out[count($out)-1][1] .= substr($substr, $srcPointer, $srcPointer - $pointer);
 			} else {
-				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), 'var', $pointer);
+				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), $curBlock, $pointer);
 			}
 		}
 
@@ -2751,9 +2751,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$pluginType = $this->getPluginType($func);
 
 			if ($state & 2) {
-				array_unshift($params, array('value', array($output, $output)));
+				array_unshift($params, array('value', is_array($output) ? $output : array($output, $output)));
 			} else {
-				array_unshift($params, array($output, $output));
+				array_unshift($params, is_array($output) ? $output : array($output, $output));
 			}
 
 			if ($pluginType & Dwoo_Core::NATIVE_PLUGIN) {
@@ -2881,7 +2881,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if ($curBlock === 'var' || $m[1] === null) {
+		if ($curBlock === 'namedparam') {
+			return array($output, $output);
+		} elseif ($curBlock === 'var' || $m[1] === null) {
 			return $output;
 		} elseif ($curBlock === 'string' || $curBlock === 'root') {
 			return $m[1].'.'.$output.'.'.$m[1].(isset($add)?$add:null);
