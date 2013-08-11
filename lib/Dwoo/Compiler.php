@@ -817,17 +817,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 						break;
 					}
 				}
-
-				// adds additional line breaks between php closing and opening tags because the php parser removes those if there is just a single line break
-				if (substr($this->curBlock['buffer'], -2) === '?>' && preg_match('{^(([\r\n])([\r\n]?))}', substr($tpl, $ptr, 3), $m)) {
-					if ($m[3] === '') {
-						$ptr+=1;
-						$this->push($m[1].$m[1], 1);
-					} else {
-						$ptr+=2;
-						$this->push($m[1]."\n", 2);
-					}
-				}
 			}
 		}
 
@@ -902,6 +891,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		// handle <?xml tag at the beginning
 		$output = preg_replace('#(/\* template body \*/ \?>\s*)<\?xml#is', '$1<?php echo \'<?xml\'; ?>', $output);
+
+		// add another line break after PHP closing tags that have a line break following,
+		// as we do not know whether it's intended, and PHP will strip it otherwise
+		$output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
 		if ($this->debug) {
 			echo '<hr><pre>';
@@ -1523,15 +1516,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if ($curBlock !== 'modifier' && ($parsed === 'func' || $parsed === 'var') && preg_match('#^\|@?[a-z0-9_]+(:.*)?#i', $substr, $match)) {
+		if ($curBlock !== 'modifier' && ($parsed === 'func' || $parsed === 'var') && preg_match('#^(\|@?[a-z0-9_]+(:.*)?)+#i', $substr, $match)) {
 			// parse modifier on funcs or vars
 			$srcPointer = $pointer;
 			if (is_array($parsingParams)) {
-				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), 'var', $pointer);
+				$tmp = $this->replaceModifiers(array(null, null, $out[count($out)-1][0], $match[0]), $curBlock, $pointer);
 				$out[count($out)-1][0] = $tmp;
 				$out[count($out)-1][1] .= substr($substr, $srcPointer, $srcPointer - $pointer);
 			} else {
-				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), 'var', $pointer);
+				$out = $this->replaceModifiers(array(null, null, $out, $match[0]), $curBlock, $pointer);
 			}
 		}
 
@@ -2064,7 +2057,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = substr($in, $from, $to-$from);
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
-			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' ? '(\(.*)?' : '()') . // method call
+			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='expression' || $curBlock==='delimited_string' ? '(\(.*)?' : '()') . // method call
 			($curBlock==='root' || $curBlock==='function' || $curBlock==='namedparam' || $curBlock==='condition' || $curBlock==='variable' || $curBlock==='delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)':'()') . // simple math expressions
 			($curBlock!=='modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?':'(())') . // modifiers
 			'#i', $substr, $match)) {
@@ -2276,7 +2269,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 
 			if(!preg_match('/^([a-z0-9_]+)(\(.*?\))?/i', substr($methodCall, $ptr), $methMatch)) {
-				throw new Dwoo_Compilation_Exception($this, 'Invalid method name : '.substr($methodCall, $ptr, 20));
+				break;
 			}
 
 			if (empty($methMatch[2])) {
@@ -2755,9 +2748,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$pluginType = $this->getPluginType($func);
 
 			if ($state & 2) {
-				array_unshift($params, array('value', array($output, $output)));
+				array_unshift($params, array('value', is_array($output) ? $output : array($output, $output)));
 			} else {
-				array_unshift($params, array($output, $output));
+				array_unshift($params, is_array($output) ? $output : array($output, $output));
 			}
 
 			if ($pluginType & Dwoo_Core::NATIVE_PLUGIN) {
@@ -2885,7 +2878,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if ($curBlock === 'var' || $m[1] === null) {
+		if ($curBlock === 'namedparam') {
+			return array($output, $output);
+		} elseif ($curBlock === 'var' || $m[1] === null) {
 			return $output;
 		} elseif ($curBlock === 'string' || $curBlock === 'root') {
 			return $m[1].'.'.$output.'.'.$m[1].(isset($add)?$add:null);
