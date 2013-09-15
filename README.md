@@ -1,10 +1,7 @@
------------------------------------------------------------------------------
--- DWOO IS BACK                                          readme - version 2.0
------------------------------------------------------------------------------
+#DWOO IS BACK
 
------------------------------------------------------------------------------
--- WHAT IS DWOO?
------------------------------------------------------------------------------
+#WHAT IS DWOO?
+
 Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
 older. It carries the weight of it's age, having old features that are
@@ -17,14 +14,10 @@ So far it has proven to be faster than Smarty in many areas, and it provides
 a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
------------------------------------------------------------------------------
--- DOCUMENTATION
------------------------------------------------------------------------------
+#DOCUMENTATION
 Dwoo's website to get the latest version is at http://dwoo.org/
 
 The wiki/documentation pages are available at http://wiki.dwoo.org/
 
------------------------------------------------------------------------------
--- LICENSE
------------------------------------------------------------------------------
+#LICENSE
 Dwoo is released under the GNU LESSER GENERAL PUBLIC LICENSE V3
