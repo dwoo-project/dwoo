@@ -1,0 +1,1 @@
+{replace "abc" "b" "B"} or {"abc"|replace:array(a,c):array(A,C)}

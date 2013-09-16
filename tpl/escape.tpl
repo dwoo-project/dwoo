@@ -1,0 +1,1 @@
+{"some <strong>html</strong> tags"|escape}

@@ -1,0 +1,1 @@
+{count_words('ab cd ef')}

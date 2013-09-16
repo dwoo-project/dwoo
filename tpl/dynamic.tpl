@@ -1,0 +1,3 @@
+{dynamic}
+	DyNAMiC conteNT
+{/dynamic}

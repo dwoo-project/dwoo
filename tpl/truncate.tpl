@@ -1,0 +1,1 @@
+{truncate "this text is really too long, or let's just pretend it is will you?" 30 middle=true}

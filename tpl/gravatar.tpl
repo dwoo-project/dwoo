@@ -1,0 +1,1 @@
+<img src="{gravatar "test@gravatar.com" 20 "identicon" "x"}" alt="Test gravatar" />
