@@ -1,0 +1,217 @@
+body {
+	padding: 0px;
+	margin: 0;
+}
+header {
+	border-top: 38px solid #7ab80e;
+	border-bottom: 2px solid #7ab80e;
+	position: fixed;
+	left: 0;
+	right: 0;
+	background: white;
+	z-index: 1;
+}
+.stack-container {
+	height: 100%;
+	position: relative;
+	top: 140px;
+}
+.details-container {
+
+	height: 100%;
+	overflow: auto;
+	float: left;
+	width: 30%;
+}
+.frames-container {
+	height: 100%;
+	overflow: auto;
+	float: right;
+	width: 70%;
+	background: #DADADA;
+}
+
+
+#alterna-header {
+	padding: 25px 0;
+}
+.container {
+	width: 1170px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#alterna-header .logo {
+	display: inline-block;
+	width: 174px;
+	height: 47px;
+	margin-top: 0px;
+	background-image: url('logo.png');
+	background-size: 174px 47px;
+}
+
+.debug-bar {
+	border-top: 2px solid #7ab80e;
+	background: #0C0C0C;
+	height: 40px;
+	position: fixed;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+.debug-bar > div {
+	height: 40px;
+	display: inline-block;
+	line-height: 40px;
+	color: white;
+}
+.debug-bar > div.version {
+	width: 100px;
+}
+.debug-bar > div.version > a.logo {
+	float: left;
+	display: inline-block;
+	background-image: url('debug-bar-logo.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 34px 30px;
+	width: 34px;
+	height: 40px;
+	margin: 0 10px;
+}
+.debug-bar > div.version > span {
+	font-family: 'Arial';
+	font-size: 15px;
+	background: #7ab80e;
+	border: 1px solid #629a00;
+	padding: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+
+
+
+.intererrorblock {
+	font-size: 12pt;
+	background-color: #ffffcc;
+	text-align: left;
+	vertical-align: middle;
+	border-collapse: collapse;
+	word-break: break-all;
+	padding: 3px;
+}
+
+.intererrorblock a:link {
+	color: #0000ff;
+	text-decoration: none;
+}
+.intererrorblock a:visited {
+	text-decoration: none;
+	color: #0000ff;
+}
+.intererrorblock a:hover {
+	text-decoration: underline;
+	color: #0000ff;
+}
+.intererrorblock a:active {
+	text-decoration: none;
+	color: #0000ff;
+}
+
+.intererrortitle {
+	color: #ffffff;
+	background-color: #996633;
+	padding: 3px;
+	font-weight: bold;
+}
+
+.intererrorsubtitle {
+	padding: 3px;
+	font-weight: bold;
+	color: #ff0000;
+}
+
+.intererrorcontent {
+	font-size: 11pt;
+	color: #000000;
+	background-color: #ffffff;
+	padding: 3px;
+}
+
+.intererrorcontent table {
+	font-size: 14px;
+	word-break: break-all;
+	background-color: #d4d0c8;
+	border-color: #000000;
+}
+
+.intererrorblock table a:link {
+	color: #0000ff;
+	text-decoration: none;
+}
+.intererrorblock table a:visited {
+	text-decoration: none;
+	color: #0000ff;
+}
+.intererrorblock table a:hover {
+	text-decoration: underline;
+	color: #0000ff;
+}
+.intererrorblock table a:active {
+	text-decoration: none;
+	color: #0000ff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.variablesblock {
+	font-size: 12pt;
+	background-color: #CCC;
+	text-align: left;
+	vertical-align: middle;
+	border-collapse: collapse;
+	word-break: break-all;
+	padding: 3px;
+	color: #000;
+}
+
+.variablesblock a:link {
+	color: #000;
+	text-decoration: none;
+}
+.variablesblock a:visited {
+	text-decoration: none;
+	color: #000;
+}
+.variablesblock a:hover {
+	text-decoration: underline;
+	color: #000;
+}
+.variablesblock a:active {
+	text-decoration: none;
+	color: #000;
+}
+
+.variablessubtitle {
+	padding: 3px;
+	font-weight: bold;
+	border: 1px solid #FFF;
+}
+
+.variablescontent {
+	font-size: 11pt;
+	color: #000;
+	background-color: #FFF;
+	padding: 3px;
+}

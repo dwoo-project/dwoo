@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="lib/resources/style.css">
+</head>
+<body>
+	<header>
+		<div id="alterna-header">
+			<div class="container">
+				<div class="logo"></div>
+			</div>
+		</div>
+	</header>
+
+	<div class="stack-container">
+		<div class="details-container cf">{$DETAILS}</div>
+		<div class="frames-container cf ">{$RESULT}</div>
+	</div>
+
+	<div class="debug-bar">
+		<div class="version">
+			<a href="http://dwoo.org" target="_blank" class="logo"></a>
+			<span>{$DWOO_VERSION}</span>
+		</div>
+		<div id="exectime">{$EXECTIME}</div>
+		<div id="memory-usage">{$MEMORY_USAGE}</div>
+		<div id="php-version">PHP {$PHP_VERSION}</div>
+	</div>
+</body>
+</html>
