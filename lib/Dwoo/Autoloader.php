@@ -18,12 +18,11 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function __autoloadClass($class) {
-		$trimmedClass = substr($class, strlen('Dwoo\\'));
-		$filePath = self::_transformClassNameToFilename($trimmedClass, __DIR__ . DIRECTORY_SEPARATOR);
+		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $class . '.php';
 
 		// Check file exists & class not already loaded
 		if (file_exists($filePath) && class_exists($class) === false) {
-			require_once self::_transformClassNameToFilename($trimmedClass, __DIR__ . DIRECTORY_SEPARATOR);
+			require $filePath;
 		}
 	}
 
@@ -32,12 +31,11 @@ class Autoloader {
 	 * @param $func
 	 */
 	public static function loadFunction($func) {
-		$trimmedFunction = substr($func, strlen('Dwoo\\'));
-		$filePath = self::_transformClassNameToFilename($trimmedFunction, __DIR__ . DIRECTORY_SEPARATOR);
+		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $func . '.php';
 
-		// Check file exists & function not already loaded
+		// Check file exists & class not already loaded
 		if (file_exists($filePath) && function_exists($func) === false) {
-			require_once self::_transformClassNameToFilename($trimmedFunction, __DIR__ . DIRECTORY_SEPARATOR);
+			require $filePath;
 		}
 	}
 

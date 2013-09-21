@@ -212,7 +212,7 @@ class Core {
 	 * @var array
 	 * @private
 	 */
-	public $data;
+	private $data;
 
 	/**
 	 * stores the current scope during template runtime
@@ -1710,5 +1710,9 @@ class Core {
 		else {
 			return $_SERVER['REQUEST_TIME_FLOAT'];
 		}
+	}
+
+	public function __get($name) {
+		return $this->$name;
 	}
 }

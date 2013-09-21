@@ -5,7 +5,7 @@ Dwoo\Autoloader::register();
 
 // Create the controller, this is reusable
 $dwoo = new Dwoo\Core();
-$dwoo->debugMode = true;
+$dwoo->debugMode = false;
 
 // Remove default error  reporting system
 /*error_reporting(0);

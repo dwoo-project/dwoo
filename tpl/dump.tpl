@@ -1,1 +1,1 @@
-{dump($menuTree)}
+{dump $}

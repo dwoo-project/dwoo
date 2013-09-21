@@ -1,4 +1,9 @@
-[2013-09-01 to 2013-09-11] 2.0 beta
+[2013-09-01 to 2013-09-22] 2.0 beta
++ Add new method: Core::__get()
+* Change FunctionDump class to a function
+* Update FunctionDump, implement PHP-REF
++ Add PHP-REF (@see https://github.com/digitalnature/php-ref)
+- Remove plugin FunctionDumpObj
 ! Fix functionDateFormat
 * Update Autoloader, to loading functions plugins
 + Now debugMode() property, if set true forece recompilation of tpl file (easier to debug)
