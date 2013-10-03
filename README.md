@@ -1,5 +1,13 @@
 #DWOO IS BACK
 
+Welcome to Dwoo 2.0!
+
+What's new in this version :
+* Namespaces
+* CamelCase
+* New features (blocks/functions/modifiers)
+
+
 #WHAT IS DWOO?
 
 Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
@@ -15,9 +23,8 @@ a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
 #DOCUMENTATION
-[Basic example](https://github.com/emulienfou/dwoo2/wiki/Basic-example)
-
-[Advanced example](https://github.com/emulienfou/dwoo2/wiki/Advanced-example)
+* [Basic example](https://github.com/emulienfou/dwoo2/wiki/Basic-example)
+* [Advanced example](https://github.com/emulienfou/dwoo2/wiki/Advanced-example)
 
 #LICENSE
 Dwoo is released under the GNU LESSER GENERAL PUBLIC LICENSE V3
