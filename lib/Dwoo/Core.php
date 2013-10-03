@@ -119,6 +119,12 @@ class Core {
 	 * @var string
 	 */
 	protected $compileDir;
+	
+	/**
+	 * directory where the template files are stored
+	 * @var string
+	 */
+	protected $templateDir;
 
 	/**
 	 * directory where the cached templates are stored
@@ -341,8 +347,8 @@ class Core {
 		if ($_tpl instanceof ITemplate) {
 			// valid, skip
 		}
-		elseif (is_string($_tpl) && file_exists($_tpl)) {
-			$_tpl = new File($_tpl);
+		elseif (is_string($this->templateDir . $_tpl) && file_exists($this->templateDir . $_tpl)) {
+			$_tpl = new File($this->templateDir . $_tpl);
 		}
 		else {
 			throw new Exception('Dwoo->get/Dwoo->output\'s first argument must be a \Dwoo\ITemplate (i.e. \Dwoo\Template\File) or a valid path to a template file', E_USER_NOTICE);
@@ -725,6 +731,27 @@ class Core {
 	 */
 	public function getCompileDir() {
 		return $this->compileDir;
+	}
+	
+	/**
+	 * returns the template directory with a trailing DIRECTORY_SEPARATOR
+	 *
+	 * @return string
+	 */
+	public function getTemplateDir() {
+		return $this->templateDir;
+	}
+
+	/**
+	 * sets the template directory and automatically appends a DIRECTORY_SEPARATOR
+	 * @param $dir
+	 * @throws Exception
+	 */
+	public function setTemplateDir($dir) {
+		$this->templateDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+		if (is_writable($this->templateDir) === false) {
+			throw new Exception('The template directory must be writable, chmod "' . $this->templateDir . '" to make it writable');
+		}
 	}
 
 	/**
@@ -1677,7 +1704,7 @@ class Core {
 	 */
 	public function __call($method, $args) {
 		$proxy = $this->getPluginProxy();
-		if (! $proxy) {
+		if (!$proxy) {
 			throw new Exception('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
 		}
 
