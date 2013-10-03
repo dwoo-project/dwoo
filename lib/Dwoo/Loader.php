@@ -117,7 +117,8 @@ class Loader implements ILoader {
 		$index = array_values($match);
 
 		// Entry doesn't exist, try to rebuild cache
-		if (!isset($index[0]) || !isset($this->classPath[$index[0]]) || !is_readable($this->classPath[$index[0]]) || !(include $this->classPath[$index[0]])) {
+		$included_files = get_included_files();
+		if (!isset($index[0]) || !isset($this->classPath[$index[0]]) || !is_readable($this->classPath[$index[0]]) || !in_array($this->classPath[$index[0]], $included_files)) {
 			if ($forceRehash) {
 
 				// Rebuild cache
