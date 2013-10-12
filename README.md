@@ -1,4 +1,4 @@
-#DWOO IS BACK
+#DWOO IS BACK [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/emulienfou/dwoo2/badges/quality-score.png?s=033709f2f5cd5f1edcc69b84aec28da3edf7938e)](https://scrutinizer-ci.com/g/emulienfou/dwoo2/)
 
 Welcome to Dwoo 2.0!
 
