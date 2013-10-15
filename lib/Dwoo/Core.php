@@ -105,7 +105,7 @@ class Core {
 	 * @private
 	 * @var array
 	 */
-	public $globals;
+	public $globals = array();
 
 	/**
 	 * @var bool
@@ -482,6 +482,11 @@ class Core {
 		if ($this->debugMode == true) {
 			Debug::getDebugger();
 		}
+	}
+
+
+	public function setInitGlobal($name, $value) {
+		$this->globals[$name] = $value;
 	}
 
 	/**
