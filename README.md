@@ -3,9 +3,9 @@
 Welcome to Dwoo 2.0!
 
 What's new in this version :
-* Namespaces
-* CamelCase
-* New features (blocks/functions/modifiers)
+* **Namespaces**
+* **CamelCase**
+* **New features (blocks/functions/modifiers)**
 
 
 #WHAT IS DWOO?

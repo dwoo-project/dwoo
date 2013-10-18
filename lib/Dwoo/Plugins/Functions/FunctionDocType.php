@@ -5,11 +5,12 @@ use Dwoo\Plugin;
 /**
  * Outputs a valid (X)HTML DOCTYPE
  * <pre>
- *  * docType : the name of the doctype, falls back to HTML4_LOOSE if not recognized or given
+ *  * docType : the name of the doctype, falls back to HTML5 if not recognized or given
  * </pre>
  *
  * Available DOCTYPES:
  * <pre>
+ *  * HTML5
  *  * XHTML11
  *  * XHTML1_STRICT
  *  * XHTML1_TRANSITIONAL

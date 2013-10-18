@@ -1,49 +1,186 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Core;
-use Ref\Ref;
+use Dwoo\Plugin;
 
-function functionDump(Core $core, $value) {
-	// options (operators) gathered by the expression parser;
-	// this variable gets passed as reference to getInputExpressions(), which will store the operators in it
-	$options = array();
+/**
+ * Dumps values of the given variable, or the entire data if nothing provided
+ * <pre>
+ *  * var : the variable to display
+ *  * show_methods : if set to true, the public methods of any object encountered are also displayed
+ * </pre>
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @link       http://dwoo.org/
+ * @version    2.0
+ * @date       2013-10-18
+ * @package    Dwoo
+ */
+class FunctionDump extends Plugin {
+	protected $outputObjects;
+	protected $outputMethods;
 
-	$ref = new Ref();
-	Ref::config('stylePath', Ref::ROOT . '/Resources/ref.css');
-	Ref::config('scriptPath', Ref::ROOT . '/Resources/ref.js');
+	public function process($var = '$', $show_methods = false) {
+		$this->outputMethods = $show_methods;
+		if ($var === '$') {
+			$var = $this->dwoo->getData();
+			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
+		}
+		else {
+			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
+		}
 
-	// names of the arguments that were passed to this function
-	$expressions = Ref::getInputExpressions($options);
-	$capture     = in_array('@', $options, true);
+		$this->outputObjects = array();
 
-	// something went wrong while trying to parse the source expressions?
-	// if so, silently ignore this part and leave out the expression info
-	if (func_num_args() !== count($expressions)) {
-		$expressions = null;
+		if (! is_array($var)) {
+			if (is_object($var)) {
+				return $this->exportObj('', $var);
+			}
+			else {
+				return $this->exportVar('', $var);
+			}
+		}
+
+		$scope = $this->dwoo->getScope();
+
+		if ($var === $scope) {
+			$out .= ' (current scope): <div style="background:#ccc;">';
+		}
+		else {
+			$out .= ':<div style="padding-left:20px;">';
+		}
+
+		$out .= $this->export($var, $scope);
+
+		return $out . '</div></div>';
 	}
 
-	// IE goes funky if there's no doctype
-	if (!$capture && !headers_sent() && !ob_get_level()) {
-		print '<!DOCTYPE HTML><html><head><title>REF</title><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /></head><body>';
+	protected function export($var, $scope) {
+		$out = '';
+		foreach ($var as $i => $v) {
+			if (is_array($v) || (is_object($v) && $v instanceof \Iterator)) {
+				$out .= $i . ' (' . (is_array($v) ? 'array' : 'object: ' . get_class($v)) . ')';
+				if ($v === $scope) {
+					$out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">' . $this->export($v, $scope) . '</div>';
+				}
+				else {
+					$out .= ':<div style="padding-left:20px;">' . $this->export($v, $scope) . '</div>';
+				}
+			}
+			elseif (is_object($v)) {
+				$out .= $this->exportObj($i . ' (object: ' . get_class($v) . '):', $v);
+			}
+			else {
+				$out .= $this->exportVar($i . ' = ', $v);
+			}
+		}
+
+		return $out;
 	}
 
-	if ($capture) {
-		ob_start();
+	protected function exportVar($i, $v) {
+		if (is_string($v) || is_bool($v) || is_numeric($v)) {
+			return $i . htmlentities(var_export($v, true)) . '<br />';
+		}
+		elseif (is_null($v)) {
+			return $i . 'null<br />';
+		}
+		elseif (is_resource($v)) {
+			return $i . 'resource(' . get_resource_type($v) . ')<br />';
+		}
+		else {
+			return $i . htmlentities(var_export($v, true)) . '<br />';
+		}
 	}
 
-	/*foreach ($args as $index => $arg) {
-		$ref->query($arg, $expressions ? $expressions[$index] : null);
-	}*/
-	$ref->query($value, 'Dwoo dump');
+	protected function exportObj($i, $obj) {
+		if (array_search($obj, $this->outputObjects, true) !== false) {
+			return $i . ' [recursion, skipped]<br />';
+		}
 
-	// return the results if this function was called with the error suppression operator
-	if ($capture) {
-		return ob_get_clean();
-	}
+		$this->outputObjects[] = $obj;
 
-	// stop the script if this function was called with the bitwise not operator
-	if (in_array('~', $options, true)) {
-		print '</body></html>';
-		exit(0);
+		$list = (array)$obj;
+
+		$protectedLength = strlen(get_class($obj)) + 2;
+
+		$out = array();
+
+		if ($this->outputMethods) {
+			$ref = new \ReflectionObject($obj);
+
+			foreach ($ref->getMethods() as $method) {
+				if (! $method->isPublic()) {
+					continue;
+				}
+
+				if (empty($out['method'])) {
+					$out['method'] = '';
+				}
+
+				$params = array();
+				foreach ($method->getParameters() as $param) {
+					$params[] = ($param->isPassedByReference() ? '&' : '') . '$' . $param->getName() . ($param->isOptional() ? ' = ' . var_export($param->getDefaultValue(), true) : '');
+				}
+
+				$out['method'] .= '(method) ' . $method->getName() . '(' . implode(', ', $params) . ')<br />';
+			}
+		}
+
+		foreach ($list as $attributeName => $attributeValue) {
+			if (property_exists($obj, $attributeName)) {
+				$key = 'public';
+			}
+			elseif (substr($attributeName, 0, 3) === "\0*\0") {
+				$key           = 'protected';
+				$attributeName = substr($attributeName, 3);
+			}
+			else {
+				$key           = 'private';
+				$attributeName = substr($attributeName, $protectedLength);
+			}
+
+			if (empty($out[$key])) {
+				$out[$key] = '';
+			}
+
+			$out[$key] .= '(' . $key . ') ';
+
+			if (is_array($attributeValue)) {
+				$out[$key] .= $attributeName . ' (array):<br />
+                                                        <div style="padding-left:20px;">' . $this->export($attributeValue, false) . '</div>';
+			}
+			elseif (is_object($attributeValue)) {
+				$out[$key] .= $this->exportObj($attributeName . ' (object: ' . get_class($attributeValue) . '):', $attributeValue);
+			}
+			else {
+				$out[$key] .= $this->exportVar($attributeName . ' = ', $attributeValue);
+			}
+		}
+
+		$return = $i . '<br /><div style="padding-left:20px;">';
+
+		if (! empty($out['method'])) {
+			$return .= $out['method'];
+		}
+
+		if (! empty($out['public'])) {
+			$return .= $out['public'];
+		}
+
+		if (! empty($out['protected'])) {
+			$return .= $out['protected'];
+		}
+
+		if (! empty($out['private'])) {
+			$return .= $out['private'];
+		}
+
+		return $return . '</div>';
 	}
 }

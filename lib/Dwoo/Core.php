@@ -25,7 +25,7 @@ use Dwoo\Template\File;
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-08
+ * @date       2013-10-14
  * @package    Dwoo
  */
 class Core {
@@ -1733,6 +1733,7 @@ class Core {
 	}
 
 	/**
+	 * Get time now
 	 * @return int|float
 	 */
 	private function _now() {
@@ -1744,6 +1745,11 @@ class Core {
 		}
 	}
 
+	/**
+	 * Magic method __get
+	 * @param $name
+	 * @return mixed
+	 */
 	public function __get($name) {
 		return $this->$name;
 	}
