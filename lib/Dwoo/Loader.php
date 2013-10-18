@@ -100,6 +100,7 @@ class Loader implements ILoader {
 	 * @param string $class       the plugin name, without the prefix (Block|block|Function|function)
 	 * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
 	 *
+	 * @return bool
 	 * @throws Exception\PluginException
 	 */
 	public function loadPlugin($class, $forceRehash = true) {
@@ -141,6 +142,7 @@ class Loader implements ILoader {
 			throw new PluginException(sprintf(PluginException::FORGOT_BIND, $class), E_USER_NOTICE);
 			return false;
 		}
+		return false;
 	}
 
 	/**

@@ -118,6 +118,7 @@ class Dwootemplate extends Dwoo_Core {
         } else {
             return $template;
         }
+		return null;
     }
 
 

@@ -68,5 +68,7 @@ class FunctionCycle extends Plugin {
 			return $out;
 		}
 		$this->dwoo->assignInScope($out, $assign);
+
+		return null;
 	}
 }

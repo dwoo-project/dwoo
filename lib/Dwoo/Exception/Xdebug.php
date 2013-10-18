@@ -20,7 +20,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function _break() {
-		return xdebug_break();
+		xdebug_break();
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function debugZval () {
-		return xdebug_debug_zval();
+		xdebug_debug_zval();
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function debugZvalStdout () {
-		return xdebug_debug_zval_stdout();
+		xdebug_debug_zval_stdout();
 	}
 
 	/**
@@ -94,14 +94,14 @@ class Xdebug {
 	 * @return void
 	 */
 	public function disable () {
-		return xdebug_disable();
+		xdebug_disable();
 	}
 
 	/**
 	 *
 	 */
 	public function dumpAggrProfilingData () {
-		return xdebug_dump_aggr_profiling_data();
+		xdebug_dump_aggr_profiling_data();
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function dumpSuperglobals () {
-		return xdebug_dump_superglobals();
+		xdebug_dump_superglobals();
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function enable () {
-		return xdebug_enable();
+		xdebug_enable();
 	}
 
 	/**
@@ -242,7 +242,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function startCodeCoverage () {
-		return xdebug_start_code_coverage();
+		xdebug_start_code_coverage();
 	}
 
 	/**
@@ -255,7 +255,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function startTrace () {
-		return xdebug_start_trace();
+		xdebug_start_trace();
 	}
 
 	/**
@@ -266,7 +266,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function stopCodeCoverage () {
-		return xdebug_stop_code_coverage();
+		xdebug_stop_code_coverage();
 	}
 
 	/**
@@ -275,7 +275,7 @@ class Xdebug {
 	 * @return void
 	 */
 	public function stopTrace () {
-		return xdebug_stop_trace();
+		xdebug_stop_trace();
 	}
 
 	/**
@@ -293,6 +293,6 @@ class Xdebug {
 	 * @return void
 	 */
 	public function varDump () {
-		return xdebug_var_dump();
+		xdebug_var_dump();
 	}
 }

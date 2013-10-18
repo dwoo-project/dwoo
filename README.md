@@ -23,8 +23,7 @@ a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
 #DOCUMENTATION
-* [Basic example](https://github.com/emulienfou/dwoo2/wiki/Basic-example)
-* [Advanced example](https://github.com/emulienfou/dwoo2/wiki/Advanced-example)
+See the complete documentation in the [wiki section](https://github.com/emulienfou/dwoo2/wiki).
 
 #LICENSE
 Dwoo is released under the GNU LESSER GENERAL PUBLIC LICENSE V3

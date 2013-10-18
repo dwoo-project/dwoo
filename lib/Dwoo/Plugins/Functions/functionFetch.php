@@ -21,7 +21,7 @@ use Dwoo\Core;
  */
 function functionFetch(Core $dwoo, $file, $assign = null) {
 	if ($file === '') {
-		return;
+		return null;
 	}
 
 	if ($policy = $dwoo->getSecurityPolicy()) {
@@ -49,4 +49,6 @@ function functionFetch(Core $dwoo, $file, $assign = null) {
 		return $out;
 	}
 	$dwoo->assignInScope($out, $assign);
+
+	return null;
 }

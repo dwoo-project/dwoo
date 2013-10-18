@@ -29,7 +29,7 @@ use Dwoo\Template\String;
  */
 function functionEval(Core $dwoo, $var, $assign = null) {
 	if ($var == '') {
-		return;
+		return null;
 	}
 
 	$tpl   = new String($var);
@@ -42,4 +42,6 @@ function functionEval(Core $dwoo, $var, $assign = null) {
 	else {
 		return $out;
 	}
+
+	return null;
 }

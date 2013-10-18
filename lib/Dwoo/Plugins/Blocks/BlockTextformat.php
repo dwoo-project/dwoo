@@ -17,6 +17,7 @@ use Dwoo\Block\Plugin;
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
@@ -84,5 +85,7 @@ class BlockTextformat extends Plugin {
 		else {
 			return implode($this->wrapChar . $this->wrapChar, $pgs);
 		}
+
+		return null;
 	}
 }

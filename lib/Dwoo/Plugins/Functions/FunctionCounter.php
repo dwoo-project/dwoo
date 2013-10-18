@@ -73,5 +73,6 @@ class FunctionCounter extends Plugin {
 		elseif ($this->counters[$name]['print'] === true) {
 			return $out;
 		}
+		return null;
 	}
 }

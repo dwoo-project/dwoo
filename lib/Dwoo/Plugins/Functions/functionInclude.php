@@ -1,6 +1,8 @@
 <?php
 namespace Dwoo\Plugins\Functions;
 use Dwoo\Core;
+use Dwoo\Exception\SecurityException;
+use Dwoo\Exception;
 
 /**
  * Inserts another template into the current one
@@ -26,7 +28,7 @@ use Dwoo\Core;
  */
 function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array()) {
 	if ($file === '') {
-		return;
+		return null;
 	}
 
 	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
@@ -43,10 +45,10 @@ function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	}
-	catch (\Dwoo\Exception\SecurityException $e) {
+	catch (SecurityException $e) {
 		return $dwoo->triggerError('Include : Security restriction : ' . $e->getMessage(), E_USER_WARNING);
 	}
-	catch (\Dwoo\Exception $e) {
+	catch (Exception $e) {
 		return $dwoo->triggerError('Include : ' . $e->getMessage(), E_USER_WARNING);
 	}
 
@@ -82,4 +84,5 @@ function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null
 	if ($assign === null) {
 		return $out;
 	}
+	return null;
 }

@@ -123,7 +123,7 @@ function functionMathCompile(Compiler $compiler, $equation, $format = '', $assig
 			// parse error if we've consumed the entire equation without finding anything valid
 			throw new CompilationException($compiler, 'Math : Syntax error or variable undefined in equation ' . $equationSrc . ' at ' . $substr);
 
-			return;
+			return null;
 		}
 		else {
 			// nothing special, advance
