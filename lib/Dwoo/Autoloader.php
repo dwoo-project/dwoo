@@ -18,7 +18,7 @@ class Autoloader {
 	 * @return void
 	 */
 	public static function __autoloadClass($class) {
-		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $class . '.php';
+		$filePath = self::_transformClassNameToFilename($class, dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 		// Check file exists & class not already loaded
 		if (file_exists($filePath) && class_exists($class) === false) {
@@ -31,7 +31,7 @@ class Autoloader {
 	 * @param $func
 	 */
 	public static function loadFunction($func) {
-		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $func . '.php';
+		$filePath = self::_transformClassNameToFilename($func, dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 		// Check file exists & class not already loaded
 		if (file_exists($filePath) && function_exists($func) === false) {

@@ -1706,7 +1706,7 @@ class Compiler implements ICompiler {
 			$paramspos = strpos($cmdstr, '(');
 			$paramsep  = ')';
 		}
-		elseif (preg_match_all('#^\s*[\\\\:a-z0-9_]+(\s*\(|\s+[^(])#i', $cmdstr, $match, PREG_OFFSET_CAPTURE)) {
+		else if (preg_match_all('#^\s*[\\\\:a-z0-9_]+(\s*\(|\s+[^(])#i', $cmdstr, $match, PREG_OFFSET_CAPTURE)) {
 			$paramspos = $match[1][0][1];
 			$paramsep  = substr($match[1][0][0], -1) === '(' ? ')' : '';
 			if ($paramsep === ')') {
@@ -1858,6 +1858,8 @@ class Compiler implements ICompiler {
 		}
 
 		// blocks
+		var_dump($pluginType);
+		var_dump(Core::BLOCK_PLUGIN);
 		if ($pluginType & Core::BLOCK_PLUGIN) {
 			if ($curBlock !== 'root' || is_array($parsingParams)) {
 				throw new Exception\CompilationException($this, 'Block plugins can not be used as other plugin\'s arguments');
@@ -3302,6 +3304,7 @@ class Compiler implements ICompiler {
 		elseif ($curBlock === 'string' || $curBlock === 'root') {
 			return $m[1] . '.' . $output . '.' . $m[1] . (isset($add) ? $add : null);
 		}
+		return null;
 	}
 
 	/**
