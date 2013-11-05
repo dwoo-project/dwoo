@@ -1858,8 +1858,6 @@ class Compiler implements ICompiler {
 		}
 
 		// blocks
-		var_dump($pluginType);
-		var_dump(Core::BLOCK_PLUGIN);
 		if ($pluginType & Core::BLOCK_PLUGIN) {
 			if ($curBlock !== 'root' || is_array($parsingParams)) {
 				throw new Exception\CompilationException($this, 'Block plugins can not be used as other plugin\'s arguments');
