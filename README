@@ -1,5 +1,6 @@
------------------------------------------------------------------------------
--- WARNING - END OF LIFE / UNMAINTAINED CODE 
+=============================================================================
+
+WARNING - END OF LIFE / UNMAINTAINED CODE 
 -----------------------------------------------------------------------------
 
 This library is not being maintained anymore for quite a while, so if you are
@@ -10,8 +11,13 @@ Another alternative if you have many Dwoo templates is to switch to the
 spiritual successor [Dwoo2](https://github.com/emulienfou/dwoo2) library 
 currently developed by @emulienfou.
 
-----
-----
+=============================================================================
+
+
+
+
+
+
 
 -----------------------------------------------------------------------------
 -- WHAT IS DWOO?                                      readme - version 1.1.0
