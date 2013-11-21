@@ -3,8 +3,15 @@
 -----------------------------------------------------------------------------
 
 This library is not being maintained anymore for quite a while, so if you are
-starting a new project you should consider using Twig instead: 
-http://twig.sensiolabs.org
+starting a new project you should probably consider using
+[Twig](http://twig.sensiolabs.org) instead.
+
+Another alternative if you have many Dwoo templates is to switch to the
+spiritual successor [Dwoo2](https://github.com/emulienfou/dwoo2) library 
+currently developed by @emulienfou.
+
+----
+----
 
 -----------------------------------------------------------------------------
 -- WHAT IS DWOO?                                      readme - version 1.1.0
