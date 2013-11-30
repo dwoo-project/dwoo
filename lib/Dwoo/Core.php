@@ -484,9 +484,23 @@ class Core {
 		}
 	}
 
-
-	public function setInitGlobal($name, $value) {
+	/**
+	 * Assign a global variable
+	 * @param $name
+	 * @param $value
+	 */
+	public function setGlobal($name, $value) {
 		$this->globals[$name] = $value;
+	}
+
+	/**
+	 * Assign multiple global variables
+	 * @param array $globals
+	 */
+	public function setGlobals(array $globals) {
+		foreach ($globals as $key => $value) {
+			$this->globals[$key] = $value;
+		}
 	}
 
 	/**
