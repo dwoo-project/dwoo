@@ -12,7 +12,7 @@ class Exception extends \Dwoo\Exception {
 		parent::__construct($message, $code, $previous);
 	}
 
-	public function handleException(int $errno , string $errstr, string $errfile, int $errline, array $errcontext) {
+	public function handleException($errno , $errstr, $errfile, $errline, $errcontext) {
 		var_dump($errstr);
 	}
 
