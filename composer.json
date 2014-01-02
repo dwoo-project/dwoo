@@ -1,7 +1,6 @@
 {
-    "name": "dwoo/dwoo2",
+    "name": "dwoo/dwoo",
     "description": "Dwoo is a PHP5 template engine which is (almost) fully compatible with Smarty templates and plugins, but is written from scratch for PHP5, and adds many features.",
-    "minimum-stability": "beta",
     "authors": [
         {
             "name": "David Sanchez",
