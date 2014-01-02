@@ -49,7 +49,10 @@ class Exception extends \Dwoo\Exception {
 	}
 
 	public function handleShutdown() {
-		var_dump(error_get_last());
+		$error = error_get_last();
+		if( ! is_null($error)) {
+			var_dump(error_get_last());
+		}
 	}
 
 	/**
