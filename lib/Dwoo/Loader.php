@@ -1,5 +1,6 @@
 <?php
 namespace Dwoo;
+
 use Dwoo\Exception\PluginException;
 
 /**
@@ -42,9 +43,12 @@ class Loader implements ILoader {
 
 	protected $corePluginDir;
 
-	public function __construct($cacheDir) {
+	private $_core = null;
+
+	public function __construct(Core $core) {
+		$this->_core         = $core;
 		$this->corePluginDir = Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins';
-		$this->cacheDir      = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$this->cacheDir      = rtrim($core->getCompileDir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		// include class paths or rebuild paths if the cache file isn't there
 		$cacheFile = $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php';
@@ -72,8 +76,8 @@ class Loader implements ILoader {
 			$this->classPath = array();
 		}
 
-		$dir_iterator   = new \RecursiveDirectoryIterator($path);
-		$fileSPLObjects = new \RecursiveIteratorIterator($dir_iterator, \RecursiveIteratorIterator::SELF_FIRST);
+		$directoryIterator   = new \RecursiveDirectoryIterator($path);
+		$fileSPLObjects = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
 		try {
 			foreach ($fileSPLObjects as $fullFileName => $fileSPLObject) {
 				if ($fileSPLObject->isFile()) {
@@ -87,7 +91,7 @@ class Loader implements ILoader {
 
 		// save in file if it's the first call (not recursed)
 		if ($cacheFile !== false) {
-			if (! file_put_contents($cacheFile, serialize($this->classPath))) {
+			if (!file_put_contents($cacheFile, serialize($this->classPath))) {
 				throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
 			}
 			$this->classPath += $tmp;
@@ -134,14 +138,15 @@ class Loader implements ILoader {
 				if (isset($index[0])) {
 					if (isset($this->classPath[$index[0]])) {
 						include $this->classPath[$index[0]];
+
 						return true;
 					}
 				}
 			}
 
-			throw new PluginException(sprintf(PluginException::FORGOT_BIND, $class), E_USER_NOTICE);
-			return false;
+			throw new PluginException(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $class), E_USER_NOTICE);
 		}
+
 		return false;
 	}
 
@@ -160,10 +165,10 @@ class Loader implements ILoader {
 	 */
 	public function addDirectory($pluginDirectory) {
 		$pluginDir = realpath($pluginDirectory);
-		if (! $pluginDir) {
+		if (!$pluginDir) {
 			throw new Exception('Plugin directory does not exist or can not be read : ' . $pluginDirectory);
 		}
-		$cacheFile               = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
+		$cacheFile               = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
 		$this->paths[$pluginDir] = $cacheFile;
 		if (file_exists($cacheFile)) {
 			$classpath       = file_get_contents($cacheFile);
@@ -171,6 +176,32 @@ class Loader implements ILoader {
 		}
 		else {
 			$this->rebuildClassPathCache($pluginDir, $cacheFile);
+		}
+
+		$directoryIterator   = new \RecursiveDirectoryIterator($pluginDir);
+		$fileSPLObjects = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+		try {
+			foreach ($fileSPLObjects as $fullFileName => $fileSPLObject) {
+				if ($fileSPLObject->isFile()) {
+					$class = str_replace(['Block', 'block', 'Function', 'function'], ['', '', '', ''], $fileSPLObject->getBasename('.php'));
+
+					// Check entry exist in $this->classPath
+					$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));
+					$index = array_values($match);
+
+					// Entry doesn't exist, try to rebuild cache
+					$included_files = get_included_files();
+					if (!isset($index[0]) || !isset($this->classPath[$index[0]]) || !is_readable($this->classPath[$index[0]]) || !in_array($this->classPath[$index[0]], $included_files)) {
+
+						//$this->_core->addPlugin(strtotlower($class), );
+						include $this->classPath[$index[0]];
+					}
+
+				}
+			}
+		}
+		catch (\UnexpectedValueException $e) {
+			printf("Directory [%s] contained a directory we can not recurse into", $pluginDir);
 		}
 	}
 }

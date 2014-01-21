@@ -22,7 +22,7 @@ class Autoloader {
 
 		// Check file exists & class not already loaded
 		if (file_exists($filePath) && class_exists($class) === false) {
-			require $filePath;
+			require_once $filePath;
 		}
 	}
 

@@ -393,13 +393,7 @@ class Core {
 				ob_start();
 				include $file;
 				$this->template = null;
-
-				if ($this->debugMode == true) {
-					Debug::setResult(ob_get_clean());
-				}
-				else {
-					return ob_get_clean();
-				}
+				return ob_get_clean();
 			}
 		}
 		else {
@@ -452,13 +446,7 @@ class Core {
 					include $file;
 					// exit render mode
 					$this->template = null;
-
-					if ($this->debugMode == true) {
-						Debug::setResult(ob_get_clean());
-					}
-					else {
-						return ob_get_clean();
-					}
+					return ob_get_clean();
 				}
 			}
 			else {
@@ -469,18 +457,8 @@ class Core {
 				if ($_output === true) {
 					echo $out;
 				}
-				if ($this->debugMode == true) {
-					Debug::setResult($out);
-				}
-				else {
-					return $out;
-				}
-
+				return $out;
 			}
-		}
-
-		if ($this->debugMode == true) {
-			Debug::getDebugger();
 		}
 	}
 
@@ -705,7 +683,7 @@ class Core {
 	 */
 	public function getLoader() {
 		if ($this->loader === null) {
-			$this->loader = new Loader($this->getCompileDir());
+			$this->loader = new Loader($this);
 		}
 
 		return $this->loader;

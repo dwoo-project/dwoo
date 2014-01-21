@@ -696,11 +696,11 @@ class Compiler implements ICompiler {
 				$this->stack[0]['buffer'] = '';
 
 				if ($this->debug) {
-					Debug::setMessage('COMPILER INIT<br>');
+					echo 'COMPILER INIT<br>';
 				}
 
 				if ($this->debug) {
-					Debug::setMessage('PROCESSING PREPROCESSORS (' . count($this->processors['pre']) . ')<br>');
+					echo 'PROCESSING PREPROCESSORS (' . count($this->processors['pre']) . ')<br>';
 				}
 
 				// runs preprocessors
@@ -719,7 +719,7 @@ class Compiler implements ICompiler {
 
 				// show template source if debug
 				if ($this->debug) {
-					Debug::setMessage('<pre>' . print_r(htmlentities($tpl), true) . '</pre><hr />');
+					echo '<pre>' . print_r(htmlentities($tpl), true) . '</pre><hr />';
 				}
 
 				// strips php tags if required by the security policy
@@ -813,7 +813,7 @@ class Compiler implements ICompiler {
 		$compiled .= $this->removeBlock('TopLevel');
 
 		if ($this->debug) {
-			Debug::setMessage('PROCESSING POSTPROCESSORS<br>');
+			echo 'PROCESSING POSTPROCESSORS<br>';
 		}
 
 		foreach ($this->processors['post'] as $postProc) {
@@ -830,7 +830,7 @@ class Compiler implements ICompiler {
 		unset($postProc);
 
 		if ($this->debug) {
-			Debug::setMessage('COMPILATION COMPLETE : MEM USAGE : ' . memory_get_usage(true) . '<br>');
+			echo 'COMPILATION COMPLETE : MEM USAGE : ' . memory_get_usage(true) . '<br>';
 		}
 
 		$output = "<?php\n/* template head */\n";
@@ -910,15 +910,15 @@ class Compiler implements ICompiler {
 		$output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
 		if ($this->debug) {
-			Debug::setMessage('<hr><pre>');
+			echo '<hr><pre>';
 			$lines = preg_split('{\r\n|\n|<br />}', highlight_string(($output), true));
 			array_shift($lines);
 			foreach ($lines as $i => $line) {
-				Debug::setMessage(($i + 1) . '. ' . $line . "\r\n");
+				echo ($i + 1) . '. ' . $line . "\r\n";
 			}
 		}
 		if ($this->debug) {
-			Debug::setMessage('<hr></pre></pre>');
+			echo '<hr></pre></pre>';
 		}
 
 		$this->template = $this->dwoo = null;
@@ -1064,8 +1064,6 @@ class Compiler implements ICompiler {
 	 * @return string the preProcessing() method's output
 	 */
 	public function addCustomBlock($type, array $params, $paramtype) {
-		$type = Core::underscoreToCamel($type);
-
 		if (isset($this->customPlugins[$type])) {
 			$callback = $this->customPlugins[$type]['callback'];
 			if (is_array($callback)) {
@@ -1084,11 +1082,8 @@ class Compiler implements ICompiler {
 
 			return call_user_func(array($class, 'preProcessing'), $this, $params, '', '', $type);
 		}
-		else {
-			throw new PluginException(sprintf(PluginException::FORGOT_BIND, $type), E_USER_NOTICE);
-		}
 
-		return '';
+		throw new PluginException(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $type), E_USER_NOTICE);
 	}
 
 	/**
@@ -1308,7 +1303,7 @@ class Compiler implements ICompiler {
 				// end template tag
 				$pointer += strlen($this->rd);
 				if ($this->debug) {
-					Debug::setMessage('TEMPLATE PARSING ENDED<br />');
+					echo 'TEMPLATE PARSING ENDED<br />';
 				}
 
 				return false;
@@ -1331,7 +1326,7 @@ class Compiler implements ICompiler {
 		$substr = substr($in, $from, $to - $from);
 
 		if ($this->debug) {
-			Debug::setMessage('<br />PARSE CALL : PARSING "<b>' . htmlentities(substr($in, $from, min($to - $from, 50))) . (($to - $from) > 50 ? '...' : '') . '</b>" @ ' . $from . ':' . $to . ' in ' . $curBlock . ' : pointer=' . $pointer . '<br/>');
+			echo '<br />PARSE CALL : PARSING "<b>' . htmlentities(substr($in, $from, min($to - $from, 50))) . (($to - $from) > 50 ? '...' : '') . '</b>" @ ' . $from . ':' . $to . ' in ' . $curBlock . ' : pointer=' . $pointer . '<br/>';
 		}
 		$parsed = "";
 
@@ -1430,7 +1425,7 @@ class Compiler implements ICompiler {
 		elseif ($first === ';') {
 			// instruction end
 			if ($this->debug) {
-				Debug::setMessage('END OF INSTRUCTION<br />');
+				echo 'END OF INSTRUCTION<br />';
 			}
 			if ($pointer !== null) {
 				$pointer++;
@@ -1454,14 +1449,14 @@ class Compiler implements ICompiler {
 					$pointer -= strlen($match[0]);
 				}
 				if ($this->debug) {
-					Debug::setMessage('TOP BLOCK CLOSED<br />');
+					echo 'TOP BLOCK CLOSED<br />';
 				}
 
 				return $this->removeTopBlock();
 			}
 			else {
 				if ($this->debug) {
-					Debug::setMessage('BLOCK OF TYPE ' . $match[1] . ' CLOSED<br />');
+					echo 'BLOCK OF TYPE ' . $match[1] . ' CLOSED<br />';
 				}
 
 				return $this->removeBlock($match[1]);
@@ -1470,7 +1465,7 @@ class Compiler implements ICompiler {
 		elseif ($curBlock === 'root' && substr($substr, 0, strlen($this->rd)) === $this->rd) {
 			// end template tag
 			if ($this->debug) {
-				Debug::setMessage('TAG PARSING ENDED<br />');
+				echo 'TAG PARSING ENDED<br />';
 			}
 			$pointer += strlen($this->rd);
 
@@ -1479,7 +1474,7 @@ class Compiler implements ICompiler {
 		elseif (is_array($parsingParams) && preg_match('#^(([\'"]?)[a-z0-9_]+\2\s*=' . ($curBlock === 'array' ? '>?' : '') . ')(?:\s+|[^=]).*#i', $substr, $match)) {
 			// named parameter
 			if ($this->debug) {
-				Debug::setMessage('NAMED PARAM FOUND<br />');
+				echo 'NAMED PARAM FOUND<br />';
 			}
 			$len = strlen($match[1]);
 			while (substr($in, $from + $len, 1) === ' ') {
@@ -1528,7 +1523,7 @@ class Compiler implements ICompiler {
 		if ($parsed === 'var') {
 			if (preg_match('#^\s*([/%+*-])\s*([a-z0-9]|\$)#i', $substr, $match)) {
 				if ($this->debug) {
-					Debug::setMessage('PARSING POST-VAR EXPRESSION ' . $substr . '<br />');
+					echo 'PARSING POST-VAR EXPRESSION ' . $substr . '<br />';
 				}
 				// parse expressions
 				$pointer += strlen($match[0]) - 1;
@@ -1567,7 +1562,7 @@ class Compiler implements ICompiler {
 			}
 			else if ($curBlock === 'root' && preg_match('#^(\s*(?:[+/*%-.]=|=|\+\+|--)\s*)(.*)#s', $substr, $match)) {
 				if ($this->debug) {
-					Debug::setMessage('PARSING POST-VAR ASSIGNMENT ' . $substr . '<br />');
+					echo 'PARSING POST-VAR ASSIGNMENT ' . $substr . '<br />';
 				}
 				// parse assignment
 				$value    = $match[2];
@@ -1614,7 +1609,7 @@ class Compiler implements ICompiler {
 			else if ($curBlock === 'array' && is_array($parsingParams) && preg_match('#^(\s*=>?\s*)#', $substr, $match)) {
 				// parse namedparam with var as name (only for array)
 				if ($this->debug) {
-					Debug::setMessage('VARIABLE NAMED PARAM (FOR ARRAY) FOUND<br />');
+					echo 'VARIABLE NAMED PARAM (FOR ARRAY) FOUND<br />';
 				}
 				$len = strlen($match[1]);
 				$var = $out[count($out) - 1];
@@ -1697,7 +1692,7 @@ class Compiler implements ICompiler {
 		}
 
 		if ($this->debug) {
-			Debug::setMessage('FUNC FOUND (' . $func . ')<br />');
+			echo 'FUNC FOUND (' . $func . ')<br />';
 		}
 
 		$paramsep = '';
@@ -1766,26 +1761,26 @@ class Compiler implements ICompiler {
 
 							if ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === ')') {
 								if ($this->debug) {
-									Debug::setMessage('PARAM PARSING ENDED, ")" FOUND, POINTER AT ' . $ptr . '<br/>');
+									echo 'PARAM PARSING ENDED, ")" FOUND, POINTER AT ' . $ptr . '<br/>';
 								}
 								break 2;
 							}
 							elseif ($paramstr[$ptr] === ';') {
 								$ptr++;
 								if ($this->debug) {
-									Debug::setMessage('PARAM PARSING ENDED, ";" FOUND, POINTER AT ' . $ptr . '<br/>');
+									echo 'PARAM PARSING ENDED, ";" FOUND, POINTER AT ' . $ptr . '<br/>';
 								}
 								break 2;
 							}
 							elseif ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === '/') {
 								if ($this->debug) {
-									Debug::setMessage('PARAM PARSING ENDED, "/" FOUND, POINTER AT ' . $ptr . '<br/>');
+									echo 'PARAM PARSING ENDED, "/" FOUND, POINTER AT ' . $ptr . '<br/>';
 								}
 								break 2;
 							}
 							elseif (substr($paramstr, $ptr, strlen($this->rd)) === $this->rd) {
 								if ($this->debug) {
-									Debug::setMessage('PARAM PARSING ENDED, RIGHT DELIMITER FOUND, POINTER AT ' . $ptr . '<br/>');
+									echo 'PARAM PARSING ENDED, RIGHT DELIMITER FOUND, POINTER AT ' . $ptr . '<br/>';
 								}
 								break 2;
 							}
@@ -1799,7 +1794,7 @@ class Compiler implements ICompiler {
 						}
 
 						if ($this->debug) {
-							Debug::setMessage('FUNC START PARAM PARSING WITH POINTER AT ' . $ptr . '<br/>');
+							echo 'FUNC START PARAM PARSING WITH POINTER AT ' . $ptr . '<br/>';
 						}
 
 						if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
@@ -1813,7 +1808,7 @@ class Compiler implements ICompiler {
 						}
 
 						if ($this->debug) {
-							Debug::setMessage('PARAM PARSED, POINTER AT ' . $ptr . ' (' . substr($paramstr, $ptr - 1, 3) . ')<br/>');
+							echo 'PARAM PARSED, POINTER AT ' . $ptr . ' (' . substr($paramstr, $ptr - 1, 3) . ')<br/>';
 						}
 					}
 				}
@@ -1842,7 +1837,7 @@ class Compiler implements ICompiler {
 		if ($pointer !== null) {
 			$pointer += (isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func) + (isset($whitespace) ? $whitespace : 0);
 			if ($this->debug) {
-				Debug::setMessage('FUNC ADDS ' . ((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func)) . ' TO POINTER<br/>');
+				echo 'FUNC ADDS ' . ((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func)) . ' TO POINTER<br/>';
 			}
 		}
 
@@ -2164,7 +2159,7 @@ class Compiler implements ICompiler {
 		$first  = $substr[0];
 
 		if ($this->debug) {
-			Debug::setMessage('STRING FOUND (in ' . htmlentities(substr($in, $from, min($to - $from, 50))) . (($to - $from) > 50 ? '...' : '') . ')<br />');
+			echo 'STRING FOUND (in ' . htmlentities(substr($in, $from, min($to - $from, 50))) . (($to - $from) > 50 ? '...' : '') . ')<br />';
 		}
 		$strend = false;
 		$o      = $from + 1;
@@ -2179,7 +2174,7 @@ class Compiler implements ICompiler {
 			}
 		}
 		if ($this->debug) {
-			Debug::setMessage('STRING DELIMITED: ' . substr($in, $from, $strend + 1 - $from) . '<br/>');
+			echo 'STRING DELIMITED: ' . substr($in, $from, $strend + 1 - $from) . '<br/>';
 		}
 
 		$srcOutput = substr($in, $from, $strend + 1 - $from);
@@ -2239,7 +2234,7 @@ class Compiler implements ICompiler {
 		$substr = substr($in, $from, $to - $from);
 
 		if ($this->debug) {
-			Debug::setMessage('CONST FOUND : ' . $substr . '<br />');
+			echo 'CONST FOUND : ' . $substr . '<br />';
 		}
 
 		if (!preg_match('#^%([\\\\a-z0-9_:]+)#i', $substr, $m)) {
@@ -2342,10 +2337,10 @@ class Compiler implements ICompiler {
 
 			if ($this->debug) {
 				if ($hasMethodCall) {
-					Debug::setMessage('METHOD CALL FOUND : $' . $key . substr($methodCall, 0, 30) . '<br />');
+					echo 'METHOD CALL FOUND : $' . $key . substr($methodCall, 0, 30) . '<br />';
 				}
 				else {
-					Debug::setMessage('VAR FOUND : $' . $key . '<br />');
+					echo 'VAR FOUND : $' . $key . '<br />';
 				}
 			}
 
@@ -2405,13 +2400,13 @@ class Compiler implements ICompiler {
 				unset($uid, $current, $curTxt, $tree, $chars);
 
 				if ($this->debug) {
-					Debug::setMessage('RECURSIVE VAR REPLACEMENT : ' . $key . '<br>');
+					echo 'RECURSIVE VAR REPLACEMENT : ' . $key . '<br>';
 				}
 
 				$key = $this->flattenVarTree($parsed);
 
 				if ($this->debug) {
-					Debug::setMessage('RECURSIVE VAR REPLACEMENT DONE : ' . $key . '<br>');
+					echo 'RECURSIVE VAR REPLACEMENT DONE : ' . $key . '<br>';
 				}
 
 				$output = preg_replace('#(^""\.|""\.|\.""$|(\()""\.|\.""(\)))#', '$2$3', '$this->readVar("' . $key . '")');
@@ -2745,7 +2740,7 @@ class Compiler implements ICompiler {
 					$cnt = substr_count($key, '$');
 
 					if ($this->debug) {
-						Debug::setMessage('PARSING SUBVARS IN : ' . $key . '<br>');
+						echo 'PARSING SUBVARS IN : ' . $key . '<br>';
 					}
 					if ($cnt > 0) {
 						while (--$cnt >= 0) {
@@ -2762,7 +2757,7 @@ class Compiler implements ICompiler {
 																																																										 'replaceVarKeyHelper'
 																																																								   ), substr($key, $last, $len)), $last, $len);
 							if ($this->debug) {
-								Debug::setMessage('RECURSIVE VAR REPLACEMENT DONE : ' . $key . '<br>');
+								echo 'RECURSIVE VAR REPLACEMENT DONE : ' . $key . '<br>';
 							}
 						}
 						unset($last);
@@ -2854,21 +2849,21 @@ class Compiler implements ICompiler {
 
 		if (strtolower($substr) === 'false' || strtolower($substr) === 'no' || strtolower($substr) === 'off') {
 			if ($this->debug) {
-				Debug::setMessage('BOOLEAN(FALSE) PARSED<br />');
+				echo 'BOOLEAN(FALSE) PARSED<br />';
 			}
 			$substr = 'false';
 			$type   = self::T_BOOL;
 		}
 		elseif (strtolower($substr) === 'true' || strtolower($substr) === 'yes' || strtolower($substr) === 'on') {
 			if ($this->debug) {
-				Debug::setMessage('BOOLEAN(TRUE) PARSED<br />');
+				echo 'BOOLEAN(TRUE) PARSED<br />';
 			}
 			$substr = 'true';
 			$type   = self::T_BOOL;
 		}
 		elseif ($substr === 'null' || $substr === 'NULL') {
 			if ($this->debug) {
-				Debug::setMessage('NULL PARSED<br />');
+				echo 'NULL PARSED<br />';
 			}
 			$substr = 'null';
 			$type   = self::T_NULL;
@@ -2880,19 +2875,19 @@ class Compiler implements ICompiler {
 			}
 			$type = self::T_NUMERIC;
 			if ($this->debug) {
-				Debug::setMessage('NUMBER (' . $substr . ') PARSED<br />');
+				echo 'NUMBER (' . $substr . ') PARSED<br />';
 			}
 		}
 		elseif (preg_match('{^-?(\d+|\d*(\.\d+))\s*([/*%+-]\s*-?(\d+|\d*(\.\d+)))+$}', $substr)) {
 			if ($this->debug) {
-				Debug::setMessage('SIMPLE MATH PARSED<br />');
+				echo 'SIMPLE MATH PARSED<br />';
 			}
 			$type   = self::T_MATH;
 			$substr = '(' . $substr . ')';
 		}
 		elseif ($curBlock === 'condition' && array_search($substr, $breakChars, true) !== false) {
 			if ($this->debug) {
-				Debug::setMessage('BREAKCHAR (' . $substr . ') PARSED<br />');
+				echo 'BREAKCHAR (' . $substr . ') PARSED<br />';
 			}
 			$type = self::T_BREAKCHAR;
 			//$substr = '"'.$substr.'"';
@@ -2901,7 +2896,7 @@ class Compiler implements ICompiler {
 			$substr = $this->replaceStringVars('\'' . str_replace('\'', '\\\'', $substr) . '\'', '\'', $curBlock);
 			$type   = self::T_UNQUOTED_STRING;
 			if ($this->debug) {
-				Debug::setMessage('BLABBER (' . $substr . ') CASTED AS STRING<br />');
+				echo 'BLABBER (' . $substr . ') CASTED AS STRING<br />';
 			}
 		}
 
@@ -2933,7 +2928,7 @@ class Compiler implements ICompiler {
 	protected function replaceStringVars($string, $first, $curBlock = '') {
 		$pos = 0;
 		if ($this->debug) {
-			Debug::setMessage('STRING VAR REPLACEMENT : ' . $string . '<br>');
+			echo 'STRING VAR REPLACEMENT : ' . $string . '<br>';
 		}
 		// replace vars
 		while (($pos = strpos($string, '$', $pos)) !== false) {
@@ -2955,7 +2950,7 @@ class Compiler implements ICompiler {
 			}
 			$pos += strlen($var[1]) + 2;
 			if ($this->debug) {
-				Debug::setMessage('STRING VAR REPLACEMENT DONE : ' . $string . '<br>');
+				echo 'STRING VAR REPLACEMENT DONE : ' . $string . '<br>';
 			}
 		}
 
@@ -2986,7 +2981,7 @@ class Compiler implements ICompiler {
 	 */
 	protected function replaceModifiers(array $m, $curBlock = null, &$pointer = null) {
 		if ($this->debug) {
-			Debug::setMessage('PARSING MODIFIERS : ' . $m[3] . '<br />');
+			echo 'PARSING MODIFIERS : ' . $m[3] . '<br />';
 		}
 
 		if ($pointer !== null) {
@@ -3010,7 +3005,7 @@ class Compiler implements ICompiler {
 			}
 			if ($cmdstrsrc[0] === ' ' || $cmdstrsrc[0] === ';' || substr($cmdstrsrc, 0, strlen($this->rd)) === $this->rd) {
 				if ($this->debug) {
-					Debug::setMessage('MODIFIER PARSING ENDED, RIGHT DELIMITER or ";" FOUND<br/>');
+					echo 'MODIFIER PARSING ENDED, RIGHT DELIMITER or ";" FOUND<br/>';
 				}
 				$continue = false;
 				if ($pointer !== null) {
@@ -3031,7 +3026,7 @@ class Compiler implements ICompiler {
 				$cmdstrsrc = substr($cmdstrsrc, strlen($func));
 				$params    = array();
 				if ($this->debug) {
-					Debug::setMessage('MODIFIER (' . $func . ') CALLED WITH NO PARAMS<br/>');
+					echo 'MODIFIER (' . $func . ') CALLED WITH NO PARAMS<br/>';
 				}
 			}
 			else {
@@ -3044,26 +3039,26 @@ class Compiler implements ICompiler {
 				$params = array();
 				while ($ptr < strlen($paramstr)) {
 					if ($this->debug) {
-						Debug::setMessage('MODIFIER (' . $func . ') START PARAM PARSING WITH POINTER AT ' . $ptr . '<br/>');
+						echo 'MODIFIER (' . $func . ') START PARAM PARSING WITH POINTER AT ' . $ptr . '<br/>';
 					}
 					if ($this->debug) {
-						Debug::setMessage($paramstr . '--' . $ptr . '--' . strlen($paramstr) . '--modifier<br/>');
+						echo $paramstr . '--' . $ptr . '--' . strlen($paramstr) . '--modifier<br/>';
 					}
 					$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'modifier', $ptr);
 					if ($this->debug) {
-						Debug::setMessage('PARAM PARSED, POINTER AT ' . $ptr . '<br/>');
+						echo 'PARAM PARSED, POINTER AT ' . $ptr . '<br/>';
 					}
 
 					if ($ptr >= strlen($paramstr)) {
 						if ($this->debug) {
-							Debug::setMessage('PARAM PARSING ENDED, PARAM STRING CONSUMED<br/>');
+							echo 'PARAM PARSING ENDED, PARAM STRING CONSUMED<br/>';
 						}
 						break;
 					}
 
 					if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === '|' || $paramstr[$ptr] === ';' || substr($paramstr, $ptr, strlen($this->rd)) === $this->rd) {
 						if ($this->debug) {
-							Debug::setMessage('PARAM PARSING ENDED, " ", "|", RIGHT DELIMITER or ";" FOUND, POINTER AT ' . $ptr . '<br/>');
+							echo 'PARAM PARSING ENDED, " ", "|", RIGHT DELIMITER or ";" FOUND, POINTER AT ' . $ptr . '<br/>';
 						}
 						if ($paramstr[$ptr] !== '|') {
 							$continue = false;
