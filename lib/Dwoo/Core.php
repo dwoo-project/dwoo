@@ -1339,7 +1339,13 @@ class Core {
 			}
 			else {
 				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
-					$data = $data->$m[2][$k];
+					// Check property exists
+					if (property_exists($data, $m[2][$k])) {
+						$data = $data->$m[2][$k];
+					}
+					else {
+						$data = '';
+					}
 				}
 				else {
 					return null;
