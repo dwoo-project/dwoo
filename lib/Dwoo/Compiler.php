@@ -3542,10 +3542,15 @@ class Compiler implements ICompiler {
 			}
 		}
 
+		/**
+		 * Return array with param name as key (e.g. array('name' => 'value')
+		 * @date 1/22/2014
+		 */
 		if (count($ps)) {
-			foreach ($ps as $i => $p) {
+			$paramlist = array_merge($paramlist, $ps);
+			/*foreach ($ps as $i => $p) {
 				array_push($paramlist, $p);
-			}
+			}*/
 		}
 
 		return $paramlist;
