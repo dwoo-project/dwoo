@@ -683,7 +683,7 @@ class Core {
 	 */
 	public function getLoader() {
 		if ($this->loader === null) {
-			$this->loader = new Loader($this);
+			$this->loader = new Loader($this->getCompileDir());
 		}
 
 		return $this->loader;
