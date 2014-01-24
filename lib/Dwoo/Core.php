@@ -1308,11 +1308,10 @@ class Core {
 	 *
 	 * @param string $varstr   the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
 	 * @param mixed  $data     the data array or object to read from
-	 * @param bool   $safeRead if true, the function will check whether the index exists to prevent any notices from being output
 	 *
 	 * @return mixed
 	 */
-	public function readVarInto($varstr, $data, $safeRead = false) {
+	public function readVarInto($varstr, $data) {
 		if ($data === null) {
 			return null;
 		}
@@ -1326,11 +1325,12 @@ class Core {
 		unset($varstr);
 
 		while (list($k, $sep) = each($m[1])) {
+			// Is an array
 			if ($sep === '.' || $sep === '[' || $sep === '') {
 				// strip enclosing quotes if present
 				$m[2][$k] = preg_replace('#^(["\']?)(.*?)\1$#', '$2', $m[2][$k]);
 
-				if ((is_array($data) || $data instanceof \ArrayAccess) && ($safeRead === false || isset($data[$m[2][$k]]))) {
+				if ((is_array($data) || $data instanceof \ArrayAccess) && isset($data[$m[2][$k]])) {
 					$data = $data[$m[2][$k]];
 				}
 				else {
@@ -1338,7 +1338,8 @@ class Core {
 				}
 			}
 			else {
-				if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
+				// Is a object
+				if (is_object($data) && isset($data->$m[2][$k])) {
 					// Check property exists
 					if (property_exists($data, $m[2][$k])) {
 						$data = $data->$m[2][$k];

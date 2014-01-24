@@ -2301,11 +2301,17 @@ class Compiler implements ICompiler {
 		$substr = substr($in, $from, $to - $from);
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
+		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(?:\.|->)?' : '') . // method call
 		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()') . // method call
 		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()') . // simple math expressions
 		($curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())') . // modifiers
 		'#i', $substr, $match)
 		) {
+
+			if ($this->debug) {
+				echo 'MATCH FOUND IN parseVar(): ' . $match[0] . '<br />';
+			}
+
 			$key = substr($match[1], 1);
 
 			$matchedLength = strlen($match[0]);
@@ -2598,6 +2604,10 @@ class Compiler implements ICompiler {
 	 * @return string parsed variable
 	 */
 	protected function parseVarKey($key, $curBlock) {
+		if ($this->debug) {
+			echo 'CALL FUNCTION parseVarKey() $key='.$key.' $curbBlock='.$curBlock;
+		}
+
 		if ($key === '') {
 			return '$this->scope';
 		}
@@ -2648,6 +2658,12 @@ class Compiler implements ICompiler {
 			}
 			else {
 				preg_match_all('#(\[|->|\.)?((?:[a-z0-9_]|-(?!>))+|(\\\?[\'"])[^\3]*?\3)\]?#i', $key, $m);
+
+				if ($this->debug) {
+					echo 'FUNCTION parseVarKey(); $key value is: ' . $key;
+					echo 'FUNCTION parseVarKey(); $m value is: ' . var_export($m);
+				}
+				//$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
 
 				$i = $m[2][0];
 				if ($i === '_parent' || $i === '_') {
@@ -2702,7 +2718,12 @@ class Compiler implements ICompiler {
 
 				if (count($m[2])) {
 					unset($m[0]);
-					$output = '$this->readVarInto(' . str_replace("\n", '', var_export($m, true)) . ', ' . $output . ', ' . ($curBlock == 'root' ? 'false' : 'true') . ')';
+
+					if ($this->debug) {
+						echo 'FUNCTION parseVarKey(); OUTPUT BEFORE readVarInto(): ' . $output;
+					}
+
+					$output = '$this->readVarInto(' . str_replace("\n", '', var_export($m, true)) . ', ' . $output . ')';
 				}
 			}
 		}
@@ -2710,6 +2731,10 @@ class Compiler implements ICompiler {
 			preg_match_all('#(\[|->|\.)?((?:[a-z0-9_]|-(?!>))+)\]?#i', $key, $m);
 			unset($m[0]);
 			$output = '$this->readVar(' . str_replace("\n", '', var_export($m, true)) . ')';
+		}
+
+		if ($this->debug) {
+			echo 'FUNCTION parseVarKey(); OUTPUT VALUE: '.$output;
 		}
 
 		return $output;
@@ -3466,7 +3491,7 @@ class Compiler implements ICompiler {
 			$map = $this->getParamMap($callback);
 		}
 
-		$paramlist = array();
+		$paramList = array();
 
 		// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
 		$ps = array();
@@ -3502,18 +3527,18 @@ class Compiler implements ICompiler {
 					$tmp3[$i] = isset($p[2]) ? $p[2] : 0;
 					unset($ps[$i]);
 				}
-				$paramlist[$v[0]] = array($tmp, $tmp2, $tmp3);
+				$paramList[$v[0]] = array($tmp, $tmp2, $tmp3);
 				unset($tmp, $tmp2, $i, $p);
 				break;
 			}
 			elseif (isset($ps[$v[0]])) {
 				// parameter is defined as named param
-				$paramlist[$v[0]] = $ps[$v[0]];
+				$paramList[$v[0]] = $ps[$v[0]];
 				unset($ps[$v[0]]);
 			}
 			elseif (isset($ps[$k])) {
 				// parameter is defined as ordered param
-				$paramlist[$v[0]] = $ps[$k];
+				$paramList[$v[0]] = $ps[$k];
 				unset($ps[$k]);
 			}
 			elseif ($v[1] === false) {
@@ -3534,26 +3559,31 @@ class Compiler implements ICompiler {
 			}
 			elseif ($v[2] === null) {
 				// enforce lowercased null if default value is null (php outputs NULL with var export)
-				$paramlist[$v[0]] = array('null', null, self::T_NULL);
+				$paramList[$v[0]] = array('null', null, self::T_NULL);
 			}
 			else {
 				// outputs default value with var_export
-				$paramlist[$v[0]] = array(var_export($v[2], true), $v[2]);
+				$paramList[$v[0]] = array(var_export($v[2], true), $v[2]);
 			}
-		}
-
+		};
 		/**
 		 * Return array with param name as key (e.g. array('name' => 'value')
 		 * @date 1/22/2014
 		 */
 		if (count($ps)) {
-			$paramlist = array_merge($paramlist, $ps);
-			/*foreach ($ps as $i => $p) {
-				array_push($paramlist, $p);
-			}*/
+			$pArray = array();
+			foreach ($ps as $i => $p) {
+				if (is_array($p)) {
+					$pArray[$i] = $p[1];
+				}
+				else {
+					$pArray[$i] = $p;
+				}
+			}
+			$paramList = array_merge($paramList, $pArray);
 		}
 
-		return $paramlist;
+		return $paramList;
 	}
 
 	/**
