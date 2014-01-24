@@ -1339,7 +1339,7 @@ class Core {
 			}
 			else {
 				// Is a object
-				if (is_object($data) && isset($data->$m[2][$k])) {
+				if (is_object($data)) {
 					// Check property exists
 					if (property_exists($data, $m[2][$k])) {
 						$data = $data->$m[2][$k];
