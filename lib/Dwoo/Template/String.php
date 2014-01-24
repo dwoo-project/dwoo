@@ -355,9 +355,6 @@ class String implements ITemplate {
 				$compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
 
 				if ($compiler === null || $compiler === array('\Dwoo\Compiler', 'compilerFactory')) {
-					if (class_exists('Compiler') === false) {
-						include_once Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Compiler.php';
-					}
 					$compiler = Compiler::compilerFactory();
 				}
 				else {
