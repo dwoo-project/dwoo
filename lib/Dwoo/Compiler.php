@@ -1038,9 +1038,9 @@ class Compiler implements ICompiler {
 	public function addBlock($name, array $params, $paramtype) {
 		// Convert class name to CamelCase
 		$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . Core::underscoreToCamel($name);
-		if (class_exists($class) === false) {
+		//if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($name);
-		}
+		//}
 
 		$params = $this->mapParams($params, array($class, 'begin'), $paramtype);
 
@@ -1892,7 +1892,7 @@ class Compiler implements ICompiler {
 													), $state);
 			}
 			else {
-				foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME) as $value) {
+				/*foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME) as $value) {
 					try {
 						$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($func));
 						$params          = $this->mapParams($params, array($reflectionClass->getName(),
@@ -1902,6 +1902,20 @@ class Compiler implements ICompiler {
 					catch (\ReflectionException $Exception) {
 
 					}
+				}*/
+				/**
+				 * It can only be a function here and not a block
+				 * @author David Sanchez
+				 * @date 2014-1-25
+				 */
+				try {
+					$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . Core::underscoreToCamel($func));
+					$params          = $this->mapParams($params, array($reflectionClass->getName(),
+																	   ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
+																 ), $state);
+				}
+				catch (\ReflectionException $Exception) {
+
 				}
 			}
 		}
@@ -2045,7 +2059,7 @@ class Compiler implements ICompiler {
 					$output = call_user_func_array($funcCompiler, $params);
 				}
 				else {
-					foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
+					/*foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
 							 ) as $value) {
 						try {
 							$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($func));
@@ -2055,7 +2069,22 @@ class Compiler implements ICompiler {
 						catch (\ReflectionException $Exception) {
 
 						}
+					}*/
+
+					/**
+					 * It can only be a function here and not a block
+					 * @author David Sanchez
+					 * @date 2014-1-25
+					 */
+					try {
+						$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . Core::underscoreToCamel($func));
+						array_unshift($params, $this);
+						$output = $reflectionClass->getMethod('compile')->invokeArgs(null, $params);
 					}
+					catch (\ReflectionException $Exception) {
+
+					}
+
 				}
 			}
 			else {
@@ -3148,14 +3177,14 @@ class Compiler implements ICompiler {
 					$output = $func . '(' . $params . ')';
 				}
 			}
-			elseif ($pluginType & Core::PROXY_PLUGIN) {
+			else if ($pluginType & Core::PROXY_PLUGIN) {
 				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
 				foreach ($params as &$p) {
 					$p = $p[0];
 				}
 				$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
 			}
-			elseif ($pluginType & Core::SMARTY_MODIFIER) {
+			else if ($pluginType & Core::SMARTY_MODIFIER) {
 				$params = $this->mapParams($params, null, $state);
 				$params = $params['*'][0];
 
@@ -3191,28 +3220,15 @@ class Compiler implements ICompiler {
 					$pluginName = $callback;
 				}
 				else {
-					$func              = Core::underscoreToCamel($func);
-					$functionNameArray = array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME                        => Core::CLASS_PLUGIN,
-											   Core::PLUGIN_FUNC_CLASS_PREFIX_NAME                         => Core::CLASS_PLUGIN,
-											   Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME . $func             => Core::FUNC_PLUGIN,
-											   Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $func              => Core::FUNC_PLUGIN,
-											   Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME . $func . 'Compile' => Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN,
-											   Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $func . 'Compile'  => Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN,
-											   'smartyModifier'                                            => Core::SMARTY_MODIFIER,
-											   'smartyFunction'                                            => Core::SMARTY_FUNCTION,
-											   'smartyBlock'                                               => Core::SMARTY_BLOCK
-					);
-					foreach ($functionNameArray as $key => $value) {
-						if ($pluginType & Core::CLASS_PLUGIN & class_exists($key) !== false) {
-							$pluginName = $key;
-							$callback   = array($pluginName,
-												($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
-							);
-						}
-						else if (function_exists($key) !== false) {
-							$pluginName = $key;
-							$callback   = $key;
-						}
+					$func = Core::underscoreToCamel($func);
+
+					if ($pluginType & Core::CLASS_PLUGIN) {
+						$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $func;
+						$callback = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
+					}
+					else {
+						$pluginName = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $func;
+						$callback = $pluginName . (($pluginType & Core::COMPILABLE_PLUGIN) ? '_compile' : '');
 					}
 				}
 
@@ -3367,7 +3383,6 @@ class Compiler implements ICompiler {
 	 */
 	protected function getPluginType($name) {
 		$pluginType = -1;
-		$tmpName    = $name;
 
 		if (($this->securityPolicy === null && (function_exists($name) || strtolower($name) === 'isset' || strtolower($name) === 'empty')) || ($this->securityPolicy !== null && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false)) {
 			$phpFunc = true;
@@ -3383,44 +3398,83 @@ class Compiler implements ICompiler {
 			$pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
 		}
 		else {
+			$name = Core::underscoreToCamel($name);
 
-			// It's a Block/Function class
-			$classPrefixArray = array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME);
-			foreach ($classPrefixArray as $value) {
-				if (class_exists($value . Core::underscoreToCamel($name))) {
-					try {
-						$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($name));
-						if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
-							$pluginType = Core::BLOCK_PLUGIN;
-						}
-						else {
-							$pluginType = Core::CLASS_PLUGIN;
-						}
-
-						if ($reflectionClass->implementsInterface('\Dwoo\ICompilable') || $reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
-							$pluginType |= Core::COMPILABLE_PLUGIN;
-						}
+			// Check if its a block
+			if (file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR .'Block' . $name . '.php') === true) {
+				try {
+					$reflectionClass = new \ReflectionClass(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . $name);
+					if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
+						$pluginType = Core::BLOCK_PLUGIN;
 					}
-					catch (\ReflectionException $Exception) {
+					else {
+						$pluginType = Core::CLASS_PLUGIN;
+					}
 
+					if ($reflectionClass->implementsInterface('\Dwoo\ICompilable') || $reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
+						$pluginType |= Core::COMPILABLE_PLUGIN;
 					}
 				}
-			}
+				catch (\ReflectionException $e) {
 
-			// It's a block/function/smarty function
-			if ($pluginType === -1) {
-				$functionNameArray = array(Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($name)             => Core::FUNC_PLUGIN,
-										   Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($name)              => Core::FUNC_PLUGIN,
-										   Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($name) . 'Compile' => Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN,
-										   Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($name) . 'Compile'  => Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN,
-										   'smartyModifier'                                                                     => Core::SMARTY_MODIFIER,
-										   'smartyFunction'                                                                     => Core::SMARTY_FUNCTION,
-										   'smartyBlock'                                                                        => Core::SMARTY_BLOCK
-				);
-				foreach ($functionNameArray as $key => $value) {
-					Autoloader::loadFunction($key);
-					if (function_exists($key) !== false) {
-						$pluginType = $value;
+				}
+			}
+			// Check if its a function (with upper and lower cases (fucking windows :) )
+			else if (
+				file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR .'Function' . $name . '.php') === true
+				|| file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR .'function' . $name . '.php') === true) {
+
+				$iterator = new \DirectoryIterator(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions');
+				foreach ($iterator as $fileInfo) {
+					if ($fileInfo->isFile()) {
+						// Return specified plugin only
+						if (strpos($fileInfo->getFilename(), 'unction'.$name.'.php')) {
+							// Class
+							if (ctype_upper($fileInfo->getFilename()[0])) {
+								try {
+									$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $name);
+									if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
+										$pluginType = Core::BLOCK_PLUGIN;
+									}
+									else {
+										$pluginType = Core::CLASS_PLUGIN;
+									}
+
+									if ($reflectionClass->implementsInterface('\Dwoo\ICompilable') || $reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
+										$pluginType |= Core::COMPILABLE_PLUGIN;
+									}
+								}
+								catch (\ReflectionException $Exception) {
+
+								}
+							}
+							// function
+							else {
+								if ($pluginType === -1) {
+									// Require function, autoloader can't do this
+									require_once Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
+
+									if (function_exists(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $name) !== false) {
+										$pluginType = Core::FUNC_PLUGIN;
+									}
+									else if (function_exists(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $name . 'Compile') !== false) {
+										$pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
+									}
+									else if (function_exists('smartyModifier'.$name) !== false) {
+										$pluginType = Core::SMARTY_MODIFIER;
+									}
+									else if (function_exists('smartyFunction'.$name) !== false) {
+										$pluginType = Core::SMARTY_FUNCTION;
+									}
+									else if (function_exists('smartyBlock'.$name) !== false) {
+										$pluginType = Core::SMARTY_BLOCK;
+									}
+								}
+								else {
+									throw new Exception('It cannot be append!');
+								}
+							}
+						}
 					}
 				}
 			}
@@ -3428,17 +3482,17 @@ class Compiler implements ICompiler {
 			// Otherwise, it's not a class/function, we try to load plugin
 			if ($pluginType === -1) {
 				try {
-					$this->dwoo->getLoader()->loadPlugin($tmpName, isset($phpFunc) === false);
+					$this->dwoo->getLoader()->loadPlugin($name, isset($phpFunc) === false);
 				}
 				catch (Exception $e) {
 					if (isset($phpFunc)) {
 						$pluginType = Core::NATIVE_PLUGIN;
 					}
-					elseif (is_object($this->dwoo->getPluginProxy()) && $this->dwoo->getPluginProxy()->handles($tmpName)) {
+					elseif (is_object($this->dwoo->getPluginProxy()) && $this->dwoo->getPluginProxy()->handles($name)) {
 						$pluginType = Core::PROXY_PLUGIN;
 					}
 					else {
-						throw new PluginException(sprintf(PluginException::NOT_FOUND, Core::underscoreToCamel($name)));
+						throw new PluginException(sprintf(PluginException::NOT_FOUND, $name));
 					}
 				}
 			}
