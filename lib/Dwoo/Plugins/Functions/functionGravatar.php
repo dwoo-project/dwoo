@@ -24,8 +24,8 @@ use Dwoo\Exception;
  * More information can be found here:
  * {@link http://www.gnu.org/copyleft/lesser.html}
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    2.0

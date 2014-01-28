@@ -12,12 +12,12 @@ use Dwoo\Plugin;
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-01
+ * @date       2014-01-24
  * @package    Dwoo
  */
 class FunctionExtends extends Plugin implements ICompilable {
@@ -58,7 +58,6 @@ class FunctionExtends extends Plugin implements ICompilable {
 		while (! empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
 				throw new CompilationException($compiler, 'Extends : The file name must be a non-empty string');
-				return;
 			}
 
 			if (preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m)) {
@@ -75,11 +74,11 @@ class FunctionExtends extends Plugin implements ICompilable {
 			try {
 				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier, null, null, null, $curTpl);
 			}
-			catch (\Dwoo\Exception\SecurityException $e) {
+			catch (\Dwoo\Exception $e) {
 				throw new CompilationException($compiler, 'Extends : Security restriction : ' . $e->getMessage());
 			}
 			catch (\Dwoo\Exception $e) {
-				throw new Exception($compiler, 'Extends : ' . $e->getMessage());
+				throw new \Exception($compiler, 'Extends : ' . $e->getMessage());
 			}
 
 			if ($parent === null) {
@@ -97,7 +96,7 @@ class FunctionExtends extends Plugin implements ICompilable {
 			$inheritanceTree[] = $newParent;
 
 			if (preg_match('/^' . self::$l . 'extends(?:\(?\s*|\s+)(?:file=)?\s*((["\']).+?\2|\S+?)\s*\)?\s*?' . self::$r . '/i', $parent->getSource(), $match)) {
-				$curPath = dirname($identifier) . DIRECTORY_SEPARATOR;
+				//$curPath = dirname($identifier) . DIRECTORY_SEPARATOR;
 				if (isset($match[2]) && $match[2] == '"') {
 					$file = '"' . str_replace('"', '\\"', substr($match[1], 1, - 1)) . '"';
 				}

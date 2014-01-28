@@ -11,8 +11,8 @@ use Dwoo\Compiler;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
@@ -36,6 +36,7 @@ function functionLoadTemplatesCompile(Compiler $compiler, $file) {
 		$resource   = $compiler->getDwoo()->getTemplate()->getResourceName();
 		$identifier = $file;
 	}
+	$identifier = str_replace('\\\\', '\\', $identifier);
 
 	$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
 
@@ -55,7 +56,7 @@ function functionLoadTemplatesCompile(Compiler $compiler, $file) {
 		$compiler->addUsedPlugin($plugin, $type);
 	}
 
-	$out = '\'\';// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
+	$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
 
 	$modCheck = $tpl->getIsModifiedCode();
 

@@ -1,7 +1,6 @@
 <?php
 namespace Dwoo\Plugins\Functions;
 use Dwoo\Core;
-use Dwoo\Exception\SecurityException;
 use Dwoo\Exception;
 
 /**
@@ -18,15 +17,15 @@ use Dwoo\Exception;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    2.0
+ * @date       2014-01-24
  * @package    Dwoo
  */
-function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array()) {
+function functionInclude(Core $core, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array()) {
 	if ($file === '') {
 		return null;
 	}
@@ -38,29 +37,30 @@ function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null
 	}
 	else {
 		// get the current template's resource
-		$resource   = $dwoo->getTemplate()->getResourceName();
+		$resource   = $core->getTemplate()->getResourceName();
 		$identifier = $file;
 	}
 
+	$include = null;
 	try {
-		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
-	}
-	catch (SecurityException $e) {
-		return $dwoo->triggerError('Include : Security restriction : ' . $e->getMessage(), E_USER_WARNING);
+		$include = $core->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	}
 	catch (Exception $e) {
-		return $dwoo->triggerError('Include : ' . $e->getMessage(), E_USER_WARNING);
+		$core->triggerError('Include : Security restriction : ' . $e->getMessage(), E_USER_WARNING);
+	}
+	catch (Exception $e) {
+		$core->triggerError('Include : ' . $e->getMessage(), E_USER_WARNING);
 	}
 
 	if ($include === null) {
-		return $dwoo->triggerError('Include : Resource "' . $resource . ':' . $identifier . '" not found.', E_USER_WARNING);
+		$core->triggerError('Include : Resource "' . $resource . ':' . $identifier . '" not found.', E_USER_WARNING);
 	}
-	elseif ($include === false) {
-		return $dwoo->triggerError('Include : Resource "' . $resource . '" does not support includes.', E_USER_WARNING);
+	else if ($include === false) {
+		$core->triggerError('Include : Resource "' . $resource . '" does not support includes.', E_USER_WARNING);
 	}
 
 	if (is_string($data)) {
-		$vars = $dwoo->readVar($data);
+		$vars = $core->readVar($data);
 	}
 	else {
 		$vars = $data;
@@ -70,15 +70,15 @@ function functionInclude(Core $dwoo, $file, $cache_time = null, $cache_id = null
 		$vars = $rest + $vars;
 	}
 
-	$clone = clone $dwoo;
+	$clone = clone $core;
 	$out   = $clone->get($include, $vars);
 
 	if ($assign !== null) {
-		$dwoo->assignInScope($out, $assign);
+		$core->assignInScope($out, $assign);
 	}
 
 	foreach ($clone->getReturnValues() as $name => $value) {
-		$dwoo->assignInScope($value, $name);
+		$core->assignInScope($value, $name);
 	}
 
 	if ($assign === null) {

@@ -8,8 +8,8 @@ use Dwoo\ITemplate;
  * represents a Dwoo template contained in a file
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
@@ -165,7 +165,7 @@ class File extends String {
 	 * returns a new template object from the given include name, null if no include is
 	 * possible (resource not found), or false if include is not permitted by this resource type
 	 *
-	 * @param Core      $dwoo                         the dwoo instance requiring it
+	 * @param Core      $core                         the Core instance requiring it
 	 * @param mixed     $resourceId                   the filename (relative to this template's dir) of the template to include
 	 * @param int       $cacheTime                    duration of the cache validity for this template,
 	 *                                                if null it defaults to the Dwoo instance that will
@@ -181,7 +181,7 @@ class File extends String {
 	 * @throws Exception
 	 * @return File|null
 	 */
-	public static function templateFactory(Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null) {
+	public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null) {
 		if (DIRECTORY_SEPARATOR === '\\') {
 			$resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
 		}
@@ -191,7 +191,7 @@ class File extends String {
 
 		if (file_exists($resourceId) === false) {
 			if ($parentTemplate === null) {
-				$parentTemplate = $dwoo->getTemplate();
+				$parentTemplate = $core->getTemplate();
 			}
 			if ($parentTemplate instanceof File) {
 				if ($includePath = $parentTemplate->getIncludePath()) {
@@ -211,10 +211,10 @@ class File extends String {
 			}
 		}
 
-		if ($policy = $dwoo->getSecurityPolicy()) {
+		if ($policy = $core->getSecurityPolicy()) {
 			while (true) {
 				if (preg_match('{^([a-z]+?)://}i', $resourceId)) {
-					throw new Exception\SecurityException('The security policy prevents you to read files from external sources : <em>' . $resourceId . '</em>.');
+					throw new Exception('The security policy prevents you to read files from external sources : <em>' . $resourceId . '</em>.');
 				}
 
 				if ($includePath) {
@@ -228,7 +228,7 @@ class File extends String {
 						break 2;
 					}
 				}
-				throw new Exception\SecurityException('The security policy prevents you to read <em>' . $resourceId . '</em>');
+				throw new Exception('The security policy prevents you to read <em>' . $resourceId . '</em>');
 			}
 		}
 
@@ -244,17 +244,17 @@ class File extends String {
 	 * returns the full compiled file name and assigns a default value to it if
 	 * required
 	 *
-	 * @param Core $dwoo the dwoo instance that requests the file name
+	 * @param Core $core the dwoo instance that requests the file name
 	 *
 	 * @return string the full path to the compiled file
 	 */
-	protected function getCompiledFilename(Core $dwoo) {
+	protected function getCompiledFilename(Core $core) {
 		// no compile id was provided, set default
 		if ($this->compileId === null) {
 			$this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
 		}
 
-		return $dwoo->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+		return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
 	}
 
 	/**

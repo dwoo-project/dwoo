@@ -7,7 +7,7 @@
  * In no event will the authors be held liable for any damages arising from the
  * use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @author     David Sanchez <david38sanchez@gmail.com>
  * @author     Marc Hodgins <mjh@hodginsmedia.com>
  * @copyright  Copyright (c) 2010, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License

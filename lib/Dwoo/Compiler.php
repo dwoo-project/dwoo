@@ -1,6 +1,6 @@
 <?php
 namespace Dwoo;
-use Dwoo\Exception\Debug;
+
 use Dwoo\Exception\PluginException;
 use Dwoo\Security\Policy;
 
@@ -9,8 +9,8 @@ use Dwoo\Security\Policy;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
@@ -1083,7 +1083,7 @@ class Compiler implements ICompiler {
 			return call_user_func(array($class, 'preProcessing'), $this, $params, '', '', $type);
 		}
 
-		throw new PluginException(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $type), E_USER_NOTICE);
+		throw new Exception(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $type), E_USER_NOTICE);
 	}
 
 	/**
@@ -1844,7 +1844,7 @@ class Compiler implements ICompiler {
 		if ($curBlock === 'method' || $func === 'do' || strstr($func, '::') !== false) {
 			// handle static method calls with security policy
 			if (strstr($func, '::') !== false && $this->securityPolicy !== null && $this->securityPolicy->isMethodAllowed(explode('::', strtolower($func))) !== true) {
-				throw new Exception\SecurityException('Call to a disallowed php function : ' . $func);
+				throw new Exception\Exception('Call to a disallowed php function : ' . $func);
 			}
 			$pluginType = Core::NATIVE_PLUGIN;
 		}
@@ -2330,7 +2330,6 @@ class Compiler implements ICompiler {
 		$substr = substr($in, $from, $to - $from);
 
 		if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
-		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(?:\.|->)?' : '') . // method call
 		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()') . // method call
 		($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()') . // simple math expressions
 		($curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())') . // modifiers
@@ -3388,7 +3387,7 @@ class Compiler implements ICompiler {
 			$phpFunc = true;
 		}
 		else if ($this->securityPolicy !== null && function_exists($name) && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) === false) {
-			throw new Exception\SecurityException('Call to a disallowed php function : ' . $name);
+			throw new Exception\Exception('Call to a disallowed php function : ' . $name);
 		}
 
 		if (isset($this->templatePlugins[$name])) {
@@ -3492,7 +3491,7 @@ class Compiler implements ICompiler {
 						$pluginType = Core::PROXY_PLUGIN;
 					}
 					else {
-						throw new PluginException(sprintf(PluginException::NOT_FOUND, $name));
+						throw new Exception(sprintf('Plugin "%s" could not be found', $name));
 					}
 				}
 			}

@@ -7,7 +7,7 @@ namespace Dwoo;
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Denis Arh <denis@arh.cc>
- * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @author     David Sanchez <david38sanchez@gmail.com>
  * @copyright  Copyright (c) 2008, Denis Arh, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/

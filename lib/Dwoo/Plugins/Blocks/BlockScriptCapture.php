@@ -52,7 +52,7 @@ class BlockScriptCapture extends Plugin implements Block {
 		$params = $compiler->getCompiledParams($params);
 		$out    = $content . Compiler::PHP_OPEN . $prepend . "\n" . '$tmp = ob_get_clean();';
 
-		return $out . "\n" . 'if (!class_exists(\'\Dwoo\Plugins\Blocks\BlockScriptCapture\', false)) { $this->getLoader()->loadPlugin(\'script_capture\'); }' . "\n" . '\Dwoo\Plugins\Blocks\BlockScriptCapture::addScript(' . $params['name'] . ',$tmp);' . $append . Compiler::PHP_CLOSE;
+		return $out . "\n" . 'if (!class_exists(\'\Dwoo\Plugins\Blocks\BlockScriptCapture\')) { $this->getLoader()->loadPlugin(\'script_capture\'); }' . "\n" . '\Dwoo\Plugins\Blocks\BlockScriptCapture::addScript(' . $params['name'] . ',$tmp);' . $append . Compiler::PHP_CLOSE;
 	}
 
 	public static function addScript($name, $script) {

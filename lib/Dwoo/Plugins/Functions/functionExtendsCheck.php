@@ -7,8 +7,8 @@ use Dwoo\Compiler;
  * Checks whether an extended file has been modified, and if so recompiles the current template. This is for internal use only, do not use.
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
@@ -18,7 +18,7 @@ use Dwoo\Compiler;
 function functionExtendsCheckCompile(Compiler $compiler, $file) {
 	preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m);
 	$resource   = $m[1];
-	$identifier = $m[2];
+	$identifier = str_replace('\\\\', '\\', $m[2]);
 
 	$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
 
@@ -30,7 +30,7 @@ function functionExtendsCheckCompile(Compiler $compiler, $file) {
 	}
 
 
-	$out = '\'\';// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
+	$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
 
 	$modCheck = $tpl->getIsModifiedCode();
 

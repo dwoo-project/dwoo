@@ -2,7 +2,6 @@
 namespace Dwoo;
 
 use Dwoo\Block\Plugin;
-use Dwoo\Exception\Debug;
 use Dwoo\Template\File;
 
 /**
@@ -216,9 +215,9 @@ class Core {
 	 * stores the data during template runtime
 	 *
 	 * @var array
-	 * @private
+	 * @protected
 	 */
-	private $data;
+	protected $data;
 
 	/**
 	 * stores the current scope during template runtime
