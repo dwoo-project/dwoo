@@ -74,11 +74,11 @@ class FunctionExtends extends Plugin implements ICompilable {
 			try {
 				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier, null, null, null, $curTpl);
 			}
-			catch (\Dwoo\Exception $e) {
+			catch (\Dwoo\Security\Exception $e) {
 				throw new CompilationException($compiler, 'Extends : Security restriction : ' . $e->getMessage());
 			}
 			catch (\Dwoo\Exception $e) {
-				throw new \Exception($compiler, 'Extends : ' . $e->getMessage());
+				throw new CompilationException($compiler, 'Extends : ' . $e->getMessage());
 			}
 
 			if ($parent === null) {
