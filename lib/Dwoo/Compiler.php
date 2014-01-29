@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo;
 
+use Dwoo\Exception\CompilationException;
 use Dwoo\Exception\PluginException;
 use Dwoo\Security\Policy;
 
@@ -778,50 +779,39 @@ class Compiler implements ICompiler {
 				continue;
 			}
 
+			/**
+			 * Update, bug fixed
+			 * @author David Sanchez
+			 * @date 29-1-2014
+			 */
 			switch ($type) {
 				case Core::BLOCK_PLUGIN:
 				case Core::CLASS_PLUGIN:
-					foreach (array(
-								 Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
-							 ) as $value) {
-						try {
-							$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($plugin));
-							$output .= "if (class_exists('\\$reflectionClass->name')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-						}
-						catch (\ReflectionException $Exception) {
 
-						}
+					if (file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $plugin . '.php') === true) {
+						$output .= "if (class_exists('".Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					}
+					else if(file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . 'Function' . $plugin . '.php') === true) {
+						$output .= "if (class_exists('".Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					}
 					break;
 				case Core::FUNC_PLUGIN:
-
-					foreach (array(
-								 Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME
-							 ) as $value) {
-						try {
-							$reflectionFunction = new \ReflectionFunction($value . Core::underscoreToCamel($plugin));
-							$output .= "if (function_exists('\\$reflectionFunction->name')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-						}
-						catch (\ReflectionException $Exception) {
-
-						}
-					}
+					$output .= "if (function_exists('".Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $plugin."')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::SMARTY_MODIFIER:
-					$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('SmartyModifier$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::SMARTY_FUNCTION:
-					$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('SmartyFunction$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::SMARTY_BLOCK:
-					$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('SmartyBlock$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::PROXY_PLUGIN:
 					$output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
 					break;
 				default:
-					throw new Exception\CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
-
+					throw new CompilationException($this, 'Type error for '.$plugin.' with type'.$type);
 			}
 		}
 
@@ -1806,17 +1796,6 @@ class Compiler implements ICompiler {
 													), $state);
 			}
 			else {
-				/*foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME) as $value) {
-					try {
-						$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($func));
-						$params          = $this->mapParams($params, array($reflectionClass->getName(),
-																		   ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
-																	 ), $state);
-					}
-					catch (\ReflectionException $Exception) {
-
-					}
-				}*/
 				/**
 				 * It can only be a function here and not a block
 				 * @author David Sanchez
@@ -1975,18 +1954,6 @@ class Compiler implements ICompiler {
 					$output = call_user_func_array($funcCompiler, $params);
 				}
 				else {
-					/*foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
-							 ) as $value) {
-						try {
-							$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($func));
-							array_unshift($params, $this);
-							$output = $reflectionClass->getMethod('compile')->invokeArgs(null, $params);
-						}
-						catch (\ReflectionException $Exception) {
-
-						}
-					}*/
-
 					/**
 					 * It can only be a function here and not a block
 					 * @author David Sanchez
@@ -2000,7 +1967,6 @@ class Compiler implements ICompiler {
 					catch (\ReflectionException $Exception) {
 
 					}
-
 				}
 			}
 			else {
@@ -3326,6 +3292,7 @@ class Compiler implements ICompiler {
 									$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $name);
 									if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
 										$pluginType = Core::BLOCK_PLUGIN;
+
 									}
 									else {
 										$pluginType = Core::CLASS_PLUGIN;

@@ -118,7 +118,7 @@ class Core {
 	 * @var string
 	 */
 	protected $compileDir;
-	
+
 	/**
 	 * directory where the template files are stored
 	 * @var string
@@ -728,7 +728,7 @@ class Core {
 	public function getCompileDir() {
 		return $this->compileDir;
 	}
-	
+
 	/**
 	 * returns the template directory with a trailing DIRECTORY_SEPARATOR
 	 *
@@ -1152,7 +1152,7 @@ class Core {
 			$type = $this->plugins[$type]['class'];
 		}
 		else {
-			$type = 'Dwoo_Plugin_' . str_replace('Dwoo_Plugin_', '', $type);
+			$type = self::PLUGIN_BLOCK_CLASS_PREFIX_NAME . str_replace(self::PLUGIN_BLOCK_CLASS_PREFIX_NAME, '', $type);
 		}
 
 		$keys = array_keys($this->stack);
@@ -1193,17 +1193,25 @@ class Core {
 	 * @return string the process() return value
 	 */
 	public function classCall($plugName, array $params = array()) {
+		$prefix   = '';
+		$plugName = self::underscoreToCamel($plugName);
 
-		foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME) as $value) {
-			try {
-				$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($plugName));
-			}
-			catch (\ReflectionException $Exception) {
-
-			}
+		// Check if its a block
+		if (file_exists(self::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $plugName . '.php') === true) {
+			$prefix = self::PLUGIN_BLOCK_CLASS_PREFIX_NAME;
+		}
+		// Check if its a function
+		else if (file_exists(self::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . 'Function' . $plugName . '.php') === true) {
+			$prefix = self::PLUGIN_FUNC_CLASS_PREFIX_NAME;
 		}
 
-		return $reflectionClass->getMethod('process')->invokeArgs($this->getObjectPlugin($reflectionClass), $params);
+		try {
+			$reflectionClass = new \ReflectionClass($prefix .$plugName);
+			return $reflectionClass->getMethod('process')->invokeArgs($this->getObjectPlugin($reflectionClass), $params);
+		}
+		catch (\ReflectionException $Exception) {
+
+		}
 	}
 
 	/**
