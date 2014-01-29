@@ -1584,6 +1584,8 @@ class Compiler implements ICompiler {
 	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
 	 * @param string $curBlock      the current parser-block being processed
 	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @throws Exception\CompilationException
+	 * @throws Exception\Exception
 	 * @throws Exception
 	 * @return string parsed values
 	 */
@@ -1792,6 +1794,7 @@ class Compiler implements ICompiler {
 		}
 
 		// funcs
+		$output = '';
 		if ($pluginType & Core::NATIVE_PLUGIN || $pluginType & Core::SMARTY_FUNCTION || $pluginType & Core::SMARTY_BLOCK) {
 			$params = $this->mapParams($params, null, $state);
 		}
@@ -1840,7 +1843,7 @@ class Compiler implements ICompiler {
 			}
 		}
 		elseif ($pluginType & Core::SMARTY_MODIFIER) {
-			$output = 'smarty_modifier_' . $func . '(' . implode(', ', $params) . ')';
+			$output = 'SmartyModifier' . $func . '(' . implode(', ', $params) . ')';
 		}
 		elseif ($pluginType & Core::PROXY_PLUGIN) {
 			$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
@@ -1874,7 +1877,6 @@ class Compiler implements ICompiler {
 		// only keep php-syntax-safe values for non-block plugins
 
 		$tokens = array();
-		$output = '';
 		foreach ($params as $k => $p) {
 			$tokens[$k] = isset($p[2]) ? $p[2] : 0;
 
