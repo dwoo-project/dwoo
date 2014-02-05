@@ -745,9 +745,6 @@ class Core {
 	 */
 	public function setTemplateDir($dir) {
 		$this->templateDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
-		if (is_writable($this->templateDir) === false) {
-			throw new Exception('The template directory must be writable, chmod "' . $this->templateDir . '" to make it writable');
-		}
 	}
 
 	/**
