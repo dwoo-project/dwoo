@@ -7,25 +7,6 @@ Dwoo\Autoloader::register();
 $dwoo = new Dwoo\Core();
 $dwoo->debugMode = false;
 
-// Remove default error  reporting system
-/*error_reporting(0);
-//(PHP >= 5.1.0 MUST TO DO SO)Sets the default timezone used by all date/time functions in a script. This demo sets the PRC timezone
-date_default_timezone_set('Europe/Paris');
-//require / require_once Error.php at a proper place as you wish
-require_once "Error.php";
-//Sets a user function (error_handler & exception_handler) to handle errors in a script
-set_exception_handler(array('Inter_Error', 'exception_handler'));
-set_error_handler(array('Inter_Error', 'error_handler'), E_ALL);
-register_shutdown_function(array('Inter_Error', 'detect_fatal_error'));
-//Setting Inter_Error::$conf :
-
-Inter_Error::$conf['debugMode'] = true;*/
-
-/*var_dump(xdebug_dump_superglobals());
-var_dump(xdebug_get_declared_vars());
-var_dump(xdebug_is_enabled());
-var_dump(xdebug_get_function_stack());*/
-
 // Load a template file (name it as you please), this is reusable
 // if you want to render multiple times the same template with different data
 $plugin = isset($_GET['plugin']) ? $_GET['plugin'] : 'index';
