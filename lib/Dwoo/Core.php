@@ -643,7 +643,8 @@ class Core {
 			throw new Exception('Resource class does not exist');
 		}
 
-		if (!is_a($class, '\Dwoo\ITemplate', true)) {
+		$interfaces = class_implements($class);
+		if (in_array('Dwoo\ITemplate', $interfaces) === false) {
 			throw new Exception('Resource class must implement ITemplate');
 		}
 
