@@ -106,11 +106,21 @@ class File extends String {
 	}
 
 	/**
-	 * returns the template source of this template
+	 * Returns the template source of this template
+	 * @throws Exception
 	 * @return string
 	 */
 	public function getSource() {
-		return file_get_contents($this->getResourceIdentifier());
+		try {
+			$identifier = $this->getResourceIdentifier();
+			if ($identifier) {
+				return file_get_contents($identifier);
+			}
+			throw new Exception('Template "' . $this->file . '" could not be found in any of your include path(s)');
+		}
+		catch (Exception $e) {
+			die($e->getMessage());
+		}
 	}
 
 	/**
@@ -122,28 +132,28 @@ class File extends String {
 	}
 
 	/**
-	 * returns this template's source filename
-	 * @throws Exception
+	 * Returns this template's source filename
 	 * @return string
 	 */
 	public function getResourceIdentifier() {
 		if ($this->resolvedPath !== null) {
-			return $this->resolvedPath;
+			if (file_exists($this->resolvedPath) === true) {
+				return $this->resolvedPath;
+			}
 		}
 		elseif ($this->includePath === null) {
-			return $this->file;
+			if (file_exists($this->file) === true) {
+				return $this->file;
+			}
 		}
 		else {
 			foreach ($this->includePath as $path) {
 				$path = rtrim($path, DIRECTORY_SEPARATOR);
 				if (file_exists($path . DIRECTORY_SEPARATOR . $this->file) === true) {
 					$this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
-
 					return $this->resolvedPath;
 				}
 			}
-
-			throw new Exception('Template "' . $this->file . '" could not be found in any of your include path(s)');
 		}
 	}
 

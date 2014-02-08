@@ -1,1 +1,0 @@
-{html_select_time prefix="MyTime_" display_seconds=false use_24_hours=false}

@@ -1,3 +1,0 @@
-{loop $menuTree}
-{$name}
-{/loop}

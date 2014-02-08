@@ -1,1 +1,0 @@
-{lower('ThiS IS a STRING')}

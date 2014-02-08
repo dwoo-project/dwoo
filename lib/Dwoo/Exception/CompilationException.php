@@ -2,24 +2,28 @@
 namespace Dwoo\Exception;
 
 use Dwoo\Compiler;
+use Dwoo\Exception;
 
 /**
- * dwoo compilation exception class
+ * Dwoo compilation exception class
+ *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
  * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  Copyright (c) 2014, David Sanchez
+ * @copyright  Copyright (c) 2013-2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-08
- * @package    Dwoo
+ * @date       2014-02-08
+ * @package    Dwoo\Exception
  */
-class CompilationException extends \Dwoo\Exception {
+class CompilationException extends Exception {
 	protected $compiler;
 	protected $template;
 
 	/**
+	 * Constructor
 	 * @param Compiler $compiler
 	 * @param int      $message
 	 */
@@ -30,6 +34,7 @@ class CompilationException extends \Dwoo\Exception {
 	}
 
 	/**
+	 * Get compiler class
 	 * @return Compiler
 	 */
 	public function getCompiler() {
@@ -37,6 +42,7 @@ class CompilationException extends \Dwoo\Exception {
 	}
 
 	/**
+	 * Get class implementing ITemplate interface
 	 * @return \Dwoo\ITemplate|null
 	 */
 	public function getTemplate() {

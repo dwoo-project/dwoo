@@ -2,25 +2,24 @@
 namespace Dwoo;
 
 use Dwoo\Block\Plugin;
+use Dwoo\Exception\CoreException;
 use Dwoo\Template\File;
 
 /**
- * main dwoo class, allows communication between the compiler, template and data classes
+ * Main dwoo class, allows communication between the compiler, template and data classes
  * <pre>
  * requirements :
- *  php 5.2.0 or above (might work below, it's a rough estimate)
+ *  php 5.3.0 or above
  *  SPL and PCRE extensions (for php versions prior to 5.3.0)
  *  mbstring extension for some string manipulation plugins (especially if you intend to use UTF-8)
  * recommended :
  *  hash extension (for Template\String - minor performance boost)
- * project created :
- *  2008-01-05
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  Copyright (c) 2014, David Sanchez
+ * @copyright  Copyright (c) 2013-2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
@@ -28,9 +27,9 @@ use Dwoo\Template\File;
  * @package    Dwoo
  */
 class Core {
+
 	/**
 	 * current version number
-	 *
 	 * @var string
 	 */
 	const VERSION = '2.0a';
@@ -40,7 +39,6 @@ class Core {
 	 * this can be used by templates classes to check whether the compiled template
 	 * has been compiled before this release or not, so that old templates are
 	 * recompiled automatically when Dwoo is updated
-	 *
 	 * @var int
 	 */
 	const RELEASE_TAG = 20;
@@ -52,7 +50,6 @@ class Core {
 
 	/**
 	 * Plugins blocks and plugin functions, classes and functions namespaces
-	 *
 	 * @var string
 	 */
 	const PLUGIN_BLOCK_CLASS_PREFIX_NAME    = '\Dwoo\Plugins\Blocks\Block';
@@ -64,7 +61,6 @@ class Core {
 	 * constants that represents all plugin types
 	 * these are bitwise-operation-safe values to allow multiple types
 	 * on a single plugin
-	 *
 	 * @var int
 	 */
 	const CLASS_PLUGIN      = 1;
@@ -83,7 +79,6 @@ class Core {
 	/**
 	 * character set of the template, used by string manipulation plugins
 	 * it must be lowercase, but setCharset() will take care of that
-	 *
 	 * @see setCharset
 	 * @see getCharset
 	 * @var string
@@ -100,7 +95,6 @@ class Core {
 	 * $dwoo.charset - the character set used by the template
 	 * on top of that, foreach and other plugins can store special values in there,
 	 * see their documentation for more details.
-	 *
 	 * @private
 	 * @var array
 	 */
@@ -114,7 +108,6 @@ class Core {
 	/**
 	 * directory where the compiled templates are stored
 	 * defaults to DWOO_COMPILEDIR (= dwoo_dir/compiled by default)
-	 *
 	 * @var string
 	 */
 	protected $compileDir;
@@ -128,7 +121,6 @@ class Core {
 	/**
 	 * directory where the cached templates are stored
 	 * defaults to DWOO_CACHEDIR (= dwoo_dir/cache by default)
-	 *
 	 * @var string
 	 */
 	protected $cacheDir;
@@ -139,21 +131,18 @@ class Core {
 	 * -1 = never delete
 	 * 0 = disabled
 	 * >0 = duration in seconds
-	 *
 	 * @var int
 	 */
 	protected $cacheTime = 0;
 
 	/**
 	 * security policy object
-	 *
 	 * @var Security\Policy
 	 */
 	protected $securityPolicy = null;
 
 	/**
 	 * stores the custom plugins callbacks
-	 *
 	 * @see addPlugin
 	 * @see removePlugin
 	 * @var array
@@ -162,7 +151,6 @@ class Core {
 
 	/**
 	 * stores the filter callbacks
-	 *
 	 * @see addFilter
 	 * @see removeFilter
 	 * @var array
@@ -172,7 +160,6 @@ class Core {
 	/**
 	 * stores the resource types and associated
 	 * classes / compiler classes
-	 *
 	 * @var array
 	 */
 	protected $resources = array(
@@ -185,35 +172,30 @@ class Core {
 
 	/**
 	 * the dwoo loader object used to load plugins by this dwoo instance
-	 *
 	 * @var ILoader
 	 */
 	protected $loader = null;
 
 	/**
 	 * currently rendered template, set to null when not-rendering
-	 *
 	 * @var ITemplate
 	 */
 	protected $template = null;
 
 	/**
 	 * stores the instances of the class plugins during template runtime
-	 *
 	 * @var array
 	 */
 	protected $runtimePlugins;
 
 	/**
 	 * stores the returned values during template runtime
-	 *
 	 * @var array
 	 */
 	protected $returnData;
 
 	/**
 	 * stores the data during template runtime
-	 *
 	 * @var array
 	 * @protected
 	 */
@@ -222,7 +204,6 @@ class Core {
 	/**
 	 * stores the current scope during template runtime
 	 * this should ideally not be accessed directly from outside template code
-	 *
 	 * @var mixed
 	 * @private
 	 */
@@ -230,60 +211,59 @@ class Core {
 
 	/**
 	 * stores the scope tree during template runtime
-	 *
 	 * @var array
 	 */
 	protected $scopeTree;
 
 	/**
 	 * stores the block plugins stack during template runtime
-	 *
 	 * @var array
 	 */
 	protected $stack;
 
 	/**
 	 * stores the current block plugin at the top of the stack during template runtime
-	 *
 	 * @var object|null
 	 */
 	protected $curBlock;
 
 	/**
 	 * stores the output buffer during template runtime
-	 *
 	 * @var string
 	 */
 	protected $buffer;
 
 	/**
 	 * stores plugin proxy
-	 *
 	 * @var IPluginProxy
 	 */
 	protected $pluginProxy;
 
 	/**
 	 * constructor, sets the cache and compile dir to the default values if not provided
-	 *
 	 * @param string $compileDir path to the compiled directory, defaults to lib/compiled
 	 * @param string $cacheDir   path to the cache directory, defaults to lib/cache
+	 * @throws Exception\CoreException
 	 */
 	public function __construct($compileDir = null, $cacheDir = null) {
+		// Check PHP version greater than 5.3.0
+		try {
+			if ((version_compare(PHP_VERSION, '5.3') >= 0) === false) {
+				throw new CoreException('You need PHP 5.3 minimum.<br>Current version: ' . PHP_VERSION);
+			}
+		}
+		catch (CoreException $e) {
+			die($e->getMessage());
+		}
+
 		// Set compile directory
 		if ($compileDir !== null) {
 			$this->setCompileDir($compileDir);
-		}
-		else {
-			$this->setCompileDir(dirname(self::DWOO_DIRECTORY) . DIRECTORY_SEPARATOR . 'compiled' . DIRECTORY_SEPARATOR);
 		}
 
 		// Set cache directory
 		if ($cacheDir !== null) {
 			$this->setCacheDir($cacheDir);
-		}
-		else {
-			$this->setCacheDir(dirname(self::DWOO_DIRECTORY) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR);
 		}
 
 		// Initialize globals
@@ -301,17 +281,14 @@ class Core {
 
 	/**
 	 * outputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true)
-	 *
 	 * @see get
-	 *
-	 * @param mixed           $tpl                                           template, can either be a ITemplate object (i.e. Template\File), a valid path to a template, or
+	 * @param mixed     $tpl                                                 template, can either be a ITemplate object (i.e. Template\File), a valid path to a template, or
 	 *                                                                       a template as a string it is recommended to provide a ITemplate as it will probably make things faster,
 	 *                                                                       especially if you render a template multiple times
-	 * @param mixed           $data                                          the data to use, can either be a IDataProvider object (i.e. Data) or an associative array. if you're
+	 * @param mixed     $data                                                the data to use, can either be a IDataProvider object (i.e. Data) or an associative array. if you're
 	 *                                                                       rendering the template from cache, it can be left null
-	 * @param ICompiler $compiler                                      the compiler that must be used to compile the template, if left empty a default
-	 *                                                   Compiler will be used.
-	 *
+	 * @param ICompiler $compiler                                            the compiler that must be used to compile the template, if left empty a default
+	 *                                                                       Compiler will be used.
 	 * @return string nothing or the template output if $output is true
 	 */
 	public function output($tpl, $data = array(), ICompiler $compiler = null) {
@@ -320,18 +297,15 @@ class Core {
 
 	/**
 	 * returns the given template rendered using the provided data and optional compiler
-	 *
-	 * @param mixed           $_tpl                                          template, can either be a ITemplate object (i.e. Template\File), a valid path to a template, or
+	 * @param mixed     $_tpl                                                template, can either be a ITemplate object (i.e. Template\File), a valid path to a template, or
 	 *                                                                       a template as a string it is recommended to provide a ITemplate as it will probably make things faster,
 	 *                                                                       especially if you render a template multiple times
-	 * @param mixed           $data                                          the data to use, can either be a IDataProvider object (i.e. Data) or an associative array. if you're
+	 * @param mixed     $data                                                the data to use, can either be a IDataProvider object (i.e. Data) or an associative array. if you're
 	 *                                                                       rendering the template from cache, it can be left null
-	 * @param ICompiler $_compiler                                     the compiler that must be used to compile the template, if left empty a default
-	 *                                                   Compiler will be used.
-	 * @param bool            $_output                                       flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
-	 *
-	 * @throws Exception
-	 *
+	 * @param ICompiler $_compiler                                           the compiler that must be used to compile the template, if left empty a default
+	 *                                                                       Compiler will be used.
+	 * @param bool      $_output                                             flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
+	 * @throws Exception\CoreException
 	 * @return string nothing or the template output if $output is false
 	 */
 	public function get($_tpl, $data = array(), $_compiler = null, $_output = false) {
@@ -350,7 +324,7 @@ class Core {
 			$_tpl = new File($this->templateDir . $_tpl);
 		}
 		else {
-			throw new Exception('Dwoo->get/Dwoo->output\'s first argument must be a \Dwoo\ITemplate (i.e. \Dwoo\Template\File) or a valid path to a template file', E_USER_NOTICE);
+			throw new CoreException('Dwoo->get/Dwoo->output\'s first argument must be a \Dwoo\ITemplate (i.e. \Dwoo\Template\File) or a valid path to a template file', E_USER_NOTICE);
 		}
 
 		// Put debug mode value
@@ -371,7 +345,7 @@ class Core {
 			$this->data = $data;
 		}
 		else {
-			throw new Exception('Dwoo->get/Dwoo->output\'s data argument must be a \Dwoo\IDataProvider object (i.e. \Dwoo\Data) or an associative array', E_USER_NOTICE);
+			throw new CoreException('Dwoo->get/Dwoo->output\'s data argument must be a \Dwoo\IDataProvider object (i.e. \Dwoo\Data) or an associative array', E_USER_NOTICE);
 		}
 
 		$this->globals['template'] = $_tpl->getName();
@@ -516,13 +490,12 @@ class Core {
 
 	/**
 	 * adds a custom plugin that is not in one of the plugin directories
-	 *
 	 * @param string   $name       the plugin name to be used in the templates
 	 * @param callback $callback   the plugin callback, either a function name,
 	 *                             a class name or an array containing an object
 	 *                             or class name and a method name
 	 * @param bool     $compilable if set to true, the plugin is assumed to be compilable
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function addPlugin($name, $callback, $compilable = false) {
 		$compilable = $compilable ? self::COMPILABLE_PLUGIN : 0;
@@ -546,7 +519,7 @@ class Core {
 			$this->plugins[$name] = array('type' => self::FUNC_PLUGIN | $compilable, 'callback' => $callback);
 		}
 		else {
-			throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
+			throw new CoreException('Callback could not be processed correctly, please check that the function/class you used exists');
 		}
 	}
 
@@ -563,10 +536,9 @@ class Core {
 
 	/**
 	 * adds a filter to this Dwoo instance, it will be used to filter the output of all the templates rendered by this instance
-	 *
 	 * @param mixed $callback a callback or a filter name if it is autoloaded from a plugin directory
 	 * @param bool  $autoload if true, the first parameter must be a filter name from one of the plugin directories
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function addFilter($callback, $autoload = false) {
 		if ($autoload) {
@@ -576,12 +548,12 @@ class Core {
 				try {
 					$this->getLoader()->loadPlugin($callback);
 				}
-				catch (Exception $e) {
+				catch (CoreException $e) {
 					if (strstr($callback, 'Filter')) {
-						throw new Exception('Wrong filter name : ' . $callback . ', the "Filter" prefix should not be used, please only use "' . str_replace('Filter', '', $callback) . '"');
+						throw new CoreException('Wrong filter name : ' . $callback . ', the "Filter" prefix should not be used, please only use "' . str_replace('Filter', '', $callback) . '"');
 					}
 					else {
-						throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
+						throw new CoreException('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
 					}
 				}
 			}
@@ -593,7 +565,7 @@ class Core {
 				$callback = $class;
 			}
 			else {
-				throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
+				throw new CoreException('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
 			}
 
 			$this->filters[] = $callback;
@@ -605,7 +577,6 @@ class Core {
 
 	/**
 	 * removes a filter
-	 *
 	 * @param mixed $callback callback or filter name if it was autoloaded
 	 */
 	public function removeFilter($callback) {
@@ -628,24 +599,23 @@ class Core {
 
 	/**
 	 * adds a resource or overrides a default one
-	 *
 	 * @param string   $name            the resource name
 	 * @param string   $class           the resource class (which must implement ITemplate)
 	 * @param callback $compilerFactory the compiler factory callback, a function that must return a compiler instance used to compile this resource, if none is provided. by default it will produce a Compiler object
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function addResource($name, $class, $compilerFactory = null) {
 		if (strlen($name) < 2) {
-			throw new Exception('Resource names must be at least two-character long to avoid conflicts with Windows paths');
+			throw new CoreException('Resource names must be at least two-character long to avoid conflicts with Windows paths');
 		}
 
 		if (! class_exists($class)) {
-			throw new Exception('Resource class does not exist');
+			throw new CoreException('Resource class does not exist');
 		}
 
 		$interfaces = class_implements($class);
 		if (in_array('Dwoo\ITemplate', $interfaces) === false) {
-			throw new Exception('Resource class must implement ITemplate');
+			throw new CoreException('Resource class must implement ITemplate');
 		}
 
 		$this->resources[$name] = array('class' => $class, 'compiler' => $compilerFactory);
@@ -653,7 +623,6 @@ class Core {
 
 	/**
 	 * removes a custom resource
-	 *
 	 * @param string $name the resource name
 	 */
 	public function removeResource($name) {
@@ -669,7 +638,6 @@ class Core {
 
 	/**
 	 * sets the loader object to use to load plugins
-	 *
 	 * @param ILoader $loader loader object
 	 */
 	public function setLoader(ILoader $loader) {
@@ -700,7 +668,6 @@ class Core {
 
 	/**
 	 * returns the cache directory with a trailing DIRECTORY_SEPARATOR
-	 *
 	 * @return string
 	 */
 	public function getCacheDir() {
@@ -709,14 +676,18 @@ class Core {
 
 	/**
 	 * sets the cache directory and automatically appends a DIRECTORY_SEPARATOR
-	 *
 	 * @param string $dir the cache directory
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function setCacheDir($dir) {
-		$this->cacheDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
-		if (is_writable($this->cacheDir) === false) {
-			throw new Exception('The cache directory must be writable, chmod "' . $this->cacheDir . '" to make it writable');
+		try {
+			$this->cacheDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+			if (is_writable($this->cacheDir) === false) {
+				throw new CoreException('The cache directory must be writable, chmod "' . $this->cacheDir . '" to make it writable');
+			}
+		}
+		catch(CoreException $e) {
+			die($e->getMessage());
 		}
 	}
 
@@ -741,28 +712,39 @@ class Core {
 	/**
 	 * sets the template directory and automatically appends a DIRECTORY_SEPARATOR
 	 * @param $dir
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function setTemplateDir($dir) {
-		$this->templateDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+		try {
+			$this->templateDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+			if (is_dir($this->templateDir) === false) {
+				throw new CoreException('The template directory: "' . $this->templateDir . '" does not exists, create the directory or specify an other location !');
+			}
+		}
+		catch(CoreException $e) {
+			die($e->getMessage());
+		}
 	}
 
 	/**
 	 * sets the compile directory and automatically appends a DIRECTORY_SEPARATOR
-	 *
 	 * @param string $dir the compile directory
-	 * @throws Exception
+	 * @throws Exception\CoreException
 	 */
 	public function setCompileDir($dir) {
-		$this->compileDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
-		if (is_writable($this->compileDir) === false) {
-			throw new Exception('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable');
+		try {
+			$this->compileDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+			if (is_writable($this->compileDir) === false) {
+				throw new CoreException('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable!');
+			}
+		}
+		catch(CoreException $e) {
+			die($e->getMessage());
 		}
 	}
 
 	/**
 	 * returns the default cache time that is used with templates that do not have a cache time set
-	 *
 	 * @return int the duration in seconds
 	 */
 	public function getCacheTime() {
@@ -771,7 +753,6 @@ class Core {
 
 	/**
 	 * sets the default cache time to use with templates that do not have a cache time set
-	 *
 	 * @param int $seconds the duration in seconds
 	 */
 	public function setCacheTime($seconds) {
@@ -781,7 +762,6 @@ class Core {
 	/**
 	 * returns the character set used by the string manipulation plugins
 	 * the charset is automatically lowercased
-	 *
 	 * @return string
 	 */
 	public function getCharset() {
@@ -791,7 +771,6 @@ class Core {
 	/**
 	 * sets the character set used by the string manipulation plugins
 	 * the charset will be automatically lowercased
-	 *
 	 * @param string $charset the character set
 	 */
 	public function setCharset($charset) {
@@ -800,7 +779,6 @@ class Core {
 
 	/**
 	 * returns the current template being rendered, when applicable, or null
-	 *
 	 * @return ITemplate|null
 	 */
 	public function getTemplate() {
@@ -809,7 +787,6 @@ class Core {
 
 	/**
 	 * sets the current template being rendered
-	 *
 	 * @param ITemplate $tpl template object
 	 */
 	public function setTemplate(ITemplate $tpl) {
@@ -819,7 +796,6 @@ class Core {
 	/**
 	 * sets the default compiler factory function for the given resource name
 	 * a compiler factory must return a ICompiler object pre-configured to fit your needs
-	 *
 	 * @param string   $resourceName    the resource name (i.e. file, string)
 	 * @param callback $compilerFactory the compiler factory callback
 	 */
@@ -829,9 +805,7 @@ class Core {
 
 	/**
 	 * returns the default compiler factory function for the given resource name
-	 *
 	 * @param string $resourceName the resource name
-	 *
 	 * @return callback the compiler factory callback
 	 */
 	public function getDefaultCompilerFactory($resourceName) {
@@ -841,7 +815,6 @@ class Core {
 	/**
 	 * sets the security policy object to enforce some php security settings
 	 * use this if untrusted persons can modify templates
-	 *
 	 * @param Security\Policy $policy the security policy object
 	 */
 	public function setSecurityPolicy(Security\Policy $policy = null) {
@@ -850,7 +823,6 @@ class Core {
 
 	/**
 	 * returns the current security policy object or null by default
-	 *
 	 * @return Security\Policy|null the security policy object if any
 	 */
 	public function getSecurityPolicy() {
@@ -860,7 +832,6 @@ class Core {
 	/**
 	 * sets the object that must be used as a plugin proxy when plugin can't be found
 	 * by dwoo's loader
-	 *
 	 * @param IPluginProxy $pluginProxy the proxy object
 	 */
 	public function setPluginProxy(IPluginProxy $pluginProxy) {
@@ -869,7 +840,6 @@ class Core {
 
 	/**
 	 * returns the current plugin proxy object or null by default
-	 *
 	 * @return IPluginProxy|null the proxy object if any
 	 */
 	public function getPluginProxy() {
@@ -882,9 +852,7 @@ class Core {
 
 	/**
 	 * [util function] checks whether the given template is cached or not
-	 *
 	 * @param ITemplate $tpl the template object
-	 *
 	 * @return bool
 	 */
 	public function isCached(ITemplate $tpl) {
@@ -893,9 +861,7 @@ class Core {
 
 	/**
 	 * [util function] clears the cached templates if they are older than the given time
-	 *
 	 * @param int $olderThan minimum time (in seconds) required for a cached template to be cleared
-	 *
 	 * @return int the amount of templates cleared
 	 */
 	public function clearCache($olderThan = -1) {
@@ -917,40 +883,38 @@ class Core {
 
 	/**
 	 * [util function] fetches a template object of the given resource
-	 *
 	 * @param string $resourceName the resource name (i.e. file, string)
 	 * @param string $resourceId   the resource identifier (i.e. file path)
 	 * @param int    $cacheTime    the cache time setting for this resource
 	 * @param string $cacheId      the unique cache identifier
 	 * @param string $compileId    the unique compiler identifier
 	 * @param ITemplate $parentTemplate
-	 * @throws Exception
-	 *
+	 * @throws Exception\CoreException
 	 * @return ITemplate
 	 */
 	public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null) {
-		if (isset($this->resources[$resourceName])) {
-			try {
+		try {
+			if (isset($this->resources[$resourceName])) {
 				$reflectionClass = new \ReflectionClass($this->resources[$resourceName]['class']);
-
 				return $reflectionClass->getMethod('templateFactory')->invokeArgs($reflectionClass, array($this, $resourceId, $cacheTime, $cacheId, $compileId, $parentTemplate));
 			}
-			catch (\ReflectionException $exception) {
-
+			else {
+				throw new CoreException('Unknown resource type : ' . $resourceName);
 			}
 		}
-		else {
-			throw new Exception('Unknown resource type : ' . $resourceName);
+		catch (\ReflectionException $e) {
+			echo $e->getMessage();
+		}
+		catch (CoreException $e) {
+			echo $e->getMessage();
 		}
 	}
 
 	/**
 	 * [util function] checks if the input is an array or arrayaccess object, optionally it can also check if it's empty
-	 *
 	 * @param mixed $value          the variable to check
 	 * @param bool  $checkIsEmpty   if true, the function will also check if the array|arrayaccess is empty,
 	 *                              and return true only if it's not empty
-	 *
 	 * @return int|bool true if it's an array|arrayaccess (or the item count if $checkIsEmpty is true) or false if it's not an array|arrayaccess (or 0 if $checkIsEmpty is true)
 	 */
 	public function isArray($value, $checkIsEmpty = false) {
@@ -966,11 +930,9 @@ class Core {
 
 	/**
 	 * [util function] checks if the input is an array or a traversable object, optionally it can also check if it's empty
-	 *
 	 * @param mixed $value          the variable to check
 	 * @param bool  $checkIsEmpty   if true, the function will also check if the array|traversable is empty,
 	 *                              and return true only if it's not empty
-	 *
 	 * @return int|bool true if it's an array|traversable (or the item count if $checkIsEmpty is true) or false if it's not an array|traversable (or 0 if $checkIsEmpty is true)
 	 */
 	public function isTraversable($value, $checkIsEmpty = false) {
@@ -982,7 +944,7 @@ class Core {
 				return count($value) > 0;
 			}
 		}
-		elseif ($value instanceof \Traversable) {
+		else if ($value instanceof \Traversable) {
 			if ($checkIsEmpty === false) {
 				return true;
 			}
@@ -996,27 +958,25 @@ class Core {
 
 	/**
 	 * [util function] counts an array or arrayaccess/traversable object
-	 *
 	 * @param mixed $value
-	 *
 	 * @return int|bool the count for arrays and objects that implement countable, true for other objects that don't, and 0 for empty elements
 	 */
 	public function count($value) {
 		if (is_array($value) === true || $value instanceof \Countable) {
 			return count($value);
 		}
-		elseif ($value instanceof \ArrayAccess) {
+		else if ($value instanceof \ArrayAccess) {
 			if ($value->offsetExists(0)) {
 				return true;
 			}
 		}
-		elseif ($value instanceof \Iterator) {
+		else if ($value instanceof \Iterator) {
 			$value->rewind();
 			if ($value->valid()) {
 				return true;
 			}
 		}
-		elseif ($value instanceof \Traversable) {
+		else if ($value instanceof \Traversable) {
 			foreach ($value as $dummy) {
 				return true;
 			}
@@ -1027,7 +987,6 @@ class Core {
 
 	/**
 	 * [util function] triggers a dwoo error
-	 *
 	 * @param string $message the error message
 	 * @param int    $level   the error level, one of the PHP's E_* constants
 	 */
@@ -1044,10 +1003,8 @@ class Core {
 
 	/**
 	 * [runtime function] adds a block to the block stack
-	 *
 	 * @param string $blockName the block name (without prefix)
 	 * @param array  $args      the arguments to be passed to the block's init() function
-	 *
 	 * @return Plugin the newly created block
 	 */
 	public function addStack($blockName, array $args = array()) {
@@ -1060,8 +1017,8 @@ class Core {
 					$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($blockName));
 					$class           = '\\' . $reflectionClass->getName();
 				}
-				catch (\ReflectionException $Exception) {
-
+				catch (\ReflectionException $e) {
+					echo $e->getMessage();
 				}
 			}
 		}
@@ -1080,8 +1037,8 @@ class Core {
 			$block           = $reflectionClass->newInstance($this);
 			$reflectionClass->getMethod('begin')->invokeArgs($block, $args);
 		}
-		catch (\ReflectionException $Exception) {
-
+		catch (\ReflectionException $e) {
+			echo $e->getMessage();
 		}
 
 		$this->stack[] = $this->curBlock = $block;
@@ -1123,9 +1080,7 @@ class Core {
 
 	/**
 	 * [runtime function] returns the parent block of the given block
-	 *
 	 * @param Block\Plugin $block
-	 *
 	 * @return Block\Plugin or false if the given block isn't in the stack
 	 */
 	public function getParentBlock(Plugin $block) {
@@ -1139,9 +1094,7 @@ class Core {
 
 	/**
 	 * [runtime function] finds the closest block of the given type, starting at the top of the stack
-	 *
 	 * @param string $type the type of plugin you want to find
-	 *
 	 * @return Block\Plugin or false if no plugin of such type is in the stack
 	 */
 	public function findBlock($type) {
@@ -1166,11 +1119,8 @@ class Core {
 	 * [runtime function] returns a Plugin of the given class
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
-	 *
 	 * @private
-	 *
 	 * @param \ReflectionClass $reflectionClass the class name
-	 *
 	 * @return mixed an object of the given class
 	 */
 	public function getObjectPlugin($reflectionClass) {
@@ -1183,10 +1133,8 @@ class Core {
 
 	/**
 	 * [runtime function] calls the process() method of the given class-plugin name
-	 *
 	 * @param string $plugName the class plugin name (without plugin prefix)
 	 * @param array  $params   an array of parameters to send to the process() method
-	 *
 	 * @return string the process() return value
 	 */
 	public function classCall($plugName, array $params = array()) {
@@ -1206,17 +1154,15 @@ class Core {
 			$reflectionClass = new \ReflectionClass($prefix .$plugName);
 			return $reflectionClass->getMethod('process')->invokeArgs($this->getObjectPlugin($reflectionClass), $params);
 		}
-		catch (\ReflectionException $Exception) {
-
+		catch (\ReflectionException $e) {
+			echo $e->getMessage();
 		}
 	}
 
 	/**
 	 * [runtime function] calls a php function
-	 *
 	 * @param string $callback the function to call
 	 * @param array  $params   an array of parameters to send to the function
-	 *
 	 * @return mixed the return value of the called function
 	 */
 	public function arrayMap($callback, array $params) {
@@ -1309,10 +1255,8 @@ class Core {
 
 	/**
 	 * [runtime function] reads a variable into the given data array
-	 *
 	 * @param string $varstr   the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
 	 * @param mixed  $data     the data array or object to read from
-	 *
 	 * @return mixed
 	 */
 	public function readVarInto($varstr, $data) {
@@ -1363,10 +1307,8 @@ class Core {
 
 	/**
 	 * [runtime function] reads a variable into the parent scope
-	 *
 	 * @param int    $parentLevels the amount of parent levels to go from the current scope
 	 * @param string $varstr       the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
-	 *
 	 * @return mixed
 	 */
 	public function readParentVar($parentLevels, $varstr = null) {
@@ -1396,9 +1338,7 @@ class Core {
 
 	/**
 	 * [runtime function] reads a variable into the current scope
-	 *
 	 * @param string $varstr the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
-	 *
 	 * @return mixed
 	 */
 	public function readVar($varstr) {
@@ -1413,7 +1353,6 @@ class Core {
 				}
 				elseif ($varstr === '__' || $varstr === '_root') {
 					return $this->data;
-					$varstr = substr($varstr, 6);
 				}
 				elseif ($varstr === '_' || $varstr === '_parent') {
 					$varstr = '.' . $varstr;
@@ -1553,18 +1492,14 @@ class Core {
 
 	/**
 	 * [runtime function] assign the value to the given variable
-	 *
 	 * @param mixed  $value the value to assign
 	 * @param string $scope the variable string, using dwoo variable syntax (i.e. "var.subvar[subsubvar]->property")
-	 *
+	 * @throws Exception\CoreException
 	 * @return bool true if assigned correctly or false if a problem occured while parsing the var string
 	 */
 	public function assignInScope($value, $scope) {
-		$tree =& $this->scopeTree;
-		$data =& $this->data;
-
 		if (! is_string($scope)) {
-			return $this->triggerError('Assignments must be done into strings, (' . gettype($scope) . ') ' . var_export($scope, true) . ' given', E_USER_ERROR);
+			throw new CoreException('Assignments must be done into strings, (' . gettype($scope) . ') ' . var_export($scope, true) . ' given', E_USER_ERROR);
 		}
 		if (strstr($scope, '.') === false && strstr($scope, '->') === false) {
 			$this->scope[$scope] = $value;
@@ -1614,10 +1549,8 @@ class Core {
 
 	/**
 	 * [runtime function] sets the scope to the given scope string or array
-	 *
 	 * @param mixed $scope    a string i.e. "level1.level2" or an array i.e. array("level1", "level2")
 	 * @param bool  $absolute if true, the scope is set from the top level scope and not from the current scope
-	 *
 	 * @return array the current scope tree
 	 */
 	public function setScope($scope, $absolute = false) {
@@ -1666,7 +1599,6 @@ class Core {
 
 	/**
 	 * [runtime function] returns the entire data array
-	 *
 	 * @return array
 	 */
 	public function getData() {
@@ -1675,7 +1607,6 @@ class Core {
 
 	/**
 	 * [runtime function] sets a return value for the currently running template
-	 *
 	 * @param string $name  var name
 	 * @param mixed  $value var value
 	 */
@@ -1685,7 +1616,6 @@ class Core {
 
 	/**
 	 * [runtime function] retrieves the return values set by the template
-	 *
 	 * @return array
 	 */
 	public function getReturnValues() {
@@ -1694,7 +1624,6 @@ class Core {
 
 	/**
 	 * [runtime function] returns a reference to the current scope
-	 *
 	 * @return mixed
 	 */
 	public function &getScope() {
@@ -1703,17 +1632,15 @@ class Core {
 
 	/**
 	 * Redirects all calls to unexisting to plugin proxy.
-	 *
 	 * @param string method name
 	 * @param array  list of arguments
-	 * @throws Exception
-	 *
+	 * @throws Exception\CoreException
 	 * @return mixed
 	 */
 	public function __call($method, $args) {
 		$proxy = $this->getPluginProxy();
 		if (!$proxy) {
-			throw new Exception('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
+			throw new CoreException('Call to undefined method ' . __CLASS__ . '::' . $method . '()');
 		}
 
 		return call_user_func_array($proxy->getCallback($method), $args);
@@ -1721,9 +1648,7 @@ class Core {
 
 	/**
 	 * Convert underscore string to camel case
-	 *
 	 * @param $string string to convert to camel case
-	 *
 	 * @return string
 	 */
 	public static function underscoreToCamel($string) {

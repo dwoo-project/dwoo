@@ -1,1 +1,0 @@
-{regex_replace "abcdABCD" "/([a-z])/" "\$1*"}

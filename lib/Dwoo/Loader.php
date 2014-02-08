@@ -96,12 +96,10 @@ class Loader implements ILoader {
 
 	/**
 	 * loads a plugin file
-	 *
 	 * @param string $class       the plugin name, without the prefix (Block|block|Function|function)
 	 * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
-	 *
+	 * @throws Exception
 	 * @return bool
-	 * @throws Exception\PluginException
 	 */
 	public function loadPlugin($class, $forceRehash = true) {
 		// An unknown class was requested (maybe newly added) or the
@@ -109,9 +107,6 @@ class Loader implements ILoader {
 		// with an uncatchable error if the file doesn't exist, which
 		// usually means that the cache is stale and must be rebuilt,
 		// so we check for that before trying to include() the plugin.
-
-		// Convert class name to CamelCase
-		$class = Core::underscoreToCamel($class);
 
 		// Check entry exist in $this->classPath
 		$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));

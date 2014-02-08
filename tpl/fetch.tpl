@@ -1,1 +1,0 @@
-{fetch 'http://php.net'}

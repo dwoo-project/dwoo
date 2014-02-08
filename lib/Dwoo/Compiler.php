@@ -6,15 +6,17 @@ use Dwoo\Exception\PluginException;
 use Dwoo\Security\Policy;
 
 /**
- * default dwoo compiler class, compiles dwoo templates into php
+ * Default dwoo compiler class, compiles dwoo templates into php
+ *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
  * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  Copyright (c) 2014, David Sanchez
+ * @copyright  Copyright (c) 2013-2014, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-08
+ * @date       2014-02-08
  * @package    Dwoo
  */
 class Compiler implements ICompiler {
@@ -3234,6 +3236,7 @@ class Compiler implements ICompiler {
 	/**
 	 * returns the plugin type of a plugin and adds it to the used plugins array if required
 	 * @param string $name plugin name, as found in the template
+	 * @throws Exception\Exception
 	 * @throws Exception
 	 * @return int $pluginType as a multi bit flag composed of the \Dwoo\plugin types constants
 	 */
@@ -3286,8 +3289,9 @@ class Compiler implements ICompiler {
 					if ($fileInfo->isFile()) {
 						// Return specified plugin only
 						if (strpos($fileInfo->getFilename(), 'unction' . $name . '.php')) {
+							$filename = $fileInfo->getFilename();
 							// Class
-							if (ctype_upper($fileInfo->getFilename()[0])) {
+							if (ctype_upper($filename[0])) {
 								try {
 									$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $name);
 									if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
