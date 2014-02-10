@@ -1703,7 +1703,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if (strstr($func, '::') !== false && $this->securityPolicy !== null && $this->securityPolicy->isMethodAllowed(explode('::', strtolower($func))) !== true) {
 				throw new Dwoo_Security_Exception('Call to a disallowed php function : '.$func);
 			}
-			$pluginType = Dwoo::NATIVE_PLUGIN;
+			$pluginType = Dwoo_Core::NATIVE_PLUGIN;
 		} else {
 			$pluginType = $this->getPluginType($func);
 		}
