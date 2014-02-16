@@ -11,7 +11,7 @@ require "dwoo/dwooAutoload.php";
  *
  * @author     Stefan Verstege <stefan.verstege@newmedia.nl>
  * @copyright  Copyright (c) 2008, Stefan Verstege
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://www.newmedia.nl/
  * @version    1.1.0
  * @date       2009-07-18

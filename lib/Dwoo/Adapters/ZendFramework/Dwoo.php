@@ -10,7 +10,7 @@
  * @author     David Sanchez <david38sanchez@gmail.com>
  * @author     Marc Hodgins <mjh@hodginsmedia.com>
  * @copyright  Copyright (c) 2010, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    1.2.0
  * @date       2010-02-28

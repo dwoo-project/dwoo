@@ -10,7 +10,7 @@
  * @author	   Denis Arh <denis@arh.cc>
  * @author	   Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Denis Arh, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    1.0.0
  * @date       2008-10-23

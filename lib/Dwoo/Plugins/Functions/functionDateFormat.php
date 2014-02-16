@@ -19,7 +19,7 @@ use \DateTimeZone;
  *
  * @author     David Sanchez <david38.sanchez@gmail.com>
  * @copyright  Copyright (c) 2013, David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
  * @date       2013-09-11

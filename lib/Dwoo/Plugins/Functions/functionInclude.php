@@ -2,6 +2,7 @@
 namespace Dwoo\Plugins\Functions;
 use Dwoo\Core;
 use Dwoo\Exception;
+use Dwoo\Security\Exception as SecurityException;
 
 /**
  * Inserts another template into the current one
@@ -18,11 +19,11 @@ use Dwoo\Exception;
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  Copyright (c) 2014, David Sanchez
+ * @copyright  Copyright (c) 2013-2014, David Sanchez
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-01-24
+ * @date       2014-02-12
  * @package    Dwoo
  */
 function functionInclude(Core $core, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array()) {
@@ -45,7 +46,7 @@ function functionInclude(Core $core, $file, $cache_time = null, $cache_id = null
 	try {
 		$include = $core->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	}
-	catch (Exception $e) {
+	catch (SecurityException $e) {
 		$core->triggerError('Include : Security restriction : ' . $e->getMessage(), E_USER_WARNING);
 	}
 	catch (Exception $e) {
