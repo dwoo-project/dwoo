@@ -6,7 +6,7 @@ What's new in this version :
 * **Namespaces**
 * **CamelCase**
 * **New features (blocks/functions/modifiers)**
-
+* Distributed as a PHAR archive
 
 #WHAT IS DWOO?
 
