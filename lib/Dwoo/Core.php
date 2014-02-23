@@ -507,6 +507,9 @@ class Core {
 				$this->plugins[$name] = array('type' => self::CLASS_PLUGIN | $compilable, 'callback' => $callback, 'class' => (is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function' => $callback[1]);
 			}
 		}
+		elseif (function_exists($callback)) {
+			$this->plugins[$name] = array('type' => self::FUNC_PLUGIN | $compilable, 'callback' => $callback);
+		}
 		else if (class_exists($callback)) {
 			if (is_subclass_of($callback, '\Dwoo\Block\Plugin')) {
 				$this->plugins[$name] = array('type' => self::BLOCK_PLUGIN | $compilable, 'callback' => $callback, 'class' => $callback);
@@ -514,9 +517,6 @@ class Core {
 			else {
 				$this->plugins[$name] = array('type' => self::CLASS_PLUGIN | $compilable, 'callback' => $callback, 'class' => $callback, 'function' => ($compilable ? 'compile' : 'process'));
 			}
-		}
-		elseif (function_exists($callback)) {
-			$this->plugins[$name] = array('type' => self::FUNC_PLUGIN | $compilable, 'callback' => $callback);
 		}
 		else {
 			throw new CoreException('Callback could not be processed correctly, please check that the function/class you used exists');
@@ -664,6 +664,14 @@ class Core {
 	 */
 	public function getCustomPlugins() {
 		return $this->plugins;
+	}
+
+	/**
+	 * Returns runtime plugins
+	 * @return array
+	 */
+	public function getRuntimePlugins() {
+		return $this->runtimePlugins;
 	}
 
 	/**
