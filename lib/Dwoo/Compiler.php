@@ -960,7 +960,7 @@ class Compiler implements ICompiler {
 	 */
 	public function addBlock($name, array $params, $paramtype) {
 		// Convert class name to CamelCase
-		$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . Core::underscoreToCamel($name);
+		$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . ucfirst($name);
 		//if (class_exists($class) === false) {
 		$this->dwoo->getLoader()->loadPlugin($name);
 		//}
@@ -1047,7 +1047,7 @@ class Compiler implements ICompiler {
 				}
 				else {
 					// Convert class name to CamelCase
-					$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . Core::underscoreToCamel($top['type']);
+					$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . ucfirst($top['type']);
 				}
 				if (count($this->stack)) {
 					$this->curBlock =& $this->stack[count($this->stack) - 1];
@@ -1127,10 +1127,10 @@ class Compiler implements ICompiler {
 			throw new Exception\CompilationException($this, 'Syntax malformation, a block of unknown type was closed but was not opened.');
 		}
 		if ($o['custom']) {
-			$class = Core::underscoreToCamel($o['class']);
+			$class = ucfirst($o['class']);
 		}
 		else {
-			$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . Core::underscoreToCamel($o['type']);
+			$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . ucfirst($o['type']);
 		}
 		$this->curBlock =& $this->stack[count($this->stack) - 1];
 
@@ -1804,7 +1804,7 @@ class Compiler implements ICompiler {
 				 * @date   2014-1-25
 				 */
 				try {
-					$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . Core::underscoreToCamel($func));
+					$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func));
 					$params          = $this->mapParams($params, array(
 																	  $reflectionClass->getName(),
 																	  ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
@@ -1820,7 +1820,7 @@ class Compiler implements ICompiler {
 				$params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
 			}
 			else {
-				$params = $this->mapParams($params, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
+				$params = $this->mapParams($params, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
 			}
 		}
 		elseif ($pluginType & Core::SMARTY_MODIFIER) {
@@ -1904,7 +1904,7 @@ class Compiler implements ICompiler {
 					$funcCompiler = $this->customPlugins[$func]['callback'];
 				}
 				else {
-					$funcCompiler = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . Core::underscoreToCamel($func) . 'Compile';
+					$funcCompiler = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func) . 'Compile';
 				}
 				array_unshift($params, $this);
 				if ($func === 'tif') {
@@ -1925,7 +1925,7 @@ class Compiler implements ICompiler {
 								 Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME
 							 ) as $value) {
 						try {
-							$reflectionFunction = new \ReflectionFunction($value . Core::underscoreToCamel($func));
+							$reflectionFunction = new \ReflectionFunction($value . ucfirst($func));
 							$output             = '\\' . $reflectionFunction->getName() . '(' . $params . ')';
 						}
 						catch (\ReflectionException $exception) {
@@ -1962,7 +1962,7 @@ class Compiler implements ICompiler {
 					 * @date   2014-1-25
 					 */
 					try {
-						$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . Core::underscoreToCamel($func));
+						$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func));
 						array_unshift($params, $this);
 						$output = $reflectionClass->getMethod('compile')->invokeArgs(null, $params);
 					}
@@ -2030,13 +2030,13 @@ class Compiler implements ICompiler {
 				}
 			}
 			else {
-				$output = 'smarty_function_' . $func . '(array(' . $params . '), $this)';
+				$output = 'SmartyFunction_' . $func . '(array(' . $params . '), $this)';
 			}
 		}
 		elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
 			array_unshift($params, '$this');
 			$params                                 = self::implode_r($params);
-			$output                                 = $func . $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
+			$output                                 = '$' . $func . $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
 			$this->templatePlugins[$func]['called'] = true;
 		}
 
@@ -3081,14 +3081,12 @@ class Compiler implements ICompiler {
 					$pluginName = $callback;
 				}
 				else {
-					$func = Core::underscoreToCamel($func);
-
 					if ($pluginType & Core::CLASS_PLUGIN) {
-						$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $func;
+						$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func);
 						$callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
 					}
 					else {
-						$pluginName = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $func;
+						$pluginName = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func);
 						$callback   = $pluginName . (($pluginType & Core::COMPILABLE_PLUGIN) ? '_compile' : '');
 					}
 				}
@@ -3257,7 +3255,7 @@ class Compiler implements ICompiler {
 			$pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
 		}
 		else {
-			$name = Core::underscoreToCamel($name);
+			$name = ucfirst($name);
 
 			// Check if its a block
 			if (file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $name . '.php') === true) {
@@ -3508,7 +3506,7 @@ class Compiler implements ICompiler {
 		}
 
 		if (is_array($callback)) {
-			$ref = new \ReflectionMethod(Core::underscoreToCamel($callback[0]), $callback[1]);
+			$ref = new \ReflectionMethod(ucfirst($callback[0]), $callback[1]);
 		}
 		else {
 			$ref = new \ReflectionFunction($callback);

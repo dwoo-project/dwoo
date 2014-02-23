@@ -1022,7 +1022,7 @@ class Core {
 		else {
 			foreach (array(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME, Core::PLUGIN_FUNC_CLASS_PREFIX_NAME) as $value) {
 				try {
-					$reflectionClass = new \ReflectionClass($value . Core::underscoreToCamel($blockName));
+					$reflectionClass = new \ReflectionClass($value . ucfirst($blockName));
 					$class           = '\\' . $reflectionClass->getName();
 				}
 				catch (\ReflectionException $e) {
@@ -1147,7 +1147,7 @@ class Core {
 	 */
 	public function classCall($plugName, array $params = array()) {
 		$prefix   = '';
-		$plugName = self::underscoreToCamel($plugName);
+		$plugName = ucfirst($plugName);
 
 		// Check if its a block
 		if (file_exists(self::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $plugName . '.php') === true) {
@@ -1652,20 +1652,6 @@ class Core {
 		}
 
 		return call_user_func_array($proxy->getCallback($method), $args);
-	}
-
-	/**
-	 * Convert underscore string to camel case
-	 * @param $string string to convert to camel case
-	 * @return string
-	 */
-	public static function underscoreToCamel($string) {
-		$name_array = explode('_', $string);
-		for ($i = 0; $i < count($name_array); $i ++) {
-			$name_array[$i] = ucfirst($name_array[$i]);
-		}
-
-		return implode('', $name_array);
 	}
 
 	/**

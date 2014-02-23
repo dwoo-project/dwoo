@@ -5,6 +5,7 @@ Welcome to Dwoo 2.0!
 What's new in this version :
 * Namespaces
 * CamelCase
+* Anonymous functions
 * New features (blocks/functions/modifiers)
 * Distributed as a PHAR archive
 
