@@ -1131,7 +1131,7 @@ class Core {
 	 * @param \ReflectionClass $reflectionClass the class name
 	 * @return mixed an object of the given class
 	 */
-	public function getObjectPlugin($reflectionClass) {
+	public function getObjectPlugin(\ReflectionClass $reflectionClass) {
 		if (isset($this->runtimePlugins[$reflectionClass->getName()])) {
 			return $this->runtimePlugins[$reflectionClass->getName()];
 		}
