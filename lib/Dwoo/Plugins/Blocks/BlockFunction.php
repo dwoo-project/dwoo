@@ -19,7 +19,7 @@ use Dwoo\ICompilable\Block;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-01
+ * @date       2014-02-22
  * @package    Dwoo
  */
 class BlockFunction extends Plugin implements Block {
@@ -55,9 +55,9 @@ class BlockFunction extends Plugin implements Block {
 	}
 
 	public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content) {
-		$paramstr = '\Dwoo\Core $dwoo';
-		$init     = 'static $_callCnt = 0;' . "\n" . '$dwoo->scope[\' ' . $params['uuid'] . '\'.$_callCnt] = array();' . "\n" . '$_scope = $dwoo->setScope(array(\' ' . $params['uuid'] . '\'.($_callCnt++)));' . "\n";
-		$cleanup  = '/* -- template end output */ $dwoo->setScope($_scope, true);';
+		$paramstr = '\Dwoo\Core $core';
+		$init     = 'static $_callCnt = 0;' . "\n" . '$core->scope[\' ' . $params['uuid'] . '\'.$_callCnt] = array();' . "\n" . '$_scope = $core->setScope(array(\' ' . $params['uuid'] . '\'.($_callCnt++)));' . "\n";
+		$cleanup  = '/* -- template end output */ $core->setScope($_scope, true);';
 		foreach ($params['*'] as $param => $defValue) {
 			if ($defValue === null) {
 				$paramstr .= ', $' . $param;
@@ -65,7 +65,7 @@ class BlockFunction extends Plugin implements Block {
 			else {
 				$paramstr .= ', $' . $param . ' = ' . $defValue;
 			}
-			$init .= '$dwoo->scope[\'' . $param . '\'] = $' . $param . ";\n";
+			$init .= '$core->scope[\'' . $param . '\'] = $' . $param . ";\n";
 		}
 		$init .= '/* -- template start output */';
 
@@ -75,7 +75,7 @@ class BlockFunction extends Plugin implements Block {
 			'$this->charset', '$this->', '$this,',
 		);
 		$replacement = array(
-			'$dwoo->getCharset()', '$dwoo->', '$dwoo,',
+			'$core->getCharset()', '$core->', '$core,',
 		);
 		$content     = str_replace($search, $replacement, $content);
 
