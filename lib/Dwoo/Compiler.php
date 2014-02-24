@@ -2,7 +2,6 @@
 namespace Dwoo;
 
 use Dwoo\Exception\CompilationException;
-use Dwoo\Exception\PluginException;
 use Dwoo\Security\Policy;
 
 /**
@@ -16,7 +15,7 @@ use Dwoo\Security\Policy;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-08
+ * @date       2014-02-24
  * @package    Dwoo
  */
 class Compiler implements ICompiler {
@@ -1983,7 +1982,7 @@ class Compiler implements ICompiler {
 							$output = 'call_user_func(array(\'' . $callback . '\', \'process\'), ' . $params . ')';
 						}
 						else {
-							$output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback . '\'), \'process\'), ' . $params . ')';
+							$output = 'call_user_func(array($this->getObjectPlugin(new ReflectionClass(\''.$callback.'\')), \'process\'), ' . $params . ')';
 						}
 					}
 					elseif (is_object($callback[0])) {
@@ -1993,7 +1992,7 @@ class Compiler implements ICompiler {
 						$output = 'call_user_func(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), ' . $params . ')';
 					}
 					else {
-						$output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback[0] . '\'), \'' . $callback[1] . '\'), ' . $params . ')';
+						$output .= 'call_user_func(array($this->getObjectPlugin(new \ReflectionClass(\''.$callback[0].'\')), \'' . $callback[1] . '\'), ' . $params . ')';
 					}
 					if (empty($params)) {
 						$output = substr($output, 0, - 3) . ')';
@@ -3179,7 +3178,7 @@ class Compiler implements ICompiler {
 							}
 						}
 						elseif ($mapped) {
-							$output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo_Plugin_' . $func . '\'), \'process\'), array(' . $params . '))';
+							$output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo\Plugin\\' . $func . '\'), \'process\'), array(' . $params . '))';
 						}
 						else {
 							$output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
@@ -3419,8 +3418,8 @@ class Compiler implements ICompiler {
 				if (count($ps) === 0) {
 					if ($v[1] === false) {
 						throw new Exception\CompilationException($this, 'Rest argument missing for ' . str_replace(array(
-																														'Dwoo_Plugin_',
-																														'_compile'
+																														'\Dwoo\Plugin\\',
+																														'Compile'
 																												   ), '', (is_array($callback) ? $callback[0] : $callback)));
 					}
 					else {
