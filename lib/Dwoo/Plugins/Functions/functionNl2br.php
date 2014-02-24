@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Converts line breaks into <br /> tags
@@ -15,9 +18,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionNl2brCompile(Compiler $compiler, $value) {
-	return 'nl2br((string) ' . $value . ')';
+class FunctionNl2br extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value) {
+		return 'nl2br((string) ' . $value . ')';
+	}
 }

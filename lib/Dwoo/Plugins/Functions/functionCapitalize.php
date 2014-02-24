@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 
 /**
  * Capitalizes the first letter of each word
@@ -15,25 +16,28 @@ use Dwoo\Core;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-03
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionCapitalize(Core $dwoo, $value, $numwords = false) {
-	if ($numwords || preg_match('#^[^0-9]+$#', $value)) {
-		return mb_convert_case((string)$value, MB_CASE_TITLE, $dwoo->getCharset());
-	}
-	else {
-		$bits = explode(' ', (string)$value);
-		$out  = '';
-		while (list(, $v) = each($bits)) {
-			if (preg_match('#^[^0-9]+$#', $v)) {
-				$out .= ' ' . mb_convert_case($v, MB_CASE_TITLE, $dwoo->getCharset());
-			}
-			else {
-				$out .= ' ' . $v;
-			}
-		}
+class FunctionCapitalize extends Plugin {
 
-		return substr($out, 1);
+	public function process($value, $numwords = false) {
+		if ($numwords || preg_match('#^[^0-9]+$#', $value)) {
+			return mb_convert_case((string)$value, MB_CASE_TITLE, $this->core->getCharset());
+		}
+		else {
+			$bits = explode(' ', (string)$value);
+			$out  = '';
+			while (list(, $v) = each($bits)) {
+				if (preg_match('#^[^0-9]+$#', $v)) {
+					$out .= ' ' . mb_convert_case($v, MB_CASE_TITLE, $this->core->getCharset());
+				}
+				else {
+					$out .= ' ' . $v;
+				}
+			}
+
+			return substr($out, 1);
+		}
 	}
 }

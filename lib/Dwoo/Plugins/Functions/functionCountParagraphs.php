@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Counts the paragraphs in a string
@@ -15,10 +18,13 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-04
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionCountParagraphsCompile(Compiler $compiler, $value) {
-	// count \r or \n characters
-	return '(preg_match_all(\'([^\n]*\n+)\', ' . $value . ', $tmp)+1)';
+class FunctionCountParagraphs extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value) {
+		// count \r or \n characters
+		return '(preg_match_all(\'([^\n]*\n+)\', ' . $value . ', $tmp)+1)';
+	}
 }

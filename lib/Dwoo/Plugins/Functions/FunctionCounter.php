@@ -1,5 +1,6 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Plugin;
 
 /**

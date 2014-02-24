@@ -1,8 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
-use Dwoo\Exception\PluginException;
+
 use \DateTimeZone;
+use Dwoo\Exception;
+use Dwoo\Plugin;
 
 /**
  * Formats a date
@@ -22,29 +23,31 @@ use \DateTimeZone;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-11
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionDateFormat(Core $dwoo, $value = 'now', $format = 'M n, Y', $timestamp = 0, $timeZone = 2047, $modify = '') {
+class FunctionDateFormat extends Plugin {
 
-	if (!is_string($value)) {
-		throw new PluginException('$value is not a valid value: must be a string');
+	public function process($value = 'now', $format = 'M n, Y', $timestamp = 0, $timeZone = 2047, $modify = '') {
+		if (!is_string($value)) {
+			throw new Exception('$value is not a valid value: must be a string');
+		}
+
+		$dateTime = new \DateTime($value);
+
+		if ($timestamp != 0) {
+			$dateTime->setTimestamp($timestamp);
+		}
+
+		if ($timeZone != 2047) {
+			$dateTime->setTimezone(new \DateTimeZone($timeZone));
+		}
+
+		if ($modify != '') {
+			$dateTime->modify($modify);
+		}
+
+		return $dateTime->format($format);
 	}
-
-	$dateTime = new \DateTime($value);
-
-	if ($timestamp != 0) {
-		$dateTime->setTimestamp($timestamp);
-	}
-
-	if ($timeZone != 2047) {
-		$dateTime->setTimezone(new \DateTimeZone($timeZone));
-	}
-
-	if ($modify != '') {
-		$dateTime->modify($modify);
-	}
-
-	return $dateTime->format($format);
 }
 

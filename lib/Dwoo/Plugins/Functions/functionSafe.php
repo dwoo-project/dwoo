@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Marks the variable as safe and removes the auto-escape function, only useful if you turned auto-escaping on
@@ -15,9 +18,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionSafeCompile(Compiler $compiler, $var) {
-	return preg_replace('#\(is_string\(\$tmp=(.+)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $var);
+class FunctionSafe extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $var) {
+		return preg_replace('#\(is_string\(\$tmp=(.+)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $var);
+	}
 }

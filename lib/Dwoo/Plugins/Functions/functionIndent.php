@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Indents every line of a text by the given amount of characters
@@ -17,9 +20,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionIndentCompile(Compiler $compiler, $value, $by = 4, $char = ' ') {
-	return "preg_replace('#^#m', '" . str_repeat(substr($char, 1, - 1), trim($by, '"\'')) . "', $value)";
+class FunctionIndent extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value, $by = 4, $char = ' ') {
+		return "preg_replace('#^#m', '" . str_repeat(substr($char, 1, - 1), trim($by, '"\'')) . "', $value)";
+	}
 }

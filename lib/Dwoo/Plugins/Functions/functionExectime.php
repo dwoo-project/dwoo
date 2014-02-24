@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 
 /**
  * Return execution time of the php program.
@@ -14,14 +15,15 @@ use Dwoo\Core;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-01-24
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionExectime(Core $core, $precision = 0) {
-	if (version_compare(PHP_VERSION, '5.4', '<')) {
-		return round(((float) array_sum(explode(' ',microtime())) - ((float) $_SERVER['REQUEST_TIME'])) * 10, $precision);
-	}
-	else {
+class FunctionExectime extends Plugin {
+
+	public function process($precision = 0) {
+		if (version_compare(PHP_VERSION, '5.4', '<')) {
+			return round(((float) array_sum(explode(' ',microtime())) - ((float) $_SERVER['REQUEST_TIME'])) * 10, $precision);
+		}
 		return round((microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) * 1000, $precision);
 	}
 }

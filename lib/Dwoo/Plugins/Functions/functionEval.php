@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 use Dwoo\Template\String;
 
 /**
@@ -24,24 +25,27 @@ use Dwoo\Template\String;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionEval(Core $dwoo, $var, $assign = null) {
-	if ($var == '') {
+class FunctionEval extends Plugin {
+
+	public function process($var, $assign = null) {
+		if ($var == '') {
+			return null;
+		}
+
+		$tpl   = new String($var);
+		$clone = clone $this->core;
+		$out   = $clone->get($tpl, $this->core->readVar('_parent'));
+
+		if ($assign !== null) {
+			$this->core->assignInScope($out, $assign);
+		}
+		else {
+			return $out;
+		}
+
 		return null;
 	}
-
-	$tpl   = new String($var);
-	$clone = clone $dwoo;
-	$out   = $clone->get($tpl, $dwoo->readVar('_parent'));
-
-	if ($assign !== null) {
-		$dwoo->assignInScope($out, $assign);
-	}
-	else {
-		return $out;
-	}
-
-	return null;
 }

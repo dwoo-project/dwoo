@@ -2,6 +2,8 @@
 namespace Dwoo\Plugins\Functions;
 use Dwoo\Compiler;
 use Dwoo\Exception;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Returns a link to the gravatar of someone based on his email address, see {@link http://en.gravatar.com/}.
@@ -29,53 +31,55 @@ use Dwoo\Exception;
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionGravatarCompile(Compiler $compiler, $email, $size = null, $default = null, $rating = null) {
+class FunctionGravatar extends Plugin implements ICompilable {
 
-	$email = trim($email, '"\'');
-	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		throw new Exception('gravatar: ' . $email . ' is not a valid email.', E_USER_ERROR);
-	}
-
-	$out = '\'http://www.gravatar.com/avatar/\'.md5(strtolower(trim("' . $email . '")))';
-
-	$params = array();
-	if ($size !== null) {
-		if (is_numeric($size)) {
-			$params[] = 's=' . ((int)$size);
+	public static function compile(Compiler $compiler, $email, $size = null, $default = null, $rating = null) {
+		$email = trim($email, '"\'');
+		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			throw new Exception('gravatar: ' . $email . ' is not a valid email.', E_USER_ERROR);
 		}
-		else {
-			$params[] = 's=\'.((int) ' . $size . ').\'';
-		}
-	}
 
-	if ($default !== null) {
-		if (filter_var($default, FILTER_VALIDATE_URL)) {
-			$params[] = 'd=\'.urlencode(' . $default . ').\'';
-		}
-		else {
-			$params[] = 'd=' . $default;
-		}
-	}
+		$out = '\'http://www.gravatar.com/avatar/\'.md5(strtolower(trim("' . $email . '")))';
 
-	if ($rating !== null) {
-		$r = trim(strtolower($rating), '"\'');
-		if (in_array($r, array('g', 'pg', 'r', 'x'))) {
-			$params[] = 'r=' . $r;
+		$params = array();
+		if ($size !== null) {
+			if (is_numeric($size)) {
+				$params[] = 's=' . ((int)$size);
+			}
+			else {
+				$params[] = 's=\'.((int) ' . $size . ').\'';
+			}
 		}
-		else {
-			$params[] = 'r=\'.' . $rating . '.\'';
+
+		if ($default !== null) {
+			if (filter_var($default, FILTER_VALIDATE_URL)) {
+				$params[] = 'd=\'.urlencode(' . $default . ').\'';
+			}
+			else {
+				$params[] = 'd=' . $default;
+			}
 		}
-	}
-	if (count($params)) {
-		$out .= '.\'?' . implode('&amp;', $params) . '\'';
-	}
 
-	if (substr($out, -3) == ".''") {
-		$out = substr($out, 0, -3);
-	}
+		if ($rating !== null) {
+			$r = trim(strtolower($rating), '"\'');
+			if (in_array($r, array('g', 'pg', 'r', 'x'))) {
+				$params[] = 'r=' . $r;
+			}
+			else {
+				$params[] = 'r=\'.' . $rating . '.\'';
+			}
+		}
+		if (count($params)) {
+			$out .= '.\'?' . implode('&amp;', $params) . '\'';
+		}
 
-	return $out;
+		if (substr($out, -3) == ".''") {
+			$out = substr($out, 0, -3);
+		}
+
+		return $out;
+	}
 }

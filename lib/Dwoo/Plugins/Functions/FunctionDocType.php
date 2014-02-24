@@ -1,5 +1,6 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Plugin;
 
 /**
@@ -50,8 +51,8 @@ class FunctionDocType extends Plugin {
 	const HTML4_FRAMESET      = 'HTML4_FRAMESET';
 
 	/**
+	 * Process
 	 * @param string $docType
-	 *
 	 * @return string
 	 */
 	public function process($docType = '') {

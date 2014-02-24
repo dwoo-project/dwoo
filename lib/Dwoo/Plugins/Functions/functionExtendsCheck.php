@@ -1,7 +1,10 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Exception\CompilationException;
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Checks whether an extended file has been modified, and if so recompiles the current template. This is for internal use only, do not use.
@@ -12,33 +15,35 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-01
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionExtendsCheckCompile(Compiler $compiler, $file) {
-	preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m);
-	$resource   = $m[1];
-	$identifier = str_replace('\\\\', '\\', $m[2]);
+class FunctionExtendsCheck extends Plugin implements ICompilable {
 
-	$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+	public static function compile(Compiler $compiler, $file) {
+		preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m);
+		$resource   = $m[1];
+		$identifier = str_replace('\\\\', '\\', $m[2]);
 
-	if ($tpl === null) {
-		throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');
-	}
-	elseif ($tpl === false) {
-		throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . '" does not support includes.');
-	}
+		$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+
+		if ($tpl === null) {
+			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');
+		}
+		elseif ($tpl === false) {
+			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . '" does not support includes.');
+		}
 
 
-	$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
+		$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
 
-	$modCheck = $tpl->getIsModifiedCode();
+		$modCheck = $tpl->getIsModifiedCode();
 
-	if ($modCheck) {
-		$out .= 'if (!(' . $modCheck . ')) { ob_end_clean(); return false; }';
-	}
-	else {
-		$out .= 'try {
+		if ($modCheck) {
+			$out .= 'if (!(' . $modCheck . ')) { ob_end_clean(); return false; }';
+		}
+		else {
+			$out .= 'try {
 	$tpl = $this->templateFactory("' . $resource . '", "' . $identifier . '");
 } catch (\Dwoo\Exception $e) {
 	$this->triggerError(\'Load Templates : Resource <em>' . $resource . '</em> was not added to Dwoo, can not extend <em>' . $identifier . '</em>\', E_USER_WARNING);
@@ -48,7 +53,8 @@ if ($tpl === null)
 elseif ($tpl === false)
 	$this->triggerError(\'Load Templates : Resource "' . $resource . '" does not support extends.\', E_USER_WARNING);
 if ($tpl->getUid() != "' . $tpl->getUid() . '") { ob_end_clean(); return false; }';
-	}
+		}
 
-	return $out;
+		return $out;
+	}
 }

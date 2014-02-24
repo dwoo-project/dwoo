@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 use Dwoo\Plugins\Blocks\BlockScriptCapture;
 
 /**
@@ -32,21 +33,24 @@ use Dwoo\Plugins\Blocks\BlockScriptCapture;
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-09
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionOutputScript(Core $dwoo, $name) {
-	$pre  = '<script type="text/javascript" charset="utf-8">';
-	$post = '</script>';
+class FunctionOutputScript extends Plugin {
 
-	if (!class_exists('\Dwoo\Plugins\Blocks\BlockScriptCapture')) {
-		$dwoo->getLoader()->loadPlugin('script_capture');
+	public function process($name) {
+		$pre  = '<script type="text/javascript" charset="utf-8">';
+		$post = '</script>';
+
+		if (!class_exists('\Dwoo\Plugins\Blocks\BlockScriptCapture')) {
+			$this->core->getLoader()->loadPlugin('scriptCapture');
+		}
+
+		$content = trim(BlockScriptCapture::getScripts($name));
+		if (empty($content)) {
+			return '';
+		}
+
+		return $pre . $content . $post;
 	}
-
-	$content = trim(BlockScriptCapture::getScripts($name));
-	if (empty($content)) {
-		return '';
-	}
-
-	return $pre . $content . $post;
 }

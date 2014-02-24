@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 
 /**
  * Replaces the search string by the replace string using regular expressions
@@ -17,23 +18,26 @@ use Dwoo\Core;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionRegexReplace(Core $dwoo, $value, $search, $replace) {
-	$search = (array)$search;
-	$cnt    = count($search);
+class FunctionRegexReplace extends Plugin {
 
-	for ($i = 0; $i < $cnt; $i ++) {
-		// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
-		if (($pos = strpos($search[$i], "\0")) !== false) {
-			$search[$i] = substr($search[$i], 0, $pos);
+	public function process($value, $search, $replace) {
+		$search = (array)$search;
+		$cnt    = count($search);
+
+		for ($i = 0; $i < $cnt; $i ++) {
+			// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
+			if (($pos = strpos($search[$i], "\0")) !== false) {
+				$search[$i] = substr($search[$i], 0, $pos);
+			}
+
+			if (preg_match('#[a-z\s]+$#is', $search[$i], $m) && (strpos($m[0], 'e') !== false)) {
+				$search[$i] = substr($search[$i], 0, - strlen($m[0])) . str_replace(array('e', ' '), '', $m[0]);
+			}
 		}
 
-		if (preg_match('#[a-z\s]+$#is', $search[$i], $m) && (strpos($m[0], 'e') !== false)) {
-			$search[$i] = substr($search[$i], 0, - strlen($m[0])) . str_replace(array('e', ' '), '', $m[0]);
-		}
+		return preg_replace($search, $replace, $value);
 	}
-
-	return preg_replace($search, $replace, $value);
 }

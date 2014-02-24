@@ -1,7 +1,8 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
 use Dwoo\Exception;
+use Dwoo\Plugin;
 
 /**
  * Generate HTML <img> tag.
@@ -32,45 +33,47 @@ use Dwoo\Exception;
  * @license    http://www.gnu.org/copyleft/lesser.html  GNU Lesser General Public License
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-10
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionHtmlImage(Core $dwoo, $file, $alt = null, $width = null, $height = null, $id = null, $class = null, $style = null) {
+class FunctionHtmlImage extends Plugin {
 
-	if ($file == '' /* || !@file_get_contents($file)*/) {
-		throw new Exception('You need to specify a valid url to your image', E_USER_ERROR);
+	public function process($file, $alt = null, $width = null, $height = null, $id = null, $class = null, $style = null) {
+		if ($file == '' /* || !@file_get_contents($file)*/) {
+			throw new Exception('You need to specify a valid url to your image', E_USER_ERROR);
+		}
+
+		$out = ' src="' . $file . '"';
+
+		// Alt
+		if ($alt != null) {
+			$out .= ' alt="' . $alt . '"';
+		}
+
+		if ($width != null) {
+			$out .= ' width="' . $width . '"';
+		}
+		if ($height != null) {
+			$out .= ' height="' . $height . '"';
+		}
+
+		if ($width == null && $height == null) {
+			$size = getimagesize($file);
+			$out .= $size[3];
+		}
+
+		if ($id != null) {
+			$out .= ' id="' . $id . '"';
+		}
+
+		if ($class != null) {
+			$out .= ' class="' . $class . '"';
+		}
+
+		if ($style != null) {
+			$out .= ' style="' . $style . '"';
+		}
+
+		return '<img' . $out . ' />';
 	}
-
-	$out = ' src="' . $file . '"';
-
-	// Alt
-	if ($alt != null) {
-		$out .= ' alt="' . $alt . '"';
-	}
-
-	if ($width != null) {
-		$out .= ' width="' . $width . '"';
-	}
-	if ($height != null) {
-		$out .= ' height="' . $height . '"';
-	}
-
-	if ($width == null && $height == null) {
-		$size = getimagesize($file);
-		$out .= $size[3];
-	}
-
-	if ($id != null) {
-		$out .= ' id="' . $id . '"';
-	}
-
-	if ($class != null) {
-		$out .= ' class="' . $class . '"';
-	}
-
-	if ($style != null) {
-		$out .= ' style="' . $style . '"';
-	}
-
-	return '<img' . $out . ' />';
 }

@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 
 /**
  * Applies various escaping schemes on the given string
@@ -17,48 +18,50 @@ use Dwoo\Core;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionEscape(Core $dwoo, $value = '', $format = 'html', $charset = null) {
-	if ($charset === null) {
-		$charset = $dwoo->getCharset();
-	}
+class FunctionEscape extends Plugin {
 
-	switch ($format) {
+	public function process($value = '', $format = 'html', $charset = null) {
+		if ($charset === null) {
+			$charset = $this->core->getCharset();
+		}
 
-		case 'html':
-			return htmlspecialchars((string)$value, ENT_QUOTES, $charset);
-		case 'htmlall':
-			return htmlentities((string)$value, ENT_QUOTES, $charset);
-		case 'url':
-			return rawurlencode((string)$value);
-		case 'urlpathinfo':
-			return str_replace('%2F', '/', rawurlencode((string)$value));
-		case 'quotes':
-			return preg_replace("#(?<!\\\\)'#", "\\'", (string)$value);
-		case 'hex':
-			$out = '';
-			$cnt = strlen((string)$value);
-			for ($i = 0; $i < $cnt; $i ++) {
-				$out .= '%' . bin2hex((string)$value[$i]);
-			}
+		switch ($format) {
 
-			return $out;
-		case 'hexentity':
-			$out = '';
-			$cnt = strlen((string)$value);
-			for ($i = 0; $i < $cnt; $i ++) {
-				$out .= '&#x' . bin2hex((string)$value[$i]) . ';';
-			}
+			case 'html':
+				return htmlspecialchars((string)$value, ENT_QUOTES, $charset);
+			case 'htmlall':
+				return htmlentities((string)$value, ENT_QUOTES, $charset);
+			case 'url':
+				return rawurlencode((string)$value);
+			case 'urlpathinfo':
+				return str_replace('%2F', '/', rawurlencode((string)$value));
+			case 'quotes':
+				return preg_replace("#(?<!\\\\)'#", "\\'", (string)$value);
+			case 'hex':
+				$out = '';
+				$cnt = strlen((string)$value);
+				for ($i = 0; $i < $cnt; $i ++) {
+					$out .= '%' . bin2hex((string)$value[$i]);
+				}
 
-			return $out;
-		case 'javascript':
-			return strtr((string)$value, array('\\' => '\\\\', "'" => "\\'", '"' => '\\"', "\r" => '\\r', "\n" => '\\n', '</' => '<\/'));
-		case 'mail':
-			return str_replace(array('@', '.'), array('&nbsp;(AT)&nbsp;', '&nbsp;(DOT)&nbsp;'), (string)$value);
-		default:
-			return $dwoo->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "' . $format . '" given.', E_USER_WARNING);
+				return $out;
+			case 'hexentity':
+				$out = '';
+				$cnt = strlen((string)$value);
+				for ($i = 0; $i < $cnt; $i ++) {
+					$out .= '&#x' . bin2hex((string)$value[$i]) . ';';
+				}
 
+				return $out;
+			case 'javascript':
+				return strtr((string)$value, array('\\' => '\\\\', "'" => "\\'", '"' => '\\"', "\r" => '\\r', "\n" => '\\n', '</' => '<\/'));
+			case 'mail':
+				return str_replace(array('@', '.'), array('&nbsp;(AT)&nbsp;', '&nbsp;(DOT)&nbsp;'), (string)$value);
+			default:
+				$this->core->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "' . $format . '" given.', E_USER_WARNING);
+		}
 	}
 }

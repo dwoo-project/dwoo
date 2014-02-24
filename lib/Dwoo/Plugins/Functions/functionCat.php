@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Concatenates any number of variables or strings fed into it
@@ -14,9 +17,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-03
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionCatCompile(Compiler $compiler, $value, array $rest) {
-	return '(' . $value . ').(' . implode(').(', $rest) . ')';
+class FunctionCat extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value, array $rest) {
+		return '(' . $value . ').(' . implode(').(', $rest) . ')';
+	}
 }

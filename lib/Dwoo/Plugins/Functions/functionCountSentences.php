@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Counts the sentences in a string
@@ -16,10 +19,13 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-05
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionCountSentencesCompile(Compiler $compiler, $value) {
-	return "preg_match_all('/[^\\s](\\.|\\!|\\?)(?!\\w)/',$value, \$tmp)";
+class FunctionCountSentences extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value) {
+		return "preg_match_all('/[^\\s](\\.|\\!|\\?)(?!\\w)/',$value, \$tmp)";
+	}
 }
 

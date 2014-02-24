@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Replaces the search string by the replace string
@@ -17,14 +20,15 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-20
  * @package    Dwoo
  */
-function functionReplaceCompile(Compiler $compiler, $value, $search, $replace, $case_sensitive = true) {
-	if ($case_sensitive === false) {
-		return 'str_ireplace(' . $search . ', ' . $replace . ', ' . $value . ')';
-	}
-	else {
+class FunctionReplace extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value, $search, $replace, $case_sensitive = true) {
+		if ($case_sensitive === false) {
+			return 'str_ireplace(' . $search . ', ' . $replace . ', ' . $value . ')';
+		}
 		return 'str_replace(' . $search . ', ' . $replace . ', ' . $value . ')';
 	}
 }

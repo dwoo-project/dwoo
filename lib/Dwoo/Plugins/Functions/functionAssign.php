@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Assigns a value to a variable
@@ -15,9 +18,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-03
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionAssignCompile(Compiler $compiler, $value, $var) {
-	return '$this->assignInScope(' . $value . ', ' . $var . ')';
+class FunctionAssign extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value, $var) {
+		return '$this->assignInScope(' . $value . ', ' . $var . ')';
+	}
 }

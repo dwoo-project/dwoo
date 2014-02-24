@@ -1,7 +1,10 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Exception\CompilationException;
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Loads sub-templates contained in an external file
@@ -16,55 +19,57 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionLoadTemplatesCompile(Compiler $compiler, $file) {
-	$file = substr($file, 1, -1);
+class FunctionLoadTemplates extends Plugin implements ICompilable {
 
-	if ($file === '') {
-		return null;
-	}
+	public static function compile(Compiler $compiler, $file) {
+		$file = substr($file, 1, -1);
 
-	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
-		// resource:identifier given, extract them
-		$resource   = $m[1];
-		$identifier = $m[2];
-	}
-	else {
-		// get the current template's resource
-		$resource   = $compiler->getDwoo()->getTemplate()->getResourceName();
-		$identifier = $file;
-	}
-	$identifier = str_replace('\\\\', '\\', $identifier);
+		if ($file === '') {
+			return null;
+		}
 
-	$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+		if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
+			// resource:identifier given, extract them
+			$resource   = $m[1];
+			$identifier = $m[2];
+		}
+		else {
+			// get the current template's resource
+			$resource   = $compiler->getDwoo()->getTemplate()->getResourceName();
+			$identifier = $file;
+		}
+		$identifier = str_replace('\\\\', '\\', $identifier);
 
-	if ($tpl === null) {
-		throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');
-	}
-	else if ($tpl === false) {
-		throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . '" does not support includes.');
-	}
+		$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
 
-	$cmp = clone $compiler;
-	$cmp->compile($compiler->getDwoo(), $tpl);
-	foreach ($cmp->getTemplatePlugins() as $template => $args) {
-		$compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body']);
-	}
-	foreach ($cmp->getUsedPlugins() as $plugin => $type) {
-		$compiler->addUsedPlugin($plugin, $type);
-	}
+		if ($tpl === null) {
+			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');
+		}
+		else if ($tpl === false) {
+			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . '" does not support includes.');
+		}
 
-	$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
+		$cmp = clone $compiler;
+		$cmp->compile($compiler->getDwoo(), $tpl);
+		foreach ($cmp->getTemplatePlugins() as $template => $args) {
+			$compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body']);
+		}
+		foreach ($cmp->getUsedPlugins() as $plugin => $type) {
+			$compiler->addUsedPlugin($plugin, $type);
+		}
 
-	$modCheck = $tpl->getIsModifiedCode();
+		$out = '// checking for modification in ' . $resource . ':' . $identifier . "\r\n";
 
-	if ($modCheck) {
-		$out .= 'if (!(' . $modCheck . ')) { ob_end_clean(); return false; }';
-	}
-	else {
-		$out .= 'try {
+		$modCheck = $tpl->getIsModifiedCode();
+
+		if ($modCheck) {
+			$out .= 'if (!(' . $modCheck . ')) { ob_end_clean(); return false; }';
+		}
+		else {
+			$out .= 'try {
 	$tpl = $this->templateFactory("' . $resource . '", "' . $identifier . '");
 } catch (\Dwoo\Exception $e) {
 	$this->triggerError(\'Load Templates : Resource <em>' . $resource . '</em> was not added to Dwoo, can not extend <em>' . $identifier . '</em>\', E_USER_WARNING);
@@ -74,7 +79,8 @@ if ($tpl === null)
 elseif ($tpl === false)
 	$this->triggerError(\'Load Templates : Resource "' . $resource . '" does not support extends.\', E_USER_WARNING);
 if ($tpl->getUid() != "' . $tpl->getUid() . '") { ob_end_clean(); return false; }';
-	}
+		}
 
-	return $out;
+		return $out;
+	}
 }

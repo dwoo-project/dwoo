@@ -1,6 +1,7 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
+
+use Dwoo\Plugin;
 
 /**
  * Reads a file
@@ -16,39 +17,44 @@ use Dwoo\Core;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionFetch(Core $dwoo, $file, $assign = null) {
-	if ($file === '') {
+class FunctionFetch extends Plugin {
+
+	public function process($file, $assign = null) {
+		if ($file === '') {
+			return null;
+		}
+
+		if ($policy = $this->core->getSecurityPolicy()) {
+			while (true) {
+				if (preg_match('{^([a-z]+?)://}i', $file)) {
+					$this->core->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
+					return null;
+				}
+
+				$file = realpath($file);
+				$dirs = $policy->getAllowedDirectories();
+				foreach ($dirs as $dir => $dummy) {
+					if (strpos($file, $dir) === 0) {
+						break 2;
+					}
+				}
+
+				$this->core->triggerError('The security policy prevents you to read <em>' . $file . '</em>', E_USER_WARNING);
+				return null;
+			}
+		}
+		$file = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $file);
+
+		$out = file_get_contents($file);
+
+		if ($assign === null) {
+			return $out;
+		}
+		$this->core->assignInScope($out, $assign);
+
 		return null;
 	}
-
-	if ($policy = $dwoo->getSecurityPolicy()) {
-		while (true) {
-			if (preg_match('{^([a-z]+?)://}i', $file)) {
-				return $dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
-			}
-
-			$file = realpath($file);
-			$dirs = $policy->getAllowedDirectories();
-			foreach ($dirs as $dir => $dummy) {
-				if (strpos($file, $dir) === 0) {
-					break 2;
-				}
-			}
-
-			return $dwoo->triggerError('The security policy prevents you to read <em>' . $file . '</em>', E_USER_WARNING);
-		}
-	}
-	$file = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $file);
-
-	$out = file_get_contents($file);
-
-	if ($assign === null) {
-		return $out;
-	}
-	$dwoo->assignInScope($out, $assign);
-
-	return null;
 }

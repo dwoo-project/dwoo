@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Makes a string uppercased
@@ -15,9 +18,13 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionUpperCompile(Compiler $compiler, $value) {
-	return 'mb_strtoupper((string) ' . $value . ', $this->charset)';
+class FunctionUpper extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value) {
+		return 'mb_strtoupper((string) ' . $value . ', $this->charset)';
+	}
 }
+

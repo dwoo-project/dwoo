@@ -1,19 +1,21 @@
 <?php
 namespace Dwoo\Plugins\Functions;
-use Dwoo\Core;
-use Dwoo\Exception\PluginException;
 
-function functionGoogleAnalytics(Core $dwoo, $code, $domain = '') {
+use Dwoo\Exception;
+use Dwoo\Plugin;
 
-	if (empty($code)) {
-		throw new PluginException('$code is not valid: $code must contained a valid Google Analytics UA code.');
-	}
+class FunctionGoogleAnalytics extends Plugin {
 
-	if (!empty($domain)) {
-		$domain = "_gaq.push(['_setDomainName', '".$domain."']);";
-	}
+	public function process($code, $domain = '') {
+		if (empty($code)) {
+			throw new Exception($code . ' is not valid: $code must contained a valid Google Analytics UA code.');
+		}
 
-	return "
+		if (!empty($domain)) {
+			$domain = "_gaq.push(['_setDomainName', '".$domain."']);";
+		}
+
+		return "
 <script>
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', '{$code}']);
@@ -31,5 +33,5 @@ function functionGoogleAnalytics(Core $dwoo, $code, $domain = '') {
 	})();
 </script>
 ";
-
+	}
 }
