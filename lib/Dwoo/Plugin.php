@@ -20,20 +20,20 @@ namespace Dwoo;
  */
 abstract class Plugin {
 	/**
-	 * the dwoo instance that runs this plugin
+	 * the Core instance that runs this plugin
 	 *
-	 * @var Dwoo
+	 * @var Core
 	 */
-	protected $dwoo;
+	protected $core;
 
 	/**
-	 * constructor, if you override it, call parent::__construct($dwoo); or assign
+	 * constructor, if you override it, call parent::__construct($core); or assign
 	 * the dwoo instance yourself if you need it
 	 *
-	 * @param Core $dwoo the dwoo instance that runs this plugin
+	 * @param Core $core the Core instance that runs this plugin
 	 */
-	public function __construct(Core $dwoo) {
-		$this->dwoo = $dwoo;
+	public function __construct(Core $core) {
+		$this->core = $core;
 	}
 
 	// plugins should always implement :
