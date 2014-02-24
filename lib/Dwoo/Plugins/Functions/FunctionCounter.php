@@ -20,7 +20,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-05
+ * @date       2014-02-24
  * @package    Dwoo
  */
 class FunctionCounter extends Plugin {
@@ -68,7 +68,7 @@ class FunctionCounter extends Plugin {
 		$out = $this->counters[$name]['count'];
 
 		if ($this->counters[$name]['assign'] !== null) {
-			$this->dwoo->assignInScope($out, $this->counters[$name]['assign']);
+			$this->core->assignInScope($out, $this->counters[$name]['assign']);
 		}
 		elseif ($this->counters[$name]['print'] === true) {
 			return $out;

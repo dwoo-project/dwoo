@@ -1,7 +1,6 @@
 <?php
 namespace Dwoo\Plugins\Functions;
 
-use Dwoo\Core;
 use Dwoo\Plugin;
 
 /**
@@ -18,7 +17,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-10-18
+ * @date       2014-02-24
  * @package    Dwoo
  */
 class FunctionDump extends Plugin {
@@ -28,7 +27,7 @@ class FunctionDump extends Plugin {
 	public function process($var = '$', $show_methods = false) {
 		$this->outputMethods = $show_methods;
 		if ($var === '$') {
-			$var = $this->dwoo->getData();
+			$var = $this->core->getData();
 			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
 		}
 		else {
@@ -46,7 +45,7 @@ class FunctionDump extends Plugin {
 			}
 		}
 
-		$scope = $this->dwoo->getScope();
+		$scope = $this->core->getScope();
 
 		if ($var === $scope) {
 			$out .= ' (current scope): <div style="background:#ccc;">';

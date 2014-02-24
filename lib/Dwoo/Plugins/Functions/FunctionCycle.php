@@ -21,7 +21,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
 class FunctionCycle extends Plugin {
@@ -67,7 +67,7 @@ class FunctionCycle extends Plugin {
 		if ($assign === null) {
 			return $out;
 		}
-		$this->dwoo->assignInScope($out, $assign);
+		$this->core->assignInScope($out, $assign);
 
 		return null;
 	}
