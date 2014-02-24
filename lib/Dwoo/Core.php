@@ -23,7 +23,7 @@ use Dwoo\Template\File;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-01-24
+ * @date       2014-02-23
  * @package    Dwoo
  */
 class Core {
@@ -1127,7 +1127,6 @@ class Core {
 	 * [runtime function] returns a Plugin of the given class
 	 * this is so a single instance of every class plugin is created at each template run,
 	 * allowing class plugins to have "per-template-run" static variables
-	 * @private
 	 * @param \ReflectionClass $reflectionClass the class name
 	 * @return mixed an object of the given class
 	 */
@@ -1159,7 +1158,7 @@ class Core {
 		}
 
 		try {
-			$reflectionClass = new \ReflectionClass($prefix .$plugName);
+			$reflectionClass = new \ReflectionClass($prefix . $plugName);
 			return $reflectionClass->getMethod('process')->invokeArgs($this->getObjectPlugin($reflectionClass), $params);
 		}
 		catch (\ReflectionException $e) {
