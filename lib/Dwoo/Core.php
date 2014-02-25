@@ -195,6 +195,12 @@ class Core {
 	protected $returnData;
 
 	/**
+	 * plugin data, available from plugin side
+	 * @var array
+	 */
+	protected $pluginData = array();
+
+	/**
 	 * stores the data during template runtime
 	 * @var array
 	 * @protected
@@ -439,19 +445,44 @@ class Core {
 	 * Assign a global variable
 	 * @param $name
 	 * @param $value
+	 * @return $this
 	 */
 	public function setGlobal($name, $value) {
 		$this->globals[$name] = $value;
+
+		return $this;
 	}
 
 	/**
 	 * Assign multiple global variables
 	 * @param array $globals
+	 * @return $this
 	 */
 	public function setGlobals(array $globals) {
 		foreach ($globals as $key => $value) {
 			$this->globals[$key] = $value;
 		}
+
+		return $this;
+	}
+
+	/**
+	 * Set data retrievable inside every plugin
+	 * @param array $data
+	 * @return $this
+	 */
+	public function setPluginData(array $data) {
+		$this->pluginData = $data;
+
+		return $this;
+	}
+
+	/**
+	 * Get plugin data
+	 * @return array
+	 */
+	public function getPluginData() {
+		return $this->pluginData;
 	}
 
 	/**
