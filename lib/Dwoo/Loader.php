@@ -109,7 +109,7 @@ class Loader implements ILoader {
 		// so we check for that before trying to include() the plugin.
 
 		// Check entry exist in $this->classPath
-		$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));
+		/*$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));
 		$index = array_values($match);
 
 		// Entry doesn't exist, try to rebuild cache
@@ -128,14 +128,14 @@ class Loader implements ILoader {
 				$index = array_values($match);
 				if (isset($index[0])) {
 					if (isset($this->classPath[$index[0]])) {
-						//include $this->classPath[$index[0]];
+						include_once $this->classPath[$index[0]];
 						return true;
 					}
 				}
 			}
 
 			throw new Exception(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $class), E_USER_NOTICE);
-		}
+		}*/
 		return false;
 	}
 
@@ -153,18 +153,17 @@ class Loader implements ILoader {
 	 * @throws Exception
 	 */
 	public function addDirectory($pluginDirectory) {
-		$pluginDir = realpath($pluginDirectory);
-		if (! $pluginDir) {
+		if (! is_dir($pluginDirectory)) {
 			throw new Exception('Plugin directory does not exist or can not be read : ' . $pluginDirectory);
 		}
-		$cacheFile               = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
-		$this->paths[$pluginDir] = $cacheFile;
+		$cacheFile               = $this->cacheDir . 'classpath-' . substr(strtr($pluginDirectory, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDirectory) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
+		$this->paths[$pluginDirectory] = $cacheFile;
 		if (file_exists($cacheFile)) {
 			$classpath       = file_get_contents($cacheFile);
 			$this->classPath = unserialize($classpath) + $this->classPath;
 		}
 		else {
-			$this->rebuildClassPathCache($pluginDir, $cacheFile);
+			$this->rebuildClassPathCache($pluginDirectory, $cacheFile);
 		}
 	}
 }
