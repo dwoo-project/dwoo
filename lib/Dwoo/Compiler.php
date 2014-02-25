@@ -15,7 +15,7 @@ use Dwoo\Security\Policy;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-24
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class Compiler implements ICompiler {
@@ -189,7 +189,7 @@ class Compiler implements ICompiler {
 	 * current dwoo object that uses this compiler, or null
 	 * @var Core
 	 */
-	protected $dwoo;
+	protected $core;
 
 	/**
 	 * holds an instance of this class, used by getInstance when you don't
@@ -411,7 +411,7 @@ class Compiler implements ICompiler {
 	protected function loadProcessor($class, $name) {
 		if (! class_exists($class) && ! function_exists($class)) {
 			try {
-				$this->dwoo->getLoader()->loadPlugin($name);
+				$this->getCore()->getLoader()->loadPlugin($name);
 			}
 			catch (Exception $e) {
 				throw new Exception('Processor ' . $name . ' could not be found in your plugin directories, please ensure it is in a file named ' . $name . '.php in the plugin directory');
@@ -557,8 +557,8 @@ class Compiler implements ICompiler {
 	 * returns the core object that initiated this template compilation, only available during compilation of a template
 	 * @return Core
 	 */
-	public function getDwoo() {
-		return $this->dwoo;
+	public function getCore() {
+		return $this->core;
 	}
 
 	/**
@@ -613,7 +613,7 @@ class Compiler implements ICompiler {
 		// init vars
 		$tpl                  = $template->getSource();
 		$ptr                  = 0;
-		$this->dwoo           = $core;
+		$this->core           = $core;
 		$this->template       = $template;
 		$this->templateSource =& $tpl;
 		$this->pointer        =& $ptr;
@@ -809,7 +809,7 @@ class Compiler implements ICompiler {
 					$output .= "if (function_exists('SmartyBlock$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::PROXY_PLUGIN:
-					$output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
+					$output .= $this->getCore()->getPluginProxy()->getPreloader($plugin);
 					break;
 				default:
 					throw new CompilationException($this, 'Type error for '.$plugin.' with type'.$type);
@@ -851,7 +851,7 @@ class Compiler implements ICompiler {
 			echo '<hr></pre></pre>';
 		}
 
-		$this->template = $this->dwoo = null;
+		$this->template = $this->core = null;
 
 		return $output;
 	}
@@ -961,7 +961,7 @@ class Compiler implements ICompiler {
 		// Convert class name to CamelCase
 		$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . ucfirst($name);
 		//if (class_exists($class) === false) {
-		$this->dwoo->getLoader()->loadPlugin($name);
+		$this->getCore()->getLoader()->loadPlugin($name);
 		//}
 
 		$params = $this->mapParams($params, array($class, 'begin'), $paramtype);
@@ -1016,7 +1016,7 @@ class Compiler implements ICompiler {
 	public function injectBlock($type, array $params) {
 		$class = Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . $type;
 		if (class_exists($class) === false) {
-			$this->dwoo->getLoader()->loadPlugin($type);
+			$this->getCore()->getLoader()->loadPlugin($type);
 		}
 		$this->stack[]  = array(
 			'type'   => $type, 'params' => $params, 'custom' => false, 'class' => $class,
@@ -1826,7 +1826,7 @@ class Compiler implements ICompiler {
 			$output = 'SmartyModifier' . $func . '(' . implode(', ', $params) . ')';
 		}
 		elseif ($pluginType & Core::PROXY_PLUGIN) {
-			$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
+			$params = $this->mapParams($params, $this->getCore()->getPluginProxy()->getCallback($func), $state);
 		}
 		elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
 			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
@@ -2004,7 +2004,7 @@ class Compiler implements ICompiler {
 			}
 		}
 		elseif ($pluginType & Core::PROXY_PLUGIN) {
-			$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
+			$output = call_user_func(array($this->getCore()->getPluginProxy(), 'getCode'), $func, $params);
 		}
 		elseif ($pluginType & Core::SMARTY_FUNCTION) {
 			if (isset($params['*'])) {
@@ -3038,11 +3038,11 @@ class Compiler implements ICompiler {
 				}
 			}
 			else if ($pluginType & Core::PROXY_PLUGIN) {
-				$params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
+				$params = $this->mapParams($params, $this->getCore()->getPluginProxy()->getCallback($func), $state);
 				foreach ($params as &$p) {
 					$p = $p[0];
 				}
-				$output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
+				$output = call_user_func(array($this->getCore()->getPluginProxy(), 'getCode'), $func, $params);
 			}
 			else if ($pluginType & Core::SMARTY_MODIFIER) {
 				$params = $this->mapParams($params, null, $state);
@@ -3341,13 +3341,13 @@ class Compiler implements ICompiler {
 			// Otherwise, it's not a class/function, we try to load plugin
 			if ($pluginType === - 1) {
 				try {
-					$this->dwoo->getLoader()->loadPlugin($name, isset($phpFunc) === false);
+					$this->getCore()->getLoader()->loadPlugin($name, isset($phpFunc) === false);
 				}
 				catch (Exception $e) {
 					if (isset($phpFunc)) {
 						$pluginType = Core::NATIVE_PLUGIN;
 					}
-					elseif (is_object($this->dwoo->getPluginProxy()) && $this->dwoo->getPluginProxy()->handles($name)) {
+					elseif (is_object($this->getCore()->getPluginProxy()) && $this->getCore()->getPluginProxy()->handles($name)) {
 						$pluginType = Core::PROXY_PLUGIN;
 					}
 					else {

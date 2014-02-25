@@ -15,7 +15,7 @@ use Dwoo\Exception;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-08
+ * @date       2014-02-25
  * @package    Dwoo\Exception
  */
 class CompilationException extends Exception {
@@ -29,7 +29,7 @@ class CompilationException extends Exception {
 	 */
 	public function __construct(Compiler $compiler, $message) {
 		$this->compiler = $compiler;
-		$this->template = $compiler->getDwoo()->getTemplate();
+		$this->template = $compiler->getCore()->getTemplate();
 		parent::__construct('Compilation error at line ' . $compiler->getLine() . ' in "' . $this->template->getResourceName() . ':' . $this->template->getResourceIdentifier() . '" : ' . $message);
 	}
 

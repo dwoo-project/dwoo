@@ -22,7 +22,7 @@ use Dwoo\Plugins\Blocks\BlockIf;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-24
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class FunctionTif extends Plugin implements ICompilable {
@@ -31,7 +31,7 @@ class FunctionTif extends Plugin implements ICompilable {
 		// load if plugin
 		if (!class_exists('\Dwoo\Plugins\Blocks\BlockIf')) {
 			try {
-				$compiler->getDwoo()->getLoader()->loadPlugin('if');
+				$compiler->getCore()->getLoader()->loadPlugin('if');
 			}
 			catch (\Exception $e) {
 				throw new CompilationException($compiler, 'Tif: the if plugin is required to use Tif');

@@ -1,6 +1,9 @@
 <?php
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Replaces all white-space characters with the given string
@@ -26,9 +29,12 @@ use Dwoo\Compiler;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-009-06
+ * @date       2014-02-24
  * @package    Dwoo
  */
-function functionWhitespaceCompile(Compiler $compiler, $value, $with = ' ') {
-	return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
+class FunctionWhitespace extends Plugin implements ICompilable {
+
+	public static function compile(Compiler $compiler, $value, $with = ' ') {
+		return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
+	}
 }

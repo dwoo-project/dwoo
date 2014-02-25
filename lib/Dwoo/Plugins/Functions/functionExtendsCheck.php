@@ -15,7 +15,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-24
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class FunctionExtendsCheck extends Plugin implements ICompilable {
@@ -25,7 +25,7 @@ class FunctionExtendsCheck extends Plugin implements ICompilable {
 		$resource   = $m[1];
 		$identifier = str_replace('\\\\', '\\', $m[2]);
 
-		$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+		$tpl = $compiler->getCore()->templateFactory($resource, $identifier);
 
 		if ($tpl === null) {
 			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');

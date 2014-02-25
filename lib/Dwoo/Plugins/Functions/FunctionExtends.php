@@ -17,7 +17,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-01-24
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class FunctionExtends extends Plugin implements ICompilable {
@@ -52,8 +52,8 @@ class FunctionExtends extends Plugin implements ICompilable {
 			self::$r = '\s*' . self::$r;
 		}
 		$inheritanceTree = array(array('source' => $compiler->getTemplateSource()));
-		//$curPath         = dirname($compiler->getDwoo()->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR;
-		$curTpl          = $compiler->getDwoo()->getTemplate();
+		//$curPath         = dirname($compiler->getCore()->getTemplate()->getResourceIdentifier()) . DIRECTORY_SEPARATOR;
+		$curTpl          = $compiler->getCore()->getTemplate();
 
 		while (! empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
@@ -72,7 +72,7 @@ class FunctionExtends extends Plugin implements ICompilable {
 			}
 
 			try {
-				$parent = $compiler->getDwoo()->templateFactory($resource, $identifier, null, null, null, $curTpl);
+				$parent = $compiler->getCore()->templateFactory($resource, $identifier, null, null, null, $curTpl);
 			}
 			catch (\Dwoo\Security\Exception $e) {
 				throw new CompilationException($compiler, 'Extends : Security restriction : ' . $e->getMessage());

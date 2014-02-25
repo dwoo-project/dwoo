@@ -16,7 +16,7 @@ use Dwoo\ICompilable\Block;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2008-10-23
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class BlockSmartyinterface extends Plugin implements Block {
@@ -30,7 +30,7 @@ class BlockSmartyinterface extends Plugin implements Block {
 		$params     = $params['*'];
 
 		if ($pluginType & Core::CUSTOM_PLUGIN) {
-			$customPlugins = $compiler->getDwoo()->getCustomPlugins();
+			$customPlugins = $compiler->getCore()->getCustomPlugins();
 			$callback      = $customPlugins[$func]['callback'];
 			if (is_array($callback)) {
 				if (is_object($callback[0])) {

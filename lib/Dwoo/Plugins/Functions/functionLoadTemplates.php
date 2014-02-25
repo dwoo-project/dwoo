@@ -19,7 +19,7 @@ use Dwoo\Plugin;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-24
+ * @date       2014-02-25
  * @package    Dwoo
  */
 class FunctionLoadTemplates extends Plugin implements ICompilable {
@@ -38,12 +38,12 @@ class FunctionLoadTemplates extends Plugin implements ICompilable {
 		}
 		else {
 			// get the current template's resource
-			$resource   = $compiler->getDwoo()->getTemplate()->getResourceName();
+			$resource   = $compiler->getCore()->getTemplate()->getResourceName();
 			$identifier = $file;
 		}
 		$identifier = str_replace('\\\\', '\\', $identifier);
 
-		$tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+		$tpl = $compiler->getCore()->templateFactory($resource, $identifier);
 
 		if ($tpl === null) {
 			throw new CompilationException($compiler, 'Load Templates : Resource "' . $resource . ':' . $identifier . '" not found.');
@@ -53,7 +53,7 @@ class FunctionLoadTemplates extends Plugin implements ICompilable {
 		}
 
 		$cmp = clone $compiler;
-		$cmp->compile($compiler->getDwoo(), $tpl);
+		$cmp->compile($compiler->getCore(), $tpl);
 		foreach ($cmp->getTemplatePlugins() as $template => $args) {
 			$compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body']);
 		}
