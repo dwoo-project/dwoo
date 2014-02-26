@@ -24,7 +24,7 @@ use Dwoo\Template\File;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-23
+ * @date       2014-02-26
  * @package    Dwoo
  */
 class Core {
@@ -490,7 +490,7 @@ class Core {
 	 * @return $this
 	 */
 	public function setPluginData(array $data) {
-		$this->pluginData = $data;
+		$this->pluginData = array_merge($this->pluginData, $data);
 
 		return $this;
 	}
@@ -540,7 +540,7 @@ class Core {
 	/**
 	 * adds a custom plugin that is not in one of the plugin directories
 	 * @param string   $name       the plugin name to be used in the templates
-	 * @param callback $callback   the plugin callback, either a function name,
+	 * @param string|array $callback   the plugin callback, either a function name,
 	 *                             a class name or an array containing an object
 	 *                             or class name and a method name
 	 * @param bool     $compilable if set to true, the plugin is assumed to be compilable
@@ -556,10 +556,6 @@ class Core {
 				$this->plugins[$name] = array('type' => self::CLASS_PLUGIN | $compilable, 'callback' => $callback, 'class' => (is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function' => $callback[1]);
 			}
 		}
-		/* @deprecated
-		 * elseif (function_exists($callback)) {
-			$this->plugins[$name] = array('type' => self::FUNC_PLUGIN | $compilable, 'callback' => $callback);
-		}*/
 		else if (class_exists($callback)) {
 			if (is_subclass_of($callback, '\Dwoo\Block\Plugin')) {
 				$this->plugins[$name] = array('type' => self::BLOCK_PLUGIN | $compilable, 'callback' => $callback, 'class' => $callback);
