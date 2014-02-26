@@ -3,6 +3,7 @@ namespace Dwoo;
 
 use Dwoo\Block\Plugin;
 use Dwoo\Exception\CoreException;
+use Dwoo\Plugins\Blocks\BlockDynamic;
 use Dwoo\Template\File;
 
 /**
@@ -63,7 +64,7 @@ class Core {
 	 * @var int
 	 */
 	const CLASS_PLUGIN      = 1;
-	const FUNC_PLUGIN       = 2;
+	//const FUNC_PLUGIN       = 2; /* @deprecated */
 	const NATIVE_PLUGIN     = 4;
 	const BLOCK_PLUGIN      = 8;
 	const COMPILABLE_PLUGIN = 16;
@@ -310,6 +311,8 @@ class Core {
 	 * @param ICompiler $_compiler                                           the compiler that must be used to compile the template, if left empty a default
 	 *                                                                       Compiler will be used.
 	 * @param bool      $_output                                             flag that defines whether the function returns the output of the template (false, default) or echoes it directly (true)
+	 * @throws Exception
+	 * @throws \Exception
 	 * @throws Exception\CoreException
 	 * @return string nothing or the template output if $output is false
 	 */
@@ -380,23 +383,39 @@ class Core {
 				$dynamicId = uniqid();
 			}
 
-			// render template
-			$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
-			$out              = include $compiledTemplate;
+			$recompile = false;
+			do {
+				// render template
+				try {
+					$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
+					$out = include $compiledTemplate;
+				}
+				catch (Exception $e) {
+					// output
+					if ($_output === true) {
+						ob_flush();
+					}
+					else {
+						ob_clean();
+					}
+					throw $e;
+				}
 
-			// template returned false so it needs to be recompiled
-			if ($out === false) {
-				$_tpl->forceCompilation();
-				$compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
-				$out              = include $compiledTemplate;
+				if ($out === false) {
+					// template returned false so it needs to be recompiled
+					if ($recompile) {
+						// this is the second time this happened...
+						throw new Exception('Failed to compile template.');
+					}
+					$_tpl->forceCompilation();
+					$recompile = true;
+				}
 			}
+			while($recompile);
 
 			if ($doCache === true) {
-				$out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*' . $dynamicId . '*/ echo \'$1\'; ?>', $out);
-				if (! class_exists('\Dwoo\Plugins\Blocks\BlockDynamic')) {
-					$this->getLoader()->loadPlugin('dynamic');
-				}
-				$out = Plugins\Blocks\BlockDynamic::unescape($out, $dynamicId, $compiledTemplate);
+				$out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
+				$out = BlockDynamic::unescape($out, $dynamicId, $compiledTemplate);
 			}
 
 			// process filters
@@ -537,9 +556,10 @@ class Core {
 				$this->plugins[$name] = array('type' => self::CLASS_PLUGIN | $compilable, 'callback' => $callback, 'class' => (is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function' => $callback[1]);
 			}
 		}
-		elseif (function_exists($callback)) {
+		/* @deprecated
+		 * elseif (function_exists($callback)) {
 			$this->plugins[$name] = array('type' => self::FUNC_PLUGIN | $compilable, 'callback' => $callback);
-		}
+		}*/
 		else if (class_exists($callback)) {
 			if (is_subclass_of($callback, '\Dwoo\Block\Plugin')) {
 				$this->plugins[$name] = array('type' => self::BLOCK_PLUGIN | $compilable, 'callback' => $callback, 'class' => $callback);

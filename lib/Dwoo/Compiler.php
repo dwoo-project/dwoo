@@ -780,11 +780,6 @@ class Compiler implements ICompiler {
 				continue;
 			}
 
-			/**
-			 * Update, bug fixed
-			 * @author David Sanchez
-			 * @date 29-1-2014
-			 */
 			switch ($type) {
 				case Core::BLOCK_PLUGIN:
 				case Core::CLASS_PLUGIN:
@@ -796,9 +791,10 @@ class Compiler implements ICompiler {
 						$output .= "if (class_exists('".Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					}
 					break;
-				case Core::FUNC_PLUGIN:
+				/* @deprecated
+				 * case Core::FUNC_PLUGIN:
 					$output .= "if (function_exists('".Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $plugin."')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-					break;
+					break;*/
 				case Core::SMARTY_MODIFIER:
 					$output .= "if (function_exists('SmartyModifier$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
@@ -1767,7 +1763,7 @@ class Compiler implements ICompiler {
 				return $this->addBlock($func, $params, $state);
 			}
 		}
-		elseif ($pluginType & Core::SMARTY_BLOCK) {
+		else if ($pluginType & Core::SMARTY_BLOCK) {
 			if ($curBlock !== 'root' || is_array($parsingParams)) {
 				throw new Exception\CompilationException($this, 'Block plugins can not be used as other plugin\'s arguments');
 			}
@@ -1789,8 +1785,12 @@ class Compiler implements ICompiler {
 		if ($pluginType & Core::NATIVE_PLUGIN || $pluginType & Core::SMARTY_FUNCTION || $pluginType & Core::SMARTY_BLOCK) {
 			$params = $this->mapParams($params, null, $state);
 		}
-		elseif ($pluginType & Core::CLASS_PLUGIN) {
+		else if ($pluginType & Core::CLASS_PLUGIN) {
 			if ($pluginType & Core::CUSTOM_PLUGIN) {
+				if ($this->debug) {
+					echo 'CUSTOM CLASS PLUGIN FOUND: (' . $this->customPlugins[$func]['class'] . ')';
+				}
+
 				$params = $this->mapParams($params, array(
 														 $this->customPlugins[$func]['class'],
 														 $this->customPlugins[$func]['function']
@@ -1804,24 +1804,31 @@ class Compiler implements ICompiler {
 				 */
 				try {
 					$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func));
-					$params          = $this->mapParams($params, array(
+
+					if ($this->debug) {
+						echo 'CLASS PLUGIN FOUND: (' . $reflectionClass->getName() . ')';
+					}
+
+					$params = $this->mapParams($params, array(
 																	  $reflectionClass->getName(),
 																	  ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
 																 ), $state);
+
 				}
 				catch (\ReflectionException $Exception) {
 
 				}
 			}
 		}
-		elseif ($pluginType & Core::FUNC_PLUGIN) {
+		/* @deprecated
+		 * elseif ($pluginType & Core::FUNC_PLUGIN) {
 			if ($pluginType & Core::CUSTOM_PLUGIN) {
 				$params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
 			}
 			else {
 				$params = $this->mapParams($params, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
 			}
-		}
+		}*/
 		elseif ($pluginType & Core::SMARTY_MODIFIER) {
 			$output = 'SmartyModifier' . $func . '(' . implode(', ', $params) . ')';
 		}
@@ -1855,7 +1862,6 @@ class Compiler implements ICompiler {
 		}
 
 		// only keep php-syntax-safe values for non-block plugins
-
 		$tokens = array();
 		foreach ($params as $k => $p) {
 			$tokens[$k] = isset($p[2]) ? $p[2] : 0;
@@ -1897,7 +1903,8 @@ class Compiler implements ICompiler {
 				}
 			}
 		}
-		elseif ($pluginType & Core::FUNC_PLUGIN) {
+		/* @deprecated
+		 * else if ($pluginType & Core::FUNC_PLUGIN) {
 			if ($pluginType & Core::COMPILABLE_PLUGIN) {
 				if ($pluginType & Core::CUSTOM_PLUGIN) {
 					$funcCompiler = $this->customPlugins[$func]['callback'];
@@ -1920,9 +1927,7 @@ class Compiler implements ICompiler {
 					$output   = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
 				}
 				else {
-					foreach (array(
-								 Core::PLUGIN_BLOCK_FUNCTION_PREFIX_NAME, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME
-							 ) as $value) {
+					foreach (array(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME) as $value) {
 						try {
 							$reflectionFunction = new \ReflectionFunction($value . ucfirst($func));
 							$output             = '\\' . $reflectionFunction->getName() . '(' . $params . ')';
@@ -1933,8 +1938,8 @@ class Compiler implements ICompiler {
 					}
 				}
 			}
-		}
-		elseif ($pluginType & Core::CLASS_PLUGIN) {
+		}*/
+		else if ($pluginType & Core::CLASS_PLUGIN) {
 			if ($pluginType & Core::COMPILABLE_PLUGIN) {
 				if ($pluginType & Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
@@ -1985,10 +1990,10 @@ class Compiler implements ICompiler {
 							$output = 'call_user_func(array($this->getObjectPlugin(new ReflectionClass(\''.$callback.'\')), \'process\'), ' . $params . ')';
 						}
 					}
-					elseif (is_object($callback[0])) {
+					else if (is_object($callback[0])) {
 						$output = 'call_user_func(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), ' . $params . ')';
 					}
-					elseif (($ref = new \ReflectionMethod($callback[0], $callback[1])) && $ref->isStatic()) {
+					else if (($ref = new \ReflectionMethod($callback[0], $callback[1])) && $ref->isStatic()) {
 						$output = 'call_user_func(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), ' . $params . ')';
 					}
 					else {
@@ -2003,10 +2008,10 @@ class Compiler implements ICompiler {
 				}
 			}
 		}
-		elseif ($pluginType & Core::PROXY_PLUGIN) {
+		else if ($pluginType & Core::PROXY_PLUGIN) {
 			$output = call_user_func(array($this->getCore()->getPluginProxy(), 'getCode'), $func, $params);
 		}
-		elseif ($pluginType & Core::SMARTY_FUNCTION) {
+		else if ($pluginType & Core::SMARTY_FUNCTION) {
 			if (isset($params['*'])) {
 				$params = self::implode_r($params['*'], true);
 			}
@@ -2029,7 +2034,7 @@ class Compiler implements ICompiler {
 				}
 			}
 			else {
-				$output = 'SmartyFunction_' . $func . '(array(' . $params . '), $this)';
+				$output = 'smarty_function_' . $func . '(array(' . $params . '), $this)';
 			}
 		}
 		elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
@@ -3080,14 +3085,8 @@ class Compiler implements ICompiler {
 					$pluginName = $callback;
 				}
 				else {
-					if ($pluginType & Core::CLASS_PLUGIN) {
-						$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func);
-						$callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
-					}
-					else {
-						$pluginName = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func);
-						$callback   = $pluginName . (($pluginType & Core::COMPILABLE_PLUGIN) ? '_compile' : '');
-					}
+					$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func);
+					$callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
 				}
 
 				$params = $this->mapParams($params, $callback, $state);
@@ -3096,7 +3095,8 @@ class Compiler implements ICompiler {
 					$p = $p[0];
 				}
 
-				if ($pluginType & Core::FUNC_PLUGIN) {
+				/* @deprecated
+				 * if ($pluginType & Core::FUNC_PLUGIN) {
 					if ($pluginType & Core::COMPILABLE_PLUGIN) {
 						if ($mapped) {
 							throw new Exception\CompilationException($this, 'The @ operator can not be used on compiled plugins.');
@@ -3123,7 +3123,7 @@ class Compiler implements ICompiler {
 						}
 					}
 				}
-				else {
+				else {*/
 					if ($pluginType & Core::COMPILABLE_PLUGIN) {
 						if ($mapped) {
 							throw new Exception\CompilationException($this, 'The @ operator can not be used on compiled plugins.');
@@ -3184,7 +3184,7 @@ class Compiler implements ICompiler {
 							$output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
 						}
 					}
-				}
+				//}
 			}
 		}
 
@@ -3308,7 +3308,8 @@ class Compiler implements ICompiler {
 								}
 							}
 							// function
-							else {
+							/* @deprecated
+							 * else {
 								if ($pluginType === - 1) {
 									// Require function, autoloader can't do this
 									require_once Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
@@ -3332,7 +3333,7 @@ class Compiler implements ICompiler {
 								else {
 									throw new Exception('It cannot be append!');
 								}
-							}
+							}*/
 						}
 					}
 				}
