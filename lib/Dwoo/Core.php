@@ -49,12 +49,11 @@ class Core {
 	const DWOO_DIRECTORY = __DIR__;
 
 	/**
-	 * Plugins blocks and plugin functions, classes and functions namespaces
+	 * Plugins classes namespaces
 	 * @var string
 	 */
 	const PLUGIN_BLOCK_CLASS_PREFIX_NAME    = '\Dwoo\Plugins\Blocks\Block';
 	const PLUGIN_FUNC_CLASS_PREFIX_NAME     = '\Dwoo\Plugins\Functions\Function';
-	const PLUGIN_BLOCK_FUNCTION_PREFIX_NAME = '\Dwoo\Plugins\Blocks\block';
 	const PLUGIN_FUNC_FUNCTION_PREFIX_NAME  = '\Dwoo\Plugins\Functions\function';
 
 	/**
