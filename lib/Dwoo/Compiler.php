@@ -15,7 +15,7 @@ use Dwoo\Security\Policy;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-25
+ * @date       2014-02-26
  * @package    Dwoo
  */
 class Compiler implements ICompiler {
@@ -791,10 +791,6 @@ class Compiler implements ICompiler {
 						$output .= "if (class_exists('".Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					}
 					break;
-				/* @deprecated
-				 * case Core::FUNC_PLUGIN:
-					$output .= "if (function_exists('".Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $plugin."')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-					break;*/
 				case Core::SMARTY_MODIFIER:
 					$output .= "if (function_exists('SmartyModifier$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
@@ -1820,22 +1816,13 @@ class Compiler implements ICompiler {
 				}
 			}
 		}
-		/* @deprecated
-		 * elseif ($pluginType & Core::FUNC_PLUGIN) {
-			if ($pluginType & Core::CUSTOM_PLUGIN) {
-				$params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
-			}
-			else {
-				$params = $this->mapParams($params, Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
-			}
-		}*/
-		elseif ($pluginType & Core::SMARTY_MODIFIER) {
+		else if ($pluginType & Core::SMARTY_MODIFIER) {
 			$output = 'SmartyModifier' . $func . '(' . implode(', ', $params) . ')';
 		}
-		elseif ($pluginType & Core::PROXY_PLUGIN) {
+		else if ($pluginType & Core::PROXY_PLUGIN) {
 			$params = $this->mapParams($params, $this->getCore()->getPluginProxy()->getCallback($func), $state);
 		}
-		elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
+		else if ($pluginType & Core::TEMPLATE_PLUGIN) {
 			// transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
 			$map = array();
 			foreach ($this->templatePlugins[$func]['params'] as $param => $defValue) {
@@ -1865,17 +1852,7 @@ class Compiler implements ICompiler {
 		$tokens = array();
 		foreach ($params as $k => $p) {
 			$tokens[$k] = isset($p[2]) ? $p[2] : 0;
-
-			/**
-			 * Transform string true/false to boolean
-			 * @todo check with all plugins, there are no error returned
-			 */
-			/*if ($p[0] === 'true' || $p[0] === 'false') {
-				$params[$k] = filter_var($p[0], FILTER_VALIDATE_BOOLEAN);
-			}
-			else {*/
 			$params[$k] = $p[0];
-			//}
 		}
 
 		if ($pluginType & Core::NATIVE_PLUGIN) {
@@ -1903,42 +1880,6 @@ class Compiler implements ICompiler {
 				}
 			}
 		}
-		/* @deprecated
-		 * else if ($pluginType & Core::FUNC_PLUGIN) {
-			if ($pluginType & Core::COMPILABLE_PLUGIN) {
-				if ($pluginType & Core::CUSTOM_PLUGIN) {
-					$funcCompiler = $this->customPlugins[$func]['callback'];
-				}
-				else {
-					$funcCompiler = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . ucfirst($func) . 'Compile';
-				}
-				array_unshift($params, $this);
-				if ($func === 'tif') {
-					$params[] = $tokens;
-				}
-				$output = call_user_func_array($funcCompiler, $params);
-			}
-			else {
-				array_unshift($params, '$this');
-				$params = self::implode_r($params);
-
-				if ($pluginType & Core::CUSTOM_PLUGIN) {
-					$callback = $this->customPlugins[$func]['callback'];
-					$output   = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
-				}
-				else {
-					foreach (array(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME) as $value) {
-						try {
-							$reflectionFunction = new \ReflectionFunction($value . ucfirst($func));
-							$output             = '\\' . $reflectionFunction->getName() . '(' . $params . ')';
-						}
-						catch (\ReflectionException $exception) {
-
-						}
-					}
-				}
-			}
-		}*/
 		else if ($pluginType & Core::CLASS_PLUGIN) {
 			if ($pluginType & Core::COMPILABLE_PLUGIN) {
 				if ($pluginType & Core::CUSTOM_PLUGIN) {
@@ -1960,18 +1901,13 @@ class Compiler implements ICompiler {
 					$output = call_user_func_array($funcCompiler, $params);
 				}
 				else {
-					/**
-					 * It can only be a function here and not a block
-					 * @author David Sanchez
-					 * @date   2014-1-25
-					 */
 					try {
 						$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func));
 						array_unshift($params, $this);
 						$output = $reflectionClass->getMethod('compile')->invokeArgs(null, $params);
 					}
-					catch (\ReflectionException $Exception) {
-
+					catch (\ReflectionException $e) {
+						throw new Exception($e->getMessage());
 					}
 				}
 			}
@@ -2183,13 +2119,10 @@ class Compiler implements ICompiler {
 		}
 
 		if ($curBlock !== 'root') {
-			$output = '(defined("' . $key . '") ? ' . $key . ' : null)';
-		}
-		else {
-			$output = $key;
+			return '(defined("' . $key . '") ? ' . $key . ' : null)';
 		}
 
-		return $output;
+		return $key;
 	}
 
 	/**
@@ -2398,29 +2331,27 @@ class Compiler implements ICompiler {
 
 				return $parsingParams;
 			}
-			elseif ($curBlock === 'namedparam') {
+			else if ($curBlock === 'namedparam') {
 				return array($output, $key);
 			}
-			elseif ($curBlock === 'string' || $curBlock === 'delimited_string') {
+			else if ($curBlock === 'string' || $curBlock === 'delimited_string') {
 				return array($matchedLength, $output);
 			}
-			elseif ($curBlock === 'expression' || $curBlock === 'variable') {
+			else if ($curBlock === 'expression' || $curBlock === 'variable') {
 				return $output;
 			}
-			elseif (isset($assign)) {
+			else if (isset($assign)) {
 				return self::PHP_OPEN . $output . ';' . self::PHP_CLOSE;
 			}
-			else {
-				return $output;
-			}
+
+			return $output;
 		}
 		else {
 			if ($curBlock === 'string' || $curBlock === 'delimited_string') {
 				return array(0, '');
 			}
-			else {
-				throw new Exception\CompilationException($this, 'Invalid variable name <em>' . $substr . '</em>');
-			}
+
+			throw new Exception\CompilationException($this, 'Invalid variable name <em>' . $substr . '</em>');
 		}
 	}
 
@@ -3081,12 +3012,10 @@ class Compiler implements ICompiler {
 			}
 			else {
 				if ($pluginType & Core::CUSTOM_PLUGIN) {
-					$callback   = $this->customPlugins[$func]['callback'];
-					$pluginName = $callback;
+					$callback = $this->customPlugins[$func]['callback'];
 				}
 				else {
-					$pluginName = Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func);
-					$callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
+					$callback   = array(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($func), ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
 				}
 
 				$params = $this->mapParams($params, $callback, $state);
@@ -3095,96 +3024,66 @@ class Compiler implements ICompiler {
 					$p = $p[0];
 				}
 
-				/* @deprecated
-				 * if ($pluginType & Core::FUNC_PLUGIN) {
-					if ($pluginType & Core::COMPILABLE_PLUGIN) {
-						if ($mapped) {
-							throw new Exception\CompilationException($this, 'The @ operator can not be used on compiled plugins.');
-						}
-						if ($pluginType & Core::CUSTOM_PLUGIN) {
-							$funcCompiler = $this->customPlugins[$func]['callback'];
+				if ($pluginType & Core::COMPILABLE_PLUGIN) {
+					if ($mapped) {
+						throw new Exception\CompilationException($this, 'The @ operator can not be used on compiled plugins.');
+					}
+					if ($pluginType & Core::CUSTOM_PLUGIN) {
+						$callback = $this->customPlugins[$func]['callback'];
+						if (! is_array($callback)) {
+							if (! method_exists($callback, 'compile')) {
+								throw new Exception('Custom plugin ' . $func . ' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
+							}
+							if (($ref = new \ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
+								$funcCompiler = array($callback, 'compile');
+							}
+							else {
+								$funcCompiler = array(new $callback, 'compile');
+							}
 						}
 						else {
-							// Precompiled function
-							$funcCompiler = Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $func . 'Compile';
+							$funcCompiler = $callback;
 						}
-						array_unshift($params, $this);
 						$output = call_user_func_array($funcCompiler, $params);
 					}
 					else {
-						array_unshift($params, '$this');
+						// Call compile method
+						$classPrefixArray = array(
+							Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME,
+							Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
+						);
+						foreach ($classPrefixArray as $value) {
+							if (class_exists($value . $func)) {
+								try {
+									$reflectionClass = new \ReflectionClass($value . $func);
+									array_unshift($params, $this);
+									$output = $reflectionClass->getMethod('compile')->invokeArgs($reflectionClass->newInstance(), $params);
+								}
+								catch (\ReflectionException $Exception) {
 
-						$params = self::implode_r($params);
-						if ($mapped) {
-							$output = '$this->arrayMap(\'' . $pluginName . '\', array(' . $params . '))';
-						}
-						else {
-							$output = $pluginName . '(' . $params . ')';
+								}
+							}
 						}
 					}
 				}
-				else {*/
-					if ($pluginType & Core::COMPILABLE_PLUGIN) {
-						if ($mapped) {
-							throw new Exception\CompilationException($this, 'The @ operator can not be used on compiled plugins.');
-						}
-						if ($pluginType & Core::CUSTOM_PLUGIN) {
-							$callback = $this->customPlugins[$func]['callback'];
-							if (! is_array($callback)) {
-								if (! method_exists($callback, 'compile')) {
-									throw new Exception('Custom plugin ' . $func . ' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
-								}
-								if (($ref = new \ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
-									$funcCompiler = array($callback, 'compile');
-								}
-								else {
-									$funcCompiler = array(new $callback, 'compile');
-								}
-							}
-							else {
-								$funcCompiler = $callback;
-							}
-							$output = call_user_func_array($funcCompiler, $params);
+				else {
+					$params = self::implode_r($params);
+
+					if ($pluginType & Core::CUSTOM_PLUGIN) {
+						if (is_object($callback[0])) {
+							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
 						}
 						else {
-							// Call compile method
-							$classPrefixArray = array(
-								Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME,
-								Core::PLUGIN_FUNC_CLASS_PREFIX_NAME
-							);
-							foreach ($classPrefixArray as $value) {
-								if (class_exists($value . $func)) {
-									try {
-										$reflectionClass = new \ReflectionClass($value . $func);
-										array_unshift($params, $this);
-										$output = $reflectionClass->getMethod('compile')->invokeArgs($reflectionClass->newInstance(), $params);
-									}
-									catch (\ReflectionException $Exception) {
-
-									}
-								}
-							}
+							$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
 						}
+					}
+					elseif ($mapped) {
+						$output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo\Plugin\\' . $func . '\'), \'process\'), array(' . $params . '))';
 					}
 					else {
-						$params = self::implode_r($params);
-
-						if ($pluginType & Core::CUSTOM_PLUGIN) {
-							if (is_object($callback[0])) {
-								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
-							}
-							else {
-								$output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
-							}
-						}
-						elseif ($mapped) {
-							$output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo\Plugin\\' . $func . '\'), \'process\'), array(' . $params . '))';
-						}
-						else {
-							$output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
-						}
+						$output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
 					}
-				//}
+				}
 			}
 		}
 
@@ -3307,33 +3206,6 @@ class Compiler implements ICompiler {
 
 								}
 							}
-							// function
-							/* @deprecated
-							 * else {
-								if ($pluginType === - 1) {
-									// Require function, autoloader can't do this
-									require_once Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . $fileInfo->getFilename();
-
-									if (function_exists(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $name) !== false) {
-										$pluginType = Core::FUNC_PLUGIN;
-									}
-									else if (function_exists(Core::PLUGIN_FUNC_FUNCTION_PREFIX_NAME . $name . 'Compile') !== false) {
-										$pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
-									}
-									else if (function_exists('smartyModifier' . $name) !== false) {
-										$pluginType = Core::SMARTY_MODIFIER;
-									}
-									else if (function_exists('smartyFunction' . $name) !== false) {
-										$pluginType = Core::SMARTY_FUNCTION;
-									}
-									else if (function_exists('smartyBlock' . $name) !== false) {
-										$pluginType = Core::SMARTY_BLOCK;
-									}
-								}
-								else {
-									throw new Exception('It cannot be append!');
-								}
-							}*/
 						}
 					}
 				}
