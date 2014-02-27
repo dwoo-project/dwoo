@@ -63,43 +63,6 @@ class Loader implements ILoader {
 	}
 
 	/**
-	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
-	 *
-	 * @param string $path      the plugin path to scan
-	 * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
-	 *
-	 * @return void
-	 * @throws Exception
-	 */
-	protected function rebuildClassPathCache($path, $cacheFile) {
-		if ($cacheFile !== false) {
-			$tmp             = $this->classPath;
-			$this->classPath = array();
-		}
-
-		$dir_iterator   = new \RecursiveDirectoryIterator($path);
-		$fileSPLObjects = new \RecursiveIteratorIterator($dir_iterator, \RecursiveIteratorIterator::SELF_FIRST);
-		try {
-			foreach ($fileSPLObjects as $fullFileName => $fileSPLObject) {
-				if ($fileSPLObject->isFile()) {
-					$this->classPath[$fileSPLObject->getBasename('.php')] = $fileSPLObject->getPathname();
-				}
-			}
-		}
-		catch (\UnexpectedValueException $e) {
-			printf("Directory [%s] contained a directory we can not recurse into", $path);
-		}
-
-		// save in file if it's the first call (not recursed)
-		if ($cacheFile !== false) {
-			if (! file_put_contents($cacheFile, serialize($this->classPath))) {
-				throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
-			}
-			$this->classPath += $tmp;
-		}
-	}
-
-	/**
 	 * loads a plugin file
 	 * @param string $class       the plugin name, without the prefix (Block|block|Function|function)
 	 * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
@@ -114,7 +77,7 @@ class Loader implements ILoader {
 		// so we check for that before trying to include() the plugin.
 
 		// Check entry exist in $this->classPath
-		/*$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));
+		$match = preg_grep('/^(Block|Function)?(' . $class . '+)/i', array_keys($this->classPath));
 		$index = array_values($match);
 
 		// Entry doesn't exist, try to rebuild cache
@@ -129,18 +92,18 @@ class Loader implements ILoader {
 				}
 
 				// Check entry exist after rebuilding cache
-				$match = preg_grep('/^(Block|block|Function|function)?(' . $class . '+)/i', array_keys($this->classPath));
+				$match = preg_grep('/^(Block|Function)?(' . $class . '+)/i', array_keys($this->classPath));
 				$index = array_values($match);
 				if (isset($index[0])) {
 					if (isset($this->classPath[$index[0]])) {
-						include_once $this->classPath[$index[0]];
+						//include_once $this->classPath[$index[0]];
 						return true;
 					}
 				}
 			}
 
 			throw new Exception(sprintf('Plugin <em>%s</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', $class), E_USER_NOTICE);
-		}*/
+		}
 		return false;
 	}
 
@@ -170,5 +133,77 @@ class Loader implements ILoader {
 		else {
 			$this->rebuildClassPathCache($pluginDirectory, $cacheFile);
 		}
+	}
+
+	/**
+	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
+	 *
+	 * @param string $path      the plugin path to scan
+	 * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	protected function rebuildClassPathCache($path, $cacheFile) {
+		if ($cacheFile !== false) {
+			$tmp             = $this->classPath;
+			$this->classPath = array();
+		}
+
+		$dir_iterator   = new \RecursiveDirectoryIterator($path);
+		$files = new \RecursiveIteratorIterator($dir_iterator, \RecursiveIteratorIterator::SELF_FIRST);
+		try {
+			foreach ($files as $file) {
+				if ($file->isFile() && preg_match('/\.(inc|php)$/', $file->getFilename())) {
+					if ($classNames = $this->getFromFile($file->getPathname())) {
+						foreach ($classNames as $className) {
+							$this->classPath[$className] = $file->getPathname();
+						}
+					}
+				}
+			}
+		}
+		catch (\UnexpectedValueException $e) {
+			printf("Directory [%s] contained a directory we can not recurse into", $path);
+		}
+
+		// save in file if it's the first call (not recursed)
+		if ($cacheFile !== false) {
+			if (! file_put_contents($cacheFile, serialize($this->classPath))) {
+				throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
+			}
+			$this->classPath += $tmp;
+		}
+	}
+
+	/**
+	 * Found all classes & functions inside PHP and INI file
+	 * @param $file
+	 * @return array
+	 */
+	protected function getFromFile($file) {
+		$classes = array();
+		$tokens = token_get_all(file_get_contents($file));
+		$inClass = false;
+		for ($i = 0 ; $i < count($tokens) ; $i++) {
+			switch ($tokens[$i][0]) {
+				case T_CLASS:
+					$inClass = true;
+				case T_INTERFACE:
+				case T_TRAIT:
+					$i+=2;
+					$classes[] = $tokens[$i][1];
+					break;
+				case T_FUNCTION:
+					if (!$inClass) {
+						$i+=2;
+						$tokens[$i][1] = str_replace(array('function_', 'smarty_'), array('', ''), $tokens[$i][1]);
+						$classes[] = $tokens[$i][1];
+					}
+					break;
+			}
+		}
+
+		return $classes;
 	}
 }

@@ -64,6 +64,8 @@ class Core {
 	 * @var int
 	 */
 	const CLASS_PLUGIN      = 1;
+	/** @deprecated stay only for smarty compatibility */
+	const FUNC_PLUGIN       = 2;
 	const NATIVE_PLUGIN     = 4;
 	const BLOCK_PLUGIN      = 8;
 	const COMPILABLE_PLUGIN = 16;
@@ -258,7 +260,7 @@ class Core {
 			}
 		}
 		catch (CoreException $e) {
-			die($e->getMessage());
+			throw $e;
 		}
 
 		// Set compile directory
@@ -597,9 +599,7 @@ class Core {
 					if (strstr($callback, 'Filter')) {
 						throw new CoreException('Wrong filter name : ' . $callback . ', the "Filter" prefix should not be used, please only use "' . str_replace('Filter', '', $callback) . '"');
 					}
-					else {
-						throw new CoreException('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
-					}
+					throw new CoreException('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Filter$name"');
 				}
 			}
 
@@ -740,7 +740,7 @@ class Core {
 			}
 		}
 		catch(CoreException $e) {
-			die($e->getMessage());
+			throw $e;
 		}
 	}
 
@@ -775,7 +775,7 @@ class Core {
 			}
 		}
 		catch(CoreException $e) {
-			die($e->getMessage());
+			throw $e;
 		}
 	}
 
@@ -791,8 +791,8 @@ class Core {
 				throw new CoreException('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable!');
 			}
 		}
-		catch(CoreException $e) {
-			die($e->getMessage());
+		catch (CoreException $e) {
+			throw $e;
 		}
 	}
 
@@ -956,10 +956,10 @@ class Core {
 			}
 		}
 		catch (\ReflectionException $e) {
-			echo $e->getMessage();
+			throw $e;
 		}
 		catch (CoreException $e) {
-			echo $e->getMessage();
+			throw $e;
 		}
 	}
 
@@ -1071,7 +1071,7 @@ class Core {
 					$class           = '\\' . $reflectionClass->getName();
 				}
 				catch (\ReflectionException $e) {
-					echo $e->getMessage();
+					throw $e;
 				}
 			}
 		}
@@ -1091,7 +1091,7 @@ class Core {
 			$reflectionClass->getMethod('begin')->invokeArgs($block, $args);
 		}
 		catch (\ReflectionException $e) {
-			echo $e->getMessage();
+			throw $e;
 		}
 
 		$this->stack[] = $this->curBlock = $block;
@@ -1207,7 +1207,7 @@ class Core {
 			return $reflectionClass->getMethod('process')->invokeArgs($this->getObjectPlugin($reflectionClass), $params);
 		}
 		catch (\ReflectionException $e) {
-			echo $e->getMessage();
+			throw $e;
 		}
 	}
 

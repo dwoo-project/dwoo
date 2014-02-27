@@ -792,13 +792,13 @@ class Compiler implements ICompiler {
 					}
 					break;
 				case Core::SMARTY_MODIFIER:
-					$output .= "if (function_exists('SmartyModifier$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::SMARTY_FUNCTION:
-					$output .= "if (function_exists('SmartyFunction$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::SMARTY_BLOCK:
-					$output .= "if (function_exists('SmartyBlock$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+					$output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					break;
 				case Core::PROXY_PLUGIN:
 					$output .= $this->getCore()->getPluginProxy()->getPreloader($plugin);
@@ -1811,8 +1811,8 @@ class Compiler implements ICompiler {
 																 ), $state);
 
 				}
-				catch (\ReflectionException $Exception) {
-
+				catch (\ReflectionException $e) {
+					throw $e;
 				}
 			}
 		}
@@ -1907,7 +1907,7 @@ class Compiler implements ICompiler {
 						$output = $reflectionClass->getMethod('compile')->invokeArgs(null, $params);
 					}
 					catch (\ReflectionException $e) {
-						throw new Exception($e->getMessage());
+						throw $e;
 					}
 				}
 			}
@@ -2654,7 +2654,6 @@ class Compiler implements ICompiler {
 	 * @return string parsed values
 	 */
 	protected function parseOthers($in, $from, $to, $parsingParams = false, $curBlock = '', &$pointer = null) {
-		$first  = $in[$from];
 		$substr = substr($in, $from, $to - $from);
 
 		$end = strlen($substr);
@@ -3059,8 +3058,8 @@ class Compiler implements ICompiler {
 									array_unshift($params, $this);
 									$output = $reflectionClass->getMethod('compile')->invokeArgs($reflectionClass->newInstance(), $params);
 								}
-								catch (\ReflectionException $Exception) {
-
+								catch (\ReflectionException $e) {
+									throw $e;
 								}
 							}
 						}
@@ -3132,101 +3131,86 @@ class Compiler implements ICompiler {
 	/**
 	 * returns the plugin type of a plugin and adds it to the used plugins array if required
 	 * @param string $name plugin name, as found in the template
-	 * @throws Exception\Exception
+	 * @throws Security\Exception
 	 * @throws Exception
 	 * @return int $pluginType as a multi bit flag composed of the \Dwoo\plugin types constants
 	 */
 	protected function getPluginType($name) {
 		$pluginType = - 1;
 
+		// Security Policy
 		if (($this->securityPolicy === null && (function_exists($name) || strtolower($name) === 'isset' || strtolower($name) === 'empty')) || ($this->securityPolicy !== null && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) !== false)) {
 			$phpFunc = true;
 		}
 		else if ($this->securityPolicy !== null && function_exists($name) && array_key_exists(strtolower($name), $this->securityPolicy->getAllowedPhpFunctions()) === false) {
-			throw new Exception\Exception('Call to a disallowed php function : ' . $name);
+			throw new Security\Exception('Call to a disallowed php function : ' . $name);
 		}
 
-		if (isset($this->templatePlugins[$name])) {
-			$pluginType = Core::TEMPLATE_PLUGIN | Core::COMPILABLE_PLUGIN;
-		}
-		else if (isset($this->customPlugins[$name])) {
-			$pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
-		}
-		else {
-			$name = ucfirst($name);
-
-			// Check if its a block
-			if (file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $name . '.php') === true) {
+		// Plugin type
+		while ($pluginType <= 0) {
+			if (isset($this->templatePlugins[$name])) {
+				$pluginType = Core::TEMPLATE_PLUGIN | Core::COMPILABLE_PLUGIN;
+			}
+			else if (isset($this->customPlugins[$name])) {
+				$pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
+			}
+			else if (file_exists(Core::DWOO_DIRECTORY . '/Plugins/Blocks/Block' . ucfirst($name) . '.php')) {
 				try {
-					$reflectionClass = new \ReflectionClass(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . $name);
-					if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
-						$pluginType = Core::BLOCK_PLUGIN;
-					}
-					else {
-						$pluginType = Core::CLASS_PLUGIN;
-					}
-
-					if ($reflectionClass->implementsInterface('\Dwoo\ICompilable') || $reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
+					$reflectionClass = new \ReflectionClass(Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . ucfirst($name));
+					$pluginType = Core::BLOCK_PLUGIN;
+					if ($reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
 						$pluginType |= Core::COMPILABLE_PLUGIN;
 					}
 				}
-				catch (\ReflectionException $e) {
-
-				}
+				/**
+				 * Nothing here, we don't want to stop the program
+				 */
+				catch (Exception $e) {}
 			}
-			// Check if its a function (with upper and lower cases (fucking windows :) )
-			else if (
-				file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . 'Function' . $name . '.php') === true
-				|| file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . 'function' . $name . '.php') === true
-			) {
-
-				$iterator = new \DirectoryIterator(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions');
-				foreach ($iterator as $fileInfo) {
-					if ($fileInfo->isFile()) {
-						// Return specified plugin only
-						if (strpos($fileInfo->getFilename(), 'unction' . $name . '.php')) {
-							$filename = $fileInfo->getFilename();
-							// Class
-							if (ctype_upper($filename[0])) {
-								try {
-									$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $name);
-									if ($reflectionClass->isSubclassOf('\Dwoo\Block\Plugin')) {
-										$pluginType = Core::BLOCK_PLUGIN;
-
-									}
-									else {
-										$pluginType = Core::CLASS_PLUGIN;
-									}
-
-									if ($reflectionClass->implementsInterface('\Dwoo\ICompilable') || $reflectionClass->implementsInterface('\Dwoo\ICompilable\Block')) {
-										$pluginType |= Core::COMPILABLE_PLUGIN;
-									}
-								}
-								catch (\ReflectionException $Exception) {
-
-								}
-							}
+			else if (file_exists(Core::DWOO_DIRECTORY . '/Plugins/Functions/Function' . ucfirst($name) . '.php')) {
+				try {
+					$reflectionClass = new \ReflectionClass(Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . ucfirst($name));
+					$pluginType = Core::CLASS_PLUGIN;
+					if ($reflectionClass->implementsInterface('\Dwoo\ICompilable')) {
+						$pluginType |= Core::COMPILABLE_PLUGIN;
+					}
+				}
+				/**
+				 * Nothing here, we don't want to stop the program
+				 */
+				catch (Exception $e) {}
+			}
+			else if (function_exists('smarty_modifier_' . $name) !== false) {
+				$pluginType = Core::SMARTY_MODIFIER;
+			}
+			else if (function_exists('smarty_function_' . $name) !== false) {
+				$pluginType = Core::SMARTY_FUNCTION;
+			}
+			else if (function_exists('smarty_block_' . $name) !== false) {
+				$pluginType = Core::SMARTY_BLOCK;
+			}
+			else {
+				if ($pluginType === - 1) {
+					try {
+						$this->core->getLoader()->loadPlugin($name, isset($phpFunc)===false);
+					}
+					catch (Exception $e) {
+						if (isset($phpFunc)) {
+							$pluginType = Core::NATIVE_PLUGIN;
+						}
+						else if (is_object($this->core->getPluginProxy()) && $this->core->getPluginProxy()->handles($name)) {
+							$pluginType = Core::PROXY_PLUGIN;
+							break;
+						}
+						else {
+							throw $e;
 						}
 					}
 				}
-			}
-
-			// Otherwise, it's not a class/function, we try to load plugin
-			if ($pluginType === - 1) {
-				try {
-					$this->getCore()->getLoader()->loadPlugin($name, isset($phpFunc) === false);
+				else {
+					throw new Exception('Plugin "' . ucfirst($name) . '" could not be found');
 				}
-				catch (Exception $e) {
-					if (isset($phpFunc)) {
-						$pluginType = Core::NATIVE_PLUGIN;
-					}
-					elseif (is_object($this->getCore()->getPluginProxy()) && $this->getCore()->getPluginProxy()->handles($name)) {
-						$pluginType = Core::PROXY_PLUGIN;
-					}
-					else {
-						throw new Exception(sprintf('Plugin "%s" could not be found', $name));
-					}
-				}
+				$pluginType ++;
 			}
 		}
 
