@@ -64,7 +64,6 @@ class Core {
 	 * @var int
 	 */
 	const CLASS_PLUGIN      = 1;
-	//const FUNC_PLUGIN       = 2; /* @deprecated */
 	const NATIVE_PLUGIN     = 4;
 	const BLOCK_PLUGIN      = 8;
 	const COMPILABLE_PLUGIN = 16;
@@ -696,7 +695,7 @@ class Core {
 	 */
 	public function getLoader() {
 		if ($this->loader === null) {
-			$this->loader = new Loader($this->getCompileDir());
+			$this->loader = new Loader($this);
 		}
 
 		return $this->loader;

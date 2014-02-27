@@ -12,13 +12,13 @@ use Dwoo\Exception\PluginException;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2013-09-07
+ * @date       2014-02-27
  * @package    Dwoo
  */
 class Loader implements ILoader {
+
 	/**
 	 * stores the plugin directories
-	 *
 	 * @see addDirectory
 	 * @var array
 	 */
@@ -27,7 +27,6 @@ class Loader implements ILoader {
 	/**
 	 * stores the plugins names/paths relationships
 	 * don't edit this on your own, use addDirectory
-	 *
 	 * @see addDirectory
 	 * @var array
 	 */
@@ -35,16 +34,22 @@ class Loader implements ILoader {
 
 	/**
 	 * path where class paths cache files are written
-	 *
 	 * @var string
 	 */
 	protected $cacheDir;
 
 	protected $corePluginDir;
 
-	public function __construct($cacheDir) {
+	protected $core;
+
+	/**
+	 * Constructor, take Core object as param
+	 * @param Core $core
+	 */
+	public function __construct(Core $core) {
+		$this->core          = $core;
 		$this->corePluginDir = Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins';
-		$this->cacheDir      = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+		$this->cacheDir      = rtrim($core->getCompileDir(), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
 		// include class paths or rebuild paths if the cache file isn't there
 		$cacheFile = $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php';
