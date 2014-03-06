@@ -79,7 +79,7 @@ class BlockFunction extends Plugin implements Block {
 		);
 		$content     = str_replace($search, $replacement, $content);
 
-		$body = '$' . $funcName . ' = function(' . $paramstr . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n};";
+		$body = '$' . $funcName . ' = function(' . $paramstr . ') use(&$' . $funcName . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n};";
 		$compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
 	}
 }
