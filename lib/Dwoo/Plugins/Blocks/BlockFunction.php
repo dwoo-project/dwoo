@@ -19,7 +19,7 @@ use Dwoo\ICompilable\Block;
  * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
  * @link       http://dwoo.org/
  * @version    2.0
- * @date       2014-02-22
+ * @date       2014-03-06
  * @package    Dwoo
  */
 class BlockFunction extends Plugin implements Block {
@@ -79,7 +79,7 @@ class BlockFunction extends Plugin implements Block {
 		);
 		$content     = str_replace($search, $replacement, $content);
 
-		$body = 'if (!function_exists(\'' . $funcName . "')) {\nfunction " . $funcName . '(' . $paramstr . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n}\n}";
+		$body = '$' . $funcName . ' = function(' . $paramstr . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n};";
 		$compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
 	}
 }
