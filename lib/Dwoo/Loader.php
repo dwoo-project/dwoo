@@ -38,8 +38,16 @@ class Loader implements ILoader {
 	 */
 	protected $cacheDir;
 
+	/**
+	 * Plugin directory
+	 * @var string
+	 */
 	protected $corePluginDir;
 
+	/**
+	 * Core object
+	 * @var Core
+	 */
 	protected $core;
 
 	/**
@@ -60,6 +68,14 @@ class Loader implements ILoader {
 		else {
 			$this->rebuildClassPathCache($this->corePluginDir, $cacheFile);
 		}
+	}
+
+	/**
+	 * Get class path values
+	 * @return array|mixed
+	 */
+	public function getClassPath() {
+		return $this->classPath;
 	}
 
 	/**
@@ -96,7 +112,7 @@ class Loader implements ILoader {
 				$index = array_values($match);
 				if (isset($index[0])) {
 					if (isset($this->classPath[$index[0]])) {
-						//include_once $this->classPath[$index[0]];
+						include_once $this->classPath[$index[0]];
 						return true;
 					}
 				}
@@ -115,9 +131,8 @@ class Loader implements ILoader {
 	 * usual plugins in the same place for all applications.
 	 * TOCOM don't forget that php functions overrides are not rehashed so you
 	 * need to clear the classpath caches by hand when adding those
-	 *
 	 * @param string $pluginDirectory the plugin path to scan
-	 *
+	 * @return $this
 	 * @throws Exception
 	 */
 	public function addDirectory($pluginDirectory) {
@@ -133,6 +148,8 @@ class Loader implements ILoader {
 		else {
 			$this->rebuildClassPathCache($pluginDirectory, $cacheFile);
 		}
+
+		return $this;
 	}
 
 	/**

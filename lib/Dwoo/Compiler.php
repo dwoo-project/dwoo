@@ -783,11 +783,10 @@ class Compiler implements ICompiler {
 			switch ($type) {
 				case Core::BLOCK_PLUGIN:
 				case Core::CLASS_PLUGIN:
-
-					if (file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Blocks' . DIRECTORY_SEPARATOR . 'Block' . $plugin . '.php') === true) {
+					if (file_exists(Core::DWOO_DIRECTORY . '/Plugins/Blocks/Block' . $plugin . '.php') === true) {
 						$output .= "if (class_exists('".Core::PLUGIN_BLOCK_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					}
-					else if(file_exists(Core::DWOO_DIRECTORY . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'Functions' . DIRECTORY_SEPARATOR . 'Function' . $plugin . '.php') === true) {
+					else if(file_exists(Core::DWOO_DIRECTORY . 'Plugins/Functions/Function' . $plugin . '.php') === true) {
 						$output .= "if (class_exists('".Core::PLUGIN_FUNC_CLASS_PREFIX_NAME . $plugin."', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 					}
 					break;
@@ -3163,7 +3162,7 @@ class Compiler implements ICompiler {
 					}
 				}
 				/**
-				 * Nothing here, we don't want to stop the program
+				 * Not throwing exception, we don't want to stop the program
 				 */
 				catch (Exception $e) {}
 			}
@@ -3176,7 +3175,7 @@ class Compiler implements ICompiler {
 					}
 				}
 				/**
-				 * Nothing here, we don't want to stop the program
+				 * Not throwing exception, we don't want to stop the program
 				 */
 				catch (Exception $e) {}
 			}
@@ -3193,6 +3192,55 @@ class Compiler implements ICompiler {
 				if ($pluginType === - 1) {
 					try {
 						$this->core->getLoader()->loadPlugin($name, isset($phpFunc)===false);
+
+						$classPath = $this->core->getLoader()->getClassPath();
+						if ($match = preg_grep('/^(Block|Function)?(' . $name . '+)/i', array_keys($classPath))) {
+							$index = array_values($match);
+
+							$className = function($file) {
+								$namespace = null;
+								$classes = '';
+								$tokens = token_get_all(file_get_contents($file));
+								for ($i = 0 ; $i < count($tokens) ; $i++) {
+									switch ($tokens[$i][0]) {
+										case T_NAMESPACE:
+											$i+=2;
+											while ($tokens[$i][0] === T_STRING || $tokens[$i][0] === T_NS_SEPARATOR) {
+												$namespace .= $tokens[$i++][1];
+											}
+											break;
+										case T_INTERFACE:
+										case T_CLASS:
+										case T_TRAIT:
+											$i+=2;
+											if ($namespace) {
+												$classes = '\\' . $namespace . '\\' . $tokens[$i][1];
+											}
+											else {
+												$classes = '\\' . $tokens[$i][1];
+											}
+											break;
+									}
+								}
+
+								return $classes;
+							};
+
+							$callback = $className($classPath[$index[0]]);
+							$rc = new \ReflectionClass($callback);
+							if (strpos($index[0], 'Block') !== false) {
+								$pluginType = Core::BLOCK_PLUGIN;
+								if ($rc->implementsInterface('\Dwoo\ICompilable\Block')) {
+									$pluginType |= Core::COMPILABLE_PLUGIN;
+								}
+							}
+							else if (strpos($index[0], 'Function') !== false) {
+								$pluginType = Core::CLASS_PLUGIN;
+								if ($rc->implementsInterface('\Dwoo\ICompilable')) {
+									$pluginType |= Core::COMPILABLE_PLUGIN;
+								}
+							}
+						}
 					}
 					catch (Exception $e) {
 						if (isset($phpFunc)) {
@@ -3208,7 +3256,7 @@ class Compiler implements ICompiler {
 					}
 				}
 				else {
-					throw new Exception('Plugin "' . ucfirst($name) . '" could not be found');
+					throw new Exception('Plugin "' . $name . '" could not be found');
 				}
 				$pluginType ++;
 			}
@@ -3403,4 +3451,6 @@ class Compiler implements ICompiler {
 
 		return self::$instance;
 	}
+
+
 }

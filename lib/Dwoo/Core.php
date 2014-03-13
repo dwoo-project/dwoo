@@ -498,10 +498,11 @@ class Core {
 
 	/**
 	 * Get plugin data
+	 * @param $name
 	 * @return array
 	 */
-	public function getPluginData() {
-		return $this->pluginData;
+	public function getPluginData($name) {
+		return $this->pluginData[$name];
 	}
 
 	/**
@@ -1187,6 +1188,7 @@ class Core {
 	 * [runtime function] calls the process() method of the given class-plugin name
 	 * @param string $plugName the class plugin name (without plugin prefix)
 	 * @param array  $params   an array of parameters to send to the process() method
+	 * @throws \ReflectionException
 	 * @return string the process() return value
 	 */
 	public function classCall($plugName, array $params = array()) {
