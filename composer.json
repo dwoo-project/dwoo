@@ -9,6 +9,11 @@
             "email": "david38sanchez@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-0": {
+            "Dwoo\\": "lib/"
+        }
+    },
     "require": {
         "php": ">=5.3"
     }
