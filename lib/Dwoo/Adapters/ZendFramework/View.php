@@ -1,5 +1,13 @@
 <?php
 
+namespace Dwoo\Adapters\ZendFramework;
+
+use Dwoo\Compiler;
+use Dwoo\Core;
+use Dwoo\Data;
+use Dwoo\IDataProvider;
+use Dwoo\IPluginProxy;
+
 /**
  * Dwoo adapter for ZendFramework
  *
@@ -9,28 +17,28 @@
  *
  * @author	   Denis Arh <denis@arh.cc>
  * @author     Stephan Wentz <stephan@wentz.it>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  Copyright (c) 2014, David Sanchez
- * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    1.1.0
  * @date       2009-07-18
  * @package    Dwoo
  */
-class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
+class View extends \Zend_View_Abstract
 {
-	/**
-	 * @var Dwoo
-	 */
-	protected $_engine = null;
+    /**
+     * @var Core
+     */
+    protected $_engine = null;
 
-	/**
-	 * @var Dwoo_Data
+    /**
+     * @var Data
 	 */
 	protected $_dataProvider = null;
 
 	/**
-	 * @var Dwoo_Compiler
+	 * @var Compiler
 	 */
 	protected $_compiler = null;
 
@@ -53,7 +61,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	protected $_templateFileSettings = array();
 
 	/**
-	 * @var Dwoo_IPluginProxy
+	 * @var IPluginProxy
 	 */
 	protected $_pluginProxy = null;
 
@@ -62,14 +70,14 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 * See setOptions for $opt details
 	 *
 	 * @see setOptions
-	 * @param array|Zend_Config List of options or Zend_Config instance
+	 * @param array|\Zend_Config List of options or Zend_Config instance
 	 */
 	public function __construct($opt = array())
 	{
 
 		if (is_array($opt)) {
 			$this->setOptions($opt);
-		} elseif ($opt instanceof Zend_Config) {
+		} elseif ($opt instanceof \Zend_Config) {
 			$this->setConfig($opt);
 		}
 
@@ -88,7 +96,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 *  - any set* method (compileDir for setCompileDir ...)
 	 *
 	 * @param  array $options
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return View
 	 */
 	public function setOptions(array $opt = array())
 	{
@@ -98,7 +106,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 		// Setting options to Dwoo objects...
 		foreach ($opt as $type => $settings) {
 			if (!method_exists($this, 'set' . $type)) {
-				throw new Dwoo_Exception("Unknown type $type");
+				throw new \Dwoo\Exception("Unknown type $type");
 			}
 
 			if (is_string($settings) || is_object($settings)) {
@@ -130,10 +138,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	/**
 	 * Set object state from Zend_Config object
 	 *
-	 * @param  Zend_Config $config
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @param  \Zend_Config $config
+	 * @return $this
 	 */
-	public function setConfig(Zend_Config $config)
+	public function setConfig(\Zend_Config $config)
 	{
 		return $this->setOptions($config->toArray());
 	}
@@ -152,10 +160,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Wraper for Dwoo_Data::__set()
+	 * Wraper for \Dwoo\Data::__set()
 	 * allows to assign variables using the object syntax
 	 *
-	 * @see Dwoo_Data::__set()
+	 * @see \Dwoo\Data::__set()
 	 * @param string $name the variable name
 	 * @param string $value the value to assign to it
 	 */
@@ -165,10 +173,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Sraper for Dwoo_Data::__get() allows to read variables using the object
+	 * Sraper for \Dwoo\Data::__get() allows to read variables using the object
 	 * syntax
 	 *
-	 * @see Dwoo_Data::__get()
+	 * @see \Dwoo\Data::__get()
 	 * @param string $name the variable name
 	 * @return mixed
 	 */
@@ -178,10 +186,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Wraper for Dwoo_Data::__isset()
+	 * Wraper for \Dwoo\Data::__isset()
 	 * supports calls to isset($dwooData->var)
 	 *
-	 * @see Dwoo_Data::__isset()
+	 * @see \Dwoo\Data::__isset()
 	 * @param string $name the variable name
 	 */
 	public function __isset($name)
@@ -190,10 +198,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	}
 
 	/**
-	 * Wraper for Dwoo_Data::_unset()
+	 * Wraper for \Dwoo\Data::_unset()
 	 * supports unsetting variables using the object syntax
 	 *
-	 * @see Dwoo_Data::__unset()
+	 * @see \Dwoo\Data::__unset()
 	 * @param string $name the variable name
 	 */
 	public function __unset($name)
@@ -211,12 +219,12 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	/**
 	 * Returns plugin proxy interface
 	 *
-	 * @return Dwoo_IPluginProxy
+	 * @return IPluginProxy
 	 */
 	public function getPluginProxy()
 	{
 		if (!$this->_pluginProxy) {
-			$this->_pluginProxy = new Dwoo_Adapters_ZendFramework_PluginProxy($this);
+			$this->_pluginProxy = new PluginProxy($this);
 		}
 
 		return $this->_pluginProxy;
@@ -225,10 +233,10 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	/**
 	 * Sets plugin proxy
 	 *
-	 * @param Dwoo_IPluginProxy
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @param IPluginProxy
+	 * @return $this
 	 */
-	public function setPluginProxy(Dwoo_IPluginProxy $pluginProxy)
+	public function setPluginProxy(IPluginProxy $pluginProxy)
 	{
 		$this->_pluginProxy = $pluginProxy;
 		return $this;
@@ -237,20 +245,20 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	/**
 	 * Sets template engine
 	 *
-	 * @param string|Dwoo Object or name of the class
+	 * @param string|\Dwoo\Object or name of the class
 	 */
 	public function setEngine($engine)
 	{
 		// if param given as an object
-		if ($engine instanceof Dwoo) {
+		if ($engine instanceof Core) {
 			$this->_engine = $engine;
 		}
 		//
-		elseif (is_subclass_of($engine, 'Dwoo') || 'Dwoo' === $engine) {
+		elseif (is_subclass_of($engine, '\Dwoo\Core') || '\Dwoo\Core' === $engine) {
 			$this->_engine = new $engine();
 		}
 		else {
-			throw new Dwoo_Exception("Custom engine must be a subclass of Dwoo");
+			throw new \Dwoo\Exception("Custom engine must be a subclass of \\Dwoo\\Core");
 		}
 	}
 
@@ -262,7 +270,7 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	public function getEngine()
 	{
 		if (null === $this->_engine) {
-			$this->_engine = new Dwoo_Adapters_ZendFramework_Dwoo();
+			$this->_engine = new Dwoo();
 		}
 
 		return $this->_engine;
@@ -275,14 +283,14 @@ class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 	 */
 	public function setDataProvider($data)
 	{
-		if ($data instanceof Dwoo_IDataProvider) {
+		if ($data instanceof IDataProvider) {
 			$this->_dataProvider = $data;
 		}
-		elseif (is_subclass_of($data, 'Dwoo_Data') || 'Dwoo_Data' == $data) {
+		elseif (is_subclass_of($data, '\Dwoo\Data') || '\Dwoo\Data' == $data) {
 			$this->_dataProvider = new $data();
 		}
 		else {
-			throw new Dwoo_Exception("Custom data provider must be a subclass of Dwoo_Data or instance of Dwoo_IDataProvider");
+			throw new \Dwoo\Exception("Custom data provider must be a subclass of \\Dwoo\\Data or instance of \\Dwoo\\IDataProvider");
 		}
 	}
 
