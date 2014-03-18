@@ -1,5 +1,9 @@
 <?php
 
+namespace Dwoo\Adapters\ZendFramework;
+
+use Dwoo\Core;
+
 /**
  * Dwoo base class for ZendFramework
  *
@@ -7,16 +11,16 @@
  * In no event will the authors be held liable for any damages arising from the
  * use of this software.
  *
- * @author     David Sanchez <david38sanchez@gmail.com>
+ * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @author     Marc Hodgins <mjh@hodginsmedia.com>
  * @copyright  Copyright (c) 2010, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE GNU Lesser General Public License v3.0
+ * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
  * @version    1.2.0
  * @date       2010-02-28
  * @package    Dwoo
  */
-class Dwoo_Adapters_ZendFramework_Dwoo extends Dwoo_Core
+class Dwoo extends Core
 {
 	/**
 	 * Redirects all unknown properties to plugin proxy
