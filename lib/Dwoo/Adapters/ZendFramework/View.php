@@ -5,8 +5,10 @@ namespace Dwoo\Adapters\ZendFramework;
 use Dwoo\Compiler;
 use Dwoo\Core;
 use Dwoo\Data;
+use Dwoo\ICompiler;
 use Dwoo\IDataProvider;
 use Dwoo\IPluginProxy;
+use Dwoo\ITemplate;
 
 /**
  * Dwoo adapter for ZendFramework
@@ -53,7 +55,7 @@ class View extends \Zend_View_Abstract
 	/**
 	 * @var string
 	 */
-	protected $_templateFileClass = 'Dwoo_Template_File';
+	protected $_templateFileClass = 'Dwoo\Template\File';
 
 	/**
 	 * @var array
@@ -279,7 +281,7 @@ class View extends \Zend_View_Abstract
 	/**
 	 * Sets Dwoo data object
 	 *
-	 * @param string|Dwoo_Data Object or name of the class
+	 * @param string|Data Object or name of the class
 	 */
 	public function setDataProvider($data)
 	{
@@ -297,12 +299,12 @@ class View extends \Zend_View_Abstract
 	/**
 	 * Return the Dwoo data object
 	 *
-	 * @return Dwoo_Data
+	 * @return Data
 	 */
 	public function getDataProvider()
 	{
 		if (null === $this->_dataProvider) {
-			$this->_dataProvider = new Dwoo_Data;
+			$this->_dataProvider = new Data;
 
 			// Satisfy Zend_View_Abstract wishes to access this unexisting property
 			// by setting it to empty array (see Zend_View_Abstract::_filter)
@@ -316,13 +318,13 @@ class View extends \Zend_View_Abstract
 	/**
 	 * Sets Dwoo compiler
 	 *
-	 * @param string|Dwoo_Compiler Object or name of the class
+	 * @param string|ICompiler Object or name of the class
 	 */
 	public function setCompiler($compiler)
 	{
 
 		// if param given as an object
-		if ($compiler instanceof Dwoo_ICompiler) {
+		if ($compiler instanceof ICompiler) {
 			$this->_compiler = $compiler;
 		}
 		// if param given as a string
@@ -330,19 +332,19 @@ class View extends \Zend_View_Abstract
 			$this->_compiler = new $compiler;
 		}
 		else {
-			throw new Dwoo_Exception("Custom compiler must be a subclass of Dwoo_Compiler or instance of Dwoo_ICompiler");
+			throw new \Dwoo\Exception("Custom compiler must be a subclass of Dwoo_Compiler or instance of Dwoo_ICompiler");
 		}
 	}
 
 	/**
 	 * Return the Dwoo compiler object
 	 *
-	 * @return Dwoo_Data
+	 * @return ICompiler
 	 */
 	public function getCompiler()
 	{
 		if (null === $this->_compiler) {
-			$this->_compiler = Dwoo_Compiler::compilerFactory();
+			$this->_compiler = Compiler::compilerFactory();
 		}
 
 		return $this->_compiler;
@@ -352,15 +354,15 @@ class View extends \Zend_View_Abstract
 	 * Initializes Dwoo_ITemplate type of class and sets properties from _templateFileSettings
 	 *
 	 * @param  string Template location
-	 * @return Dwoo_ITemplate
+	 * @return ITemplate
 	 */
 	public function getTemplateFile($template) {
 		$templateFileClass = $this->_templateFileClass;
 
 		$dwooTemplateFile = new $templateFileClass($template);
 
-		if (!($dwooTemplateFile instanceof Dwoo_ITemplate)) {
-			throw new Dwoo_Exception("Custom templateFile class must be a subclass of Dwoo_ITemplate");
+		if (!($dwooTemplateFile instanceof ITemplate)) {
+			throw new \Dwoo\Exception("Custom templateFile class must be a subclass of Dwoo_ITemplate");
 		}
 
 		foreach ($this->_templateFileSettings as $method => $value) {
@@ -388,7 +390,7 @@ class View extends \Zend_View_Abstract
 	 * @see Dwoo_Data::assign()
 	 * @param array|string $name
 	 * @param mixed $val
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function assign($name, $val = null)
 	{
@@ -412,8 +414,7 @@ class View extends \Zend_View_Abstract
 	 * Clears all variables assigned to Zend_View either via {@link assign()} or
 	 * property overloading ({@link __get()}/{@link __set()}).
 	 *
-	 * @return void
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function clearVars()
 	{
@@ -455,7 +456,7 @@ class View extends \Zend_View_Abstract
 	 * Add plugin path
 	 *
 	 * @param string $dir Directory
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function addPluginDir($dir)
 	{
@@ -467,7 +468,7 @@ class View extends \Zend_View_Abstract
 	 * Set compile path
 	 *
 	 * @param string $dir Directory
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function setCompileDir($dir)
 	{
@@ -479,7 +480,7 @@ class View extends \Zend_View_Abstract
 	 * Set cache path
 	 *
 	 * @param string $dir Directory
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function setCacheDir($dir)
 	{
@@ -491,7 +492,7 @@ class View extends \Zend_View_Abstract
 	 * Set cache lifetime
 	 *
 	 * @param string $seconds Lifetime in seconds
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function setCacheLifetime($seconds)
 	{
@@ -503,7 +504,7 @@ class View extends \Zend_View_Abstract
 	 * Set charset
 	 *
 	 * @param string $charset
-	 * @return Dwoo_Adapters_ZendFramework_View
+	 * @return $this
 	 */
 	public function setCharset($charset)
 	{
