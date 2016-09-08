@@ -1,26 +1,5 @@
-=============================================================================
-
-WARNING - END OF LIFE / UNMAINTAINED CODE 
 -----------------------------------------------------------------------------
-
-This library is not being maintained anymore for quite a while, so if you are
-starting a new project you should probably consider using
-[Twig](http://twig.sensiolabs.org) instead.
-
-Another alternative if you have many Dwoo templates is to switch to the
-spiritual successor [Dwoo2](https://github.com/emulienfou/dwoo2) library 
-currently developed by @emulienfou.
-
-=============================================================================
-
-
-
-
-
-
-
------------------------------------------------------------------------------
--- WHAT IS DWOO?                                      readme - version 1.1.0
+-- WHAT IS DWOO?                                      readme - version 1.2.1
 -----------------------------------------------------------------------------
 Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
