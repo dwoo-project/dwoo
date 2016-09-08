@@ -33,6 +33,8 @@ http://dwoo.org/LICENSE
 -- QUICK START - RUNNING DWOO
 -----------------------------------------------------------------------------
 /***************************** Basic Example *******************************/
+```php
+<?php
 // Include the main class (it should handle the rest on its own)
 include 'path/to/dwooAutoload.php';
 
@@ -54,8 +56,11 @@ $data->assign('bar', 'BAZ');
 $dwoo->output($tpl, $data);
 // ... or get it to use it somewhere else
 $dwoo->get($tpl, $data);
+```
 
 /***************************** Loop Example *******************************/
+```php
+<?php
 // To loop over multiple articles of a blog for instance, if you have a
 // template file representing an article, you could do the following :
 
@@ -77,3 +82,4 @@ foreach($articles as $article) {
     // Or use the article directly (which is a lot easier in this case)
     $pageContent .= $dwoo->get($tpl, $article);
 }
+```
