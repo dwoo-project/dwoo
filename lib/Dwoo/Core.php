@@ -484,15 +484,21 @@ class Dwoo_Core
             } else {
                 $this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function'=>$callback[1]);
             }
-        } elseif (class_exists($callback, false)) {
-            if (is_subclass_of($callback, 'Dwoo_Block_Plugin')) {
-                $this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback);
-            } else {
-                $this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback, 'function'=>($compilable ? 'compile' : 'process'));
-            }
-        } elseif (function_exists($callback)) {
-            $this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
-        } else {
+        } elseif(is_string($callback)) {
+			if (class_exists($callback, false)) {
+				if (is_subclass_of($callback, 'Dwoo_Block_Plugin')) {
+					$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback);
+				} else {
+					$this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback, 'function'=>($compilable ? 'compile' : 'process'));
+				}
+			} elseif (function_exists($callback)) {
+				$this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
+			} else {
+				throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
+			}
+		} elseif(is_callable($callback)) {
+			$this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
+		} else {
             throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         }
     }
