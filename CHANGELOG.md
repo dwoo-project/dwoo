@@ -1,6 +1,7 @@
 ## 1.2.2 (2016-09-10)
 `Added`
 * Add support for `XOR` and `^` operators.
+* Add support for closure when adding a new plugin with: `$dwoo->addPlugin()`.
 
 `Removed`
 * File `lib/Dwoo.compiled.php` has been removed.
