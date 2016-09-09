@@ -2,6 +2,9 @@
 * 
 
 ## 1.2.1 (2014-04-20)
+`Added`
+* Support for Composer, adding composer.json file.
+
 `Changed`
 * Minimum PHP version required is now **PHP 5.3**
 
