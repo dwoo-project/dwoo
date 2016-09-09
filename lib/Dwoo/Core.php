@@ -36,7 +36,7 @@ class Dwoo_Core
      *
      * @var string
      */
-    const VERSION = '1.1.1';
+    const VERSION = '1.2.2';
 
     /**
      * unique number of this dwoo release
