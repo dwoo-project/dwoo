@@ -1,7 +1,8 @@
 <?php
 
-define('DWOO_DIRECTORY', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-
+if (!defined('DWOO_DIRECTORY')) {
+	define('DWOO_DIRECTORY', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+}
 /**
  * main dwoo class, allows communication between the compiler, template and data classes
  *
