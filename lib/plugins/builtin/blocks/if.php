@@ -20,11 +20,12 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ *             David Sanchez <david38sanchez@gmail.com>
+ * @copyright  Copyright (c) 2008-2016, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.2.2
+ * @date       2016-10-09
  * @package    Dwoo
  */
 class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
@@ -57,6 +58,13 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 			case 'or':
 				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
 					$p[] = '||';
+				} else {
+					$p[] = $v;
+				}
+				break;
+			case 'xor':
+				if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+					$p[] = '^';
 				} else {
 					$p[] = $v;
 				}
@@ -133,6 +141,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 			case '!==':
 			case '%':
 			case '!':
+			case '^':
 				$p[] = $vmod;
 				break;
 			case 'is':

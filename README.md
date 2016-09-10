@@ -1,6 +1,5 @@
------------------------------------------------------------------------------
--- WHAT IS DWOO?                                      readme - version 1.2.1
------------------------------------------------------------------------------
+WHAT IS DWOO?
+=============
 Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
 older. It carries the weight of it's age, having old features that are
@@ -13,30 +12,29 @@ So far it has proven to be faster than Smarty in many areas, and it provides
 a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
------------------------------------------------------------------------------
--- DOCUMENTATION
------------------------------------------------------------------------------
+DOCUMENTATION
+=============
 Dwoo's website to get the latest version is at http://dwoo.org/
 
-The wiki/documentation pages are available at http://wiki.dwoo.org/
+The wiki/documentation pages are available at http://dwoo.org/documentation/
 
------------------------------------------------------------------------------
--- LICENSE
------------------------------------------------------------------------------
+LICENSE
+=======
 Dwoo is released under the Modified BSD license.
 See the LICENSE file included in the archive or go to the URL below to obtain
 a copy.
 
-http://dwoo.org/LICENSE
+[Full license](./LICENSE)
 
------------------------------------------------------------------------------
--- QUICK START - RUNNING DWOO
------------------------------------------------------------------------------
-/***************************** Basic Example *******************************/
+QUICK START - RUNNING DWOO
+==========================
+
+Basic Example
+-------------
 ```php
 <?php
 // Include the main class (it should handle the rest on its own)
-include 'path/to/dwooAutoload.php';
+require 'vendor/autoload.php';
 
 // Create the controller, this is reusable
 $dwoo = new Dwoo();
@@ -58,13 +56,14 @@ $dwoo->output($tpl, $data);
 $dwoo->get($tpl, $data);
 ```
 
-/***************************** Loop Example *******************************/
+Loop Example
+------------
 ```php
 <?php
 // To loop over multiple articles of a blog for instance, if you have a
 // template file representing an article, you could do the following :
 
-include 'path/to/dwooAutoload.php';
+require 'vendor/autoload.php';
 
 $dwoo = new Dwoo();
 $tpl = new Dwoo_Template_File('path/to/article.tpl');
