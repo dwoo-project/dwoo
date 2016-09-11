@@ -1331,7 +1331,6 @@ class Dwoo_Core
                     return $this->globals;
                 } elseif ($varstr === '__' || $varstr === '_root' ) {
                     return $this->data;
-                    $varstr = substr($varstr, 6);
                 } elseif ($varstr === '_' || $varstr === '_parent') {
                     $varstr = '.'.$varstr;
                     $tree = $this->scopeTree;

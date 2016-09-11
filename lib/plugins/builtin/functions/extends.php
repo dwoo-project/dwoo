@@ -55,7 +55,6 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 		while (!empty($file)) {
 			if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
 				throw new Dwoo_Compilation_Exception($compiler, 'Extends : The file name must be a non-empty string');
-				return;
 			}
 
 			if (preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m)) {
