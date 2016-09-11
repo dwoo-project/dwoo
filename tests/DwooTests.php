@@ -7,7 +7,7 @@ if (!ini_get('date.timezone'))
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
 
-require dirname(__FILE__) . '/../lib/dwooAutoload.php';
+require dirname(__FILE__) . '/../vendor/autoload.php';
 //require dirname(__FILE__) . '/../lib/Dwoo.compiled.php';
 //set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../lib/');
 
