@@ -12,6 +12,8 @@ So far it has proven to be faster than Smarty in many areas, and it provides
 a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
+> ⚠ Dwoo **1.2.x** is only compatible with **PHP 5.x** ⚠
+
 DOCUMENTATION
 =============
 Dwoo's website to get the latest version is at http://dwoo.org/
