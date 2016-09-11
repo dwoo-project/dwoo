@@ -1,6 +1,6 @@
 WHAT IS DWOO?
 =============
-Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
+Dwoo is a PHP5/PHP7 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
 older. It carries the weight of it's age, having old features that are
 inconsistent compared to newer ones, being written for PHP4 its Object
@@ -22,11 +22,9 @@ The wiki/documentation pages are available at http://dwoo.org/documentation/
 
 LICENSE
 =======
-Dwoo is released under the Modified BSD license.
+Dwoo is released under the [Modified BSD](./LICENSE) license.
 See the LICENSE file included in the archive or go to the URL below to obtain
 a copy.
-
-[Full license](./LICENSE)
 
 QUICK START - RUNNING DWOO
 ==========================
@@ -76,7 +74,7 @@ $pageContent = '';
 foreach($articles as $article) {
     // Either associate variables one by one
     $data = new Dwoo_Data();
-    $data->assign('title', $article['title'];
+    $data->assign('title', $article['title']);
     $data->assign('content', $article['content']);
     $pageContent .= $dwoo->get($tpl, $data);
 
