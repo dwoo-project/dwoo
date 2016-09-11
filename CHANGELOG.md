@@ -1,3 +1,10 @@
+## 1.2.3 (2016-XX-XX)
+`Removed`
+* Unreachable statements.
+
+`Fixed`
+* PHPUnit tests.
+
 ## 1.2.2 (2016-09-10)
 `Added`
 * Add support for `XOR` and `^` operators.

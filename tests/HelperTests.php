@@ -1,7 +1,5 @@
 <?php
 
-require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-
 class HelperTests extends PHPUnit_Framework_TestCase
 {
 	protected $compiler;
