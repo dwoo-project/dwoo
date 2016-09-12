@@ -1,0 +1,21 @@
+# Select image from https://hub.docker.com/r/_/php/
+image: php:5.6
+
+# Select what we should cache
+cache:
+  paths:
+  - vendor/
+
+before_script:
+# Install git, the php image doesn't have installed
+- apt-get update -yqq
+- apt-get install git -yqq
+# Install composer
+- curl -sS https://getcomposer.org/installer | php
+# Install all project dependencies
+- php composer.phar install
+
+# We test PHP5.6
+test:app:
+  script:
+  - vendor/bin/phpunit --configuration phpunit_dwoo.xml --coverage-text
