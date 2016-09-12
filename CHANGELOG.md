@@ -1,4 +1,7 @@
 ## 1.2.3 (2016-XX-XX)
+`Added`
+* Continuously integrated **Travis** config file.
+
 `Removed`
 * Unreachable statements.
 
