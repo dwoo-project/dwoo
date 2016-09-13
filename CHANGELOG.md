@@ -8,6 +8,9 @@
 `Fixed`
 * PHPUnit tests.
 
+`Deprecated`
+* Method `Dwoo\Core::output()` is now deprecated, will be removed in **1.3.0**.
+
 ## 1.2.2 (2016-09-10)
 `Added`
 * Add support for `XOR` and `^` operators.
@@ -25,7 +28,7 @@
 * Minimum PHP version required is now **PHP 5.3**
 
 `Deprecated`
-* Dwoo class is deprecated.
+* Dwoo class is now deprecated, will be removed in **1.3.0**.
 
 `Fixed`
 * Fix for reading `unassigned _filter` from `Zend_View_Abstract` for **ZendFramework** adapter.

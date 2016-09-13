@@ -294,6 +294,7 @@ class Dwoo_Core
      * @param Dwoo_ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
      *                                Dwoo_Compiler will be used.
      * @return string nothing or the template output if $output is true
+	 * @deprecated 1.2.3. will be deleted in 1.3.0.
      */
     public function output($tpl, $data = array(), Dwoo_ICompiler $compiler = null)
     {
