@@ -1,16 +1,6 @@
 <?php
-
-error_reporting(E_ALL|E_STRICT);
-if (!ini_get('date.timezone'))
-	date_default_timezone_set('CET');
-
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
-
-require dirname(__FILE__) . '/../vendor/autoload.php';
-//require dirname(__FILE__) . '/../lib/Dwoo.compiled.php';
-//set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../lib/');
-
 define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests extends PHPUnit_Framework_TestSuite
