@@ -6,7 +6,8 @@
 * Unreachable statements.
 
 `Fixed`
-* PHPUnit tests.
+* PHPUnit config file.
+* PHPUnit tests classes.
 
 `Deprecated`
 * Method `Dwoo\Core::output()` is now deprecated, will be removed in **1.3.0**.
