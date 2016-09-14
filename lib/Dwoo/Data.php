@@ -173,8 +173,8 @@ class Dwoo_Data implements Dwoo_IDataProvider
 		}
 
    		if ($merge === true && is_array($val)) {
-   			foreach ($val as $key => &$val) {
-   				$this->data[$name][$key] =& $val;
+   			foreach ($val as $key => &$value) {
+   				$this->data[$name][$key] =& $value;
    			}
    		} else {
    			$this->data[$name][] =& $val;
