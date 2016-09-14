@@ -366,6 +366,8 @@ class Dwoo_Core
                 return ob_get_clean();
             }
         } else {
+			$dynamicId = uniqid();
+
             // render template
             $compiledTemplate = $_tpl->getCompiledTemplate($this, $_compiler);
             $out = include $compiledTemplate;
@@ -378,7 +380,7 @@ class Dwoo_Core
             }
 
             if ($doCache === true) {
-				$dynamicId = uniqid();
+
                 $out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
                 if (!class_exists('Dwoo_plugin_dynamic')) {
                     $this->getLoader()->loadPlugin('dynamic');
