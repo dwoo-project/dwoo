@@ -41,15 +41,15 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (Dwoo_Security_Exception $e) {
-		return $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
+		$dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
 	} catch (Dwoo_Exception $e) {
-		return $dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
+		$dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
 	}
 
 	if ($include === null) {
-		return $dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
+		$dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
 	} elseif ($include === false) {
-		return $dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
+		$dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
 	}
 
 	if (is_string($data)) {

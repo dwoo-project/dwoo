@@ -1470,7 +1470,7 @@ class Dwoo_Core
         $data =& $this->data;
 
         if (!is_string($scope)) {
-            return $this->triggerError('Assignments must be done into strings, ('.gettype($scope).') '.var_export($scope, true).' given', E_USER_ERROR);
+            $this->triggerError('Assignments must be done into strings, ('.gettype($scope).') '.var_export($scope, true).' given', E_USER_ERROR);
         }
         if (strstr($scope, '.') === false && strstr($scope, '->') === false) {
             $this->scope[$scope] = $value;

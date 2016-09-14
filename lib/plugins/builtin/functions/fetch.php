@@ -36,7 +36,7 @@ function Dwoo_Plugin_fetch(Dwoo_Core $dwoo, $file, $assign = null)
 					break 2;
 				}
 			}
-			return $dwoo->triggerError('The security policy prevents you to read <em>'.$file.'</em>', E_USER_WARNING);
+			$dwoo->triggerError('The security policy prevents you to read <em>'.$file.'</em>', E_USER_WARNING);
 		}
 	}
 	$file = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $file);
