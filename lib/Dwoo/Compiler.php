@@ -898,14 +898,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
 		if ($this->debug) {
-			echo "\n";
-			$lines = preg_split('{\r\n|\n|<br />}', highlight_string(($output), true));
+			echo '=============================================================================================' . "\n";
+			$lines = preg_split('{\r\n|\n|<br />}', $output);
 			array_shift($lines);
 			foreach ($lines as $i=>$line) {
 				echo ($i+1).'. '.$line."\r\n";
 			}
+			echo '=============================================================================================' . "\n";
 		}
-		if ($this->debug) echo "\n";
 
 		$this->template = $this->dwoo = null;
 		$tpl = null;
@@ -920,6 +920,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function resolveSubTemplateDependencies($function)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$body = $this->templatePlugins[$function]['body'];
 		foreach ($this->templatePlugins as $func => $attr) {
 			if ($func !== $function && !isset($attr['called']) && strpos($body, 'Dwoo_Plugin_'.$func) !== false) {
@@ -1018,6 +1020,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function addBlock($type, array $params, $paramtype)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$class = 'Dwoo_Plugin_'.$type;
 		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
@@ -1063,6 +1067,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function injectBlock($type, array $params)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$class = 'Dwoo_Plugin_'.$type;
 		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
@@ -1080,6 +1086,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function removeBlock($type)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$output = '';
 
 		$pluginType = $this->getPluginType($type);
@@ -1166,6 +1174,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function removeTopBlock()
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$o = array_pop($this->stack);
 		if ($o === null) {
 			throw new Dwoo_Compilation_Exception($this, 'Syntax malformation, a block of unknown type was closed but was not opened.');
@@ -1242,6 +1252,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function parse($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		if ($to === null) {
 			$to = strlen($in);
 		}
@@ -1814,19 +1826,30 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				$output = call_user_func_array($funcCompiler, $params);
 			} else {
+				array_unshift($params, '$this');
+				$params = self::implode_r($params);
 				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
-					if (is_callable($callback)) {
-						array_unshift($params, $this->getDwoo());
-						$output = call_user_func_array($callback, $params);
-					} else {
-						array_unshift($params, '$this');
-						$params = self::implode_r($params);
-						$output = 'call_user_func(\''.$callback.'\', '.$params.')';
-					}
+					$output = 'call_user_func(\''.$callback.'\', '.$params.')';
 				} else {
 					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
 				}
+
+//				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
+//					$callback = $this->customPlugins[$func]['callback'];
+//					if (is_callable($callback)) {
+//						array_unshift($params, $this->getDwoo());
+//						$output = call_user_func_array($callback, $params);
+//					} else {
+//						array_unshift($params, '$this');
+//						$params = self::implode_r($params);
+//						$output = 'call_user_func(\''.$callback.'\', '.$params.')';
+//					}
+//				} else {
+//					array_unshift($params, '$this');
+//					$params = self::implode_r($params);
+//					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
+//				}
 			}
 		} elseif ($pluginType & Dwoo_Core::CLASS_PLUGIN) {
 			if ($pluginType & Dwoo_Core::COMPILABLE_PLUGIN) {

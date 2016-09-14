@@ -571,7 +571,7 @@ bleh();
 	{
 		$tpl = new Dwoo_Template_String('{load_templates "file:'.TEST_DIRECTORY.'/resources/templates.html"}{menu $menu}{noparam}{load_templates ""}');
 		$tpl->forceCompilation();
-		$this->assertEquals('<ul class="level0"><li>foo</li><li>bar</li><ul class="level1"><li>baz</li><li>qux</li></ul><li>boo</li><ul class="level1"><li>far</li><ul class="level2"><li>faz</li><li>mux</li></ul></ul><li>duck</li></ul>noparamoutput'."\n",
+		$this->assertEquals('<ul class="level0"><li>foo</li><li>bar</li><ul class="level1"><li>baz</li><li>qux</li></ul><li>boo</li><ul class="level1"><li>far</li><ul class="level2"><li>faz</li><li>mux</li></ul></ul><li>duck</li></ul>noparamoutput',
 			$this->dwoo->get($tpl, array('menu'=>array('foo', 'bar'=>array('baz','qux'), 'boo'=>array('far'=>array('faz','mux')), 'duck')), $this->compiler));
 
 		// fixes the init call not being called (which is normal)

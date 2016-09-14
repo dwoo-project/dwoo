@@ -42,7 +42,6 @@ class Dwoo_Plugin_strip extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bl
 			case 'default':
 			default:
 		}
-
 		$content = preg_replace(array("/\n/","/\r/",'/(<\?(?:php)?|<%)\s*/'), array('','','$1 '), preg_replace('#^\s*(.+?)\s*$#m', '$1', $content));
 
 		return $content;

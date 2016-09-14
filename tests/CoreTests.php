@@ -191,7 +191,10 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->dwoo->addResource('news', 'Dwoo_Template_File', array('Dwoo_Compiler', 'compilerFactory'));
 		$tpl = new Dwoo_Template_String('{include file="news:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
-		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
+
+		$compiler = new Dwoo_Compiler();
+//		$compiler->debug = true;
+		$this->assertEquals("34", $this->dwoo->get($tpl, array(), $compiler));
 		$this->dwoo->removeResource('news');
 
 		$this->dwoo->addResource('file', 'Dwoo_Template_String', 'Fake');

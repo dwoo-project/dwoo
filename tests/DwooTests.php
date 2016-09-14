@@ -11,6 +11,9 @@ class DwooTests extends PHPUnit_Framework_TestSuite
 	{
 		$suite = new self('Dwoo - Unit Tests Report');
 
+//		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+//		$dwoo->clearCompiled();
+
 		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
 			if (!$file->isDir() && substr((string) $file, -4) == '.php' && (string) $file !== 'DwooTests.php' && (string) $file !== 'run-tests.php' && substr((string) $file, -4) === '.php') {
 				require_once $file->getPathname();
@@ -30,7 +33,7 @@ class DwooTests extends PHPUnit_Framework_TestSuite
 	protected function tearDown()
 	{
 		$this->clearDir(TEST_DIRECTORY.'/temp/cache', true);
-		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
+//		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
 
 	protected function clearDir($path, $emptyOnly=false)
