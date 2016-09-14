@@ -115,12 +115,10 @@ class Dwoo_Loader implements Dwoo_ILoader
 				}
 				if (isset($this->classPath[$class])) {
 					include $this->classPath[$class];
-				} else {
-					throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 				}
-			} else {
 				throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 			}
+			throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 		}
 	}
 
