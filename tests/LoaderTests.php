@@ -40,8 +40,8 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 		$dwoo->setLoader($loader);
-		$loader->addDirectory(TEST_DIRECTORY.'/resources/plugins');
 		file_put_contents(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php', '<?php function Dwoo_Plugin_loaderTest2(Dwoo_Core $dwoo) { return "It works!"; }');
+		$loader->addDirectory(TEST_DIRECTORY.'/resources/plugins');
 
 		$tpl = new Dwoo_Template_String('{loaderTest2}');
 		$tpl->forceCompilation();

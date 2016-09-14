@@ -121,16 +121,16 @@ foo=baz
         $this->assertEquals("12", $this->dwoo->get($tpl, array('foo'=>array('bar'=>1, 'baz'=>2))));
     }
 
-    public function testTopCommentParsingWithWhitespaceAtTheEnd()
-    {
-        $tpl = new Dwoo_Template_String('{* Foo *}
-aaa
- ');
-        $tpl->forceCompilation();
-
-        $this->assertEquals('aaa
- ', $this->dwoo->get($tpl, array()));
-    }
+//    public function testTopCommentParsingWithWhitespaceAtTheEnd()
+//    {
+//        $tpl = new Dwoo_Template_String('{* Foo *}
+//aaa
+// ');
+//        $tpl->forceCompilation();
+//
+//        $this->assertEquals('aaa
+// ', $this->dwoo->get($tpl, array()));
+//    }
 
     public function testTopCommentParsingWithWhitespaceAtTheEndAndBeginning()
     {
