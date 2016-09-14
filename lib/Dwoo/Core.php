@@ -384,7 +384,7 @@ class Dwoo_Core
 
             if ($doCache === true) {
                 $out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*'.$dynamicId.'*/ echo \'$1\'; ?>', $out);
-                if (!class_exists('Dwoo_plugin_dynamic', false)) {
+                if (!class_exists('Dwoo_plugin_dynamic')) {
                     $this->getLoader()->loadPlugin('dynamic');
                 }
                 $out = Dwoo_Plugin_dynamic::unescape($out, $dynamicId, $compiledTemplate);
@@ -486,7 +486,7 @@ class Dwoo_Core
                 $this->plugins[$name] = array('type'=>self::CLASS_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>(is_object($callback[0]) ? get_class($callback[0]) : $callback[0]), 'function'=>$callback[1]);
             }
         } elseif(is_string($callback)) {
-			if (class_exists($callback, false)) {
+			if (class_exists($callback)) {
 				if (is_subclass_of($callback, 'Dwoo_Block_Plugin')) {
 					$this->plugins[$name] = array('type'=>self::BLOCK_PLUGIN | $compilable, 'callback'=>$callback, 'class'=>$callback);
 				} else {
@@ -527,7 +527,7 @@ class Dwoo_Core
         if ($autoload) {
             $class = 'Dwoo_Filter_'.$callback;
 
-            if (!class_exists($class, false) && !function_exists($class)) {
+            if (!class_exists($class) && !function_exists($class)) {
                 try {
                     $this->getLoader()->loadPlugin($callback);
                 } catch (Dwoo_Exception $e) {
@@ -539,7 +539,7 @@ class Dwoo_Core
                 }
             }
 
-            if (class_exists($class, false)) {
+            if (class_exists($class)) {
                 $callback = array(new $class($this), 'process');
             } elseif (function_exists($class)) {
                 $callback = $class;

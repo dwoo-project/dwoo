@@ -367,7 +367,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (class_exists($class, false)) {
+			if (class_exists($class)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
@@ -416,7 +416,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (class_exists($class, false)) {
+			if (class_exists($class)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
@@ -460,7 +460,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function loadProcessor($class, $name)
 	{
-		if (!class_exists($class, false) && !function_exists($class)) {
+		if (!class_exists($class) && !function_exists($class)) {
 			try {
 				$this->dwoo->getLoader()->loadPlugin($name);
 			} catch (Dwoo_Exception $e) {
@@ -468,7 +468,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if (class_exists($class, false)) {
+		if (class_exists($class)) {
 			return array(new $class($this), 'process');
 		}
 
@@ -848,7 +848,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			case Dwoo_Core::BLOCK_PLUGIN:
 			case Dwoo_Core::CLASS_PLUGIN:
-				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+				$output .= "if (class_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo_Core::FUNC_PLUGIN:
 				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
@@ -1016,7 +1016,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	public function addBlock($type, array $params, $paramtype)
 	{
 		$class = 'Dwoo_Plugin_'.$type;
-		if (class_exists($class, false) === false) {
+		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
 		}
 
@@ -1062,7 +1062,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	public function injectBlock($type, array $params)
 	{
 		$class = 'Dwoo_Plugin_'.$type;
-		if (class_exists($class, false) === false) {
+		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
 		}
 		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'class' => $class, 'buffer' => null);
@@ -1300,7 +1300,6 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$comOpen = $this->ld.'*';
 					$comClose = '*'.$this->rd;
 					$level = 1;
-					$start = $startpos;
 					$ptr = $this->getPointer();
 
 					while ($level > 0 && $ptr < strlen($src)) {
@@ -2939,7 +2938,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pluginType = Dwoo_Core::TEMPLATE_PLUGIN | Dwoo_Core::COMPILABLE_PLUGIN;
 			} elseif (isset($this->customPlugins[$name])) {
 				$pluginType = $this->customPlugins[$name]['type'] | Dwoo_Core::CUSTOM_PLUGIN;
-			} elseif (class_exists('Dwoo_Plugin_'.$name, false) !== false) {
+			} elseif (class_exists('Dwoo_Plugin_'.$name) !== false) {
 				if (is_subclass_of('Dwoo_Plugin_'.$name, 'Dwoo_Block_Plugin')) {
 					$pluginType = Dwoo_Core::BLOCK_PLUGIN;
 				} else {

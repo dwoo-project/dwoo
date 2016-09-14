@@ -352,9 +352,6 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 				$compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
 
 				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
-					if (class_exists('Dwoo_Compiler', false) === false) {
-						include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-					}
 					$compiler = Dwoo_Compiler::compilerFactory();
 				} else {
 					$compiler = call_user_func($compiler);

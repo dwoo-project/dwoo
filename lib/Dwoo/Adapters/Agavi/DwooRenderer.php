@@ -114,9 +114,6 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 	 */
 	public function compilerFactory()
 	{
-		if (class_exists('Dwoo_Compiler', false) === false) {
-			include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-		}
 		$compiler = Dwoo_Compiler::compilerFactory();
 		$compiler->setAutoEscape((bool) $this->getParameter('auto_escape', false));
 		return $compiler;

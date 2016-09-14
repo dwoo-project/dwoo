@@ -11,10 +11,6 @@ if (!defined('SMARTY_PHP_PASSTHRU')) {
 	define('SMARTY_PHP_ALLOW',      3);
 }
 
-if (class_exists('Dwoo_Compiler', false) === false) {
-	require dirname(dirname(__FILE__)) . '/Compiler.php';
-}
-
 /**
  * a Smarty compatibility layer for Dwoo
  *
@@ -226,7 +222,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
 		}
 
 		if ($this->compiler_class !== null) {
-			if ($this->compiler_file !== null && !class_exists($this->compiler_class, false)) {
+			if ($this->compiler_file !== null && !class_exists($this->compiler_class)) {
 				include $this->compiler_file;
 			}
 			$this->compiler = new $this->compiler_class;
@@ -507,7 +503,7 @@ class Dwoo_Smarty_Processor_Adapter extends Dwoo_Processor
 }
 
 // cloaks the adapter if possible with the smarty name to fool type-hinted plugins
-if (class_exists('Smarty', false) === false)
+if (class_exists('Smarty') === false)
 {
 	interface Smarty {}
 	class Dwoo_Smarty_Adapter extends Dwoo_Smarty__Adapter implements Smarty {}
