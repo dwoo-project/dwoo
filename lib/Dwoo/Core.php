@@ -1076,7 +1076,7 @@ class Dwoo_Core
      * [runtime function] returns the parent block of the given block
      *
      * @param Dwoo_Block_Plugin $block
-     * @return Dwoo_Block_Plugin or false if the given block isn't in the stack
+     * @return Dwoo_Block_Plugin|false if the given block isn't in the stack
      */
     public function getParentBlock(Dwoo_Block_Plugin $block)
     {
@@ -1091,7 +1091,7 @@ class Dwoo_Core
      * [runtime function] finds the closest block of the given type, starting at the top of the stack
      *
      * @param string $type the type of plugin you want to find
-     * @return Dwoo_Block_Plugin or false if no plugin of such type is in the stack
+     * @return Dwoo_Block_Plugin|false if no plugin of such type is in the stack
      */
     public function findBlock($type)
     {
