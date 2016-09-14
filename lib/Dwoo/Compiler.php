@@ -2944,7 +2944,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					$pluginType = Dwoo_Core::CLASS_PLUGIN;
 				}
-				$interfaces = class_implements('Dwoo_Plugin_'.$name, false);
+				$interfaces = class_implements('Dwoo_Plugin_'.$name);
 				if (in_array('Dwoo_ICompilable', $interfaces) !== false || in_array('Dwoo_ICompilable_Block', $interfaces) !== false) {
 					$pluginType |= Dwoo_Core::COMPILABLE_PLUGIN;
 				}
