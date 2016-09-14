@@ -1301,7 +1301,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$comClose = '*'.$this->rd;
 					$level = 1;
 					$start = $startpos;
-					$ptr = $this->getPointer() + '*';
+					$ptr = $this->getPointer();
 
 					while ($level > 0 && $ptr < strlen($src)) {
 						$open = strpos($src, $comOpen, $ptr);
