@@ -851,6 +851,25 @@ class Dwoo_Core
         return is_string($tpl->getCachedTemplate($this));
     }
 
+	/**
+	 * Clear templates inside the compiled directory.
+	 * @return int
+	 */
+	public function clearCompiled() {
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($this->getCompileDir()),
+			\RecursiveIteratorIterator::SELF_FIRST
+		);
+		$count    = 0;
+		/** @var \SplFileInfo $file */
+		foreach ($iterator as $file) {
+			if ($file->isFile() && $file->getExtension() == 'php') {
+				$count += unlink($file->__toString()) ? 1 : 0;
+			}
+		}
+		return $count;
+	}
+
     /**
      * [util function] clears the cached templates if they are older than the given time
      *
