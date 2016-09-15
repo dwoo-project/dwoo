@@ -24,7 +24,7 @@
  * @copyright  Copyright (c) 2008-2016, David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.2.2
+ * @version    1.2.3
  * @date       2016-10-09
  * @package    Dwoo
  */
