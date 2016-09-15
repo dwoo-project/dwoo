@@ -1,4 +1,4 @@
-## 1.2.3 (2016-XX-XX)
+## 1.2.3 (2016-09-15)
 `Added`
 * Continuously integrated **Travis** config file.
 * Add new method `Dwoo_Core::ClearCompiled()` to clear compiled templates.
