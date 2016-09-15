@@ -7,7 +7,7 @@ before_script:
 
 # PHP5.3
 php:5.6:
-    image: _php/5.6
+    image: php/5.6
     script:
       - echo "Running PHPUnit Tests on PHP5.6"
       - php vendor/bin/phpunit --colors --debug  --coverage-text
