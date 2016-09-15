@@ -116,14 +116,14 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->dwoo->clearCache());
 	}
 
-	public function testClearCompiled()
-	{
-		$compiledDir = $this->dwoo->getCompileDir();
-		chmod($compiledDir, 0777);
-		$this->dwoo->clearCompiled();
-		file_put_contents($compiledDir.DIRECTORY_SEPARATOR.'junk.html', 'test');
-		$this->assertEquals(1, $this->dwoo->clearCompiled());
-	}
+//	public function testClearCompiled()
+//	{
+//		$compiledDir = $this->dwoo->getCompileDir();
+//		chmod($compiledDir, 0777);
+//		$this->dwoo->clearCompiled();
+//		file_put_contents($compiledDir.DIRECTORY_SEPARATOR.'junk.html', 'test');
+//		$this->assertEquals(1, $this->dwoo->clearCompiled());
+//	}
 
 	public function testDwoo_GetFilename()
 	{
