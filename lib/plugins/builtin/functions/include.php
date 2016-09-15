@@ -15,17 +15,19 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  2008-2013 Jordi Boggiano
+ * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    1.2.3
+ * @date       2016-10-15
  * @package    Dwoo
  */
 function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
 	if ($file === '') {
-		return;
+		return '';
 	}
 
 	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
@@ -41,15 +43,15 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 	try {
 		$include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
 	} catch (Dwoo_Security_Exception $e) {
-		return $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
+		$dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
 	} catch (Dwoo_Exception $e) {
-		return $dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
+		$dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
 	}
 
 	if ($include === null) {
-		return $dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
+		$dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
 	} elseif ($include === false) {
-		return $dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
+		$dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
 	}
 
 	if (is_string($data)) {

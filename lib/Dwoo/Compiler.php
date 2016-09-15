@@ -7,11 +7,13 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  2008-2013 Jordi Boggiano
+ * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    1.2.3
+ * @date       2016-10-15
  * @package    Dwoo
  */
 class Dwoo_Compiler implements Dwoo_ICompiler
@@ -367,7 +369,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (class_exists($class, false)) {
+			if (class_exists($class)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
@@ -416,7 +418,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$name = str_replace('Dwoo_Processor_', '', $callback);
 			$class = 'Dwoo_Processor_'.$name;
 
-			if (class_exists($class, false)) {
+			if (class_exists($class)) {
 				$callback = array(new $class($this), 'process');
 			} elseif (function_exists($class)) {
 				$callback = $class;
@@ -454,13 +456,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * internal function to autoload processors at runtime if required
-	 *
 	 * @param string $class the class/function name
-	 * @param string $name the plugin name (without Dwoo_Plugin_ prefix)
+	 * @param string $name  the plugin name (without Dwoo_Plugin_ prefix)
+	 * @return array|string
+	 * @throws Dwoo_Exception
 	 */
 	protected function loadProcessor($class, $name)
 	{
-		if (!class_exists($class, false) && !function_exists($class)) {
+		if (!class_exists($class) && !function_exists($class)) {
 			try {
 				$this->dwoo->getLoader()->loadPlugin($name);
 			} catch (Dwoo_Exception $e) {
@@ -468,7 +471,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			}
 		}
 
-		if (class_exists($class, false)) {
+		if (class_exists($class)) {
 			return array(new $class($this), 'process');
 		}
 
@@ -684,9 +687,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * compiles the provided string down to php code
-	 *
-	 * @param string $tpl the template to compile
+	 * @param Dwoo_Core      $dwoo
+	 * @param Dwoo_ITemplate $template the template to compile
 	 * @return string a compiled php string
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function compile(Dwoo_Core $dwoo, Dwoo_ITemplate $template)
 	{
@@ -713,9 +717,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$compiled = $this->addBlock('topLevelBlock', array(), 0);
 				$this->stack[0]['buffer'] = '';
 
-				if ($this->debug) echo 'COMPILER INIT<br />';
+				if ($this->debug) {
+					echo "\n";
+					echo 'COMPILER INIT' . "\n";
+				}
 
-				if ($this->debug) echo 'PROCESSING PREPROCESSORS ('.count($this->processors['pre']).')<br>';
+				if ($this->debug) echo 'PROCESSING PREPROCESSORS ('.count($this->processors['pre']).')' . "\n";
 
 				// runs preprocessors
 				foreach ($this->processors['pre'] as $preProc) {
@@ -731,7 +738,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				unset($preProc);
 
 				// show template source if debug
-				if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre><hr />';
+				if ($this->debug) echo '<pre>'.print_r(htmlentities($tpl), true).'</pre>' . "\n";
 
 				// strips php tags if required by the security policy
 				if ($this->securityPolicy !== null) {
@@ -820,7 +827,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$compiled .= $this->removeBlock('topLevelBlock');
 
-		if ($this->debug) echo 'PROCESSING POSTPROCESSORS<br>';
+		if ($this->debug) echo 'PROCESSING POSTPROCESSORS' . "\n";
 
 		foreach ($this->processors['post'] as $postProc) {
 			if (is_array($postProc) && isset($postProc['autoload'])) {
@@ -834,7 +841,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		}
 		unset($postProc);
 
-		if ($this->debug) echo 'COMPILATION COMPLETE : MEM USAGE : '.memory_get_usage().'<br>';
+		if ($this->debug) echo 'COMPILATION COMPLETE : MEM USAGE : '.memory_get_usage() . "\n";
 
 		$output = "<?php\n/* template head */\n";
 
@@ -848,7 +855,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			case Dwoo_Core::BLOCK_PLUGIN:
 			case Dwoo_Core::CLASS_PLUGIN:
-				$output .= "if (class_exists('Dwoo_Plugin_$plugin', false)===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+				$output .= "if (class_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
 				break;
 			case Dwoo_Core::FUNC_PLUGIN:
 				$output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
@@ -895,14 +902,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
 		if ($this->debug) {
-			echo '<hr><pre>';
-			$lines = preg_split('{\r\n|\n|<br />}', highlight_string(($output), true));
+			echo '=============================================================================================' . "\n";
+			$lines = preg_split('{\r\n|\n|<br />}', $output);
 			array_shift($lines);
 			foreach ($lines as $i=>$line) {
 				echo ($i+1).'. '.$line."\r\n";
 			}
+			echo '=============================================================================================' . "\n";
 		}
-		if ($this->debug) echo '<hr></pre></pre>';
 
 		$this->template = $this->dwoo = null;
 		$tpl = null;
@@ -917,6 +924,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	protected function resolveSubTemplateDependencies($function)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$body = $this->templatePlugins[$function]['body'];
 		foreach ($this->templatePlugins as $func => $attr) {
 			if ($func !== $function && !isset($attr['called']) && strpos($body, 'Dwoo_Plugin_'.$func) !== false) {
@@ -929,9 +938,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * adds compiled content to the current block
-	 *
-	 * @param string $content the content to push
-	 * @param int $lineCount newlines count in content, optional
+	 * @param string $content   the content to push
+	 * @param int    $lineCount newlines count in content, optional
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function push($content, $lineCount = null)
 	{
@@ -1015,11 +1024,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function addBlock($type, array $params, $paramtype)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$class = 'Dwoo_Plugin_'.$type;
-		if (class_exists($class, false) === false) {
+		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
 		}
-
 		$params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
 		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'class' => $class, 'buffer' => null);
@@ -1061,8 +1071,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	 */
 	public function injectBlock($type, array $params)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$class = 'Dwoo_Plugin_'.$type;
-		if (class_exists($class, false) === false) {
+		if (class_exists($class) === false) {
 			$this->dwoo->getLoader()->loadPlugin($type);
 		}
 		$this->stack[] = array('type' => $type, 'params' => $params, 'custom' => false, 'class' => $class, 'buffer' => null);
@@ -1072,12 +1084,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * removes the closest-to-top block of the given type and all other
 	 * blocks encountered while going down the block stack
-	 *
 	 * @param string $type block type (name)
 	 * @return string the output of all postProcessing() method's return values of the closed blocks
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function removeBlock($type)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$output = '';
 
 		$pluginType = $this->getPluginType($type);
@@ -1115,14 +1129,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * returns a reference to the first block of the given type encountered and
 	 * optionally closes all blocks until it finds it
-	 *
 	 * this is mainly used by {else} plugins to close everything that was opened
 	 * between their parent and themselves
-	 *
-	 * @param string $type the block type (name)
-	 * @param bool $closeAlong whether to close all blocks encountered while going down the block stack or not
-	 * @return &array the array is as such: array('type'=>pluginName, 'params'=>parameter array,
-	 * 				  'custom'=>bool defining whether it's a custom plugin or not, for internal use)
+	 * @param string $type       the block type (name)
+	 * @param bool   $closeAlong whether to close all blocks encountered while going down the block stack or not
+	 * @return mixed &array the array is as such: array('type'=>pluginName, 'params'=>parameter array,
+	 *                           'custom'=>bool defining whether it's a custom plugin or not, for internal use)
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function &findBlock($type, $closeAlong = false)
 	{
@@ -1159,11 +1172,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * removes the block at the top of the stack and calls its postProcessing() method
-	 *
 	 * @return string the postProcessing() method's output
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function removeTopBlock()
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		$o = array_pop($this->stack);
 		if ($o === null) {
 			throw new Dwoo_Compilation_Exception($this, 'Syntax malformation, a block of unknown type was closed but was not opened.');
@@ -1229,17 +1244,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * entry point of the parser, it redirects calls to other parse* functions
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parse($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
+		if ($this->debug) echo 'Compiler::'.__FUNCTION__."\n";
+
 		if ($to === null) {
 			$to = strlen($in);
 		}
@@ -1253,7 +1270,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($curBlock === 'root' && substr($in, $from, strlen($this->rd)) === $this->rd) {
 				// end template tag
 				$pointer += strlen($this->rd);
-				if ($this->debug) echo 'TEMPLATE PARSING ENDED<br />';
+				if ($this->debug) echo 'TEMPLATE PARSING ENDED' . "\n";
 				return false;
 			}
 			$from++;
@@ -1272,7 +1289,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		$substr = substr($in, $from, $to-$from);
 
-		if ($this->debug) echo '<br />PARSE CALL : PARSING "<b>'.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').'</b>" @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer.'<br/>';
+		if ($this->debug) echo 'PARSE CALL : PARSING "<b>'.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').'</b>" @ '.$from.':'.$to.' in '.$curBlock.' : pointer='.$pointer. "\n";
 		$parsed = "";
 
 		if ($curBlock === 'root' && $first === '*') {
@@ -1300,8 +1317,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					$comOpen = $this->ld.'*';
 					$comClose = '*'.$this->rd;
 					$level = 1;
-					$start = $startpos;
-					$ptr = $this->getPointer() + '*';
+					$ptr = $this->getPointer();
 
 					while ($level > 0 && $ptr < strlen($src)) {
 						$open = strpos($src, $comOpen, $ptr);
@@ -1357,7 +1373,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$parsed = 'func';
 		} elseif ($first === ';') {
 			// instruction end
-			if ($this->debug) echo 'END OF INSTRUCTION<br />';
+			if ($this->debug) echo 'END OF INSTRUCTION' . "\n";
 			if ($pointer !== null) {
 				$pointer++;
 			}
@@ -1377,20 +1393,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				if ($this->curBlock['type'] == 'else' || $this->curBlock['type'] == 'elseif') {
 					$pointer -= strlen($match[0]);
 				}
-				if ($this->debug) echo 'TOP BLOCK CLOSED<br />';
+				if ($this->debug) echo 'TOP BLOCK CLOSED' . "\n";
 				return $this->removeTopBlock();
 			} else {
-				if ($this->debug) echo 'BLOCK OF TYPE '.$match[1].' CLOSED<br />';
+				if ($this->debug) echo 'BLOCK OF TYPE '.$match[1].' CLOSED' . "\n";
 				return $this->removeBlock($match[1]);
 			}
 		} elseif ($curBlock === 'root' && substr($substr, 0, strlen($this->rd)) === $this->rd) {
 			// end template tag
-			if ($this->debug) echo 'TAG PARSING ENDED<br />';
+			if ($this->debug) echo 'TAG PARSING ENDED' . "\n";
 			$pointer += strlen($this->rd);
 			return false;
 		} elseif (is_array($parsingParams) && preg_match('#^(([\'"]?)[a-z0-9_]+\2\s*='.($curBlock === 'array' ? '>?':'').')(?:\s+|[^=]).*#i', $substr, $match)) {
 			// named parameter
-			if ($this->debug) echo 'NAMED PARAM FOUND<br />';
+			if ($this->debug) echo 'NAMED PARAM FOUND' . "\n";
 			$len = strlen($match[1]);
 			while (substr($in, $from+$len, 1)===' ') {
 				$len++;
@@ -1430,7 +1446,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		// var parsed, check if any var-extension applies
 		if ($parsed==='var') {
 			if (preg_match('#^\s*([/%+*-])\s*([a-z0-9]|\$)#i', $substr, $match)) {
-				if($this->debug) echo 'PARSING POST-VAR EXPRESSION '.$substr.'<br />';
+				if($this->debug) echo 'PARSING POST-VAR EXPRESSION '.$substr . "\n";
 				// parse expressions
 				$pointer += strlen($match[0]) - 1;
 				if (is_array($parsingParams)) {
@@ -1460,7 +1476,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 					}
 				}
 			} else if ($curBlock === 'root' && preg_match('#^(\s*(?:[+/*%-.]=|=|\+\+|--)\s*)(.*)#s', $substr, $match)) {
-				if($this->debug) echo 'PARSING POST-VAR ASSIGNMENT '.$substr.'<br />';
+				if($this->debug) echo 'PARSING POST-VAR ASSIGNMENT '.$substr . "\n";
 				// parse assignment
 				$value = $match[2];
 				$operator = trim($match[1]);
@@ -1502,7 +1518,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$out = Dwoo_Compiler::PHP_OPEN. $echo . $out . $operator . implode(' ', $value) . Dwoo_Compiler::PHP_CLOSE;
 			} else if ($curBlock === 'array' && is_array($parsingParams) && preg_match('#^(\s*=>?\s*)#', $substr, $match)) {
 				// parse namedparam with var as name (only for array)
-				if ($this->debug) echo 'VARIABLE NAMED PARAM (FOR ARRAY) FOUND<br />';
+				if ($this->debug) echo 'VARIABLE NAMED PARAM (FOR ARRAY) FOUND' . "\n";
 				$len = strlen($match[1]);
 				$var = $out[count($out)-1];
 				$pointer += $len;
@@ -1552,14 +1568,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a function call
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
+	 * @throws Dwoo_Exception
+	 * @throws Dwoo_Security_Exception
 	 */
 	protected function parseFunction($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -1576,7 +1594,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			$cmdstr = $match[1];
 		}
 
-		if ($this->debug) echo 'FUNC FOUND ('.$func.')<br />';
+		if ($this->debug) echo 'FUNC FOUND ('.$func.')' . "\n";
 
 		$paramsep = '';
 
@@ -1638,17 +1656,17 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 							}
 
 							if ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === ')') {
-								if ($this->debug) echo 'PARAM PARSING ENDED, ")" FOUND, POINTER AT '.$ptr.'<br/>';
+								if ($this->debug) echo 'PARAM PARSING ENDED, ")" FOUND, POINTER AT '.$ptr . "\n";
 								break 2;
 							} elseif ($paramstr[$ptr] === ';') {
 								$ptr++;
-								if ($this->debug) echo 'PARAM PARSING ENDED, ";" FOUND, POINTER AT '.$ptr.'<br/>';
+								if ($this->debug) echo 'PARAM PARSING ENDED, ";" FOUND, POINTER AT '.$ptr . "\n";
 								break 2;
 							} elseif ($func !== 'if' && $func !== 'elseif' && $paramstr[$ptr] === '/') {
-								if ($this->debug) echo 'PARAM PARSING ENDED, "/" FOUND, POINTER AT '.$ptr.'<br/>';
+								if ($this->debug) echo 'PARAM PARSING ENDED, "/" FOUND, POINTER AT '.$ptr . "\n";
 								break 2;
 							} elseif (substr($paramstr, $ptr, strlen($this->rd)) === $this->rd) {
-								if ($this->debug) echo 'PARAM PARSING ENDED, RIGHT DELIMITER FOUND, POINTER AT '.$ptr.'<br/>';
+								if ($this->debug) echo 'PARAM PARSING ENDED, RIGHT DELIMITER FOUND, POINTER AT '.$ptr . "\n";
 								break 2;
 							}
 
@@ -1659,7 +1677,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 							}
 						}
 
-						if ($this->debug) echo 'FUNC START PARAM PARSING WITH POINTER AT '.$ptr.'<br/>';
+						if ($this->debug) echo 'FUNC START PARAM PARSING WITH POINTER AT '.$ptr . "\n";
 
 						if ($func === 'if' || $func === 'elseif' || $func === 'tif') {
 							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'condition', $ptr);
@@ -1669,7 +1687,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 							$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'function', $ptr);
 						}
 
-						if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.' ('.substr($paramstr, $ptr-1, 3).')<br/>';
+						if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.' ('.substr($paramstr, $ptr-1, 3).')' . "\n";
 					}
 				}
 				$paramstr = substr($paramstr, 0, $ptr);
@@ -1693,7 +1711,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 		if ($pointer !== null) {
 			$pointer += (isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func) + (isset($whitespace) ? $whitespace : 0);
-			if ($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func)).' TO POINTER<br/>';
+			if ($this->debug) echo 'FUNC ADDS '.((isset($paramstr) ? strlen($paramstr) : 0) + (')' === $paramsep ? 2 : ($paramspos === false ? 0 : 1)) + strlen($func)).' TO POINTER' . "\n";
 		}
 
 		if ($curBlock === 'method' || $func === 'do' || strstr($func, '::') !== false) {
@@ -1815,15 +1833,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			} else {
 				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
-					if (is_callable($callback)) {
+					if ($callback instanceof \Closure) {
 						array_unshift($params, $this->getDwoo());
 						$output = call_user_func_array($callback, $params);
-					} else {
+					}
+					else {
 						array_unshift($params, '$this');
 						$params = self::implode_r($params);
-						$output = 'call_user_func(\''.$callback.'\', '.$params.')';
+						$output = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
 					}
 				} else {
+					array_unshift($params, '$this');
+					$params = self::implode_r($params);
 					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
 				}
 			}
@@ -1917,21 +1938,21 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a string
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseString($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
 		$substr = substr($in, $from, $to-$from);
 		$first = $substr[0];
 
-		if ($this->debug) echo 'STRING FOUND (in '.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').')<br />';
+		if ($this->debug) echo 'STRING FOUND (in '.htmlentities(substr($in, $from, min($to-$from, 50))).(($to-$from) > 50 ? '...':'').')' . "\n";
 		$strend = false;
 		$o = $from+1;
 		while ($strend === false) {
@@ -1944,7 +1965,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$strend = false;
 			}
 		}
-		if ($this->debug) echo 'STRING DELIMITED: '.substr($in, $from, $strend+1-$from).'<br/>';
+		if ($this->debug) echo 'STRING DELIMITED: '.substr($in, $from, $strend+1-$from) . "\n";
 
 		$srcOutput = substr($in, $from, $strend+1-$from);
 
@@ -1984,21 +2005,21 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a constant
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseConst($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
 		$substr = substr($in, $from, $to-$from);
 
 		if ($this->debug) {
-			echo 'CONST FOUND : '.$substr.'<br />';
+			echo 'CONST FOUND : '.$substr . "\n";
 		}
 
 		if (!preg_match('#^%([\\\\a-z0-9_:]+)#i', $substr, $m)) {
@@ -2045,14 +2066,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a variable
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseVar($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -2094,9 +2115,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 			if ($this->debug) {
 				if ($hasMethodCall) {
-					echo 'METHOD CALL FOUND : $'.$key.substr($methodCall, 0, 30).'<br />';
+					echo 'METHOD CALL FOUND : $'.$key.substr($methodCall, 0, 30) . "\n";
 				} else {
-					echo 'VAR FOUND : $'.$key.'<br />';
+					echo 'VAR FOUND : $'.$key . "\n";
 				}
 			}
 
@@ -2150,11 +2171,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				unset($uid, $current, $curTxt, $tree, $chars);
 
-				if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT : '.$key.'<br>';
+				if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT : '.$key . "\n";
 
 				$key = $this->flattenVarTree($parsed);
 
-				if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key.'<br>';
+				if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key . "\n";
 
 				$output = preg_replace('#(^""\.|""\.|\.""$|(\()""\.|\.""(\)))#', '$2$3', '$this->readVar("'.$key.'")');
 			} else {
@@ -2445,7 +2466,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				} else {
 					$cnt = substr_count($key, '$');
 
-					if ($this->debug) echo 'PARSING SUBVARS IN : '.$key.'<br>';
+					if ($this->debug) echo 'PARSING SUBVARS IN : '.$key . "\n";
 					if ($cnt > 0) {
 						while (--$cnt >= 0) {
 							if (isset($last)) {
@@ -2467,7 +2488,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 								$last,
 								$len
 							);
-							if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key.'<br>';
+							if ($this->debug) echo 'RECURSIVE VAR REPLACEMENT DONE : '.$key . "\n";
 						}
 						unset($last);
 
@@ -2495,14 +2516,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses various constants, operators or non-quoted strings
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Exception
 	 */
 	protected function parseOthers($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -2548,15 +2569,15 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		$substr = trim($substr);
 
 		if (strtolower($substr) === 'false' || strtolower($substr) === 'no' || strtolower($substr) === 'off') {
-			if ($this->debug) echo 'BOOLEAN(FALSE) PARSED<br />';
+			if ($this->debug) echo 'BOOLEAN(FALSE) PARSED' . "\n";
 			$substr = 'false';
 			$type = self::T_BOOL;
 		} elseif (strtolower($substr) === 'true' || strtolower($substr) === 'yes' || strtolower($substr) === 'on') {
-			if ($this->debug) echo 'BOOLEAN(TRUE) PARSED<br />';
+			if ($this->debug) echo 'BOOLEAN(TRUE) PARSED' . "\n";
 			$substr = 'true';
 			$type = self::T_BOOL;
 		} elseif ($substr === 'null' || $substr === 'NULL') {
-			if ($this->debug) echo 'NULL PARSED<br />';
+			if ($this->debug) echo 'NULL PARSED' . "\n";
 			$substr = 'null';
 			$type = self::T_NULL;
 		} elseif (is_numeric($substr)) {
@@ -2565,19 +2586,19 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$substr = (int) $substr;
 			}
 			$type = self::T_NUMERIC;
-			if ($this->debug) echo 'NUMBER ('.$substr.') PARSED<br />';
+			if ($this->debug) echo 'NUMBER ('.$substr.') PARSED' . "\n";
 		} elseif (preg_match('{^-?(\d+|\d*(\.\d+))\s*([/*%+-]\s*-?(\d+|\d*(\.\d+)))+$}', $substr)) {
-			if ($this->debug) echo 'SIMPLE MATH PARSED<br />';
+			if ($this->debug) echo 'SIMPLE MATH PARSED . "\n"';
 			$type = self::T_MATH;
 			$substr = '('.$substr.')';
 		} elseif ($curBlock === 'condition' && array_search($substr, $breakChars, true) !== false) {
-			if ($this->debug) echo 'BREAKCHAR ('.$substr.') PARSED<br />';
+			if ($this->debug) echo 'BREAKCHAR ('.$substr.') PARSED' . "\n";
 			$type = self::T_BREAKCHAR;
 			//$substr = '"'.$substr.'"';
 		} else {
 			$substr = $this->replaceStringVars('\''.str_replace('\'', '\\\'', $substr).'\'', '\'', $curBlock);
 			$type = self::T_UNQUOTED_STRING;
-			if ($this->debug) echo 'BLABBER ('.$substr.') CASTED AS STRING<br />';
+			if ($this->debug) echo 'BLABBER ('.$substr.') CASTED AS STRING' . "\n";
 		}
 
 		if (is_array($parsingParams)) {
@@ -2603,7 +2624,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	protected function replaceStringVars($string, $first, $curBlock='')
 	{
 		$pos = 0;
-		if ($this->debug) echo 'STRING VAR REPLACEMENT : '.$string.'<br>';
+		if ($this->debug) echo 'STRING VAR REPLACEMENT : '.$string . "\n";
 		// replace vars
 		while (($pos = strpos($string, '$', $pos)) !== false) {
 			$prev = substr($string, $pos-1, 1);
@@ -2622,7 +2643,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$string = substr_replace($string, $first.'.'.$var[1].'.'.$first, $pos, $len);
 			}
 			$pos += strlen($var[1]) + 2;
-			if ($this->debug) echo 'STRING VAR REPLACEMENT DONE : '.$string.'<br>';
+			if ($this->debug) echo 'STRING VAR REPLACEMENT DONE : '.$string . "\n";
 		}
 
 		// handle modifiers
@@ -2639,14 +2660,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * replaces the modifiers applied to a string or a variable
-	 *
-	 * @param array $m the regex matches that must be array(1=>"double or single quotes enclosing a string, when applicable", 2=>"the string or var", 3=>"the modifiers matched")
+	 * @param array  $m        the regex matches that must be array(1=>"double or single quotes enclosing a string, when applicable", 2=>"the string or var", 3=>"the modifiers matched")
 	 * @param string $curBlock the current parser-block being processed
+	 * @param null   $pointer
 	 * @return string the input enclosed with various function calls according to the modifiers found
+	 * @throws Dwoo_Compilation_Exception
+	 * @throws Dwoo_Exception
 	 */
 	protected function replaceModifiers(array $m, $curBlock = null, &$pointer = null)
 	{
-		if ($this->debug) echo 'PARSING MODIFIERS : '.$m[3].'<br />';
+		if ($this->debug) echo 'PARSING MODIFIERS : '.$m[3] . "\n";
 
 		if ($pointer !== null) {
 			$pointer += strlen($m[3]);
@@ -2668,7 +2691,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				continue;
 			}
 			if ($cmdstrsrc[0] === ' ' || $cmdstrsrc[0] === ';' || substr($cmdstrsrc, 0, strlen($this->rd)) === $this->rd) {
-				if ($this->debug) echo 'MODIFIER PARSING ENDED, RIGHT DELIMITER or ";" FOUND<br/>';
+				if ($this->debug) echo 'MODIFIER PARSING ENDED, RIGHT DELIMITER or ";" FOUND' . "\n";
 				$continue = false;
 				if ($pointer !== null) {
 					$pointer -= strlen($cmdstrsrc);
@@ -2687,7 +2710,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 			if ($paramspos === false) {
 				$cmdstrsrc = substr($cmdstrsrc, strlen($func));
 				$params = array();
-				if ($this->debug) echo 'MODIFIER ('.$func.') CALLED WITH NO PARAMS<br/>';
+				if ($this->debug) echo 'MODIFIER ('.$func.') CALLED WITH NO PARAMS' . "\n";
 			} else {
 				$paramstr = substr($cmdstr, $paramspos+1);
 				if (substr($paramstr, -1, 1) === $paramsep) {
@@ -2697,18 +2720,18 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$ptr = 0;
 				$params = array();
 				while ($ptr < strlen($paramstr)) {
-					if ($this->debug) echo 'MODIFIER ('.$func.') START PARAM PARSING WITH POINTER AT '.$ptr.'<br/>';
-					if ($this->debug) echo $paramstr.'--'.$ptr.'--'.strlen($paramstr).'--modifier<br/>';
+					if ($this->debug) echo 'MODIFIER ('.$func.') START PARAM PARSING WITH POINTER AT '.$ptr . "\n";
+					if ($this->debug) echo $paramstr.'--'.$ptr.'--'.strlen($paramstr).'--modifier' . "\n";
 					$params = $this->parse($paramstr, $ptr, strlen($paramstr), $params, 'modifier', $ptr);
-					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr.'<br/>';
+					if ($this->debug) echo 'PARAM PARSED, POINTER AT '.$ptr . "\n";
 
 					if ($ptr >= strlen($paramstr)) {
-						if ($this->debug) echo 'PARAM PARSING ENDED, PARAM STRING CONSUMED<br/>';
+						if ($this->debug) echo 'PARAM PARSING ENDED, PARAM STRING CONSUMED' . "\n";
 						break;
 					}
 
 					if ($paramstr[$ptr] === ' ' || $paramstr[$ptr] === '|' || $paramstr[$ptr] === ';' || substr($paramstr, $ptr, strlen($this->rd)) === $this->rd) {
-						if ($this->debug) echo 'PARAM PARSING ENDED, " ", "|", RIGHT DELIMITER or ";" FOUND, POINTER AT '.$ptr.'<br/>';
+						if ($this->debug) echo 'PARAM PARSING ENDED, " ", "|", RIGHT DELIMITER or ";" FOUND, POINTER AT '.$ptr . "\n";
 						if ($paramstr[$ptr] !== '|') {
 							$continue = false;
 							if ($pointer !== null) {
@@ -2887,6 +2910,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($curBlock === 'string' || $curBlock === 'root') {
 			return $m[1].'.'.$output.'.'.$m[1].(isset($add)?$add:null);
 		}
+
+		return '';
 	}
 
 	/**
@@ -2919,9 +2944,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * returns the plugin type of a plugin and adds it to the used plugins array if required
-	 *
 	 * @param string $name plugin name, as found in the template
 	 * @return int type as a multi bit flag composed of the Dwoo plugin types constants
+	 * @throws Dwoo_Exception
+	 * @throws Dwoo_Security_Exception
+	 * @throws Exception
 	 */
 	protected function getPluginType($name)
 	{
@@ -2939,13 +2966,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				$pluginType = Dwoo_Core::TEMPLATE_PLUGIN | Dwoo_Core::COMPILABLE_PLUGIN;
 			} elseif (isset($this->customPlugins[$name])) {
 				$pluginType = $this->customPlugins[$name]['type'] | Dwoo_Core::CUSTOM_PLUGIN;
-			} elseif (class_exists('Dwoo_Plugin_'.$name, false) !== false) {
+			} elseif (class_exists('Dwoo_Plugin_'.$name) !== false) {
 				if (is_subclass_of('Dwoo_Plugin_'.$name, 'Dwoo_Block_Plugin')) {
 					$pluginType = Dwoo_Core::BLOCK_PLUGIN;
 				} else {
 					$pluginType = Dwoo_Core::CLASS_PLUGIN;
 				}
-				$interfaces = class_implements('Dwoo_Plugin_'.$name, false);
+				$interfaces = class_implements('Dwoo_Plugin_'.$name);
 				if (in_array('Dwoo_ICompilable', $interfaces) !== false || in_array('Dwoo_ICompilable_Block', $interfaces) !== false) {
 					$pluginType |= Dwoo_Core::COMPILABLE_PLUGIN;
 				}
@@ -3012,12 +3039,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * maps the parameters received from the template onto the parameters required by the given callback
-	 *
-	 * @param array $params the array of parameters
+	 * @param array    $params   the array of parameters
 	 * @param callback $callback the function or method to reflect on to find out the required parameters
-	 * @param int $callType the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call
-	 * @param array $map the parameter map to use, if not provided it will be built from the callback
+	 * @param int      $callType the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call
+	 * @param array    $map      the parameter map to use, if not provided it will be built from the callback
 	 * @return array parameters sorted in the correct order with missing optional parameters filled
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function mapParams(array $params, $callback, $callType=2, $map = null)
 	{

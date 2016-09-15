@@ -7,11 +7,13 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  2008-2013 Jordi Boggiano
+ * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    1.2.3
+ * @date       2016-10-15
  * @package    Dwoo
  */
 class Dwoo_Template_String implements Dwoo_ITemplate
@@ -83,6 +85,8 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 * @var int
 	 */
 	protected $chmod = 0777;
+
+	protected $template;
 
 	/**
 	 * creates a template from a string
@@ -352,9 +356,6 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 				$compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
 
 				if ($compiler === null || $compiler === array('Dwoo_Compiler', 'compilerFactory')) {
-					if (class_exists('Dwoo_Compiler', false) === false) {
-						include DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-					}
 					$compiler = Dwoo_Compiler::compilerFactory();
 				} else {
 					$compiler = call_user_func($compiler);
@@ -373,7 +374,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 			if (extension_loaded('Zend OPcache')) {
 				opcache_invalidate($compiledFile);
-			} elseif (extension_loaded('apc')) {
+			} elseif (extension_loaded('apc') && ini_get('apc.enabled')) {
 				apc_delete_file($compiledFile);
 			}
 
@@ -386,7 +387,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * Checks if compiled file is valid (it exists)
 	 *
-	 * @param string file
+	 * @param string $file
 	 * @return boolean True cache file existance
 	 */
 	protected function isValidCompiledFile($file) {
@@ -471,11 +472,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 	/**
 	 * ensures the given path exists
-	 *
-	 * @param string $path any path
+	 * @param string $path    any path
 	 * @param string $baseDir the base directory where the directory is created
 	 *                        ($path must still contain the full path, $baseDir
 	 *                        is only used for unix permissions)
+	 * @throws Exception
 	 */
 	protected function makeDirectory($path, $baseDir = null)
 	{

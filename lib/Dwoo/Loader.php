@@ -7,11 +7,13 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  2008-2013 Jordi Boggiano
+ * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.1.0
- * @date       2009-07-18
+ * @version    1.2.3
+ * @date       2016-10-15
  * @package    Dwoo
  */
 class Dwoo_Loader implements Dwoo_ILoader
@@ -59,9 +61,9 @@ class Dwoo_Loader implements Dwoo_ILoader
 
 	/**
 	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
-	 *
-	 * @param string $path the plugin path to scan
+	 * @param string $path      the plugin path to scan
 	 * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
+	 * @throws Dwoo_Exception
 	 */
 	protected function rebuildClassPathCache($path, $cacheFile)
 	{
@@ -93,9 +95,9 @@ class Dwoo_Loader implements Dwoo_ILoader
 
 	/**
 	 * loads a plugin file
-	 *
-	 * @param string $class the plugin name, without the Dwoo_Plugin_ prefix
-	 * @param bool $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
+	 * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
+	 * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
+	 * @throws Dwoo_Exception
 	 */
 	public function loadPlugin($class, $forceRehash = true)
 	{
@@ -115,12 +117,10 @@ class Dwoo_Loader implements Dwoo_ILoader
 				}
 				if (isset($this->classPath[$class])) {
 					include $this->classPath[$class];
-				} else {
-					throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 				}
-			} else {
 				throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 			}
+			throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
 		}
 	}
 
@@ -130,11 +130,10 @@ class Dwoo_Loader implements Dwoo_ILoader
 	 * dwoo plugin directory), you can use this for example to override plugins
 	 * in a specific directory for a specific application while keeping all your
 	 * usual plugins in the same place for all applications.
-	 *
 	 * TOCOM don't forget that php functions overrides are not rehashed so you
 	 * need to clear the classpath caches by hand when adding those
-	 *
 	 * @param string $pluginDirectory the plugin path to scan
+	 * @throws Dwoo_Exception
 	 */
 	public function addDirectory($pluginDirectory)
 	{

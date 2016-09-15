@@ -1,16 +1,6 @@
 <?php
-
-error_reporting(E_ALL|E_STRICT);
-if (!ini_get('date.timezone'))
-	date_default_timezone_set('CET');
-
 define('DWOO_CACHE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
 define('DWOO_COMPILE_DIR', dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled');
-
-require dirname(__FILE__) . '/../lib/dwooAutoload.php';
-//require dirname(__FILE__) . '/../lib/Dwoo.compiled.php';
-//set_include_path(get_include_path().PATH_SEPARATOR.dirname(__FILE__).'/../lib/');
-
 define('TEST_DIRECTORY', dirname(__FILE__));
 
 class DwooTests extends PHPUnit_Framework_TestSuite
@@ -20,6 +10,9 @@ class DwooTests extends PHPUnit_Framework_TestSuite
 	public static function suite()
 	{
 		$suite = new self('Dwoo - Unit Tests Report');
+
+//		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+//		$dwoo->clearCompiled();
 
 		foreach (new DirectoryIterator(dirname(__FILE__)) as $file) {
 			if (!$file->isDir() && substr((string) $file, -4) == '.php' && (string) $file !== 'DwooTests.php' && (string) $file !== 'run-tests.php' && substr((string) $file, -4) === '.php') {
@@ -40,7 +33,7 @@ class DwooTests extends PHPUnit_Framework_TestSuite
 	protected function tearDown()
 	{
 		$this->clearDir(TEST_DIRECTORY.'/temp/cache', true);
-		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
+//		$this->clearDir(TEST_DIRECTORY.'/temp/compiled', true);
 	}
 
 	protected function clearDir($path, $emptyOnly=false)

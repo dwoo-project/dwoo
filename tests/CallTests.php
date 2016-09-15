@@ -1,7 +1,5 @@
 <?php
 
-require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-
 class CallTests extends PHPUnit_Framework_TestCase
 {
 	protected $compiler;
@@ -13,6 +11,19 @@ class CallTests extends PHPUnit_Framework_TestCase
 		$this->compiler = new Dwoo_Compiler();
 		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
+
+//	public function testClosureFunctionPlugin()
+//	{
+//		$this->dwoo->addPlugin('test', function (Dwoo_Core $dwoo, $foo, $bar="bar")
+//		{
+//			return $foo.$bar;
+//		});
+//		$tpl = new Dwoo_Template_String('{test "xxx"}');
+//		$tpl->forceCompilation();
+//
+//		$this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
+//		$this->dwoo->removePlugin('test');
+//	}
 
 	public function testCustomFunctionPlugin()
 	{

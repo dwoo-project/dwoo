@@ -10,11 +10,13 @@
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
  * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
+ * @author     David Sanchez <david38sanchez@gmail.com>
+ * @copyright  2008-2013 Jordi Boggiano
+ * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
  * @link       http://dwoo.org/
- * @version    1.0.0
- * @date       2008-10-23
+ * @version    1.2.3
+ * @date       2016-10-15
  * @package    Dwoo
  */
 abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
@@ -62,18 +64,17 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 
 	/**
 	 * called at compile time to define what the block should output in the compiled template code, happens when the block is declared
-	 *
 	 * basically this will replace the {block arg arg arg} tag in the template
-	 *
 	 * @param Dwoo_Compiler $compiler the compiler instance that calls this function
-	 * @param array $params an array containing original and compiled parameters
-	 * @param string $prepend that is just meant to allow a child class to call
-	 * 						  parent::postProcessing($compiler, $params, "foo();") to add a command before the
-	 * 						  default commands are executed
-	 * @param string $append that is just meant to allow a child class to call
-	 * 						 parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
-	 * 						 default commands are executed
-	 * @param string $type the type is the plugin class name used
+	 * @param array         $params   an array containing original and compiled parameters
+	 * @param string        $prepend  that is just meant to allow a child class to call
+	 *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
+	 *                                default commands are executed
+	 * @param string        $append   that is just meant to allow a child class to call
+	 *                                parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
+	 *                                default commands are executed
+	 * @param string        $type     the type is the plugin class name used
+	 * @return string
 	 */
 	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
 	{
@@ -82,19 +83,18 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
 
 	/**
 	 * called at compile time to define what the block should output in the compiled template code, happens when the block is ended
-	 *
 	 * basically this will replace the {/block} tag in the template
-	 *
 	 * @see preProcessing
 	 * @param Dwoo_Compiler $compiler the compiler instance that calls this function
-	 * @param array $params an array containing original and compiled parameters, see preProcessing() for more details
-	 * @param string $prepend that is just meant to allow a child class to call
-	 * 						  parent::postProcessing($compiler, $params, "foo();") to add a command before the
-	 * 						  default commands are executed
-	 * @param string $append that is just meant to allow a child class to call
-	 * 						 parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
-	 * 						 default commands are executed
-	 * @param string $content the entire content of the block being closed
+	 * @param array         $params   an array containing original and compiled parameters, see preProcessing() for more details
+	 * @param string        $prepend  that is just meant to allow a child class to call
+	 *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
+	 *                                default commands are executed
+	 * @param string        $append   that is just meant to allow a child class to call
+	 *                                parent::postProcessing($compiler, $params, null, "foo();") to add a command after the
+	 *                                default commands are executed
+	 * @param string        $content  the entire content of the block being closed
+	 * @return string
 	 */
 	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
 	{

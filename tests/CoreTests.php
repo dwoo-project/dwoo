@@ -1,7 +1,5 @@
 <?php
 
-require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-
 class CoreTests extends PHPUnit_Framework_TestCase
 {
 	protected $compiler;
@@ -118,6 +116,14 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, $this->dwoo->clearCache());
 	}
 
+	public function testClearCompiled()
+	{
+		$compiledDir = $this->dwoo->getCompileDir();
+		$this->dwoo->clearCompiled();
+		file_put_contents($compiledDir.DIRECTORY_SEPARATOR.'junk.html', 'test');
+		$this->assertEquals(1, $this->dwoo->clearCompiled());
+	}
+
 	public function testDwoo_GetFilename()
 	{
 		$this->assertEquals('44BAR', $this->dwoo->get(TEST_DIRECTORY.'/resources/test.html', array('foo'=>44, 'bar'=>'BAR')));
@@ -193,7 +199,10 @@ class CoreTests extends PHPUnit_Framework_TestCase
 		$this->dwoo->addResource('news', 'Dwoo_Template_File', array('Dwoo_Compiler', 'compilerFactory'));
 		$tpl = new Dwoo_Template_String('{include file="news:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
 		$tpl->forceCompilation();
-		$this->assertEquals("34", $this->dwoo->get($tpl, array()));
+
+		$compiler = new Dwoo_Compiler();
+//		$compiler->debug = true;
+		$this->assertEquals("34", $this->dwoo->get($tpl, array(), $compiler));
 		$this->dwoo->removeResource('news');
 
 		$this->dwoo->addResource('file', 'Dwoo_Template_String', 'Fake');

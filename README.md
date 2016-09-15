@@ -1,6 +1,6 @@
-WHAT IS DWOO?
+WHAT IS DWOO? [![Build Status](https://travis-ci.org/dwoo-project/dwoo.svg?branch=1.2)](https://travis-ci.org/dwoo-project/dwoo) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dwoo-project/dwoo/badges/quality-score.png?b=1.2)](https://scrutinizer-ci.com/g/dwoo-project/dwoo/?branch=1.2)
 =============
-Dwoo is a PHP5 Template Engine that was started in early 2008. The idea came
+Dwoo is a PHP5/PHP7 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
 older. It carries the weight of it's age, having old features that are
 inconsistent compared to newer ones, being written for PHP4 its Object
@@ -12,19 +12,24 @@ So far it has proven to be faster than Smarty in many areas, and it provides
 a compatibility layer to allow developers that have been using Smarty for
 years to switch their application over to Dwoo progressively.
 
+> ⚠ Dwoo **1.2.x** is only compatible with **PHP 5.x** ⚠
+
 DOCUMENTATION
 =============
-Dwoo's website to get the latest version is at http://dwoo.org/
-
+Dwoo's website to get the latest version is at http://dwoo.org/   
 The wiki/documentation pages are available at http://dwoo.org/documentation/
+
+Requirements
+------------
+* PHP >= **5.3**
+* PHP <= **7.0**
+* [Multibyte String](http://php.net/manual/en/book.mbstring.php)
 
 LICENSE
 =======
-Dwoo is released under the Modified BSD license.
+Dwoo is released under the [Modified BSD](./LICENSE) license.
 See the LICENSE file included in the archive or go to the URL below to obtain
 a copy.
-
-[Full license](./LICENSE)
 
 QUICK START - RUNNING DWOO
 ==========================
@@ -74,7 +79,7 @@ $pageContent = '';
 foreach($articles as $article) {
     // Either associate variables one by one
     $data = new Dwoo_Data();
-    $data->assign('title', $article['title'];
+    $data->assign('title', $article['title']);
     $data->assign('content', $article['content']);
     $pageContent .= $dwoo->get($tpl, $data);
 

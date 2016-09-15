@@ -1,7 +1,5 @@
 <?php
 
-require_once DWOO_DIRECTORY . 'Dwoo/Compiler.php';
-
 class CompilerTests extends PHPUnit_Framework_TestCase
 {
 	const FOO = 3;
