@@ -888,7 +888,7 @@ class Dwoo_Core
         $count = 0;
 		/** @var \SplFileInfo $file */
         foreach ($iterator as $file) {
-			if ($file->isFile() && $file->getExtension() !== 'html' && $file->getCTime() < $expired) {
+			if ($file->isFile() && $file->getCTime() < $expired) {
 				$count += unlink((string) $file) ? 1 : 0;
 			}
         }
