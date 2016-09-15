@@ -1,7 +1,9 @@
 # Before Script
 before_script:
-  - composer self-update
-  - composer install --prefer-dist > /dev/null
+  - apt-get update -yqq
+  - apt-get install git -yqq
+  - curl -sS https://getcomposer.org/installer | php
+  - php composer.phar install
 
 # PHP5.3
 php:5.3:
