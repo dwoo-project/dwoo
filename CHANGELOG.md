@@ -1,6 +1,8 @@
 ## 1.2.3 (2016-XX-XX)
 `Added`
 * Continuously integrated **Travis** config file.
+* Add new method `Dwoo_Core::ClearCompiled()` to clear compiled templates.
+* Add new PHPDoc `@author` and `@copyright` tags.
 
 `Removed`
 * Unreachable statements.
@@ -8,6 +10,9 @@
 `Fixed`
 * PHPUnit config file.
 * PHPUnit tests classes.
+* Fix `Dwoo_Core::clearCache()`, remove all files even `.html`.
+* Fix all PHPDoc.
+* Fix return statements in correlation with PHPDoc.
 
 `Deprecated`
 * Method `Dwoo\Core::output()` is now deprecated, will be removed in **1.3.0**.

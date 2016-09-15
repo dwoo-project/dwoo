@@ -119,6 +119,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 	public function testClearCompiled()
 	{
 		$compiledDir = $this->dwoo->getCompileDir();
+		chmod($compiledDir, 0777);
 		$this->dwoo->clearCompiled();
 		file_put_contents($compiledDir.DIRECTORY_SEPARATOR.'junk.html', 'test');
 		$this->assertEquals(1, $this->dwoo->clearCompiled());
