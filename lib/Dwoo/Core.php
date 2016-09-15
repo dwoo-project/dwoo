@@ -865,7 +865,7 @@ class Dwoo_Core
 		$count    = 0;
 		/** @var \SplFileInfo $file */
 		foreach ($iterator as $file) {
-			if ($file->isFile() && $file->getExtension() == 'php') {
+			if ($file->isFile()) {
 				$count += unlink($file->__toString()) ? 1 : 0;
 			}
 		}
