@@ -1831,12 +1831,20 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 				}
 				$output = call_user_func_array($funcCompiler, $params);
 			} else {
-				array_unshift($params, '$this');
-				$params = self::implode_r($params);
 				if ($pluginType & Dwoo_Core::CUSTOM_PLUGIN) {
 					$callback = $this->customPlugins[$func]['callback'];
-					$output = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
+					if ($callback instanceof \Closure) {
+						array_unshift($params, $this->getDwoo());
+						$output = call_user_func_array($callback, $params);
+					}
+					else {
+						array_unshift($params, '$this');
+						$params = self::implode_r($params);
+						$output = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
+					}
 				} else {
+					array_unshift($params, '$this');
+					$params = self::implode_r($params);
 					$output = 'Dwoo_Plugin_'.$func.'('.$params.')';
 				}
 			}

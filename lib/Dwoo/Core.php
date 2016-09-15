@@ -499,7 +499,7 @@ class Dwoo_Core
 			} else {
 				throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
 			}
-		} elseif(is_callable($callback)) {
+		} elseif($callback instanceof \Closure) {
 			$this->plugins[$name] = array('type'=>self::FUNC_PLUGIN | $compilable, 'callback'=>$callback);
 		} else {
             throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
