@@ -61,9 +61,9 @@ class Dwoo_Loader implements Dwoo_ILoader
 
 	/**
 	 * rebuilds class paths, scans the given directory recursively and saves all paths in the given file
-	 *
-	 * @param string $path the plugin path to scan
+	 * @param string $path      the plugin path to scan
 	 * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
+	 * @throws Dwoo_Exception
 	 */
 	protected function rebuildClassPathCache($path, $cacheFile)
 	{
@@ -95,9 +95,9 @@ class Dwoo_Loader implements Dwoo_ILoader
 
 	/**
 	 * loads a plugin file
-	 *
-	 * @param string $class the plugin name, without the Dwoo_Plugin_ prefix
-	 * @param bool $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
+	 * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
+	 * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
+	 * @throws Dwoo_Exception
 	 */
 	public function loadPlugin($class, $forceRehash = true)
 	{
@@ -130,11 +130,10 @@ class Dwoo_Loader implements Dwoo_ILoader
 	 * dwoo plugin directory), you can use this for example to override plugins
 	 * in a specific directory for a specific application while keeping all your
 	 * usual plugins in the same place for all applications.
-	 *
 	 * TOCOM don't forget that php functions overrides are not rehashed so you
 	 * need to clear the classpath caches by hand when adding those
-	 *
 	 * @param string $pluginDirectory the plugin path to scan
+	 * @throws Dwoo_Exception
 	 */
 	public function addDirectory($pluginDirectory)
 	{

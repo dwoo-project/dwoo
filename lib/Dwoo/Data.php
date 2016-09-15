@@ -193,12 +193,12 @@ class Dwoo_Data implements Dwoo_IDataProvider
    	{
    		return isset($this->data[$name]);
    	}
-   	
-   	/**
-   	 * supports calls to isset($dwooData->var)
-   	 * 
-   	 * @param string $name the variable name
-   	 */
+
+	/**
+	 * supports calls to isset($dwooData->var)
+	 * @param string $name the variable name
+	 * @return bool
+	 */
    	public function __isset($name)
    	{
    		return isset($this->data[$name]);
@@ -235,12 +235,12 @@ class Dwoo_Data implements Dwoo_IDataProvider
    		return $this->__get($name);
    	}
 
-   	/**
-   	 * allows to read variables using the object syntax
-   	 * 
-   	 * @param string $name the variable name
-   	 * @return mixed
-   	 */
+	/**
+	 * allows to read variables using the object syntax
+	 * @param string $name the variable name
+	 * @return mixed
+	 * @throws Dwoo_Exception
+	 */
    	public function __get($name)
    	{
    		if (isset($this->data[$name])) {

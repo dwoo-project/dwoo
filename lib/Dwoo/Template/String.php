@@ -86,6 +86,8 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	 */
 	protected $chmod = 0777;
 
+	protected $template;
+
 	/**
 	 * creates a template from a string
 	 *
@@ -385,7 +387,7 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 	/**
 	 * Checks if compiled file is valid (it exists)
 	 *
-	 * @param string file
+	 * @param string $file
 	 * @return boolean True cache file existance
 	 */
 	protected function isValidCompiledFile($file) {
@@ -470,11 +472,11 @@ class Dwoo_Template_String implements Dwoo_ITemplate
 
 	/**
 	 * ensures the given path exists
-	 *
-	 * @param string $path any path
+	 * @param string $path    any path
 	 * @param string $baseDir the base directory where the directory is created
 	 *                        ($path must still contain the full path, $baseDir
 	 *                        is only used for unix permissions)
+	 * @throws Exception
 	 */
 	protected function makeDirectory($path, $baseDir = null)
 	{

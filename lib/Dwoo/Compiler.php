@@ -456,9 +456,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * internal function to autoload processors at runtime if required
-	 *
 	 * @param string $class the class/function name
-	 * @param string $name the plugin name (without Dwoo_Plugin_ prefix)
+	 * @param string $name  the plugin name (without Dwoo_Plugin_ prefix)
+	 * @return array|string
+	 * @throws Dwoo_Exception
 	 */
 	protected function loadProcessor($class, $name)
 	{
@@ -686,9 +687,10 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * compiles the provided string down to php code
-	 *
-	 * @param string $tpl the template to compile
+	 * @param Dwoo_Core      $dwoo
+	 * @param Dwoo_ITemplate $template the template to compile
 	 * @return string a compiled php string
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function compile(Dwoo_Core $dwoo, Dwoo_ITemplate $template)
 	{
@@ -936,9 +938,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * adds compiled content to the current block
-	 *
-	 * @param string $content the content to push
-	 * @param int $lineCount newlines count in content, optional
+	 * @param string $content   the content to push
+	 * @param int    $lineCount newlines count in content, optional
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function push($content, $lineCount = null)
 	{
@@ -1082,9 +1084,9 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * removes the closest-to-top block of the given type and all other
 	 * blocks encountered while going down the block stack
-	 *
 	 * @param string $type block type (name)
 	 * @return string the output of all postProcessing() method's return values of the closed blocks
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function removeBlock($type)
 	{
@@ -1127,14 +1129,13 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 	/**
 	 * returns a reference to the first block of the given type encountered and
 	 * optionally closes all blocks until it finds it
-	 *
 	 * this is mainly used by {else} plugins to close everything that was opened
 	 * between their parent and themselves
-	 *
-	 * @param string $type the block type (name)
-	 * @param bool $closeAlong whether to close all blocks encountered while going down the block stack or not
-	 * @return &array the array is as such: array('type'=>pluginName, 'params'=>parameter array,
-	 * 				  'custom'=>bool defining whether it's a custom plugin or not, for internal use)
+	 * @param string $type       the block type (name)
+	 * @param bool   $closeAlong whether to close all blocks encountered while going down the block stack or not
+	 * @return mixed &array the array is as such: array('type'=>pluginName, 'params'=>parameter array,
+	 *                           'custom'=>bool defining whether it's a custom plugin or not, for internal use)
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function &findBlock($type, $closeAlong = false)
 	{
@@ -1171,8 +1172,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * removes the block at the top of the stack and calls its postProcessing() method
-	 *
 	 * @return string the postProcessing() method's output
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	public function removeTopBlock()
 	{
@@ -1243,14 +1244,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * entry point of the parser, it redirects calls to other parse* functions
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parse($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -1567,14 +1568,16 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a function call
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
+	 * @throws Dwoo_Exception
+	 * @throws Dwoo_Security_Exception
 	 */
 	protected function parseFunction($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -1927,14 +1930,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a string
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseString($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -1994,14 +1997,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a constant
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseConst($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -2055,14 +2058,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses a variable
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function parseVar($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -2505,14 +2508,14 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * parses various constants, operators or non-quoted strings
-	 *
-	 * @param string $in the string within which we must parse something
-	 * @param int $from the starting offset of the parsed area
-	 * @param int $to the ending offset of the parsed area
-	 * @param mixed $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
-	 * @param string $curBlock the current parser-block being processed
-	 * @param mixed $pointer a reference to a pointer that will be increased by the amount of characters parsed, or null by default
+	 * @param string $in            the string within which we must parse something
+	 * @param int    $from          the starting offset of the parsed area
+	 * @param int    $to            the ending offset of the parsed area
+	 * @param mixed  $parsingParams must be an array if we are parsing a function or modifier's parameters, or false by default
+	 * @param string $curBlock      the current parser-block being processed
+	 * @param mixed  $pointer       a reference to a pointer that will be increased by the amount of characters parsed, or null by default
 	 * @return string parsed values
+	 * @throws Exception
 	 */
 	protected function parseOthers($in, $from, $to, $parsingParams = false, $curBlock='', &$pointer = null)
 	{
@@ -2649,10 +2652,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * replaces the modifiers applied to a string or a variable
-	 *
-	 * @param array $m the regex matches that must be array(1=>"double or single quotes enclosing a string, when applicable", 2=>"the string or var", 3=>"the modifiers matched")
+	 * @param array  $m        the regex matches that must be array(1=>"double or single quotes enclosing a string, when applicable", 2=>"the string or var", 3=>"the modifiers matched")
 	 * @param string $curBlock the current parser-block being processed
+	 * @param null   $pointer
 	 * @return string the input enclosed with various function calls according to the modifiers found
+	 * @throws Dwoo_Compilation_Exception
+	 * @throws Dwoo_Exception
 	 */
 	protected function replaceModifiers(array $m, $curBlock = null, &$pointer = null)
 	{
@@ -2897,6 +2902,8 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 		} elseif ($curBlock === 'string' || $curBlock === 'root') {
 			return $m[1].'.'.$output.'.'.$m[1].(isset($add)?$add:null);
 		}
+
+		return '';
 	}
 
 	/**
@@ -2929,9 +2936,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * returns the plugin type of a plugin and adds it to the used plugins array if required
-	 *
 	 * @param string $name plugin name, as found in the template
 	 * @return int type as a multi bit flag composed of the Dwoo plugin types constants
+	 * @throws Dwoo_Exception
+	 * @throws Dwoo_Security_Exception
+	 * @throws Exception
 	 */
 	protected function getPluginType($name)
 	{
@@ -3022,12 +3031,12 @@ class Dwoo_Compiler implements Dwoo_ICompiler
 
 	/**
 	 * maps the parameters received from the template onto the parameters required by the given callback
-	 *
-	 * @param array $params the array of parameters
+	 * @param array    $params   the array of parameters
 	 * @param callback $callback the function or method to reflect on to find out the required parameters
-	 * @param int $callType the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call
-	 * @param array $map the parameter map to use, if not provided it will be built from the callback
+	 * @param int      $callType the type of call in the template, 0 = no params, 1 = php-style call, 2 = named parameters call
+	 * @param array    $map      the parameter map to use, if not provided it will be built from the callback
 	 * @return array parameters sorted in the correct order with missing optional parameters filled
+	 * @throws Dwoo_Compilation_Exception
 	 */
 	protected function mapParams(array $params, $callback, $callType=2, $map = null)
 	{

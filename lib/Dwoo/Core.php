@@ -307,7 +307,7 @@ class Dwoo_Core
 	 * returns the given template rendered using the provided data and optional compiler
 	 * @param mixed $data             the data to use, can either be a Dwoo_IDataProvider object (i.e. Dwoo_Data) or an associative array. if you're
 	 *                                rendering the template from cache, it can be left null
-	 * @return string nothing or the template output if $output is false
+	 * @return string|void or the template output if $output is false
 	 * @throws Dwoo_Exception
 	 * @param mixed $_tpl template, can either be a Dwoo_ITemplate object (i.e. Dwoo_Template_File), a valid path to a template, or
 	 *                                a template as a string it is recommended to provide a Dwoo_ITemplate as it will probably make things faster,
@@ -426,6 +426,8 @@ class Dwoo_Core
                 return $out;
             }
         }
+
+        return '';
     }
 
     /**
@@ -878,17 +880,17 @@ class Dwoo_Core
      */
     public function clearCache($olderThan=-1)
     {
-        $cacheDirs = new RecursiveDirectoryIterator($this->getCacheDir());
-        $cache = new RecursiveIteratorIterator($cacheDirs);
+		$iterator = new \RecursiveIteratorIterator(
+			new \RecursiveDirectoryIterator($this->getCacheDir()),
+			\RecursiveIteratorIterator::SELF_FIRST
+		);
         $expired = time() - $olderThan;
         $count = 0;
-        foreach ($cache as $file) {
-            if ($cache->isDot() || $cache->isDir() || substr($file, -5) !== '.html') {
-                continue;
-            }
-            if ($cache->getCTime() < $expired) {
-                $count += unlink((string) $file) ? 1 : 0;
-            }
+		/** @var \SplFileInfo $file */
+        foreach ($iterator as $file) {
+			if ($file->isFile() && $file->getExtension() !== 'html' && $file->getCTime() < $expired) {
+				$count += unlink((string) $file) ? 1 : 0;
+			}
         }
         return $count;
     }

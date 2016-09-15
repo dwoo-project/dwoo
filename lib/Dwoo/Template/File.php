@@ -134,8 +134,8 @@ class Dwoo_Template_File extends Dwoo_Template_String
 
 	/**
 	 * returns this template's source filename
-	 *
 	 * @return string
+	 * @throws Dwoo_Exception
 	 */
 	public function getResourceIdentifier()
 	{
@@ -170,20 +170,21 @@ class Dwoo_Template_File extends Dwoo_Template_String
 	/**
 	 * returns a new template object from the given include name, null if no include is
 	 * possible (resource not found), or false if include is not permitted by this resource type
-	 *
-	 * @param Dwoo_Core $dwoo the dwoo instance requiring it
-	 * @param mixed $resourceId the filename (relative to this template's dir) of the template to include
-	 * @param int $cacheTime duration of the cache validity for this template,
-	 * 						 if null it defaults to the Dwoo instance that will
-	 * 						 render this template
-	 * @param string $cacheId the unique cache identifier of this page or anything else that
-	 * 						  makes this template's content unique, if null it defaults
-	 * 						  to the current url
-	 * @param string $compileId the unique compiled identifier, which is used to distinguish this
-	 * 							template from others, if null it defaults to the filename+bits of the path
-	 * @param Dwoo_ITemplate $parentTemplate the template that is requesting a new template object (through
-	 * 											an include, extends or any other plugin)
+	 * @param Dwoo_Core      $dwoo                the dwoo instance requiring it
+	 * @param mixed          $resourceId          the filename (relative to this template's dir) of the template to include
+	 * @param int            $cacheTime           duration of the cache validity for this template,
+	 *                                            if null it defaults to the Dwoo instance that will
+	 *                                            render this template
+	 * @param string         $cacheId             the unique cache identifier of this page or anything else that
+	 *                                            makes this template's content unique, if null it defaults
+	 *                                            to the current url
+	 * @param string         $compileId           the unique compiled identifier, which is used to distinguish this
+	 *                                            template from others, if null it defaults to the filename+bits of the path
+	 * @param Dwoo_ITemplate $parentTemplate      the template that is requesting a new template object (through
+	 *                                            an include, extends or any other plugin)
 	 * @return Dwoo_Template_File|null
+	 * @throws Dwoo_Exception
+	 * @throws Dwoo_Security_Exception
 	 */
 	public static function templateFactory(Dwoo_Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, Dwoo_ITemplate $parentTemplate = null)
 	{
