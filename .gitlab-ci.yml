@@ -18,4 +18,4 @@ before_script:
 # We test PHP5.6
 test:app:
   script:
-  - vendor/bin/phpunit --configuration phpunit_dwoo.xml --coverage-text
+  - vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text
