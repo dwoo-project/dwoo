@@ -18,7 +18,17 @@ php:5.3:
       - wget https://getcomposer.org/composer.phar -O composer
       - php-5.3 composer install
       - wget https://phar.phpunit.de/phpunit-old.phar -O phpunit
-      - php-5.3 phpunit --colors --debug  --coverage-text
+      - php-5.3 phpunit -d memory_limit=512M --colors --debug  --coverage-text
+
+# PHP5.4
+php:5.4:
+  stage: test
+  script:
+      - echo "Running PHPUnit Tests on PHP5.4"
+      - wget https://getcomposer.org/composer.phar -O composer
+      - php-5.4 composer install
+      - wget https://phar.phpunit.de/phpunit-old.phar -O phpunit
+      - php-5.4 phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 # PHP5.6
 php:5.6:
