@@ -12,6 +12,19 @@ class CallTests extends PHPUnit_Framework_TestCase
 		$this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 	}
 
+//	public function testClosureFunctionPlugin()
+//	{
+//		$this->dwoo->addPlugin('test', function (Dwoo_Core $dwoo, $foo, $bar="bar")
+//		{
+//			return $foo.$bar;
+//		});
+//		$tpl = new Dwoo_Template_String('{test "xxx"}');
+//		$tpl->forceCompilation();
+//
+//		$this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
+//		$this->dwoo->removePlugin('test');
+//	}
+
 	public function testCustomFunctionPlugin()
 	{
 		$this->dwoo->addPlugin('test', 'plugin_custom_name');
