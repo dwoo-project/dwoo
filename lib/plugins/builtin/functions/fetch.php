@@ -22,13 +22,13 @@
 function Dwoo_Plugin_fetch(Dwoo_Core $dwoo, $file, $assign = null)
 {
 	if ($file === '') {
-		return;
+		return '';
 	}
 
 	if ($policy = $dwoo->getSecurityPolicy()) {
 		while (true) {
 			if (preg_match('{^([a-z]+?)://}i', $file)) {
-				return $dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
+				$dwoo->triggerError('The security policy prevents you to read files from external sources.', E_USER_WARNING);
 			}
 
 			$file = realpath($file);

@@ -23,7 +23,7 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
 	$file = substr($file, 1, -1);
 
 	if ($file === '') {
-		return;
+		return '';
 	}
 
 	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {

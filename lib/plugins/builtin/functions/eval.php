@@ -29,7 +29,7 @@
 function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 {
 	if ($var == '') {
-		return;
+		return '';
 	}
 
 	$tpl = new Dwoo_Template_String($var);

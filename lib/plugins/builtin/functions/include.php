@@ -27,7 +27,7 @@
 function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
 	if ($file === '') {
-		return;
+		return '';
 	}
 
 	if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
