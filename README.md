@@ -16,9 +16,14 @@ years to switch their application over to Dwoo progressively.
 
 DOCUMENTATION
 =============
-Dwoo's website to get the latest version is at http://dwoo.org/
-
+Dwoo's website to get the latest version is at http://dwoo.org/   
 The wiki/documentation pages are available at http://dwoo.org/documentation/
+
+Requirements
+------------
+* PHP >= **5.3**
+* PHP <= **7.0**
+* [Multibyte String](http://php.net/manual/en/book.mbstring.php)
 
 LICENSE
 =======
