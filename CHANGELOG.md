@@ -1,3 +1,12 @@
+## 1.2.4 (2016-XX-XX)
+`Added`
+* Add namespaces.
+
+`Changed`
+* Follows PSR-0: Autoloader Standard.
+* Follows PSR-1: Basic Coding Standard.
+* Follows PSR-2: Cosing Style Guide.
+
 ## 1.2.3 (2016-09-15)
 `Added`
 * Continuously integrated **Travis** config file.
