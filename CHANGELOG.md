@@ -5,9 +5,9 @@
 `Changed`
 * Follows [PHP Coding Standards Fixer](http://cs.sensiolabs.org/).
 * Follows [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer).
-* Follows PSR-0: Autoloader Standard.
 * Follows PSR-1: Basic Coding Standard.
 * Follows PSR-2: Cosing Style Guide.
+* Follows PSR-4: Autoloader
 
 ## 1.2.3 (2016-09-15)
 `Added`
@@ -42,6 +42,7 @@
 * Support for Composer, adding `composer.json` file.
 
 `Changed`
+* Follows PSR-0: Autoloader Standard.
 * Minimum PHP version required is now **PHP 5.3**
 
 `Deprecated`
