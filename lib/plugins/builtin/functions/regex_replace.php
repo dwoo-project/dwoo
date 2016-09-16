@@ -15,26 +15,27 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 function Dwoo_Plugin_regex_replace(Dwoo_Core $dwoo, $value, $search, $replace)
 {
-	$search = (array) $search;
-	$cnt = count($search);
+    $search = (array) $search;
+    $cnt = count($search);
 
-	for ($i = 0; $i < $cnt; $i++) {
-		// Credits for this to Monte Ohrt who made smarty's regex_replace modifier
-		if (($pos = strpos($search[$i], "\0")) !== false) {
-			$search[$i] = substr($search[$i], 0, $pos);
-		}
+    for ($i = 0; $i < $cnt; ++$i) {
+        // Credits for this to Monte Ohrt who made smarty's regex_replace modifier
+        if (($pos = strpos($search[$i], "\0")) !== false) {
+            $search[$i] = substr($search[$i], 0, $pos);
+        }
 
-		if (preg_match('#[a-z\s]+$#is', $search[$i], $m) && (strpos($m[0], 'e') !== false)) {
-			$search[$i] = substr($search[$i], 0, -strlen($m[0])) . str_replace(array('e', ' '), '', $m[0]);
-		}
-	}
+        if (preg_match('#[a-z\s]+$#is', $search[$i], $m) && (strpos($m[0], 'e') !== false)) {
+            $search[$i] = substr($search[$i], 0, -strlen($m[0])).str_replace(array('e', ' '), '', $m[0]);
+        }
+    }
 
-	return preg_replace($search, $replace, $value);
+    return preg_replace($search, $replace, $value);
 }

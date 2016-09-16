@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Evaluates the given string as if it was a template
+ * Evaluates the given string as if it was a template.
  *
  * Although this plugin is kind of optimized and will
  * not recompile your string each time, it is still not
@@ -21,24 +21,25 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
 {
-	if ($var == '') {
-		return '';
-	}
+    if ($var == '') {
+        return '';
+    }
 
-	$tpl = new Dwoo_Template_String($var);
-	$clone = clone $dwoo;
-	$out = $clone->get($tpl, $dwoo->readVar('_parent'));
+    $tpl = new Dwoo_Template_String($var);
+    $clone = clone $dwoo;
+    $out = $clone->get($tpl, $dwoo->readVar('_parent'));
 
-	if ($assign !== null) {
-		$dwoo->assignInScope($out, $assign);
-	} else {
-		return $out;
-	}
+    if ($assign !== null) {
+        $dwoo->assignInScope($out, $assign);
+    } else {
+        return $out;
+    }
 }

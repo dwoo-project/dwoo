@@ -14,23 +14,25 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
-function Dwoo_Plugin_reverse(Dwoo_Core $dwoo, $value, $preserve_keys=false)
+function Dwoo_Plugin_reverse(Dwoo_Core $dwoo, $value, $preserve_keys = false)
 {
-	if (is_array($value)) {
-		return array_reverse($value, $preserve_keys);
-	} elseif(($charset=$dwoo->getCharset()) === 'iso-8859-1') {
-		return strrev((string) $value);
-	} else {
-	    $strlen = mb_strlen($value);
-	    $out = '';
-	    while ($strlen--) {
-	        $out .= mb_substr($value, $strlen, 1, $charset);
-	    }
-		return $out;
-	}
+    if (is_array($value)) {
+        return array_reverse($value, $preserve_keys);
+    } elseif (($charset = $dwoo->getCharset()) === 'iso-8859-1') {
+        return strrev((string) $value);
+    } else {
+        $strlen = mb_strlen($value);
+        $out = '';
+        while ($strlen--) {
+            $out .= mb_substr($value, $strlen, 1, $charset);
+        }
+
+        return $out;
+    }
 }

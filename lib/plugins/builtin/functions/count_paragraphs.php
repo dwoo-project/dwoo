@@ -13,12 +13,13 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 function Dwoo_Plugin_count_paragraphs_compile(Dwoo_Compiler $compiler, $value)
 {
-	return '(preg_match_all(\'#[\r\n]+#\', '.$value.', $tmp)+1)';
+    return '(preg_match_all(\'#[\r\n]+#\', '.$value.', $tmp)+1)';
 }

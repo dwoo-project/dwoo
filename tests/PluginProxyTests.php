@@ -18,7 +18,7 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
 
     public function testPlainNestedProxyCall()
     {
-        $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy);
+        $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy());
 
         // test simple assign
         $tpl = new Dwoo_Template_String('{F1_Stub(F2_Stub())}');
@@ -32,8 +32,7 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
 
     public function testAdvNestedProxyCall()
     {
-        $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy);
-
+        $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy());
 
         // test simple assign
         $tpl = new Dwoo_Template_String('{assign F1_Stub(F2_Stub(\'/public/css/global.css\'))->something(F3_Stub(\'/public/css/global.css\')) styles}');
@@ -46,38 +45,48 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
     }
 }
 
-class PluginProxyTest_PluginProxy implements Dwoo_IPluginProxy {
-    public function handles($name) {
+class PluginProxyTest_PluginProxy implements Dwoo_IPluginProxy
+{
+    public function handles($name)
+    {
         return 'F' == substr($name, 0, 1);
     }
 
-    public function getCode($name, $params) {
-        return 'PluginProxyTest_'. $name .'('.Dwoo_Compiler::implode_r($params).')';
+    public function getCode($name, $params)
+    {
+        return 'PluginProxyTest_'.$name.'('.Dwoo_Compiler::implode_r($params).')';
     }
 
-    public function getCallback($name) {
-        return 'PluginProxyTest_' . $name;
+    public function getCallback($name)
+    {
+        return 'PluginProxyTest_'.$name;
     }
 
-    public function getLoader($name) {
+    public function getLoader($name)
+    {
         return '';
     }
 }
 
-function PluginProxyTest_F1_Stub() {
-    return new PluginProxyTest_C1_Stub;
+function PluginProxyTest_F1_Stub()
+{
+    return new PluginProxyTest_C1_Stub();
 }
 
-function PluginProxyTest_F2_Stub($in = '') {
-    return $in . '#1';
+function PluginProxyTest_F2_Stub($in = '')
+{
+    return $in.'#1';
 }
 
-function PluginProxyTest_F3_Stub($in = '') {
-    return $in . '#1';
+function PluginProxyTest_F3_Stub($in = '')
+{
+    return $in.'#1';
 }
 
-class PluginProxyTest_C1_Stub {
-    function something($in) {
-        return $in . '#2';
+class PluginProxyTest_C1_Stub
+{
+    public function something($in)
+    {
+        return $in.'#2';
     }
 }

@@ -13,51 +13,54 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	protected static $stack = array();
+    protected static $stack = array();
 
-	public function init($enabled)
-	{
-	}
+    public function init($enabled)
+    {
+    }
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
-	{
-		$params = $compiler->getCompiledParams($params);
-		switch(strtolower(trim((string) $params['enabled'], '"\''))) {
+    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    {
+        $params = $compiler->getCompiledParams($params);
+        switch (strtolower(trim((string) $params['enabled'], '"\''))) {
 
-		case 'on':
-		case 'true':
-		case 'enabled':
-		case 'enable':
-		case '1':
-			$enable = true;
-			break;
-		case 'off':
-		case 'false':
-		case 'disabled':
-		case 'disable':
-		case '0':
-			$enable = false;
-			break;
-		default:
-			throw new Dwoo_Compilation_Exception($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
+        case 'on':
+        case 'true':
+        case 'enabled':
+        case 'enable':
+        case '1':
+            $enable = true;
+            break;
+        case 'off':
+        case 'false':
+        case 'disabled':
+        case 'disable':
+        case '0':
+            $enable = false;
+            break;
+        default:
+            throw new Dwoo_Compilation_Exception($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
 
-		}
+        }
 
-		self::$stack[] = $compiler->getAutoEscape();
-		$compiler->setAutoEscape($enable);
-		return '';
-	}
+        self::$stack[] = $compiler->getAutoEscape();
+        $compiler->setAutoEscape($enable);
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
-	{
-		$compiler->setAutoEscape(array_pop(self::$stack));
-		return $content;
-	}
+        return '';
+    }
+
+    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    {
+        $compiler->setAutoEscape(array_pop(self::$stack));
+
+        return $content;
+    }
 }

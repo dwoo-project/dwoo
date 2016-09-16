@@ -16,12 +16,13 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
-function Dwoo_Plugin_wordwrap_compile(Dwoo_Compiler $compiler, $value, $length=80, $break="\n", $cut=false)
+function Dwoo_Plugin_wordwrap_compile(Dwoo_Compiler $compiler, $value, $length = 80, $break = "\n", $cut = false)
 {
-	return 'wordwrap('.$value.','.$length.','.$break.','.$cut.')';
+    return 'wordwrap('.$value.','.$length.','.$break.','.$cut.')';
 }

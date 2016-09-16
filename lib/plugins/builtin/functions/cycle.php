@@ -19,52 +19,53 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 class Dwoo_Plugin_cycle extends Dwoo_Plugin
 {
-	protected $cycles = array();
+    protected $cycles = array();
 
-	public function process($name = 'default', $values = null, $print = true, $advance = true, $delimiter = ',', $assign = null, $reset = false)
-	{
-		if ($values !== null) {
-			if (is_string($values)) {
-				$values = explode($delimiter, $values);
-			}
+    public function process($name = 'default', $values = null, $print = true, $advance = true, $delimiter = ',', $assign = null, $reset = false)
+    {
+        if ($values !== null) {
+            if (is_string($values)) {
+                $values = explode($delimiter, $values);
+            }
 
-			if (!isset($this->cycles[$name]) || $this->cycles[$name]['values'] !== $values) {
-				$this->cycles[$name]['index'] = 0;
-			}
+            if (!isset($this->cycles[$name]) || $this->cycles[$name]['values'] !== $values) {
+                $this->cycles[$name]['index'] = 0;
+            }
 
-			$this->cycles[$name]['values'] = array_values($values);
-		} elseif (isset($this->cycles[$name])) {
-			$values = $this->cycles[$name]['values'];
-		}
+            $this->cycles[$name]['values'] = array_values($values);
+        } elseif (isset($this->cycles[$name])) {
+            $values = $this->cycles[$name]['values'];
+        }
 
-		if ($reset) {
-			$this->cycles[$name]['index'] = 0;
-		}
+        if ($reset) {
+            $this->cycles[$name]['index'] = 0;
+        }
 
-		if ($print) {
-			$out = $values[$this->cycles[$name]['index']];
-		} else {
-			$out = null;
-		}
+        if ($print) {
+            $out = $values[$this->cycles[$name]['index']];
+        } else {
+            $out = null;
+        }
 
-		if ($advance) {
-			if ($this->cycles[$name]['index'] >= count($values)-1) {
-				$this->cycles[$name]['index'] = 0;
-			} else {
-				$this->cycles[$name]['index']++;
-			}
-		}
+        if ($advance) {
+            if ($this->cycles[$name]['index'] >= count($values) - 1) {
+                $this->cycles[$name]['index'] = 0;
+            } else {
+                ++$this->cycles[$name]['index'];
+            }
+        }
 
-		if ($assign === null) {
-			return $out;
-		}
-		$this->dwoo->assignInScope($out, $assign);
-	}
+        if ($assign === null) {
+            return $out;
+        }
+        $this->dwoo->assignInScope($out, $assign);
+    }
 }

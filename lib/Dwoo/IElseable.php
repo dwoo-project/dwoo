@@ -1,7 +1,7 @@
 <?php
 
 /**
- * interface that represents a block plugin that supports the else functionality
+ * interface that represents a block plugin that supports the else functionality.
  *
  * the else block will enter an "hasElse" parameter inside the parameters array
  * of the closest parent implementing this interface, the hasElse parameter contains
@@ -16,10 +16,11 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 interface Dwoo_IElseable
 {

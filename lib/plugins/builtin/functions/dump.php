@@ -14,162 +14,164 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 class Dwoo_Plugin_dump extends Dwoo_Plugin
 {
-	protected $outputObjects;
-	protected $outputMethods;
+    protected $outputObjects;
+    protected $outputMethods;
 
-	public function process($var = '$', $show_methods = false)
-	{
-		$this->outputMethods = $show_methods;
-		if ($var === '$') {
-			$var = $this->dwoo->getData();
-			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
-		} else {
-			$out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
-		}
+    public function process($var = '$', $show_methods = false)
+    {
+        $this->outputMethods = $show_methods;
+        if ($var === '$') {
+            $var = $this->dwoo->getData();
+            $out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
+        } else {
+            $out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
+        }
 
-		$this->outputObjects = array();
+        $this->outputObjects = array();
 
-		if (!is_array($var)) {
-			if (is_object($var)) {
-				return $this->exportObj('', $var);
-			} else {
-				return $this->exportVar('', $var);
-			}
-		}
+        if (!is_array($var)) {
+            if (is_object($var)) {
+                return $this->exportObj('', $var);
+            } else {
+                return $this->exportVar('', $var);
+            }
+        }
 
-		$scope = $this->dwoo->getScope();
+        $scope = $this->dwoo->getScope();
 
-		if ($var === $scope) {
-			$out .= ' (current scope): <div style="background:#ccc;">';
-		} else {
-			$out .= ':<div style="padding-left:20px;">';
-		}
+        if ($var === $scope) {
+            $out .= ' (current scope): <div style="background:#ccc;">';
+        } else {
+            $out .= ':<div style="padding-left:20px;">';
+        }
 
-		$out .= $this->export($var, $scope);
+        $out .= $this->export($var, $scope);
 
-		return $out .'</div></div>';
-	}
+        return $out.'</div></div>';
+    }
 
-	protected function export($var, $scope)
-	{
-		$out = '';
-		foreach ($var as $i=>$v) {
-			if (is_array($v) || (is_object($v) && $v instanceof Iterator)) {
-				$out .= $i.' ('.(is_array($v) ? 'array':'object: '.get_class($v)).')';
-				if ($v===$scope) {
-					$out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">'.$this->export($v, $scope).'</div>';
-				} else {
-					$out .= ':<div style="padding-left:20px;">'.$this->export($v, $scope).'</div>';
-				}
-			} elseif (is_object($v)) {
-				$out .= $this->exportObj($i.' (object: '.get_class($v).'):', $v);
-			} else {
-				$out .= $this->exportVar($i.' = ', $v);
-			}
-		}
-		return $out;
-	}
+    protected function export($var, $scope)
+    {
+        $out = '';
+        foreach ($var as $i => $v) {
+            if (is_array($v) || (is_object($v) && $v instanceof Iterator)) {
+                $out .= $i.' ('.(is_array($v) ? 'array' : 'object: '.get_class($v)).')';
+                if ($v === $scope) {
+                    $out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">'.$this->export($v, $scope).'</div>';
+                } else {
+                    $out .= ':<div style="padding-left:20px;">'.$this->export($v, $scope).'</div>';
+                }
+            } elseif (is_object($v)) {
+                $out .= $this->exportObj($i.' (object: '.get_class($v).'):', $v);
+            } else {
+                $out .= $this->exportVar($i.' = ', $v);
+            }
+        }
 
-	protected function exportVar($i, $v)
-	{
-		if (is_string($v) || is_bool($v) || is_numeric($v)) {
-			return $i.htmlentities(var_export($v, true)).'<br />';
-		} elseif (is_null($v)) {
-			return $i.'null<br />';
-		} elseif (is_resource($v)) {
-			return $i.'resource('.get_resource_type($v).')<br />';
-		} else {
-			return $i.htmlentities(var_export($v, true)).'<br />';
-		}
-	}
+        return $out;
+    }
 
-	protected function exportObj($i, $obj)
-	{
-		if (array_search($obj, $this->outputObjects, true) !== false) {
-			return $i . ' [recursion, skipped]<br />';
-		}
+    protected function exportVar($i, $v)
+    {
+        if (is_string($v) || is_bool($v) || is_numeric($v)) {
+            return $i.htmlentities(var_export($v, true)).'<br />';
+        } elseif (is_null($v)) {
+            return $i.'null<br />';
+        } elseif (is_resource($v)) {
+            return $i.'resource('.get_resource_type($v).')<br />';
+        } else {
+            return $i.htmlentities(var_export($v, true)).'<br />';
+        }
+    }
 
-		$this->outputObjects[] = $obj;
+    protected function exportObj($i, $obj)
+    {
+        if (array_search($obj, $this->outputObjects, true) !== false) {
+            return $i.' [recursion, skipped]<br />';
+        }
 
-		$list = (array) $obj;
+        $this->outputObjects[] = $obj;
 
-		$protectedLength = strlen(get_class($obj)) + 2;
+        $list = (array) $obj;
 
-		$out = array();
+        $protectedLength = strlen(get_class($obj)) + 2;
 
-		if ($this->outputMethods) {
-			$ref = new ReflectionObject($obj);
+        $out = array();
 
-			foreach ($ref->getMethods() as $method) {
-				if (!$method->isPublic()) {
-					continue;
-				}
+        if ($this->outputMethods) {
+            $ref = new ReflectionObject($obj);
 
-				if (empty($out['method'])) {
-					$out['method'] = '';
-				}
+            foreach ($ref->getMethods() as $method) {
+                if (!$method->isPublic()) {
+                    continue;
+                }
 
-				$params = array();
-				foreach ($method->getParameters() as $param) {
-					$params[] = ($param->isPassedByReference() ? '&':'') . '$'.$param->getName() . ($param->isOptional() ? ' = '.var_export($param->getDefaultValue(), true) : '');
-				}
+                if (empty($out['method'])) {
+                    $out['method'] = '';
+                }
 
-				$out['method'] .= '(method) ' . $method->getName() .'('.implode(', ', $params).')<br />';
-			}
-		}
+                $params = array();
+                foreach ($method->getParameters() as $param) {
+                    $params[] = ($param->isPassedByReference() ? '&' : '').'$'.$param->getName().($param->isOptional() ? ' = '.var_export($param->getDefaultValue(), true) : '');
+                }
 
-		foreach ($list as $attributeName => $attributeValue) {
-			if(property_exists($obj, $attributeName)) {
-				$key = 'public';
-			} elseif(substr($attributeName, 0, 3) === "\0*\0") {
-				$key = 'protected';
-				$attributeName = substr($attributeName, 3);
-			} else {
-				$key = 'private';
-				$attributeName = substr($attributeName, $protectedLength);
-			}
+                $out['method'] .= '(method) '.$method->getName().'('.implode(', ', $params).')<br />';
+            }
+        }
 
-			if (empty($out[$key])) {
-				$out[$key] = '';
-			}
+        foreach ($list as $attributeName => $attributeValue) {
+            if (property_exists($obj, $attributeName)) {
+                $key = 'public';
+            } elseif (substr($attributeName, 0, 3) === "\0*\0") {
+                $key = 'protected';
+                $attributeName = substr($attributeName, 3);
+            } else {
+                $key = 'private';
+                $attributeName = substr($attributeName, $protectedLength);
+            }
 
-			$out[$key] .= '('.$key.') ';
+            if (empty($out[$key])) {
+                $out[$key] = '';
+            }
 
-			if (is_array($attributeValue)) {
-				$out[$key] .= $attributeName.' (array):<br />
+            $out[$key] .= '('.$key.') ';
+
+            if (is_array($attributeValue)) {
+                $out[$key] .= $attributeName.' (array):<br />
 							<div style="padding-left:20px;">'.$this->export($attributeValue, false).'</div>';
-			} elseif (is_object($attributeValue)) {
-				$out[$key] .= $this->exportObj($attributeName.' (object: '.get_class($attributeValue).'):', $attributeValue);
-			} else {
-				$out[$key] .= $this->exportVar($attributeName.' = ', $attributeValue);
-			}
-		}
+            } elseif (is_object($attributeValue)) {
+                $out[$key] .= $this->exportObj($attributeName.' (object: '.get_class($attributeValue).'):', $attributeValue);
+            } else {
+                $out[$key] .= $this->exportVar($attributeName.' = ', $attributeValue);
+            }
+        }
 
-		$return = $i . '<br /><div style="padding-left:20px;">';
+        $return = $i.'<br /><div style="padding-left:20px;">';
 
-		if (!empty($out['method'])) {
-			$return .= $out['method'];
-		}
+        if (!empty($out['method'])) {
+            $return .= $out['method'];
+        }
 
-		if (!empty($out['public'])) {
-			$return .= $out['public'];
-		}
+        if (!empty($out['public'])) {
+            $return .= $out['public'];
+        }
 
-		if (!empty($out['protected'])) {
-			$return .= $out['protected'];
-		}
+        if (!empty($out['protected'])) {
+            $return .= $out['protected'];
+        }
 
-		if (!empty($out['private'])) {
-			$return .= $out['private'];
-		}
+        if (!empty($out['private'])) {
+            $return .= $out['private'];
+        }
 
-		return $return . '</div>';
-	}
+        return $return.'</div>';
+    }
 }

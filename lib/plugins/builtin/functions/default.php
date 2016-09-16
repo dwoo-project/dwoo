@@ -14,12 +14,13 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
-function Dwoo_Plugin_default_compile(Dwoo_Compiler $compiler, $value, $default='')
+function Dwoo_Plugin_default_compile(Dwoo_Compiler $compiler, $value, $default = '')
 {
-	return '(($tmp = '.$value.')===null||$tmp===\'\' ? '.$default.' : $tmp)';
+    return '(($tmp = '.$value.')===null||$tmp===\'\' ? '.$default.' : $tmp)';
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * <strong>Agavi specific plugin</strong>
+ * <strong>Agavi specific plugin</strong>.
  *
  * uses AgaviTranslationManager to localize a string
  *
@@ -21,12 +21,13 @@
  * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.0.0
  * @date       2008-10-23
- * @package    Dwoo
  */
 function Dwoo_Plugin_t_compile(Dwoo_Compiler $compiler, $string)
 {
-	return '$this->data[\'tm\']->_('.$string.')';
+    return '$this->data[\'tm\']->_('.$string.')';
 }

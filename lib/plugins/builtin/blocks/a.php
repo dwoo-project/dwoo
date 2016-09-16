@@ -5,7 +5,7 @@
  * <pre>
  *  * href : the target URI where the link must point
  *  * rest : any other attributes you want to add to the tag can be added as named parameters
- * </pre>
+ * </pre>.
  *
  * Example :
  *
@@ -29,41 +29,42 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
 class Dwoo_Plugin_a extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
 {
-	public function init($href, array $rest=array())
-	{
-	}
+    public function init($href, array $rest = array())
+    {
+    }
 
-	public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
-	{
-		$p = $compiler->getCompiledParams($params);
+    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    {
+        $p = $compiler->getCompiledParams($params);
 
-		$out = Dwoo_Compiler::PHP_OPEN . 'echo \'<a '.self::paramsToAttributes($p, "'", $compiler);
+        $out = Dwoo_Compiler::PHP_OPEN.'echo \'<a '.self::paramsToAttributes($p, "'", $compiler);
 
-		return $out.'>\';' . Dwoo_Compiler::PHP_CLOSE;
-	}
+        return $out.'>\';'.Dwoo_Compiler::PHP_CLOSE;
+    }
 
-	public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
-	{
-		$p = $compiler->getCompiledParams($params);
+    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    {
+        $p = $compiler->getCompiledParams($params);
 
-		// no content was provided so use the url as display text
-		if ($content == "") {
-			// merge </a> into the href if href is a string
-			if (substr($p['href'], -1) === '"' || substr($p['href'], -1) === '\'') {
-				return Dwoo_Compiler::PHP_OPEN . 'echo '.substr($p['href'], 0, -1).'</a>'.substr($p['href'], -1).';'.Dwoo_Compiler::PHP_CLOSE;
-			}
-			// otherwise append
-			return Dwoo_Compiler::PHP_OPEN . 'echo '.$p['href'].'.\'</a>\';'.Dwoo_Compiler::PHP_CLOSE;
-		}
+        // no content was provided so use the url as display text
+        if ($content == '') {
+            // merge </a> into the href if href is a string
+            if (substr($p['href'], -1) === '"' || substr($p['href'], -1) === '\'') {
+                return Dwoo_Compiler::PHP_OPEN.'echo '.substr($p['href'], 0, -1).'</a>'.substr($p['href'], -1).';'.Dwoo_Compiler::PHP_CLOSE;
+            }
+            // otherwise append
+            return Dwoo_Compiler::PHP_OPEN.'echo '.$p['href'].'.\'</a>\';'.Dwoo_Compiler::PHP_CLOSE;
+        }
 
-		// return content
-		return $content . '</a>';
-	}
+        // return content
+        return $content.'</a>';
+    }
 }

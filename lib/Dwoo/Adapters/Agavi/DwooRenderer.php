@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Dwoo adapter for Agavi
+ * Dwoo adapter for Agavi.
  *
  * Install instructions :
  *  - download dwoo from dwoo.org and unzip it somewhere in your agavi app
@@ -40,162 +40,165 @@
  * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.1.1
  * @date       2010-04-06
- * @package    Dwoo
  */
 class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 {
-	/**
-	 * @constant   string The directory inside the cache dir where templates will
-	 *                    be stored in compiled form.
-	 */
-	const COMPILE_DIR = 'templates';
+    /**
+     * @constant   string The directory inside the cache dir where templates will
+     *                    be stored in compiled form.
+     */
+    const COMPILE_DIR = 'templates';
 
-	/**
-	 * @constant   string The subdirectory inside the compile dir where templates
-	 *                    will be stored in compiled form.
-	 */
-	const COMPILE_SUBDIR = 'dwoo';
+    /**
+     * @constant   string The subdirectory inside the compile dir where templates
+     *                    will be stored in compiled form.
+     */
+    const COMPILE_SUBDIR = 'dwoo';
 
-	/**
-	 * @constant   string The directory inside the cache dir where cached content
-	 *                    will be stored.
-	 */
-	const CACHE_DIR = 'dwoo';
+    /**
+     * @constant   string The directory inside the cache dir where cached content
+     *                    will be stored.
+     */
+    const CACHE_DIR = 'dwoo';
 
-	/**
-	 * @var        Dwoo Dwoo template engine.
-	 */
-	protected $dwoo = null;
+    /**
+     * @var Dwoo Dwoo template engine
+     */
+    protected $dwoo = null;
 
-	/**
-	 * @var        string A string with the default template file extension,
-	 *                    including the dot.
-	 */
-	protected $defaultExtension = '.html';
+    /**
+     * @var string A string with the default template file extension,
+     *             including the dot
+     */
+    protected $defaultExtension = '.html';
 
-	/**
-	 * stores the (optional) plugin directories to add to the Dwoo_Loader
-	 */
-	protected $plugin_dir = null;
+    /**
+     * stores the (optional) plugin directories to add to the Dwoo_Loader.
+     */
+    protected $plugin_dir = null;
 
-	/**
-	 * Pre-serialization callback.
-	 *
-	 * Excludes the Dwoo instance to prevent excessive serialization load.
-	 */
-	public function __sleep()
-	{
-		$keys = parent::__sleep();
-		unset($keys[array_search('dwoo', $keys)]);
-		return $keys;
-	}
+    /**
+     * Pre-serialization callback.
+     *
+     * Excludes the Dwoo instance to prevent excessive serialization load.
+     */
+    public function __sleep()
+    {
+        $keys = parent::__sleep();
+        unset($keys[array_search('dwoo', $keys)]);
 
-	/**
-	 * Initialize this Renderer.
-	 *
-	 * @param      AgaviContext The current application context.
-	 * @param      array        An associative array of initialization parameters.
-	 */
-	public function initialize(AgaviContext $context, array $parameters = array())
-	{
-		parent::initialize($context, $parameters);
+        return $keys;
+    }
 
-		$this->plugin_dir = $this->getParameter('plugin_dir', $this->plugin_dir);
-	}
+    /**
+     * Initialize this Renderer.
+     *
+     * @param      AgaviContext The current application context
+     * @param      array        An associative array of initialization parameters
+     */
+    public function initialize(AgaviContext $context, array $parameters = array())
+    {
+        parent::initialize($context, $parameters);
 
-	/**
-	 * provides a custom compiler to the dwoo renderer with optional settings
-	 * you can set in the agavi output_types.xml config file
-	 *
-	 * @return Dwoo_Compiler
-	 */
-	public function compilerFactory()
-	{
-		$compiler = Dwoo_Compiler::compilerFactory();
-		$compiler->setAutoEscape((bool) $this->getParameter('auto_escape', false));
-		return $compiler;
-	}
+        $this->plugin_dir = $this->getParameter('plugin_dir', $this->plugin_dir);
+    }
 
-	/**
-	 * Grab a cleaned up dwoo instance.
-	 *
-	 * @return     Dwoo A Dwoo instance.
-	 */
-	protected function getEngine()
-	{
-		if($this->dwoo) {
-			return $this->dwoo;
-		}
+    /**
+     * provides a custom compiler to the dwoo renderer with optional settings
+     * you can set in the agavi output_types.xml config file.
+     *
+     * @return Dwoo_Compiler
+     */
+    public function compilerFactory()
+    {
+        $compiler = Dwoo_Compiler::compilerFactory();
+        $compiler->setAutoEscape((bool) $this->getParameter('auto_escape', false));
 
-		// this triggers Agavi autoload
-		if(!class_exists('Dwoo')) {
-			if (file_exists(dirname(__FILE__).'/../../../dwooAutoload.php')) {
-				// file was dropped with the entire dwoo package
-				require dirname(__FILE__).'/../../../dwooAutoload.php';
-			} else {
-				// assume the dwoo package is in the include path
-				require 'dwooAutoload.php';
-			}
-		}
+        return $compiler;
+    }
 
-		$parentMode = fileperms(AgaviConfig::get('core.cache_dir'));
+    /**
+     * Grab a cleaned up dwoo instance.
+     *
+     * @return Dwoo A Dwoo instance
+     */
+    protected function getEngine()
+    {
+        if ($this->dwoo) {
+            return $this->dwoo;
+        }
 
-		$compileDir = AgaviConfig::get('core.cache_dir') . DIRECTORY_SEPARATOR . self::COMPILE_DIR . DIRECTORY_SEPARATOR . self::COMPILE_SUBDIR;
-		AgaviToolkit::mkdir($compileDir, $parentMode, true);
+        // this triggers Agavi autoload
+        if (!class_exists('Dwoo')) {
+            if (file_exists(dirname(__FILE__).'/../../../dwooAutoload.php')) {
+                // file was dropped with the entire dwoo package
+                require dirname(__FILE__).'/../../../dwooAutoload.php';
+            } else {
+                // assume the dwoo package is in the include path
+                require 'dwooAutoload.php';
+            }
+        }
 
-		$cacheDir = AgaviConfig::get('core.cache_dir') . DIRECTORY_SEPARATOR . self::CACHE_DIR;
-		AgaviToolkit::mkdir($cacheDir, $parentMode, true);
+        $parentMode = fileperms(AgaviConfig::get('core.cache_dir'));
 
-		$this->dwoo = new Dwoo_Core($compileDir, $cacheDir);
+        $compileDir = AgaviConfig::get('core.cache_dir').DIRECTORY_SEPARATOR.self::COMPILE_DIR.DIRECTORY_SEPARATOR.self::COMPILE_SUBDIR;
+        AgaviToolkit::mkdir($compileDir, $parentMode, true);
 
-		if (!empty($this->plugin_dir)) {
-			foreach ((array) $this->plugin_dir as $dir) {
-				$this->dwoo->getLoader()->addDirectory($dir);
-			}
-		}
+        $cacheDir = AgaviConfig::get('core.cache_dir').DIRECTORY_SEPARATOR.self::CACHE_DIR;
+        AgaviToolkit::mkdir($cacheDir, $parentMode, true);
 
-		$this->dwoo->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
+        $this->dwoo = new Dwoo_Core($compileDir, $cacheDir);
 
-		return $this->dwoo;
-	}
+        if (!empty($this->plugin_dir)) {
+            foreach ((array) $this->plugin_dir as $dir) {
+                $this->dwoo->getLoader()->addDirectory($dir);
+            }
+        }
 
-	/**
-	 * Render the presentation and return the result.
-	 *
-	 * @param      AgaviTemplateLayer The template layer to render.
-	 * @param      array              The template variables.
-	 * @param      array              The slots.
-	 * @param      array              Associative array of additional assigns.
-	 *
-	 * @return     string A rendered result.
-	 */
-	public function render(AgaviTemplateLayer $layer, array &$attributes = array(), array &$slots = array(), array &$moreAssigns = array())
-	{
-		$engine = $this->getEngine();
+        $this->dwoo->setDefaultCompilerFactory('file', array($this, 'compilerFactory'));
 
-		$data = array();
-		if($this->extractVars) {
-			$data = $attributes;
-		} else {
-			$data[$this->varName] = &$attributes;
-		}
+        return $this->dwoo;
+    }
 
-		$data[$this->slotsVarName] =& $slots;
+    /**
+     * Render the presentation and return the result.
+     *
+     * @param      AgaviTemplateLayer The template layer to render
+     * @param      array              The template variables
+     * @param      array              The slots
+     * @param      array              Associative array of additional assigns
+     *
+     * @return string A rendered result
+     */
+    public function render(AgaviTemplateLayer $layer, array &$attributes = array(), array &$slots = array(), array &$moreAssigns = array())
+    {
+        $engine = $this->getEngine();
 
-		foreach($this->assigns as $key => $getter) {
-			$data[$key] = $this->getContext()->$getter();
-		}
+        $data = array();
+        if ($this->extractVars) {
+            $data = $attributes;
+        } else {
+            $data[$this->varName] = &$attributes;
+        }
 
-		foreach($moreAssigns as $key => &$value) {
-			if(isset($this->moreAssignNames[$key])) {
-				$key = $this->moreAssignNames[$key];
-			}
-			$data[$key] =& $value;
-		}
+        $data[$this->slotsVarName] = &$slots;
 
-		return $engine->get($layer->getResourceStreamIdentifier(), $data);
-	}
+        foreach ($this->assigns as $key => $getter) {
+            $data[$key] = $this->getContext()->$getter();
+        }
+
+        foreach ($moreAssigns as $key => &$value) {
+            if (isset($this->moreAssignNames[$key])) {
+                $key = $this->moreAssignNames[$key];
+            }
+            $data[$key] = &$value;
+        }
+
+        return $engine->get($layer->getResourceStreamIdentifier(), $data);
+    }
 }

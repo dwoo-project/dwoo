@@ -17,31 +17,33 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
-function Dwoo_Plugin_truncate(Dwoo_Core $dwoo, $value, $length=80, $etc='...', $break=false, $middle=false)
+function Dwoo_Plugin_truncate(Dwoo_Core $dwoo, $value, $length = 80, $etc = '...', $break = false, $middle = false)
 {
-	if ($length == 0) {
-		return '';
-	}
+    if ($length == 0) {
+        return '';
+    }
 
-	$value = (string) $value;
-	$etc = (string) $etc;
-	$length = (int) $length;
+    $value = (string) $value;
+    $etc = (string) $etc;
+    $length = (int) $length;
 
-	if (strlen($value) < $length) {
-		return $value;
-	}
+    if (strlen($value) < $length) {
+        return $value;
+    }
 
-	$length = max($length - strlen($etc), 0);
-	if ($break === false && $middle === false) {
-		$value = preg_replace('#\s+(\S*)?$#', '', substr($value, 0, $length+1));
-	}
-	if ($middle === false) {
-		return substr($value, 0, $length) . $etc;
-	}
-	return substr($value, 0, ceil($length/2)) . $etc . substr($value, -floor($length/2));
+    $length = max($length - strlen($etc), 0);
+    if ($break === false && $middle === false) {
+        $value = preg_replace('#\s+(\S*)?$#', '', substr($value, 0, $length + 1));
+    }
+    if ($middle === false) {
+        return substr($value, 0, $length).$etc;
+    }
+
+    return substr($value, 0, ceil($length / 2)).$etc.substr($value, -floor($length / 2));
 }

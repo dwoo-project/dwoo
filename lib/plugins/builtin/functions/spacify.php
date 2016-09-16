@@ -14,12 +14,13 @@
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.2.3
  * @date       2016-10-15
- * @package    Dwoo
  */
-function Dwoo_Plugin_spacify_compile(Dwoo_Compiler $compiler, $value, $space_char=' ')
+function Dwoo_Plugin_spacify_compile(Dwoo_Compiler $compiler, $value, $space_char = ' ')
 {
-	return 'implode('.$space_char.', str_split('.$value.', 1))';
+    return 'implode('.$space_char.', str_split('.$value.', 1))';
 }

@@ -1,16 +1,16 @@
 <?php
 
-class Dwoowelcome extends Controller {
-
-    function __construct()
+class dwoowelcome extends Controller
+{
+    public function __construct()
     {
         parent::Controller();
     }
 
-    function index()
+    public function index()
     {
-    	$this->load->library('Dwootemplate');
-    	$this->dwootemplate->assign('itshowlate', date('H:i:s'));
-    	$this->dwootemplate->display('dwoowelcome.tpl');
+        $this->load->library('Dwootemplate');
+        $this->dwootemplate->assign('itshowlate', date('H:i:s'));
+        $this->dwootemplate->display('dwoowelcome.tpl');
     }
 }

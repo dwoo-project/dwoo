@@ -1,7 +1,7 @@
 <?php
 
 /**
- * <strong>Agavi specific plugin</strong>
+ * <strong>Agavi specific plugin</strong>.
  *
  * uses AgaviRouting to create an url
  *
@@ -25,30 +25,32 @@
  * @author     Jordi Boggiano <j.boggiano@seld.be>
  * @copyright  Copyright (c) 2008, Jordi Boggiano
  * @license    http://dwoo.org/LICENSE   Modified BSD License
+ *
  * @link       http://dwoo.org/
+ *
  * @version    1.0.0
  * @date       2008-10-23
- * @package    Dwoo
  */
 function Dwoo_Plugin_url_compile(Dwoo_Compiler $compiler, $route = null, $params = null, $options = null, array $rest = array())
 {
-	if ($params == 'null') {
-		if (count($rest)) {
-			$params = array();
-			foreach ($rest as $k=>$v) {
-				if (is_numeric($k)) {
-					$params[] = $k.'=>'.$v;
-				} else {
-					$params[] = '"'.$k.'"=>'.$v;
-				}
-			}
-			$params = 'array('.implode(', ', $params).')';
-		} else {
-			$params = 'array()';
-		}
-	}
-	if ($options == 'null') {
-		$options = 'array()';
-	}
-	return '$this->data[\'ro\']->gen('.$route.', '.$params.', '.$options.')';
+    if ($params == 'null') {
+        if (count($rest)) {
+            $params = array();
+            foreach ($rest as $k => $v) {
+                if (is_numeric($k)) {
+                    $params[] = $k.'=>'.$v;
+                } else {
+                    $params[] = '"'.$k.'"=>'.$v;
+                }
+            }
+            $params = 'array('.implode(', ', $params).')';
+        } else {
+            $params = 'array()';
+        }
+    }
+    if ($options == 'null') {
+        $options = 'array()';
+    }
+
+    return '$this->data[\'ro\']->gen('.$route.', '.$params.', '.$options.')';
 }
