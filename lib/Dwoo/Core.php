@@ -25,7 +25,7 @@ if (!defined('DWOO_DIRECTORY')) {
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
- * @license   http://dwoo.org/LICENSE   Modified BSD License
+ * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
  * @date      2016-10-15
  * @link      http://dwoo.org/
