@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Applies various escaping schemes on the given string
@@ -21,7 +22,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_escape(Dwoo_Core $dwoo, $value = '', $format = 'html', $charset = null)
+function Dwoo_Plugin_escape(Core $dwoo, $value = '', $format = 'html', $charset = null)
 {
     if ($charset === null) {
         $charset = $dwoo->getCharset();

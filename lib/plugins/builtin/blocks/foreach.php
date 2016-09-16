@@ -1,4 +1,9 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Similar to the php foreach block, loops over an array.
@@ -32,7 +37,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_foreach extends BlockPlugin implements ICompilableBlock, IElseable
 {
     public static $cnt = 0;
 
@@ -40,7 +45,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         // get block params and save the current template pointer to use it in the postProcessing method
         $currentBlock = &$compiler->getCurrentBlock();
@@ -49,7 +54,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $params = $compiler->getCompiledParams($params);
         $tpl = $compiler->getTemplateSource($params['tplPointer']);
@@ -65,15 +70,15 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
         } elseif ($params['key'] !== 'null') {
             $val = $params['key'];
         } else {
-            throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter missing');
+            throw new CompilationException($compiler, 'Foreach <em>item</em> parameter missing');
         }
         $name = $params['name'];
 
         if (substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
-            throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>item</em> parameter must be of type string');
+            throw new CompilationException($compiler, 'Foreach <em>item</em> parameter must be of type string');
         }
         if (isset($key) && substr($val, 0, 1) !== '"' && substr($val, 0, 1) !== '\'') {
-            throw new Dwoo_Compilation_Exception($compiler, 'Foreach <em>key</em> parameter must be of type string');
+            throw new CompilationException($compiler, 'Foreach <em>key</em> parameter must be of type string');
         }
 
         // evaluates which global variables have to be computed
@@ -104,7 +109,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
         $cnt = self::$cnt++;
 
         // build pre content output
-        $pre = Dwoo_Compiler::PHP_OPEN."\n".'$_fh'.$cnt.'_data = '.$src.';';
+        $pre = Compiler::PHP_OPEN."\n".'$_fh'.$cnt.'_data = '.$src.';';
         // adds foreach properties
         if ($usesAny) {
             $pre .= "\n".'$this->globals["foreach"]['.$name.'] = array'."\n(";
@@ -139,10 +144,10 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
         if ($usesLast) {
             $pre .= "\n\t\t".'$_fh'.$cnt.'_glob["last"] = (string) ($_fh'.$cnt.'_glob["iteration"] === $_fh'.$cnt.'_glob["total"]);';
         }
-        $pre .= "\n/* -- foreach start output */\n".Dwoo_Compiler::PHP_CLOSE;
+        $pre .= "\n/* -- foreach start output */\n".Compiler::PHP_CLOSE;
 
         // build post content output
-        $post = Dwoo_Compiler::PHP_OPEN."\n";
+        $post = Compiler::PHP_OPEN."\n";
 
         if (isset($implode)) {
             $post .= '/* -- implode */'."\n".'if (!$_fh'.$cnt.'_glob["last"]) {'.
@@ -157,7 +162,7 @@ class Dwoo_Plugin_foreach extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
             $post .= "\n\t\t".'$_fh'.$cnt.'_glob["iteration"]+=1;';
         }
         // end loop
-        $post .= "\n\t}\n}".Dwoo_Compiler::PHP_CLOSE;
+        $post .= "\n\t}\n}".Compiler::PHP_CLOSE;
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];
         }

@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Marks the contents of the block as dynamic. Which means that it will not be cached.
@@ -17,42 +21,42 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_dynamic extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_dynamic extends BlockPlugin implements ICompilableBlock
 {
     public function init()
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         try {
             $compiler->findBlock('dynamic');
 
             return $content;
-        } catch (Dwoo_Compilation_Exception $e) {
+        } catch (CompilationException $e) {
         }
-        $output = Dwoo_Compiler::PHP_OPEN.
+        $output = Compiler::PHP_OPEN.
             'if($doCache) {'."\n\t".
                 'echo \'<dwoo:dynamic_\'.$dynamicId.\'>'.
                 str_replace('\'', '\\\'', $content).
                 '</dwoo:dynamic_\'.$dynamicId.\'>\';'.
             "\n} else {\n\t";
-        if (substr($content, 0, strlen(Dwoo_Compiler::PHP_OPEN)) == Dwoo_Compiler::PHP_OPEN) {
-            $output .= substr($content, strlen(Dwoo_Compiler::PHP_OPEN));
+        if (substr($content, 0, strlen(Compiler::PHP_OPEN)) == Compiler::PHP_OPEN) {
+            $output .= substr($content, strlen(Compiler::PHP_OPEN));
         } else {
-            $output .= Dwoo_Compiler::PHP_CLOSE.$content;
+            $output .= Compiler::PHP_CLOSE.$content;
         }
-        if (substr($output, -strlen(Dwoo_Compiler::PHP_CLOSE)) == Dwoo_Compiler::PHP_CLOSE) {
-            $output = substr($output, 0, -strlen(Dwoo_Compiler::PHP_CLOSE));
+        if (substr($output, -strlen(Compiler::PHP_CLOSE)) == Compiler::PHP_CLOSE) {
+            $output = substr($output, 0, -strlen(Compiler::PHP_CLOSE));
         } else {
-            $output .= Dwoo_Compiler::PHP_OPEN;
+            $output .= Compiler::PHP_OPEN;
         }
-        $output .= "\n}".Dwoo_Compiler::PHP_CLOSE;
+        $output .= "\n}".Compiler::PHP_CLOSE;
 
         return $output;
     }

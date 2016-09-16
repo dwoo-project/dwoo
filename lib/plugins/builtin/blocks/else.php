@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with.
@@ -30,23 +34,23 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_else extends BlockPlugin implements ICompilableBlock
 {
     public function init()
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $preContent = '';
         while (true) {
             $preContent .= $compiler->removeTopBlock();
             $block = &$compiler->getCurrentBlock();
             if (!$block) {
-                throw new Dwoo_Compilation_Exception($compiler, 'An else block was found but it was not preceded by an if or other else-able construct');
+                throw new CompilationException($compiler, 'An else block was found but it was not preceded by an if or other else-able construct');
             }
             $interfaces = class_implements($block['class'], false);
-            if (in_array('Dwoo_IElseable', $interfaces) !== false) {
+            if (in_array('Dwoo\IElseable', $interfaces) !== false) {
                 break;
             }
         }
@@ -57,14 +61,14 @@ class Dwoo_Plugin_else extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
         return $preContent;
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         if (!isset($params['initialized'])) {
             return '';
         }
 
         $block = &$compiler->getCurrentBlock();
-        $block['params']['hasElse'] = Dwoo_Compiler::PHP_OPEN."else {\n".Dwoo_Compiler::PHP_CLOSE.$content.Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+        $block['params']['hasElse'] = Compiler::PHP_OPEN."else {\n".Compiler::PHP_CLOSE.$content.Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
 
         return '';
     }

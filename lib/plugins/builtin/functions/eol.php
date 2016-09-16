@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Returns the correct end of line character(s) for the current operating system.
@@ -17,7 +18,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_eol_compile(Dwoo_Compiler $compiler)
+function Dwoo_Plugin_eol_compile(Compiler $compiler)
 {
     return 'PHP_EOL';
 }

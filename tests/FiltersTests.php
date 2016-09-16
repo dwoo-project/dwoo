@@ -8,16 +8,16 @@ class FiltersTests extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         // extend this class and override this in your constructor to test a modded compiler
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function testHtmlFormat()
     {
-        $tpl = new Dwoo_Template_String("<html><body><div><p>a<em>b</em>c<hr /></p><textarea>a\n  b</textarea></div></body><html>");
+        $tpl = new Dwoo\Template\String("<html><body><div><p>a<em>b</em>c<hr /></p><textarea>a\n  b</textarea></div></body><html>");
         $tpl->forceCompilation();
 
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
         $dwoo->addFilter('html_format', true);
 
         $this->assertEquals(str_replace("\r", '', <<<'SNIPPET'
@@ -39,11 +39,11 @@ SNIPPET
 
     public function testSmartyCompat()
     {
-        $tpl = new Dwoo_Template_String('{ldelim}{$smarty.version}{rdelim}');
+        $tpl = new Dwoo\Template\String('{ldelim}{$smarty.version}{rdelim}');
         $tpl->forceCompilation();
-        $cmp = new Dwoo_Compiler();
+        $cmp = new Dwoo\Compiler();
         $cmp->addPreProcessor('smarty_compat', true);
 
-        $this->assertEquals('{'.Dwoo_Core::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
+        $this->assertEquals('{'.Dwoo\Core::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
     }
 }

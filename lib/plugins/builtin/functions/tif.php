@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Ternary if operation.
@@ -21,14 +23,14 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $tokens)
+function Dwoo_Plugin_tif_compile(Compiler $compiler, array $rest, array $tokens)
 {
     // load if plugin
     if (!class_exists('Dwoo_Plugin_if', false)) {
         try {
             $compiler->getDwoo()->getLoader()->loadPlugin('if');
         } catch (Exception $e) {
-            throw new Dwoo_Compilation_Exception($compiler, 'Tif: the if plugin is required to use Tif');
+            throw new CompilationException($compiler, 'Tif: the if plugin is required to use Tif');
         }
     }
 
@@ -44,7 +46,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $to
         array_pop($rest);
     } elseif (trim(end($rest), '"\'') === '?' || count($rest) === 1) {
         if ($falseResult === '?' || $falseResult === ':') {
-            throw new Dwoo_Compilation_Exception($compiler, 'Tif: incomplete tif statement, value missing after '.$falseResult);
+            throw new CompilationException($compiler, 'Tif: incomplete tif statement, value missing after '.$falseResult);
         }
         // there was in fact no false result provided, so we move it to be the true result instead
         $trueResult = $falseResult;
@@ -67,7 +69,7 @@ function Dwoo_Plugin_tif_compile(Dwoo_Compiler $compiler, array $rest, array $to
 
     // check params were correctly provided
     if (empty($rest) || $trueResult === null || $falseResult === null) {
-        throw new Dwoo_Compilation_Exception($compiler, 'Tif: you must provide three parameters serving as <expression> ? <true value> : <false value>');
+        throw new CompilationException($compiler, 'Tif: you must provide three parameters serving as <expression> ? <true value> : <false value>');
     }
 
     // parse condition

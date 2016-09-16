@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Counts the paragraphs in a string
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_count_paragraphs_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_count_paragraphs_compile(Compiler $compiler, $value)
 {
     return '(preg_match_all(\'#[\r\n]+#\', '.$value.', $tmp)+1)';
 }

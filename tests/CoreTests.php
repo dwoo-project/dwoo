@@ -7,16 +7,16 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function testCoverConstructorsEtc()
     {
         // extend this class and override this in your constructor to test a modded compiler
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $tpl = new Dwoo_Template_String('');
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $tpl = new Dwoo\Template\String('');
         $tpl->forceCompilation();
         $this->assertEquals('', $this->dwoo->get($tpl, array(), $this->compiler));
 
@@ -27,7 +27,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testReadVar()
     {
-        $tpl = new Dwoo_Template_String('{$foo.$bar[$baz->qux][moo]}{with $foo}{$a.b.moo}{/with}{$baz->qux}');
+        $tpl = new Dwoo\Template\String('{$foo.$bar[$baz->qux][moo]}{with $foo}{$a.b.moo}{/with}{$baz->qux}');
         $tpl->forceCompilation();
 
         $Obj = new stdClass();
@@ -46,7 +46,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testReadParentVar()
     {
-        $tpl = new Dwoo_Template_String('{assign "Yay!" a.b->qux}{$a.b->qux}');
+        $tpl = new Dwoo\Template\String('{assign "Yay!" a.b->qux}{$a.b->qux}');
         $tpl->forceCompilation();
 
         $this->assertEquals('Yay!', $this->dwoo->get($tpl, array('bar' => 'a'), $this->compiler));
@@ -56,7 +56,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testDwoo_Output()
     {
-        $tpl = new Dwoo_Template_String('a');
+        $tpl = new Dwoo\Template\String('a');
         $tpl->forceCompilation();
 
         ob_start();
@@ -66,7 +66,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testDwoo_GetNonTemplate()
     {
@@ -74,26 +74,26 @@ class CoreTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testDwoo_GetNonData()
     {
-        $tpl = new Dwoo_Template_String('a');
+        $tpl = new Dwoo\Template\String('a');
         $this->dwoo->get($tpl, null);
     }
 
     public function testGetSetSecurityPolicy()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $policy = new Dwoo_Security_Policy();
-        $policy->setConstantHandling(Dwoo_Security_Policy::CONST_ALLOW);
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $policy = new Dwoo\Security\Policy();
+        $policy->setConstantHandling(Dwoo\Security\Policy::CONST_ALLOW);
         $dwoo->setSecurityPolicy($policy);
         $this->assertEquals($policy, $dwoo->getSecurityPolicy());
         $this->assertEquals($policy->getConstantHandling(), $dwoo->getSecurityPolicy()->getConstantHandling());
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testWrongResourceName()
     {
@@ -102,7 +102,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testIsCached()
     {
-        $tpl = new Dwoo_Template_String('foo');
+        $tpl = new Dwoo\Template\String('foo');
         $this->assertEquals(false, $this->dwoo->isCached($tpl));
     }
 
@@ -130,7 +130,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testAssignVarInScope()
     {
-        $tpl = new Dwoo_Template_String('{assign "Yay!" a.b->qux}{$a.b->qux}');
+        $tpl = new Dwoo\Template\String('{assign "Yay!" a.b->qux}{$a.b->qux}');
         $tpl->forceCompilation();
 
         $Obj = new stdClass();
@@ -138,7 +138,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
         $this->assertEquals('Yay!', $this->dwoo->get($tpl, array('a' => array('b' => $Obj)), $this->compiler));
 
-        $tpl = new Dwoo_Template_String('{assign "Yay!" a->b.qux}{$a->b.qux}');
+        $tpl = new Dwoo\Template\String('{assign "Yay!" a->b.qux}{$a->b.qux}');
         $tpl->forceCompilation();
 
         $Obj = new stdClass();
@@ -149,12 +149,12 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testPhpCall()
     {
-        $tpl = new Dwoo_Template_String('{"foo"|strtoupper}');
+        $tpl = new Dwoo\Template\String('{"foo"|strtoupper}');
         $tpl->forceCompilation();
 
         $this->assertEquals('FOO', $this->dwoo->get($tpl, array(), $this->compiler));
 
-        $tpl = new Dwoo_Template_String('{foreach $foo|@count subitems}{$subitems}{/foreach}');
+        $tpl = new Dwoo\Template\String('{foreach $foo|@count subitems}{$subitems}{/foreach}');
         $tpl->forceCompilation();
 
         $this->assertEquals('21', $this->dwoo->get($tpl, array('foo' => array('a' => array(1, 2), 'b' => array(2))), $this->compiler));
@@ -162,7 +162,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testClassCall()
     {
-        $tpl = new Dwoo_Template_String('{dump $foo.b.0}');
+        $tpl = new Dwoo\Template\String('{dump $foo.b.0}');
         $tpl->forceCompilation();
 
         $this->assertEquals('2<br />', $this->dwoo->get($tpl, array('foo' => array('a' => array(1, 2), 'b' => array(2))), $this->compiler));
@@ -171,7 +171,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
     public function testSuperGlobals()
     {
         $_GET[5] = 'Yay';
-        $tpl = new Dwoo_Template_String('{$dwoo.get.5} {$dwoo.get.$foo}');
+        $tpl = new Dwoo\Template\String('{$dwoo.get.5} {$dwoo.get.$foo}');
         $tpl->forceCompilation();
 
         $this->assertEquals('Yay Yay', $this->dwoo->get($tpl, array('foo' => 5), $this->compiler));
@@ -189,30 +189,30 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
         $this->dwoo->setDefaultCompilerFactory('file', 'Moo');
         $this->assertEquals('Moo', $this->dwoo->getDefaultCompilerFactory('file'));
-        $this->dwoo->setDefaultCompilerFactory('file', array('Dwoo_Compiler', 'compilerFactory'));
+        $this->dwoo->setDefaultCompilerFactory('file', array('Dwoo\Compiler', 'compilerFactory'));
     }
 
     public function testAddAndRemoveResource()
     {
-        $this->dwoo->addResource('news', 'Dwoo_Template_File', array('Dwoo_Compiler', 'compilerFactory'));
-        $tpl = new Dwoo_Template_String('{include file="news:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
+        $this->dwoo->addResource('news', 'Dwoo\Template\File', array('Dwoo\Compiler', 'compilerFactory'));
+        $tpl = new Dwoo\Template\String('{include file="news:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
         $tpl->forceCompilation();
 
-        $compiler = new Dwoo_Compiler();
+        $compiler = new Dwoo\Compiler();
 //		$compiler->debug = true;
         $this->assertEquals('34', $this->dwoo->get($tpl, array(), $compiler));
         $this->dwoo->removeResource('news');
 
-        $this->dwoo->addResource('file', 'Dwoo_Template_String', 'Fake');
+        $this->dwoo->addResource('file', 'Dwoo\Template\String', 'Fake');
         $this->dwoo->removeResource('file');
-        $tpl = new Dwoo_Template_String('{include file="file:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
+        $tpl = new Dwoo\Template\String('{include file="file:'.TEST_DIRECTORY.'/resources/test.html" foo=3 bar=4}');
         $tpl->forceCompilation();
         $this->assertEquals('34', $this->dwoo->get($tpl, array()));
     }
 
     public function testTemplateFile()
     {
-        $tpl = new Dwoo_Template_File(TEST_DIRECTORY.'/resources/test.html');
+        $tpl = new Dwoo\Template\File(TEST_DIRECTORY.'/resources/test.html');
         $tpl->forceCompilation();
 
         $this->assertEquals('12', $this->dwoo->get($tpl, array('foo' => 1, 'bar' => 2)));
@@ -220,7 +220,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testTemplateString()
     {
-        $tpl = new Dwoo_Template_String('foo', 13);
+        $tpl = new Dwoo\Template\String('foo', 13);
 
         $this->assertEquals('13', $tpl->getCacheTime());
         $this->assertEquals(null, $tpl->getCompiler());
@@ -228,7 +228,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testCachedTemplateAndClearCache()
     {
-        $tpl = new Dwoo_Template_String('foo{$foo}', 10, 'cachetest');
+        $tpl = new Dwoo\Template\String('foo{$foo}', 10, 'cachetest');
         $tpl->forceCompilation();
 
         $this->assertEquals('foo1', $this->dwoo->get($tpl, array('foo' => 1)));
@@ -240,7 +240,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testCachedTemplateAndOutput()
     {
-        $tpl = new Dwoo_Template_String('foo{$foo}', 10, 'cachetest');
+        $tpl = new Dwoo\Template\String('foo{$foo}', 10, 'cachetest');
         $tpl->forceCompilation();
 
         ob_start();
@@ -257,9 +257,9 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testCachedTemplateWithDwoo_Cache()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
         $dwoo->setCacheTime(10);
-        $tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
+        $tpl = new Dwoo\Template\String('foo{$foo}bar', null, 'cachetest2');
         $tpl->forceCompilation();
 
         $this->assertEquals('foo1bar', $dwoo->get($tpl, array('foo' => 1)));
@@ -271,9 +271,9 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testClearCacheOnTemplateClass()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
         $dwoo->setCacheTime(10);
-        $tpl = new Dwoo_Template_String('foo{$foo}bar', null, 'cachetest2');
+        $tpl = new Dwoo\Template\String('foo{$foo}bar', null, 'cachetest2');
         $tpl->forceCompilation();
 
         $this->assertEquals('foo1bar', $dwoo->get($tpl, array('foo' => 1)));
@@ -286,10 +286,10 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testTemplateGetSet()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
         $dwoo->setCacheTime(10);
-        $tpl = new Dwoo_Template_String('foo');
-        $tpl2 = new Dwoo_Template_File('./resources/test.html');
+        $tpl = new Dwoo\Template\String('foo');
+        $tpl2 = new Dwoo\Template\File('./resources/test.html');
 
         $this->assertEquals(false, $tpl->getResourceIdentifier());
         $this->assertEquals('string', $tpl->getResourceName());
@@ -300,14 +300,14 @@ class CoreTests extends PHPUnit_Framework_TestCase
     public function testPluginProxyGetSet()
     {
         $proxy = new ProxyHelper();
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $dwoo->setPluginProxy($proxy);
         $this->assertEquals($proxy, $dwoo->getPluginProxy());
     }
 
     public function testIsArrayArray()
     {
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $data = array();
         $this->assertEquals(true, $dwoo->isArray($data));
         $this->assertEquals(0, $dwoo->isArray($data, true));
@@ -318,7 +318,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testIsArrayArrayAccess()
     {
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $data = new TestArrayAccess(array());
         $this->assertEquals(true, $dwoo->isArray($data));
         $this->assertEquals(0, $dwoo->isArray($data, true));
@@ -329,7 +329,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testIsArrayCountableArrayAccess()
     {
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $data = new TestCountableArrayAccess(array());
         $this->assertEquals(true, $dwoo->isArray($data));
         $this->assertEquals(0, $dwoo->isArray($data, true));
@@ -340,7 +340,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testIsTraversableIterator()
     {
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $data = new TestIterator(array());
         $this->assertEquals(true, $dwoo->isTraversable($data));
         $this->assertEquals(0, $dwoo->isTraversable($data, true));
@@ -351,7 +351,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
 
     public function testIsTraversableCountableIterator()
     {
-        $dwoo = new Dwoo_Core();
+        $dwoo = new Dwoo\Core();
         $data = new TestCountableIterator(array());
         $this->assertEquals(true, $dwoo->isTraversable($data));
         $this->assertEquals(0, $dwoo->isTraversable($data, true));

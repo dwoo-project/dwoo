@@ -1,4 +1,5 @@
 <?php
+namespace Dwoo;
 
 /**
  * Base plugin class.
@@ -18,12 +19,12 @@
  * @date      2016-10-16
  * @link      http://dwoo.org/
  */
-abstract class Dwoo_Plugin
+abstract class Plugin
 {
     /**
      * The dwoo instance that runs this plugin.
      *
-     * @var Dwoo
+     * @var Core
      */
     protected $dwoo;
 
@@ -31,9 +32,9 @@ abstract class Dwoo_Plugin
      * Constructor, if you override it, call parent::__construct($dwoo); or assign
      * the dwoo instance yourself if you need it.
      *
-     * @param Dwoo_Core $dwoo the dwoo instance that runs this plugin
+     * @param Core $dwoo the dwoo instance that runs this plugin
      */
-    public function __construct(Dwoo_Core $dwoo)
+    public function __construct(Core $dwoo)
     {
         $this->dwoo = $dwoo;
     }
@@ -60,12 +61,12 @@ abstract class Dwoo_Plugin
      * @param array         $params   an array of attributeName=>value items that will be compiled to be ready for
      *                                inclusion in a php string
      * @param string        $delim    the string delimiter you want to use (defaults to ')
-     * @param Dwoo_Compiler $compiler the compiler instance (optional for BC, but recommended to pass it for proper
+     * @param Compiler $compiler the compiler instance (optional for BC, but recommended to pass it for proper
      *                                escaping behavior)
      *
      * @return string
      */
-    public static function paramsToAttributes(array $params, $delim = '\'', Dwoo_Compiler $compiler = null)
+    public static function paramsToAttributes(array $params, $delim = '\'', Compiler $compiler = null)
     {
         if (isset($params['*'])) {
             $params = array_merge($params, $params['*']);

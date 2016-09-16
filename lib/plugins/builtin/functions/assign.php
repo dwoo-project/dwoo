@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Assigns a value to a variable
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_assign_compile(Dwoo_Compiler $compiler, $value, $var)
+function Dwoo_Plugin_assign_compile(Compiler $compiler, $value, $var)
 {
     return '$this->assignInScope('.$value.', '.$var.')';
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Dwoo\Compiler;
+
 /**
  * Builds an array with all the provided variables, use named parameters to make an associative array
  * <pre>
@@ -24,12 +26,12 @@
  * @version    1.2.3
  * @date       2016-10-15
  *
- * @param Dwoo_Compiler $compiler
+ * @param Compiler $compiler
  * @param array         $rest
  *
  * @return string
  */
-function Dwoo_Plugin_array_compile(Dwoo_Compiler $compiler, array $rest = array())
+function Dwoo_Plugin_array_compile(Compiler $compiler, array $rest = array())
 {
     $out = array();
     foreach ($rest as $key => $value) {

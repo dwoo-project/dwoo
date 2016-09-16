@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Loads sub-templates contained in an external file
@@ -19,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
+function Dwoo_Plugin_load_templates_compile(Compiler $compiler, $file)
 {
     $file = substr($file, 1, -1);
 
@@ -40,9 +42,9 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
     $tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
 
     if ($tpl === null) {
-        throw new Dwoo_Compilation_Exception($compiler, 'Load Templates : Resource "'.$resource.':'.$identifier.'" not found.');
+        throw new CompilationException($compiler, 'Load Templates : Resource "'.$resource.':'.$identifier.'" not found.');
     } elseif ($tpl === false) {
-        throw new Dwoo_Compilation_Exception($compiler, 'Load Templates : Resource "'.$resource.'" does not support includes.');
+        throw new CompilationException($compiler, 'Load Templates : Resource "'.$resource.'" does not support includes.');
     }
 
     $cmp = clone $compiler;
@@ -63,7 +65,7 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
     } else {
         $out .= 'try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
-} catch (Dwoo_Exception $e) {
+} catch (Dwoo\Exception $e) {
 	$this->triggerError(\'Load Templates : Resource <em>'.$resource.'</em> was not added to Dwoo, can not extend <em>'.$identifier.'</em>\', E_USER_WARNING);
 }
 if ($tpl === null)

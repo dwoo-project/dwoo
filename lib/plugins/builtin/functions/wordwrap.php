@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Wraps a text at the given line length
@@ -22,7 +23,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_wordwrap_compile(Dwoo_Compiler $compiler, $value, $length = 80, $break = "\n", $cut = false)
+function Dwoo_Plugin_wordwrap_compile(Compiler $compiler, $value, $length = 80, $break = "\n", $cut = false)
 {
     return 'wordwrap('.$value.','.$length.','.$break.','.$cut.')';
 }

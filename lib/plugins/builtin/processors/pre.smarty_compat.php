@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Processor;
 
 /**
  * Performs some template conversions to allow smarty templates to be used by
@@ -18,7 +19,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Processor_smarty_compat extends Dwoo_Processor
+class Dwoo_Processor_smarty_compat extends Processor
 {
     public function process($input)
     {

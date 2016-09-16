@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Makes a string uppercased
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_upper_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_upper_compile(Compiler $compiler, $value)
 {
     return 'mb_strtoupper((string) '.$value.', $this->charset)';
 }

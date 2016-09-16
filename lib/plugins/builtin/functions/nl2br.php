@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Converts line breaks into <br /> tags
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_nl2br_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_nl2br_compile(Compiler $compiler, $value)
 {
     return 'nl2br((string) '.$value.')';
 }

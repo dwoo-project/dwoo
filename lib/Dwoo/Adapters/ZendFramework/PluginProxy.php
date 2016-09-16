@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IPluginProxy;
 
 /**
  * PluginProxy class for Zend View.
@@ -17,7 +19,7 @@
  * @version    1.0.0
  * @date       2008-10-23
  */
-class Dwoo_Adapters_ZendFramework_PluginProxy implements Dwoo_IPluginProxy
+class Dwoo_Adapters_ZendFramework_PluginProxy implements IPluginProxy
 {
     /**
      * reference to the zend view owning this proxy.
@@ -65,7 +67,7 @@ class Dwoo_Adapters_ZendFramework_PluginProxy implements Dwoo_IPluginProxy
      */
     public function getCode($name, $params)
     {
-        return '$this->getPluginProxy()->view->'.$name.'('.Dwoo_Compiler::implode_r($params).')';
+        return '$this->getPluginProxy()->view->'.$name.'('.Compiler::implode_r($params).')';
     }
 
     /**

@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Compatibility plugin for smarty templates, do not use otherwise, this is deprecated.
@@ -17,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_section extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_section extends BlockPlugin implements ICompilableBlock, IElseable
 {
     public static $cnt = 0;
 
@@ -25,14 +29,14 @@ class Dwoo_Plugin_section extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
-        $output = Dwoo_Compiler::PHP_OPEN;
+        $output = Compiler::PHP_OPEN;
         $params = $compiler->getCompiledParams($params);
 
         // assigns params
@@ -121,9 +125,9 @@ class Dwoo_Plugin_section extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
         $output .= "\t\t".'$_section'.$cnt.'[\'first\']      = ($_section'.$cnt.'[\'iteration\'] == 1);'."\n";
         $output .= "\t\t".'$_section'.$cnt.'[\'last\']       = ($_section'.$cnt.'[\'iteration\'] == $_section'.$cnt.'[\'total\']);'."\n";
 
-        $output .= Dwoo_Compiler::PHP_CLOSE.$content.Dwoo_Compiler::PHP_OPEN;
+        $output .= Compiler::PHP_CLOSE.$content.Compiler::PHP_OPEN;
 
-        $output .= "\n\t}\n} ".Dwoo_Compiler::PHP_CLOSE;
+        $output .= "\n\t}\n} ".Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $output .= $params['hasElse'];

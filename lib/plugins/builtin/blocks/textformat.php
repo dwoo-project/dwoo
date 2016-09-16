@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Block\Plugin as BlockPlugin;
 
 /**
  * Formats a string to the given format, you can wrap lines at a certain
@@ -27,7 +28,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_textformat extends Dwoo_Block_Plugin
+class Dwoo_Plugin_textformat extends BlockPlugin
 {
     protected $wrap;
     protected $wrapChar;

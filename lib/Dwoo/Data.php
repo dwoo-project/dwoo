@@ -1,24 +1,25 @@
 <?php
+namespace Dwoo;
 
 /**
- * dwoo data object, use it for complex data assignments or if you want to easily pass it
+ * Dwoo data object, use it for complex data assignments or if you want to easily pass it
  * around multiple functions to avoid passing an array by reference.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-class Dwoo_Data implements Dwoo_IDataProvider
+class Data implements IDataProvider
 {
     /**
      * data array.
@@ -249,14 +250,14 @@ class Dwoo_Data implements Dwoo_IDataProvider
      *
      * @return mixed
      *
-     * @throws Dwoo_Exception
+     * @throws Exception
      */
     public function __get($name)
     {
         if (isset($this->data[$name])) {
             return $this->data[$name];
         } else {
-            throw new Dwoo_Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
+            throw new Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
         }
     }
 }

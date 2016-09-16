@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Plugin;
 
 /**
  * Cycles between several values and returns one of them on each call
@@ -25,7 +26,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_cycle extends Dwoo_Plugin
+class Dwoo_Plugin_cycle extends Plugin
 {
     protected $cycles = array();
 

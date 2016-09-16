@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Overrides the compiler auto-escape setting within the block
@@ -19,7 +23,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_auto_escape extends BlockPlugin implements ICompilableBlock
 {
     protected static $stack = array();
 
@@ -27,7 +31,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $params = $compiler->getCompiledParams($params);
         switch (strtolower(trim((string) $params['enabled'], '"\''))) {
@@ -47,7 +51,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
             $enable = false;
             break;
         default:
-            throw new Dwoo_Compilation_Exception($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
+            throw new CompilationException($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
 
         }
 
@@ -57,7 +61,7 @@ class Dwoo_Plugin_auto_escape extends Dwoo_Block_Plugin implements Dwoo_ICompila
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $compiler->setAutoEscape(array_pop(self::$stack));
 

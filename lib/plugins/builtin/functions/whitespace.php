@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Replaces all white-space characters with the given string
@@ -30,7 +31,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_whitespace_compile(Dwoo_Compiler $compiler, $value, $with = ' ')
+function Dwoo_Plugin_whitespace_compile(Compiler $compiler, $value, $with = ' ')
 {
     return "preg_replace('#\s+#'.(strcasecmp(\$this->charset, 'utf-8')===0?'u':''), $with, $value)";
 }

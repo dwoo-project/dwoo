@@ -1,23 +1,24 @@
 <?php
+namespace Dwoo;
 
 /**
- * handles plugin loading and caching of plugins names/paths relationships.
+ * Handles plugin loading and caching of plugins names/paths relationships.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-class Dwoo_Loader implements Dwoo_ILoader
+class Loader implements ILoader
 {
     /**
      * stores the plugin directories.
@@ -53,7 +54,7 @@ class Dwoo_Loader implements Dwoo_ILoader
         $this->cacheDir = rtrim($cacheDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 
         // include class paths or rebuild paths if the cache file isn't there
-        $cacheFile = $this->cacheDir.'classpath.cache.d'.Dwoo_Core::RELEASE_TAG.'.php';
+        $cacheFile = $this->cacheDir.'classpath.cache.d'.Core::RELEASE_TAG.'.php';
         if (file_exists($cacheFile)) {
             $classpath = file_get_contents($cacheFile);
             $this->classPath = unserialize($classpath) + $this->classPath;
@@ -68,7 +69,7 @@ class Dwoo_Loader implements Dwoo_ILoader
      * @param string $path      the plugin path to scan
      * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
      *
-     * @throws Dwoo_Exception
+     * @throws Exception
      */
     protected function rebuildClassPathCache($path, $cacheFile)
     {
@@ -92,7 +93,7 @@ class Dwoo_Loader implements Dwoo_ILoader
         // save in file if it's the first call (not recursed)
         if ($cacheFile !== false) {
             if (!file_put_contents($cacheFile, serialize($this->classPath))) {
-                throw new Dwoo_Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
+                throw new Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
             }
             $this->classPath += $tmp;
         }
@@ -104,7 +105,7 @@ class Dwoo_Loader implements Dwoo_ILoader
      * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
      * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
      *
-     * @throws Dwoo_Exception
+     * @throws Exception
      */
     public function loadPlugin($class, $forceRehash = true)
     {
@@ -117,16 +118,16 @@ class Dwoo_Loader implements Dwoo_ILoader
             !is_readable($this->classPath[$class]) ||
             !(include $this->classPath[$class])) {
             if ($forceRehash) {
-                $this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir.'classpath.cache.d'.Dwoo_Core::RELEASE_TAG.'.php');
+                $this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir.'classpath.cache.d'.Core::RELEASE_TAG.'.php');
                 foreach ($this->paths as $path => $file) {
                     $this->rebuildClassPathCache($path, $file);
                 }
                 if (isset($this->classPath[$class])) {
                     include $this->classPath[$class];
                 }
-                throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                throw new Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
-            throw new Dwoo_Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+            throw new Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
         }
     }
 
@@ -141,15 +142,15 @@ class Dwoo_Loader implements Dwoo_ILoader
      *
      * @param string $pluginDirectory the plugin path to scan
      *
-     * @throws Dwoo_Exception
+     * @throws Exception
      */
     public function addDirectory($pluginDirectory)
     {
         $pluginDir = realpath($pluginDirectory);
         if (!$pluginDir) {
-            throw new Dwoo_Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
+            throw new Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
         }
-        $cacheFile = $this->cacheDir.'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Dwoo_Core::RELEASE_TAG.'.php';
+        $cacheFile = $this->cacheDir.'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Core::RELEASE_TAG.'.php';
         $this->paths[$pluginDir] = $cacheFile;
         if (file_exists($cacheFile)) {
             $classpath = file_get_contents($cacheFile);

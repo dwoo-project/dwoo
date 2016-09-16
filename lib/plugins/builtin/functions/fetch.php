@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Reads a file
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_fetch(Dwoo_Core $dwoo, $file, $assign = null)
+function Dwoo_Plugin_fetch(Core $dwoo, $file, $assign = null)
 {
     if ($file === '') {
         return '';

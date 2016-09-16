@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Replaces the search string by the replace string
@@ -21,7 +22,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_replace_compile(Dwoo_Compiler $compiler, $value, $search, $replace, $case_sensitive = true)
+function Dwoo_Plugin_replace_compile(Compiler $compiler, $value, $search, $replace, $case_sensitive = true)
 {
     if ($case_sensitive == 'false' || (bool) $case_sensitive === false) {
         return 'str_ireplace('.$search.', '.$replace.', '.$value.')';

@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Core;
+use Dwoo\Template\String as TemplateString;
 
 /**
  * Evaluates the given string as if it was a template.
@@ -27,13 +29,13 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_eval(Dwoo_Core $dwoo, $var, $assign = null)
+function Dwoo_Plugin_eval(Core $dwoo, $var, $assign = null)
 {
     if ($var == '') {
         return '';
     }
 
-    $tpl = new Dwoo_Template_String($var);
+    $tpl = new TemplateString($var);
     $clone = clone $dwoo;
     $out = $clone->get($tpl, $dwoo->readVar('_parent'));
 

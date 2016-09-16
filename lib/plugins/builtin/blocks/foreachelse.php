@@ -1,4 +1,7 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * This plugin serves as a {else} block specifically for the {foreach} plugin.
@@ -17,13 +20,13 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_foreachelse extends BlockPlugin implements ICompilableBlock
 {
     public function init()
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $with = &$compiler->findBlock('foreach', true);
 
@@ -33,14 +36,14 @@ class Dwoo_Plugin_foreachelse extends Dwoo_Block_Plugin implements Dwoo_ICompila
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         if (!isset($params['initialized'])) {
             return '';
         }
 
         $block = &$compiler->getCurrentBlock();
-        $block['params']['hasElse'] = Dwoo_Compiler::PHP_OPEN."else {\n".Dwoo_Compiler::PHP_CLOSE.$content.Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+        $block['params']['hasElse'] = Compiler::PHP_OPEN."else {\n".Compiler::PHP_CLOSE.$content.Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
 
         return '';
     }

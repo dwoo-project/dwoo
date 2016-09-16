@@ -1,4 +1,14 @@
 <?php
+namespace Dwoo\Smarty;
+
+use Dwoo\Core;
+use Dwoo\Compiler;
+use Dwoo\Data;
+use Dwoo\Security\Policy as SecurityPolicy;
+use Dwoo\Exception as Exception;
+use Dwoo\Template\File as TemplateFile;
+use Dwoo\Smarty\Filter\Adapter as FilterAdapter;
+use Dwoo\Smarty\Processor\Adapter as ProcessorAdapter;
 
 if (!defined('DIR_SEP')) {
     define('DIR_SEP', DIRECTORY_SEPARATOR);
@@ -17,18 +27,18 @@ if (!defined('SMARTY_PHP_PASSTHRU')) {
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo\Smarty
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-class Dwoo_Smarty__Adapter extends Dwoo_Core
+class Adapter extends Core
 {
     // magic get/set/call functions that handle unsupported features
     public function __set($p, $v)
@@ -45,12 +55,12 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
         }
         if (array_key_exists($p, $this->compat['properties']) !== false) {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo_Smarty_Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             }
             $this->compat['properties'][$p] = $v;
         } else {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo_Smarty_Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
@@ -59,13 +69,13 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
     {
         if (array_key_exists($p, $this->compat['properties']) !== false) {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo_Smarty_Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             }
 
             return $this->compat['properties'][$p];
         } else {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo_Smarty_Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
@@ -76,9 +86,9 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
             call_user_func_array(array($this->dataProvider, $m), $a);
         } elseif ($this->show_compat_errors) {
             if (array_search($m, $this->compat['methods']) !== false) {
-                $this->triggerError('Method '.$m.' is not available in the Dwoo_Smarty_Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Method '.$m.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             } else {
-                $this->triggerError('Method '.$m.' is not available in the Dwoo_Smarty_Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Method '.$m.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
@@ -157,8 +167,8 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
     {
         parent::__construct();
         $this->charset = 'iso-8859-1';
-        $this->dataProvider = new Dwoo_Data();
-        $this->compiler = new Dwoo_Compiler();
+        $this->dataProvider = new Data();
+        $this->compiler = new Compiler();
     }
 
     public function display($filename, $cacheId = null, $compileId = null)
@@ -172,7 +182,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
         $this->setCompileDir($this->compile_dir);
 
         if ($this->security) {
-            $policy = new Dwoo_Security_Policy();
+            $policy = new SecurityPolicy();
             $policy->addPhpFunction(array_merge($this->security_settings['IF_FUNCS'], $this->security_settings['MODIFIER_FUNCS']));
 
             $phpTags = $this->security_settings['PHP_HANDLING'] ? SMARTY_PHP_ALLOW : $this->php_handling;
@@ -182,14 +192,14 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
             switch ($phpTags) {
                 case SMARTY_PHP_ALLOW:
                 case SMARTY_PHP_PASSTHRU:
-                    $phpTags = Dwoo_Security_Policy::PHP_ALLOW;
+                    $phpTags = SecurityPolicy::PHP_ALLOW;
                     break;
                 case SMARTY_PHP_QUOTE:
-                    $phpTags = Dwoo_Security_Policy::PHP_ENCODE;
+                    $phpTags = SecurityPolicy::PHP_ENCODE;
                     break;
                 case SMARTY_PHP_REMOVE:
                 default:
-                    $phpTags = Dwoo_Security_Policy::PHP_REMOVE;
+                    $phpTags = SecurityPolicy::PHP_REMOVE;
                     break;
             }
             $policy->setPhpHandling($phpTags);
@@ -249,7 +259,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
     public function register_function($name, $callback, $cacheable = true, $cache_attrs = null)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION) {
-            throw new Dwoo_Exception('Multiple plugins of different types can not share the same name');
+            throw new Exception('Multiple plugins of different types can not share the same name');
         }
         $this->plugins[$name] = array('type' => self::SMARTY_FUNCTION, 'callback' => $callback);
     }
@@ -262,7 +272,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
     public function register_block($name, $callback, $cacheable = true, $cache_attrs = null)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK) {
-            throw new Dwoo_Exception('Multiple plugins of different types can not share the same name');
+            throw new Exception('Multiple plugins of different types can not share the same name');
         }
         $this->plugins[$name] = array('type' => self::SMARTY_BLOCK, 'callback' => $callback);
     }
@@ -275,7 +285,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
     public function register_modifier($name, $callback)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER) {
-            throw new Dwoo_Exception('Multiple plugins of different types can not share the same name');
+            throw new Exception('Multiple plugins of different types can not share the same name');
         }
         $this->plugins[$name] = array('type' => self::SMARTY_MODIFIER, 'callback' => $callback);
     }
@@ -287,7 +297,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
 
     public function register_prefilter($callback)
     {
-        $processor = new Dwoo_SmartyProcessorAdapter($this->compiler);
+        $processor = new ProcessorAdapter($this->compiler);
         $processor->registerCallback($callback);
         $this->_filters['pre'][] = $processor;
         $this->compiler->addPreProcessor($processor);
@@ -305,7 +315,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
 
     public function register_postfilter($callback)
     {
-        $processor = new Dwoo_SmartyProcessorAdapter($this->compiler);
+        $processor = new ProcessorAdapter($this->compiler);
         $processor->registerCallback($callback);
         $this->_filters['post'][] = $processor;
         $this->compiler->addPostProcessor($processor);
@@ -323,7 +333,7 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
 
     public function register_outputfilter($callback)
     {
-        $filter = new Dwoo_SmartyFilterAdapter($this);
+        $filter = new FilterAdapter($this);
         $filter->registerCallback($callback);
         $this->_filters['output'][] = $filter;
         $this->addFilter($filter);
@@ -463,9 +473,9 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
         if (!isset(self::$tplCache[$hash])) {
             // abs path
             if (substr($file, 0, 1) === '/' || substr($file, 1, 1) === ':') {
-                self::$tplCache[$hash] = new Dwoo_Template_File($file, null, $cacheId, $compileId);
+                self::$tplCache[$hash] = new TemplateFile($file, null, $cacheId, $compileId);
             } elseif (is_string($this->template_dir) || is_array($this->template_dir)) {
-                self::$tplCache[$hash] = new Dwoo_Template_File($file, null, $cacheId, $compileId, $this->template_dir);
+                self::$tplCache[$hash] = new TemplateFile($file, null, $cacheId, $compileId, $this->template_dir);
             } else {
                 throw new Exception('Unable to load "'.$file.'", check the template_dir');
             }
@@ -480,49 +490,5 @@ class Dwoo_Smarty__Adapter extends Dwoo_Core
             return parent::triggerError($message, $level);
         }
         trigger_error('Dwoo error : '.$message, $level);
-    }
-}
-
-class Dwoo_Smarty_Filter_Adapter extends Dwoo_Filter
-{
-    public $callback;
-
-    public function process($input)
-    {
-        return call_user_func($this->callback, $input);
-    }
-
-    public function registerCallback($callback)
-    {
-        $this->callback = $callback;
-    }
-}
-
-class Dwoo_Smarty_Processor_Adapter extends Dwoo_Processor
-{
-    public $callback;
-
-    public function process($input)
-    {
-        return call_user_func($this->callback, $input);
-    }
-
-    public function registerCallback($callback)
-    {
-        $this->callback = $callback;
-    }
-}
-
-// cloaks the adapter if possible with the smarty name to fool type-hinted plugins
-if (class_exists('Smarty') === false) {
-    interface Smarty
-    {
-    }
-    class Dwoo_Smarty_Adapter extends Dwoo_Smarty__Adapter implements Smarty
-    {
-    }
-} else {
-    class Dwoo_Smarty_Adapter extends Dwoo_Smarty__Adapter
-    {
     }
 }

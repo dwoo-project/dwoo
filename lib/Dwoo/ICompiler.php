@@ -1,7 +1,10 @@
 <?php
+namespace Dwoo;
+
+use Dwoo\Security\Policy as SecurityPolicy;
 
 /**
- * interface that represents a dwoo compiler.
+ * Interface that represents a dwoo compiler.
  *
  * while implementing this is enough to interact with Dwoo/Dwoo_Templates, it is not
  * sufficient to interact with Dwoo_Plugins, however the main purpose of creating a
@@ -11,27 +14,26 @@
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-interface Dwoo_ICompiler
+interface ICompiler
 {
-    /**
-     * compiles the provided string down to php code.
-     *
-     * @param string $templateStr the template to compile
-     *
-     * @return string a compiled php code string
-     */
-    public function compile(Dwoo_Core $dwoo, Dwoo_ITemplate $template);
+	/**
+	 * compiles the provided string down to php code.
+	 * @param \Dwoo\Core $dwoo
+	 * @param ITemplate  $template the template to compile
+	 * @return string a compiled php code string
+	 */
+    public function compile(Core $dwoo, ITemplate $template);
 
     /**
      * adds the custom plugins loaded into Dwoo to the compiler so it can load them.
@@ -48,7 +50,7 @@ interface Dwoo_ICompiler
      * use this if untrusted persons can modify templates,
      * set it on the Dwoo object as it will be passed onto the compiler automatically
      *
-     * @param Dwoo_Security_Policy $policy the security policy object
+     * @param SecurityPolicy $policy the security policy object
      */
-    public function setSecurityPolicy(Dwoo_Security_Policy $policy = null);
+    public function setSecurityPolicy(SecurityPolicy $policy = null);
 }

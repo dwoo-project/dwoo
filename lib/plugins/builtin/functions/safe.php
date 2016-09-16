@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Marks the variable as safe and removes the auto-escape function, only useful if you turned auto-escaping on
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_safe_compile(Dwoo_Compiler $compiler, $var)
+function Dwoo_Plugin_safe_compile(Compiler $compiler, $var)
 {
     return preg_replace('#\(is_string\(\$tmp=(.+)\) \? htmlspecialchars\(\$tmp, ENT_QUOTES, \$this->charset\) : \$tmp\)#', '$1', $var);
 }

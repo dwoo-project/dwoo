@@ -1,4 +1,8 @@
 <?php
+use Dwoo\IElseable;
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Moves the scope down into the provided variable, allowing you to use shorter
@@ -41,7 +45,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_with extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_with extends BlockPlugin implements ICompilableBlock, IElseable
 {
     protected static $cnt = 0;
 
@@ -49,25 +53,25 @@ class Dwoo_Plugin_with extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $rparams = $compiler->getRealParams($params);
         $cparams = $compiler->getCompiledParams($params);
 
         $compiler->setScope($rparams['var']);
 
-        $pre = Dwoo_Compiler::PHP_OPEN.'if ('.$cparams['var'].')'."\n{\n".
+        $pre = Compiler::PHP_OPEN.'if ('.$cparams['var'].')'."\n{\n".
             '$_with'.(self::$cnt).' = $this->setScope("'.$rparams['var'].'");'.
-            "\n/* -- start with output */\n".Dwoo_Compiler::PHP_CLOSE;
+            "\n/* -- start with output */\n".Compiler::PHP_CLOSE;
 
-        $post = Dwoo_Compiler::PHP_OPEN."\n/* -- end with output */\n".
+        $post = Compiler::PHP_OPEN."\n/* -- end with output */\n".
             '$this->setScope($_with'.(self::$cnt++).', true);'.
-            "\n}\n".Dwoo_Compiler::PHP_CLOSE;
+            "\n}\n".Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];

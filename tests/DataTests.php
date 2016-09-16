@@ -8,15 +8,15 @@ class DataTests extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         // extend this class and override this in your constructor to test a modded compiler
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $this->tpl = new Dwoo_Template_String('{$var}{$var2}{$var3}{$var4}');
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->tpl = new Dwoo\Template\String('{$var}{$var2}{$var3}{$var4}');
         $this->tpl->forceCompilation();
     }
 
     public function testSetMergeAndClear()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
 
         $data->setData(array('foo'));
         $this->assertEquals(array('foo'), $data->getData());
@@ -31,7 +31,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
     public function testAssign()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
 
         $data->assign('var', '1');
         $data->assign(array('var2' => '1', 'var3' => 1));
@@ -44,7 +44,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
     public function testClear()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
 
         $data->assign(array('var2' => '1', 'var3' => 1, 'var4' => 5));
         $data->clear(array('var2', 'var4'));
@@ -59,7 +59,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
     public function testAppend()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
 
         $data->assign('var', 'val');
         $data->append('var', 'moo');
@@ -73,7 +73,7 @@ class DataTests extends PHPUnit_Framework_TestCase
 
     public function testMagicGetSetStuff()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
 
         $data->variable = 'val';
         $data->append('variable', 'moo');
@@ -84,11 +84,11 @@ class DataTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testUnset()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
         $data->variable = 'val';
         $this->assertEquals(true, isset($data->variable));
         unset($data->variable);
@@ -96,11 +96,11 @@ class DataTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testUnassign()
     {
-        $data = new Dwoo_Data();
+        $data = new Dwoo\Data();
         $data->variable = 'val';
         $this->assertEquals(true, isset($data->variable));
         $data->unassign('variable');

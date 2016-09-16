@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Loops over an array and moves the scope into each value, allowing for shorter loop constructs.
@@ -41,7 +45,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_loop extends BlockPlugin implements ICompilableBlock, IElseable
 {
     public static $cnt = 0;
 
@@ -49,7 +53,7 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         // get block params and save the current template pointer to use it in the postProcessing method
         $currentBlock = &$compiler->getCurrentBlock();
@@ -58,7 +62,7 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $params = $compiler->getCompiledParams($params);
         $tpl = $compiler->getTemplateSource($params['tplPointer']);
@@ -86,7 +90,7 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
         $cnt = self::$cnt++;
 
         // builds pre processing output
-        $pre = Dwoo_Compiler::PHP_OPEN."\n".'$_loop'.$cnt.'_data = '.$src.';';
+        $pre = Compiler::PHP_OPEN."\n".'$_loop'.$cnt.'_data = '.$src.';';
         // adds foreach properties
         if ($usesAny) {
             $pre .= "\n".'$this->globals["loop"]['.$name.'] = array'."\n(";
@@ -121,10 +125,10 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
         if ($usesLast) {
             $pre .= "\n\t\t".'$_loop'.$cnt.'_glob["last"] = (string) ($_loop'.$cnt.'_glob["iteration"] === $_loop'.$cnt.'_glob["total"]);';
         }
-        $pre .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope(array("-loop-"));'."\n/* -- loop start output */\n".Dwoo_Compiler::PHP_CLOSE;
+        $pre .= "\n\t\t".'$_loop'.$cnt.'_scope = $this->setScope(array("-loop-"));'."\n/* -- loop start output */\n".Compiler::PHP_CLOSE;
 
         // build post processing output and cache it
-        $post = Dwoo_Compiler::PHP_OPEN."\n".'/* -- loop end output */'."\n\t\t".'$this->setScope($_loop'.$cnt.'_scope, true);';
+        $post = Compiler::PHP_OPEN."\n".'/* -- loop end output */'."\n\t\t".'$this->setScope($_loop'.$cnt.'_scope, true);';
         // update properties
         if ($usesIndex) {
             $post .= "\n\t\t".'$_loop'.$cnt.'_glob["index"]+=1;';
@@ -133,7 +137,7 @@ class Dwoo_Plugin_loop extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Blo
             $post .= "\n\t\t".'$_loop'.$cnt.'_glob["iteration"]+=1;';
         }
         // end loop
-        $post .= "\n\t}\n}\n".Dwoo_Compiler::PHP_CLOSE;
+        $post .= "\n\t}\n}\n".Compiler::PHP_CLOSE;
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];
         }

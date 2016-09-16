@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Capitalizes the first letter of each word
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_capitalize(Dwoo_Core $dwoo, $value, $numwords = false)
+function Dwoo_Plugin_capitalize(Core $dwoo, $value, $numwords = false)
 {
     if ($numwords || preg_match('#^[^0-9]+$#', $value)) {
         return mb_convert_case((string) $value, MB_CASE_TITLE, $dwoo->getCharset());

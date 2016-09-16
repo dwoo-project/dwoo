@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Removes all html tags
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_strip_tags_compile(Dwoo_Compiler $compiler, $value, $addspace = true)
+function Dwoo_Plugin_strip_tags_compile(Compiler $compiler, $value, $addspace = true)
 {
     if ($addspace === 'true') {
         return "preg_replace('#<[^>]*>#', ' ', $value)";

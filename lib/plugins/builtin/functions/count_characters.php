@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Counts the characters in a string
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_count_characters_compile(Dwoo_Compiler $compiler, $value, $count_spaces = false)
+function Dwoo_Plugin_count_characters_compile(Compiler $compiler, $value, $count_spaces = false)
 {
     if ($count_spaces === 'false') {
         return 'preg_match_all(\'#[^\s\pZ]#u\', '.$value.', $tmp)';

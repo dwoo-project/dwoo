@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Concatenates any number of variables or strings fed into it
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_cat_compile(Dwoo_Compiler $compiler, $value, array $rest)
+function Dwoo_Plugin_cat_compile(Compiler $compiler, $value, array $rest)
 {
     return '('.$value.').('.implode(').(', $rest).')';
 }

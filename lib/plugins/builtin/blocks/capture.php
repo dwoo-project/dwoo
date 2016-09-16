@@ -1,4 +1,7 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Captures all the output within this block and saves it into {$.capture.default} by default,
@@ -34,22 +37,22 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_capture extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_capture extends BlockPlugin implements ICompilableBlock
 {
     public function init($name = 'default', $assign = null, $cat = false, $trim = false)
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
-        return Dwoo_Compiler::PHP_OPEN.$prepend.'ob_start();'.$append.Dwoo_Compiler::PHP_CLOSE;
+        return Compiler::PHP_OPEN.$prepend.'ob_start();'.$append.Compiler::PHP_CLOSE;
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $params = $compiler->getCompiledParams($params);
 
-        $out = $content.Dwoo_Compiler::PHP_OPEN.$prepend."\n".'$tmp = ob_get_clean();';
+        $out = $content.Compiler::PHP_OPEN.$prepend."\n".'$tmp = ob_get_clean();';
         if ($params['trim'] !== 'false' && $params['trim'] !== 0) {
             $out .= "\n".'$tmp = trim($tmp);';
         }
@@ -60,6 +63,6 @@ class Dwoo_Plugin_capture extends Dwoo_Block_Plugin implements Dwoo_ICompilable_
             $out .= "\n".'$this->scope['.$params['assign'].'] = $tmp;';
         }
 
-        return $out."\n".'$this->globals[\'capture\']['.$params['name'].'] = $tmp;'.$append.Dwoo_Compiler::PHP_CLOSE;
+        return $out."\n".'$this->globals[\'capture\']['.$params['name'].'] = $tmp;'.$append.Compiler::PHP_CLOSE;
     }
 }

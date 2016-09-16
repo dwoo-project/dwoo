@@ -1,4 +1,7 @@
 <?php
+use Dwoo\Core;
+use Dwoo\Exception as Exception;
+use Dwoo\Security\Exception as SecurityException;
 
 /**
  * Inserts another template into the current one
@@ -25,7 +28,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
+function Dwoo_Plugin_include(Core $dwoo, $file, $cache_time = null, $cache_id = null, $compile_id = null, $data = '_root', $assign = null, array $rest = array())
 {
     if ($file === '') {
         return '';
@@ -43,9 +46,9 @@ function Dwoo_Plugin_include(Dwoo_Core $dwoo, $file, $cache_time = null, $cache_
 
     try {
         $include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
-    } catch (Dwoo_Security_Exception $e) {
+    } catch (SecurityException $e) {
         $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
-    } catch (Dwoo_Exception $e) {
+    } catch (Exception $e) {
         $dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
     }
 

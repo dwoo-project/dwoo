@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Truncates a string at the given length
@@ -23,7 +24,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_truncate(Dwoo_Core $dwoo, $value, $length = 80, $etc = '...', $break = false, $middle = false)
+function Dwoo_Plugin_truncate(Core $dwoo, $value, $length = 80, $etc = '...', $break = false, $middle = false)
 {
     if ($length == 0) {
         return '';

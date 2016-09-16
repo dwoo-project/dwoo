@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Checks whether a variable is not null
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_isset_compile(Dwoo_Compiler $compiler, $var)
+function Dwoo_Plugin_isset_compile(Compiler $compiler, $var)
 {
     return '('.$var.' !== null)';
 }

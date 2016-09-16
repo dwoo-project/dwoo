@@ -1,4 +1,7 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Acts as a php elseif block, allowing you to add one more condition
@@ -18,20 +21,20 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements ICompilableBlock, IElseable
 {
     public function init(array $rest)
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $preContent = '';
         while (true) {
             $preContent .= $compiler->removeTopBlock();
             $block = &$compiler->getCurrentBlock();
             $interfaces = class_implements($block['class'], false);
-            if (in_array('Dwoo_IElseable', $interfaces) !== false) {
+            if (in_array('Dwoo\IElseable', $interfaces) !== false) {
                 break;
             }
         }
@@ -42,7 +45,7 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Bloc
         return $preContent;
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         if (!isset($params['initialized'])) {
             return '';
@@ -51,8 +54,8 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements Dwoo_ICompilable_Bloc
         $tokens = $compiler->getParamTokens($params);
         $params = $compiler->getCompiledParams($params);
 
-        $pre = Dwoo_Compiler::PHP_OPEN.'elseif ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
-        $post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+        $pre = Compiler::PHP_OPEN.'elseif ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Compiler::PHP_CLOSE;
+        $post = Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];

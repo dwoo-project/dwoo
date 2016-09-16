@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Defines a sub-template that can then be called (even recursively) with the defined arguments
@@ -20,13 +24,13 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_template extends BlockPlugin implements ICompilableBlock
 {
     public function init($name, array $rest = array())
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $params = $compiler->getCompiledParams($params);
         $parsedParams = array();
@@ -40,7 +44,7 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
             }
             $param = trim($param, '\'"');
             if (!preg_match('#^[a-z0-9_]+$#i', $param)) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Function : parameter names must contain only A-Z, 0-9 or _');
+                throw new CompilationException($compiler, 'Function : parameter names must contain only A-Z, 0-9 or _');
             }
             $parsedParams[$param] = $defValue;
         }
@@ -54,9 +58,9 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
-        $paramstr = 'Dwoo_Core $dwoo';
+        $paramstr = 'Dwoo\Core $dwoo';
         $init = 'static $_callCnt = 0;'."\n".
         '$dwoo->scope[\' '.$params['uuid'].'\'.$_callCnt] = array();'."\n".
         '$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n";
@@ -85,9 +89,9 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
         );
         $content = str_replace($search, $replacement, $content);
 
-        $body = 'if (!function_exists(\''.$funcName."')) {\nfunction ".$funcName.'('.$paramstr.') {'."\n$init".Dwoo_Compiler::PHP_CLOSE.
+        $body = 'if (!function_exists(\''.$funcName."')) {\nfunction ".$funcName.'('.$paramstr.') {'."\n$init".Compiler::PHP_CLOSE.
             $prepend.$content.$append.
-            Dwoo_Compiler::PHP_OPEN.$cleanup."\n}\n}";
+            Compiler::PHP_OPEN.$cleanup."\n}\n}";
         $compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
     }
 }

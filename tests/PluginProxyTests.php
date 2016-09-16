@@ -7,8 +7,8 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function tearDown()
@@ -21,7 +21,7 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
         $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy());
 
         // test simple assign
-        $tpl = new Dwoo_Template_String('{F1_Stub(F2_Stub())}');
+        $tpl = new Dwoo\Template\String('{F1_Stub(F2_Stub())}');
         $tpl->forceCompilation();
 
         $this->assertContains(
@@ -35,7 +35,7 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
         $this->dwoo->setPluginProxy(new PluginProxyTest_PluginProxy());
 
         // test simple assign
-        $tpl = new Dwoo_Template_String('{assign F1_Stub(F2_Stub(\'/public/css/global.css\'))->something(F3_Stub(\'/public/css/global.css\')) styles}');
+        $tpl = new Dwoo\Template\String('{assign F1_Stub(F2_Stub(\'/public/css/global.css\'))->something(F3_Stub(\'/public/css/global.css\')) styles}');
         $tpl->forceCompilation();
 
         $this->assertContains(
@@ -45,7 +45,7 @@ class PluginProxyTests extends PHPUnit_Framework_TestCase
     }
 }
 
-class PluginProxyTest_PluginProxy implements Dwoo_IPluginProxy
+class PluginProxyTest_PluginProxy implements Dwoo\IPluginProxy
 {
     public function handles($name)
     {
@@ -54,7 +54,7 @@ class PluginProxyTest_PluginProxy implements Dwoo_IPluginProxy
 
     public function getCode($name, $params)
     {
-        return 'PluginProxyTest_'.$name.'('.Dwoo_Compiler::implode_r($params).')';
+        return 'PluginProxyTest_'.$name.'('.Dwoo\Compiler::implode_r($params).')';
     }
 
     public function getCallback($name)

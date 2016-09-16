@@ -1,4 +1,9 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Conditional block, the syntax is very similar to the php one, allowing () || && and
@@ -29,13 +34,13 @@
  * @version    1.2.3
  * @date       2016-10-09
  */
-class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_if extends BlockPlugin implements ICompilableBlock, IElseable
 {
     public function init(array $rest)
     {
     }
 
-    public static function replaceKeywords(array $params, array $tokens, Dwoo_Compiler $compiler)
+    public static function replaceKeywords(array $params, array $tokens, Compiler $compiler)
     {
         $p = array();
 
@@ -50,28 +55,28 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
             switch ($vmod) {
 
             case 'and':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '&&';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'or':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '||';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'xor':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '^';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'eq':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '==';
                 } else {
                     $p[] = $v;
@@ -79,7 +84,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                 break;
             case 'ne':
             case 'neq':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '!=';
                 } else {
                     $p[] = $v;
@@ -87,7 +92,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                 break;
             case 'gte':
             case 'ge':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '>=';
                 } else {
                     $p[] = $v;
@@ -95,35 +100,35 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                 break;
             case 'lte':
             case 'le':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '<=';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'gt':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '>';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'lt':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '<';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'mod':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '%';
                 } else {
                     $p[] = $v;
                 }
                 break;
             case 'not':
-                if ($tokens[$k] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] === Compiler::T_UNQUOTED_STRING) {
                     $p[] = '!';
                 } else {
                     $p[] = $v;
@@ -146,18 +151,18 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                 $p[] = $vmod;
                 break;
             case 'is':
-                if ($tokens[$k] !== Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k] !== Compiler::T_UNQUOTED_STRING) {
                     $p[] = $v;
                     break;
                 }
-                if (isset($params[$k + 1]) && strtolower(trim($params[$k + 1], '"\'')) === 'not' && $tokens[$k + 1] === Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if (isset($params[$k + 1]) && strtolower(trim($params[$k + 1], '"\'')) === 'not' && $tokens[$k + 1] === Compiler::T_UNQUOTED_STRING) {
                     $negate = true;
                     next($params);
                 } else {
                     $negate = false;
                 }
                 $ptr = 1 + (int) $negate;
-                if ($tokens[$k + $ptr] !== Dwoo_Compiler::T_UNQUOTED_STRING) {
+                if ($tokens[$k + $ptr] !== Compiler::T_UNQUOTED_STRING) {
                     break;
                 }
                 if (!isset($params[$k + $ptr])) {
@@ -174,7 +179,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                         next($params);
                         next($params);
                     } else {
-                        throw new Dwoo_Compilation_Exception($compiler, 'If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k - 1].' is '.($negate ? 'not ' : '').'div '.$params[$k + $ptr + 1].' '.$params[$k + $ptr + 2]);
+                        throw new CompilationException($compiler, 'If : Syntax error : syntax should be "if $a is [not] div by $b", found '.$params[$k - 1].' is '.($negate ? 'not ' : '').'div '.$params[$k + $ptr + 1].' '.$params[$k + $ptr + 2]);
                     }
                     break;
                 case 'even':
@@ -202,7 +207,7 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
                     next($params);
                     break;
                 default:
-                    throw new Dwoo_Compilation_Exception($compiler, 'If : Syntax error : syntax should be "if $a is [not] (div|even|odd) [by $b]", found '.$params[$k - 1].' is '.$params[$k + $ptr + 1]);
+                    throw new CompilationException($compiler, 'If : Syntax error : syntax should be "if $a is [not] (div|even|odd) [by $b]", found '.$params[$k - 1].' is '.$params[$k + $ptr + 1]);
 
                 }
                 break;
@@ -215,18 +220,18 @@ class Dwoo_Plugin_if extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
         return $p;
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $tokens = $compiler->getParamTokens($params);
         $params = $compiler->getCompiledParams($params);
-        $pre = Dwoo_Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Dwoo_Compiler::PHP_CLOSE;
+        $pre = Compiler::PHP_OPEN.'if ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Compiler::PHP_CLOSE;
 
-        $post = Dwoo_Compiler::PHP_OPEN."\n}".Dwoo_Compiler::PHP_CLOSE;
+        $post = Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];

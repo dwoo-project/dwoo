@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Indents every line of a text by the given amount of characters
@@ -21,7 +22,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_indent_compile(Dwoo_Compiler $compiler, $value, $by = 4, $char = ' ')
+function Dwoo_Plugin_indent_compile(Compiler $compiler, $value, $by = 4, $char = ' ')
 {
     return "preg_replace('#^#m', '".str_repeat(substr($char, 1, -1), trim($by, '"\''))."', $value)";
 }

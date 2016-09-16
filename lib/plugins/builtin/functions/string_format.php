@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Formats a string using the sprintf function
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_string_format_compile(Dwoo_Compiler $compiler, $value, $format)
+function Dwoo_Plugin_string_format_compile(Compiler $compiler, $value, $format)
 {
     return 'sprintf('.$format.','.$value.')';
 }

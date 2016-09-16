@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Prints out a variable without any notice if it doesn't exist.
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_optional_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_optional_compile(Compiler $compiler, $value)
 {
     return $value;
 }

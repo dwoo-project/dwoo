@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Formats a date
@@ -21,7 +22,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_date_format(Dwoo_Core $dwoo, $value, $format = '%b %e, %Y', $default = null)
+function Dwoo_Plugin_date_format(Core $dwoo, $value, $format = '%b %e, %Y', $default = null)
 {
     if (!empty($value)) {
         // convert if it's not a valid unix timestamp

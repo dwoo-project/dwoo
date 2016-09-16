@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Counts the sentences in a string
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_count_sentences_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_count_sentences_compile(Compiler $compiler, $value)
 {
     return "preg_match_all('#[\w\pL]\.(?![\w\pL])#u', $value, \$tmp)";
 }

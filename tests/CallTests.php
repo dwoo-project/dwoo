@@ -8,17 +8,17 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         // extend this class and override this in your constructor to test a modded compiler
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
 //	public function testClosureFunctionPlugin()
 //	{
-//		$this->dwoo->addPlugin('test', function (Dwoo_Core $dwoo, $foo, $bar="bar")
+//		$this->dwoo->addPlugin('test', function (Dwoo\Core $dwoo, $foo, $bar="bar")
 //		{
 //			return $foo.$bar;
 //		});
-//		$tpl = new Dwoo_Template_String('{test "xxx"}');
+//		$tpl = new Dwoo\Template\String('{test "xxx"}');
 //		$tpl->forceCompilation();
 
 //		$this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -28,7 +28,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testCustomFunctionPlugin()
     {
         $this->dwoo->addPlugin('test', 'plugin_custom_name');
-        $tpl = new Dwoo_Template_String('{test "xxx"}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -38,7 +38,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testHalfCustomClassPluginByClassMethodCallback()
     {
         $this->dwoo->addPlugin('test', array('plugin_half_custom', 'process'));
-        $tpl = new Dwoo_Template_String('{test "xxx"}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -48,7 +48,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testFullCustomClassPluginByClassMethodCallback()
     {
         $this->dwoo->addPlugin('test', array('plugin_full_custom', 'process'));
-        $tpl = new Dwoo_Template_String('{test "xxx"}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -58,7 +58,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testCustomClassPluginByClassname()
     {
         $this->dwoo->addPlugin('test', 'plugin_full_custom');
-        $tpl = new Dwoo_Template_String('{test "xxx"}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -68,7 +68,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testCustomObjectPluginByObjectMethodCallback()
     {
         $this->dwoo->addPlugin('test', array(new plugin_full_custom(), 'process'));
-        $tpl = new Dwoo_Template_String('{test "xxx"}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -78,7 +78,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testCustomBlockPluginByClassMethodCallback()
     {
         $this->dwoo->addPlugin('test', array('blockplugin_custom', 'process'));
-        $tpl = new Dwoo_Template_String('{test "xxx"}aaa{/test}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}aaa{/test}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbaraaa', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -88,7 +88,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     public function testCustomBlockPluginByClassname()
     {
         $this->dwoo->addPlugin('test', 'blockplugin_custom');
-        $tpl = new Dwoo_Template_String('{test "xxx"}aaa{/test}');
+        $tpl = new Dwoo\Template\String('{test "xxx"}aaa{/test}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xxxbaraaa', $this->dwoo->get($tpl, array(), $this->compiler));
@@ -96,7 +96,7 @@ class CallTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Dwoo_Exception
+     * @expectedException Dwoo\Exception
      */
     public function testCustomInvalidPlugin()
     {
@@ -104,12 +104,12 @@ class CallTests extends PHPUnit_Framework_TestCase
     }
 }
 
-function plugin_custom_name(Dwoo_Core $dwoo, $foo, $bar = 'bar')
+function plugin_custom_name(Dwoo\Core $dwoo, $foo, $bar = 'bar')
 {
     return $foo.$bar;
 }
 
-class plugin_half_custom extends Dwoo_Plugin
+class plugin_half_custom extends Dwoo\Plugin
 {
     public function process($foo, $bar = 'bar')
     {
@@ -125,7 +125,7 @@ class plugin_full_custom
     }
 }
 
-class blockplugin_custom extends Dwoo_Block_Plugin
+class blockplugin_custom extends Dwoo\Block\Plugin
 {
     public function init($foo, $bar = 'bar')
     {

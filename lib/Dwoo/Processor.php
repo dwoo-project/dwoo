@@ -1,4 +1,5 @@
 <?php
+namespace Dwoo;
 
 /**
  * Base class for processors.
@@ -16,12 +17,12 @@
  * @date      2016-10-16
  * @link      http://dwoo.org/
  */
-abstract class Dwoo_Processor
+abstract class Processor
 {
     /**
      * The compiler instance that runs this processor.
      *
-     * @var Dwoo
+     * @var Core
      */
     protected $compiler;
 
@@ -29,9 +30,9 @@ abstract class Dwoo_Processor
      * Constructor, if you override it, call parent::__construct($dwoo); or assign
      * the dwoo instance yourself if you need it.
      *
-     * @param Dwoo_Compiler $compiler the compiler class
+     * @param Compiler $compiler the compiler class
      */
-    public function __construct(Dwoo_Compiler $compiler)
+    public function __construct(Compiler $compiler)
     {
         $this->compiler = $compiler;
     }

@@ -7,18 +7,18 @@ class TemplateTests extends PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function testIncludePath()
     {
         // no include path
-        $tpl = new Dwoo_Template_File('test.html');
+        $tpl = new Dwoo\Template\File('test.html');
         $this->assertEquals('test.html', $tpl->getResourceIdentifier());
 
         // include path in constructor
-        $tpl = new Dwoo_Template_File('test.html', null, null, null, TEST_DIRECTORY.DIRECTORY_SEPARATOR.'resources');
+        $tpl = new Dwoo\Template\File('test.html', null, null, null, TEST_DIRECTORY.DIRECTORY_SEPARATOR.'resources');
         $this->assertEquals(TEST_DIRECTORY.DIRECTORY_SEPARATOR.'resources'.DIRECTORY_SEPARATOR.'test.html', $tpl->getResourceIdentifier());
 
         // set include path as string

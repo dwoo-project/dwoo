@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Plugin;
 
 /**
  * Initiates a counter that is incremented every time you call it
@@ -24,7 +25,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_counter extends Dwoo_Plugin
+class Dwoo_Plugin_counter extends Plugin
 {
     protected $counters = array();
 

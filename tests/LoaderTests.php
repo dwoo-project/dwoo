@@ -8,14 +8,14 @@ class LoaderTests extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         // extend this class and override this in your constructor to test a modded compiler
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function testLoaderGetSet()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $loader = new Dwoo\Loader(TEST_DIRECTORY.'/temp/cache');
 
         $dwoo->setLoader($loader);
         $this->assertEquals($loader, $dwoo->getLoader());
@@ -23,27 +23,27 @@ class LoaderTests extends PHPUnit_Framework_TestCase
 
     public function testPluginLoad()
     {
-        $dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
+        $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $loader = new Dwoo\Loader(TEST_DIRECTORY.'/temp/cache');
 
         $dwoo->setLoader($loader);
         $loader->addDirectory(TEST_DIRECTORY.'/resources/plugins');
 
-        $tpl = new Dwoo_Template_String('{loaderTest}');
+        $tpl = new Dwoo\Template\String('{loaderTest}');
         $tpl->forceCompilation();
         $this->assertEquals('Moo', $dwoo->get($tpl, array(), $this->compiler));
     }
 
 //	public function testRebuildClassPath()
 //	{
-//		$dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+//		$dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
 //		$loader = new Dwoo_Loader(TEST_DIRECTORY.'/temp/cache');
 
 //		$dwoo->setLoader($loader);
-//		file_put_contents(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php', '<?php function Dwoo_Plugin_loaderTest2(Dwoo_Core $dwoo) { return "It works!"; }');
+//		file_put_contents(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php', '<?php function Dwoo_Plugin_loaderTest2(Dwoo\Core $dwoo) { return "It works!"; }');
 //		$loader->addDirectory(TEST_DIRECTORY.'/resources/plugins');
 
-//		$tpl = new Dwoo_Template_String('{loaderTest2}');
+//		$tpl = new Dwoo\Template\String('{loaderTest2}');
 //		$tpl->forceCompilation();
 //		$this->assertEquals('It works!', $dwoo->get($tpl, array(), $this->compiler));
 //		unlink(TEST_DIRECTORY.'/resources/plugins/loaderTest2.php');

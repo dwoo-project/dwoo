@@ -7,13 +7,13 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function __construct()
     {
-        $this->compiler = new Dwoo_Compiler();
-        $this->dwoo = new Dwoo_Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->compiler = new Dwoo\Compiler();
+        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 
     public function testBlockStackBufferingBug()
     {
-        $tpl = new Dwoo_Template_String('{textformat 10 wrap_char="\n"}here is some text that should wrap{/textformat}
+        $tpl = new Dwoo\Template\String('{textformat 10 wrap_char="\n"}here is some text that should wrap{/textformat}
 {textformat 10 wrap_cut=true wrap_char="\n"}and this one should cut words that go beyooooooond 10 chars{/textformat}');
         $tpl->forceCompilation();
 
@@ -22,7 +22,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testSpaceBeforeArgsBug()
     {
-        $tpl = new Dwoo_Template_String('{upper ("moo")}.{upper    	("moo")}.{if (true) && (true)}MOO{/if}');
+        $tpl = new Dwoo\Template\String('{upper ("moo")}.{upper    	("moo")}.{if (true) && (true)}MOO{/if}');
         $tpl->forceCompilation();
 
         $this->assertEquals('MOO.MOO.MOO', $this->dwoo->get($tpl, array()));
@@ -30,7 +30,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testEmptyStringArgInModifierCall()
     {
-        $tpl = new Dwoo_Template_String('{$var|replace:"foo":""}');
+        $tpl = new Dwoo\Template\String('{$var|replace:"foo":""}');
         $tpl->forceCompilation();
 
         $this->assertEquals('ab', $this->dwoo->get($tpl, array('var' => 'afoob')));
@@ -38,7 +38,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testRecursiveVarModifiersCalls()
     {
-        $tpl = new Dwoo_Template_String('{$var|replace:array("foo", "bar"):array("")}');
+        $tpl = new Dwoo\Template\String('{$var|replace:array("foo", "bar"):array("")}');
         $tpl->forceCompilation();
 
         $this->assertEquals('abc', $this->dwoo->get($tpl, array('var' => 'afoobbarc')));
@@ -46,7 +46,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testVarModifierCallWithSpaces()
     {
-        $tpl = new Dwoo_Template_String('{"x$var|replace:array(\'foo\', bar):array(\"\") y"}');
+        $tpl = new Dwoo\Template\String('{"x$var|replace:array(\'foo\', bar):array(\"\") y"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xabc y', $this->dwoo->get($tpl, array('var' => 'afoobbarc')));
@@ -54,7 +54,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testVarModifierCallWithDelimiters()
     {
-        $tpl = new Dwoo_Template_String('{"x`$var|replace:array(\'foo\', bar):array(\"\")`y"}');
+        $tpl = new Dwoo\Template\String('{"x`$var|replace:array(\'foo\', bar):array(\"\")`y"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('xabcy', $this->dwoo->get($tpl, array('var' => 'afoobbarc')));
@@ -62,7 +62,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testStringModifierInOtherCall()
     {
-        $tpl = new Dwoo_Template_String('{cat "f o o"|replace:" ":"" "xx"}');
+        $tpl = new Dwoo\Template\String('{cat "f o o"|replace:" ":"" "xx"}');
         $tpl->forceCompilation();
 
         $this->assertEquals('fooxx', $this->dwoo->get($tpl, array()));
@@ -70,7 +70,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testPhpTagWithoutSemicolon()
     {
-        $tpl = new Dwoo_Template_String('{capture "foo"}<?php $var=3; echo $var ?>{/capture}-{$.capture.foo}');
+        $tpl = new Dwoo\Template\String('{capture "foo"}<?php $var=3; echo $var ?>{/capture}-{$.capture.foo}');
         $tpl->forceCompilation();
 
         $this->assertEquals('-3', $this->dwoo->get($tpl, array()));
@@ -78,7 +78,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testUppercasePlugin()
     {
-        $tpl = new Dwoo_Template_String('{X foo}');
+        $tpl = new Dwoo\Template\String('{X foo}');
         $tpl->forceCompilation();
 
         $this->assertEquals('foo', $this->dwoo->get($tpl, array()));
@@ -86,7 +86,7 @@ class BugTests extends PHPUnit_Framework_TestCase
 
     public function testMultilineAssignments()
     {
-        $tpl = new Dwoo_Template_String('{$foo = array(
+        $tpl = new Dwoo\Template\String('{$foo = array(
 moo=bar
 foo=baz
 )}{foreach $foo k v}{$k; $v}.{/foreach}');
@@ -97,9 +97,9 @@ foo=baz
 
     public function testAssignmentsWithAutoEscape()
     {
-        $cmp = new Dwoo_Compiler();
+        $cmp = new Dwoo\Compiler();
         $cmp->setAutoEscape(true);
-        $tpl = new Dwoo_Template_String('{$foo = $bar}>{$foo}');
+        $tpl = new Dwoo\Template\String('{$foo = $bar}>{$foo}');
         $tpl->forceCompilation();
 
         $this->assertEquals('>moo', $this->dwoo->get($tpl, array('bar' => 'moo'), $cmp));
@@ -107,7 +107,7 @@ foo=baz
 
     public function testAndOrOperatorsFollowedWithRoundBrackets()
     {
-        $tpl = new Dwoo_Template_String('{if 1 AND (0 OR 1)}true{/if}');
+        $tpl = new Dwoo\Template\String('{if 1 AND (0 OR 1)}true{/if}');
         $tpl->forceCompilation();
 
         $this->assertEquals('true', $this->dwoo->get($tpl, array()));
@@ -115,7 +115,7 @@ foo=baz
 
     public function testMultipleVarsWithStringKey()
     {
-        $tpl = new Dwoo_Template_String('{$foo["bar"]}{$foo["baz"]}');
+        $tpl = new Dwoo\Template\String('{$foo["bar"]}{$foo["baz"]}');
         $tpl->forceCompilation();
 
         $this->assertEquals('12', $this->dwoo->get($tpl, array('foo' => array('bar' => 1, 'baz' => 2))));
@@ -123,7 +123,7 @@ foo=baz
 
 //    public function testTopCommentParsingWithWhitespaceAtTheEnd()
 //    {
-//        $tpl = new Dwoo_Template_String('{* Foo *}
+//        $tpl = new Dwoo\Template\String('{* Foo *}
 //aaa
 // ');
 //        $tpl->forceCompilation();
@@ -134,7 +134,7 @@ foo=baz
 
     public function testTopCommentParsingWithWhitespaceAtTheEndAndBeginning()
     {
-        $tpl = new Dwoo_Template_String(' {* Foo *}
+        $tpl = new Dwoo\Template\String(' {* Foo *}
 aaa
  ');
         $tpl->forceCompilation();
@@ -144,7 +144,7 @@ aaa
 
     public function testNestedDynamicTags()
     {
-        $tpl = new Dwoo_Template_String('
+        $tpl = new Dwoo\Template\String('
         {dynamic}
         {dynamic}
         {foreach $foo member}
@@ -160,16 +160,16 @@ aaa
 
     public function testDoubleEscapingOnAssignments()
     {
-        $tpl = new Dwoo_Template_String('{$bar = $foo}{$foo}{$bar}');
+        $tpl = new Dwoo\Template\String('{$bar = $foo}{$foo}{$bar}');
         $tpl->forceCompilation();
-        $cmp = new Dwoo_Compiler();
+        $cmp = new Dwoo\Compiler();
         $cmp->setAutoEscape(true);
 
         $this->assertEquals('a&#039;ba&#039;b', $this->dwoo->get($tpl, array('foo' => "a'b"), $cmp));
     }
 }
 
-function Dwoo_Plugin_X_compile(Dwoo_Compiler $cmp, $text)
+function Dwoo_Plugin_X_compile(Dwoo\Compiler $cmp, $text)
 {
     return $text;
 }

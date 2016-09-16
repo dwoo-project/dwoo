@@ -1,4 +1,5 @@
 <?php
+namespace Dwoo;
 
 /**
  * Main dwoo exception class.
@@ -13,9 +14,9 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-15
+ * @date      2016-10-16
  * @link      http://dwoo.org/
  */
-class Dwoo_Exception extends Exception
+class Exception extends \Exception
 {
 }

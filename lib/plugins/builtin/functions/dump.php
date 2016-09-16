@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Plugin;
 
 /**
  * Dumps values of the given variable, or the entire data if nothing provided
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_dump extends Dwoo_Plugin
+class Dwoo_Plugin_dump extends Plugin
 {
     protected $outputObjects;
     protected $outputMethods;

@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Checks whether an extended file has been modified, and if so recompiles the current template. This is for internal use only, do not use.
@@ -17,7 +19,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file)
+function Dwoo_Plugin_extendsCheck_compile(Compiler $compiler, $file)
 {
     preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m);
     $resource = $m[1];
@@ -26,9 +28,9 @@ function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file)
     $tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
 
     if ($tpl === null) {
-        throw new Dwoo_Compilation_Exception($compiler, 'Load Templates : Resource "'.$resource.':'.$identifier.'" not found.');
+        throw new CompilationException($compiler, 'Load Templates : Resource "'.$resource.':'.$identifier.'" not found.');
     } elseif ($tpl === false) {
-        throw new Dwoo_Compilation_Exception($compiler, 'Load Templates : Resource "'.$resource.'" does not support includes.');
+        throw new CompilationException($compiler, 'Load Templates : Resource "'.$resource.'" does not support includes.');
     }
 
     $out = '\'\';// checking for modification in '.$resource.':'.$identifier."\r\n";
@@ -40,7 +42,7 @@ function Dwoo_Plugin_extendsCheck_compile(Dwoo_Compiler $compiler, $file)
     } else {
         $out .= 'try {
 	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
-} catch (Dwoo_Exception $e) {
+} catch (Dwoo\Exception $e) {
 	$this->triggerError(\'Load Templates : Resource <em>'.$resource.'</em> was not added to Dwoo, can not extend <em>'.$identifier.'</em>\', E_USER_WARNING);
 }
 if ($tpl === null)

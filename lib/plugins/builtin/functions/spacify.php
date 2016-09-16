@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Adds spaces (or the given character(s)) between every character of a string
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_spacify_compile(Dwoo_Compiler $compiler, $value, $space_char = ' ')
+function Dwoo_Plugin_spacify_compile(Compiler $compiler, $value, $space_char = ' ')
 {
     return 'implode('.$space_char.', str_split('.$value.', 1))';
 }

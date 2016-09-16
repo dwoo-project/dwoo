@@ -1,4 +1,6 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Computes a mathematical equation
@@ -31,7 +33,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format = '', $assign = '', array $rest = array())
+function Dwoo_Plugin_math_compile(Compiler $compiler, $equation, $format = '', $assign = '', array $rest = array())
 {
     /*
      * Holds the allowed function, characters, operators and constants
@@ -114,7 +116,7 @@ function Dwoo_Plugin_math_compile(Dwoo_Compiler $compiler, $equation, $format = 
             $ptr = 0;
         } elseif ($ptr >= strlen($equation)) {
             // parse error if we've consumed the entire equation without finding anything valid
-            throw new Dwoo_Compilation_Exception($compiler, 'Math : Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr);
+            throw new CompilationException($compiler, 'Math : Syntax error or variable undefined in equation '.$equationSrc.' at '.$substr);
         } else {
             // nothing special, advance
             ++$ptr;

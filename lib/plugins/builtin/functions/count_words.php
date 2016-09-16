@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Counts the words in a string
@@ -19,7 +20,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_count_words_compile(Dwoo_Compiler $compiler, $value)
+function Dwoo_Plugin_count_words_compile(Compiler $compiler, $value)
 {
     return 'preg_match_all(strcasecmp($this->charset, \'utf-8\')===0 ? \'#[\w\pL]+#u\' : \'#\w+#\', '.$value.', $tmp)';
 }

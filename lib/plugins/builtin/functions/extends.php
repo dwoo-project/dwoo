@@ -1,4 +1,10 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
+use Dwoo\Exception as Exception;
+use Dwoo\Security\Exception as SecurityException;
+use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Extends another template, read more about template inheritance at {@link http://wiki.dwoo.org/index.php/TemplateInheritance}
@@ -19,7 +25,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
+class Dwoo_Plugin_extends extends Plugin implements ICompilable
 {
     protected static $childSource;
     protected static $regex;
@@ -27,7 +33,9 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
     protected static $r;
     protected static $lastReplacement;
 
-    public static function compile(Dwoo_Compiler $compiler, $file)
+	public function process(){}
+
+    public static function compile(Compiler $compiler, $file)
     {
         list($l, $r) = $compiler->getDelimiters();
         self::$l = preg_quote($l, '/');
@@ -57,7 +65,7 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
         while (!empty($file)) {
             if ($file === '""' || $file === "''" || (substr($file, 0, 1) !== '"' && substr($file, 0, 1) !== '\'')) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : The file name must be a non-empty string');
+                throw new CompilationException($compiler, 'Extends : The file name must be a non-empty string');
             }
 
             if (preg_match('#^["\']([a-z]{2,}):(.*?)["\']$#i', $file, $m)) {
@@ -72,22 +80,22 @@ class Dwoo_Plugin_extends extends Dwoo_Plugin implements Dwoo_ICompilable
 
             try {
                 $parent = $compiler->getDwoo()->templateFactory($resource, $identifier, null, null, null, $curTpl);
-            } catch (Dwoo_Security_Exception $e) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : Security restriction : '.$e->getMessage());
-            } catch (Dwoo_Exception $e) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : '.$e->getMessage());
+            } catch (SecurityException $e) {
+                throw new CompilationException($compiler, 'Extends : Security restriction : '.$e->getMessage());
+            } catch (Exception $e) {
+                throw new CompilationException($compiler, 'Extends : '.$e->getMessage());
             }
 
             if ($parent === null) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.':'.$identifier.'" not found.');
+                throw new CompilationException($compiler, 'Extends : Resource "'.$resource.':'.$identifier.'" not found.');
             } elseif ($parent === false) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : Resource "'.$resource.'" does not support extends.');
+                throw new CompilationException($compiler, 'Extends : Resource "'.$resource.'" does not support extends.');
             }
 
             $curTpl = $parent;
             $newParent = array('source' => $parent->getSource(), 'resource' => $resource, 'identifier' => $parent->getResourceIdentifier(), 'uid' => $parent->getUid());
             if (array_search($newParent, $inheritanceTree, true) !== false) {
-                throw new Dwoo_Compilation_Exception($compiler, 'Extends : Recursive template inheritance detected');
+                throw new CompilationException($compiler, 'Extends : Recursive template inheritance detected');
             }
             $inheritanceTree[] = $newParent;
 

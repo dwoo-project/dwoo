@@ -1,4 +1,8 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\IElseable;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Similar to the php for block
@@ -22,7 +26,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block, Dwoo_IElseable
+class Dwoo_Plugin_for extends BlockPlugin implements ICompilableBlock, IElseable
 {
     public static $cnt = 0;
 
@@ -30,7 +34,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         // get block params and save the current template pointer to use it in the postProcessing method
         $currentBlock = &$compiler->getCurrentBlock();
@@ -39,7 +43,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
         return '';
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $params = $compiler->getCompiledParams($params);
         $tpl = $compiler->getTemplateSource($params['tplPointer']);
@@ -69,7 +73,7 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
         $cnt = self::$cnt++;
 
         // builds pre processing output for
-        $out = Dwoo_Compiler::PHP_OPEN."\n".'$_for'.$cnt.'_from = '.$from.';'.
+        $out = Compiler::PHP_OPEN."\n".'$_for'.$cnt.'_from = '.$from.';'.
                                         "\n".'$_for'.$cnt.'_to = '.$to.';'.
                                         "\n".'$_for'.$cnt.'_step = abs('.$step.');'.
                                         "\n".'if (is_numeric($_for'.$cnt.'_from) && !is_numeric($_for'.$cnt.'_to)) { $this->triggerError(\'For requires the <em>to</em> parameter when using a numerical <em>from</em>\'); }'.
@@ -140,16 +144,16 @@ class Dwoo_Plugin_for extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Bloc
         if ($usesLast) {
             $out .= "\n\t\t".'$_for'.$cnt.'_glob["last"] = (string) ($_for'.$cnt.'_glob["iteration"] === $_for'.$cnt.'_glob["total"]);';
         }
-        $out .= "\n/* -- for start output */\n".Dwoo_Compiler::PHP_CLOSE;
+        $out .= "\n/* -- for start output */\n".Compiler::PHP_CLOSE;
 
         // build post processing output and cache it
-        $postOut = Dwoo_Compiler::PHP_OPEN.'/* -- for end output */';
+        $postOut = Compiler::PHP_OPEN.'/* -- for end output */';
         // update properties
         if ($usesIteration) {
             $postOut .= "\n\t\t".'$_for'.$cnt.'_glob["iteration"]+=1;';
         }
         // end loop
-        $postOut .= "\n\t}\n}\n".Dwoo_Compiler::PHP_CLOSE;
+        $postOut .= "\n\t}\n}\n".Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $postOut .= $params['hasElse'];

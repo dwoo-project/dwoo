@@ -1,7 +1,11 @@
 <?php
+namespace Dwoo\Block;
+
+use Dwoo\Plugin as DwooPlugin;
+use Dwoo\Compiler as DwooCompiler;
 
 /**
- * base class for block plugins.
+ * Base class for block plugins.
  *
  * you have to implement the <em>init()</em> method, it will receive the parameters that
  * are in the template code and is called when the block starts
@@ -9,18 +13,18 @@
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo\Block
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
+abstract class Plugin extends DwooPlugin
 {
     /**
      * stores the contents of the block while it runs.
@@ -67,7 +71,7 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
      * called at compile time to define what the block should output in the compiled template code, happens when the block is declared
      * basically this will replace the {block arg arg arg} tag in the template.
      *
-     * @param Dwoo_Compiler $compiler the compiler instance that calls this function
+     * @param DwooCompiler $compiler the compiler instance that calls this function
      * @param array         $params   an array containing original and compiled parameters
      * @param string        $prepend  that is just meant to allow a child class to call
      *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
@@ -79,9 +83,9 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
      *
      * @return string
      */
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(DwooCompiler $compiler, array $params, $prepend, $append, $type)
     {
-        return Dwoo_Compiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.Dwoo_Compiler::implode_r($compiler->getCompiledParams($params)).'));'.$append.Dwoo_Compiler::PHP_CLOSE;
+        return DwooCompiler::PHP_OPEN.$prepend.'$this->addStack("'.$type.'", array('.DwooCompiler::implode_r($compiler->getCompiledParams($params)).'));'.$append.DwooCompiler::PHP_CLOSE;
     }
 
     /**
@@ -90,7 +94,7 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
      *
      * @see preProcessing
      *
-     * @param Dwoo_Compiler $compiler the compiler instance that calls this function
+     * @param DwooCompiler $compiler the compiler instance that calls this function
      * @param array         $params   an array containing original and compiled parameters, see preProcessing() for more details
      * @param string        $prepend  that is just meant to allow a child class to call
      *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
@@ -102,8 +106,8 @@ abstract class Dwoo_Block_Plugin extends Dwoo_Plugin
      *
      * @return string
      */
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(DwooCompiler $compiler, array $params, $prepend, $append, $content)
     {
-        return $content.Dwoo_Compiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.Dwoo_Compiler::PHP_CLOSE;
+        return $content.DwooCompiler::PHP_OPEN.$prepend.'$this->delStack();'.$append.DwooCompiler::PHP_CLOSE;
     }
 }

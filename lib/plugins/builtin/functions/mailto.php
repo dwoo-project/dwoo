@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Outputs a mailto link with optional spam-proof (okay probably not) encoding
@@ -27,7 +28,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_mailto(Dwoo_Core $dwoo, $address, $text = null, $subject = null, $encode = null, $cc = null, $bcc = null, $newsgroups = null, $followupto = null, $extra = null)
+function Dwoo_Plugin_mailto(Core $dwoo, $address, $text = null, $subject = null, $encode = null, $cc = null, $bcc = null, $newsgroups = null, $followupto = null, $extra = null)
 {
     if (empty($address)) {
         return '';

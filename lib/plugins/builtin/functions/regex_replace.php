@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Replaces the search string by the replace string using regular expressions
@@ -21,7 +22,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_regex_replace(Dwoo_Core $dwoo, $value, $search, $replace)
+function Dwoo_Plugin_regex_replace(Core $dwoo, $value, $search, $replace)
 {
     $search = (array) $search;
     $cnt = count($search);

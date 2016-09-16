@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Core;
 
 /**
  * Reverses a string or an array
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_reverse(Dwoo_Core $dwoo, $value, $preserve_keys = false)
+function Dwoo_Plugin_reverse(Core $dwoo, $value, $preserve_keys = false)
 {
     if (is_array($value)) {
         return array_reverse($value, $preserve_keys);

@@ -1,4 +1,7 @@
 <?php
+use Dwoo\Compiler;
+use Dwoo\Block\Plugin as BlockPlugin;
+use Dwoo\ICompilable\Block as ICompilableBlock;
 
 /**
  * Outputs a html &lt;a&gt; tag
@@ -35,22 +38,22 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Plugin_a extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
+class Dwoo_Plugin_a extends BlockPlugin implements ICompilableBlock
 {
     public function init($href, array $rest = array())
     {
     }
 
-    public static function preProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $type)
+    public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $p = $compiler->getCompiledParams($params);
 
-        $out = Dwoo_Compiler::PHP_OPEN.'echo \'<a '.self::paramsToAttributes($p, "'", $compiler);
+        $out = Compiler::PHP_OPEN.'echo \'<a '.self::paramsToAttributes($p, "'", $compiler);
 
-        return $out.'>\';'.Dwoo_Compiler::PHP_CLOSE;
+        return $out.'>\';'.Compiler::PHP_CLOSE;
     }
 
-    public static function postProcessing(Dwoo_Compiler $compiler, array $params, $prepend, $append, $content)
+    public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $p = $compiler->getCompiledParams($params);
 
@@ -58,10 +61,10 @@ class Dwoo_Plugin_a extends Dwoo_Block_Plugin implements Dwoo_ICompilable_Block
         if ($content == '') {
             // merge </a> into the href if href is a string
             if (substr($p['href'], -1) === '"' || substr($p['href'], -1) === '\'') {
-                return Dwoo_Compiler::PHP_OPEN.'echo '.substr($p['href'], 0, -1).'</a>'.substr($p['href'], -1).';'.Dwoo_Compiler::PHP_CLOSE;
+                return Compiler::PHP_OPEN.'echo '.substr($p['href'], 0, -1).'</a>'.substr($p['href'], -1).';'.Compiler::PHP_CLOSE;
             }
             // otherwise append
-            return Dwoo_Compiler::PHP_OPEN.'echo '.$p['href'].'.\'</a>\';'.Dwoo_Compiler::PHP_CLOSE;
+            return Compiler::PHP_OPEN.'echo '.$p['href'].'.\'</a>\';'.Compiler::PHP_CLOSE;
         }
 
         // return content

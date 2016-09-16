@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Returns a variable or a default value if it's empty
@@ -20,7 +21,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_default_compile(Dwoo_Compiler $compiler, $value, $default = '')
+function Dwoo_Plugin_default_compile(Compiler $compiler, $value, $default = '')
 {
     return '(($tmp = '.$value.')===null||$tmp===\'\' ? '.$default.' : $tmp)';
 }

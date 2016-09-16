@@ -1,6 +1,6 @@
 <?php
 
-function Dwoo_Plugin_loaderTest(Dwoo_Core $dwoo)
+function Dwoo_Plugin_loaderTest(Dwoo\Core $dwoo)
 {
 	return 'Moo';
 }

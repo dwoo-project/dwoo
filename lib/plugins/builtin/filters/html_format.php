@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Filter;
 
 /**
  * Formats any html output (must be valid xml where every tag opened is closed)
@@ -23,7 +24,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-class Dwoo_Filter_html_format extends Dwoo_Filter
+class Dwoo_Filter_html_format extends Filter
 {
     /**
      * tab count to auto-indent the source.

@@ -1,28 +1,32 @@
 <?php
+namespace Dwoo\Compilation;
+
+use Dwoo\Exception as DwooException;
+use Dwoo\Compiler as DwooCompiler;
 
 /**
- * dwoo compilation exception class.
+ * Dwoo compilation exception class.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo\Compilation
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-class Dwoo_Compilation_Exception extends Dwoo_Exception
+class Exception extends DwooException
 {
     protected $compiler;
     protected $template;
 
-    public function __construct(Dwoo_Compiler $compiler, $message)
+    public function __construct(DwooCompiler $compiler, $message)
     {
         $this->compiler = $compiler;
         $this->template = $compiler->getDwoo()->getTemplate();

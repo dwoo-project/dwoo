@@ -1,23 +1,26 @@
 <?php
+namespace Dwoo\Security;
+
+use Dwoo\Core;
 
 /**
- * represents the security settings of a dwoo instance, it can be passed around to different dwoo instances.
+ * Represents the security settings of a dwoo instance, it can be passed around to different dwoo instances.
  *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     David Sanchez <david38sanchez@gmail.com>
- * @copyright  2008-2013 Jordi Boggiano
- * @copyright  2013-2016 David Sanchez
- * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link       http://dwoo.org/
- *
- * @version    1.2.3
- * @date       2016-10-15
+ * @category  Library
+ * @package   Dwoo\Security
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   Release: 1.2.4
+ * @date      2016-10-16
+ * @link      http://dwoo.org/
  */
-class Dwoo_Security_Policy
+class Policy
 {
     /**#@+
      * php handling constants, defaults to PHP_REMOVE
@@ -274,14 +277,14 @@ class Dwoo_Security_Policy
     /**
      * this is used at run time to check whether method calls are allowed or not.
      *
-     * @param Dwoo_Core $dwoo   dwoo instance that calls this
+     * @param Core $dwoo   dwoo instance that calls this
      * @param object    $obj    any object on which the method must be called
      * @param string    $method lowercased method name
      * @param array     $args   arguments array
      *
      * @return mixed result of method call or unll + E_USER_NOTICE if not allowed
      */
-    public function callMethod(Dwoo_Core $dwoo, $obj, $method, $args)
+    public function callMethod(Core $dwoo, $obj, $method, $args)
     {
         foreach ($this->allowedMethods as $class => $methods) {
             if (!isset($methods[$method])) {

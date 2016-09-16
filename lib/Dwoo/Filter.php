@@ -1,4 +1,5 @@
 <?php
+namespace Dwoo;
 
 /**
  * Base class for filters.
@@ -11,17 +12,17 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
- * @license   http://dwoo.org/LICENSE   Modified BSD License
+ * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-15
+ * @date      2016-10-16
  * @link      http://dwoo.org/
  */
-abstract class Dwoo_Filter
+abstract class Filter
 {
     /**
      * The dwoo instance that runs this filter.
      *
-     * @var Dwoo
+     * @var Core
      */
     protected $dwoo;
 
@@ -29,9 +30,9 @@ abstract class Dwoo_Filter
      * Constructor, if you override it, call parent::__construct($dwoo); or assign
      * the dwoo instance yourself if you need it.
      *
-     * @param Dwoo_Core $dwoo the dwoo instance that runs this plugin
+     * @param Core $dwoo the dwoo instance that runs this plugin
      */
-    public function __construct(Dwoo_Core $dwoo)
+    public function __construct(Core $dwoo)
     {
         $this->dwoo = $dwoo;
     }

@@ -1,4 +1,5 @@
 <?php
+use Dwoo\Compiler;
 
 /**
  * Inserts another template into the current one
@@ -25,7 +26,7 @@
  * @version    1.2.3
  * @date       2016-10-15
  */
-function Dwoo_Plugin_return_compile(Dwoo_Compiler $compiler, array $rest = array())
+function Dwoo_Plugin_return_compile(Compiler $compiler, array $rest = array())
 {
     $out = array();
     foreach ($rest as $var => $val) {
