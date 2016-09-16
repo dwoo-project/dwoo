@@ -510,15 +510,17 @@ class Dwoo_Core
                     'type'     => self::FUNC_PLUGIN | $compilable,
                     'callback' => $callback
                 );
+            } else {
+                throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
             }
-            throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         } elseif ($callback instanceof \Closure) {
             $this->plugins[$name] = array(
                 'type'     => self::FUNC_PLUGIN | $compilable,
                 'callback' => $callback
             );
+        } else {
+            throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         }
-        throw new Dwoo_Exception('Callback could not be processed correctly, please check that the function/class you used exists');
     }
 
     /**
@@ -1506,9 +1508,9 @@ class Dwoo_Core
                     array_shift($m[2]);
                     if (defined($m[2][0])) {
                         return constant($m[2][0]);
+                    } else {
+                        return null;
                     }
-
-                    return null;
             }
             if ($cur !== $this->globals) {
                 array_shift($m[2]);
@@ -1574,6 +1576,9 @@ class Dwoo_Core
      */
     public function assignInScope($value, $scope)
     {
+        $tree = &$this->scopeTree;
+        $data = &$this->data;
+
         if (!is_string($scope)) {
             $this->triggerError('Assignments must be done into strings, (' . gettype($scope) . ') ' . var_export($scope, true) . ' given', E_USER_ERROR);
         }
