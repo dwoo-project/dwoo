@@ -1,6 +1,7 @@
 ## 1.2.4 (2016-XX-XX)
 `Added`
 * Add namespaces.
+* Implement [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) pattern.
 
 `Changed`
 * Follows [PHP Coding Standards Fixer](http://cs.sensiolabs.org/).
@@ -8,6 +9,10 @@
 * Follows PSR-1: Basic Coding Standard.
 * Follows PSR-2: Cosing Style Guide.
 * Follows PSR-4: Autoloader
+* Update **README** with namespace examples.
+
+`Removed`
+* Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
 
 ## 1.2.3 (2016-09-15)
 `Added`
