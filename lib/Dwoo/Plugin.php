@@ -26,17 +26,17 @@ abstract class Plugin
      *
      * @var Core
      */
-    protected $dwoo;
+    protected $core;
 
     /**
-     * Constructor, if you override it, call parent::__construct($dwoo); or assign
+     * Constructor, if you override it, call parent::__construct($core); or assign
      * the dwoo instance yourself if you need it.
      *
-     * @param Core $dwoo the dwoo instance that runs this plugin
+     * @param Core $core the dwoo instance that runs this plugin
      */
-    public function __construct(Core $dwoo)
+    public function __construct(Core $core)
     {
-        $this->dwoo = $dwoo;
+        $this->core = $core;
     }
 
     // plugins should always implement :

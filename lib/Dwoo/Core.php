@@ -84,7 +84,7 @@ class Core
      * @see getCharset
      * @var string
      */
-    protected $charset = 'utf-8';
+    protected $charset = 'UTF-8';
 
     /**
      * Global variables that are accessible through $dwoo.* in the templates.

@@ -249,16 +249,16 @@ class String implements ITemplate
      * returns the cached template output file name, true if it's cache-able but not cached
      * or false if it's not cached.
      *
-     * @param Core $dwoo the dwoo instance that requests it
+     * @param Core $core the dwoo instance that requests it
      *
      * @return string|bool
      */
-    public function getCachedTemplate(Core $dwoo)
+    public function getCachedTemplate(Core $core)
     {
         if ($this->cacheTime !== null) {
             $cacheLength = $this->cacheTime;
         } else {
-            $cacheLength = $dwoo->getCacheTime();
+            $cacheLength = $core->getCacheTime();
         }
 
         // file is not cacheable
@@ -266,12 +266,12 @@ class String implements ITemplate
             return false;
         }
 
-        $cachedFile = $this->getCacheFilename($dwoo);
+        $cachedFile = $this->getCacheFilename($core);
 
         if (isset(self::$cache['cached'][$this->cacheId]) === true && file_exists($cachedFile)) {
             // already checked, return cache file
             return $cachedFile;
-        } elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === - 1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength)) && $this->isValidCompiledFile($this->getCompiledFilename($dwoo))) {
+        } elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === - 1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength)) && $this->isValidCompiledFile($this->getCompiledFilename($core))) {
             // cache is still valid and can be loaded
             self::$cache['cached'][$this->cacheId] = true;
 
@@ -285,15 +285,15 @@ class String implements ITemplate
     /**
      * caches the provided output into the cache file.
      *
-     * @param Core   $dwoo   the dwoo instance that requests it
+     * @param Core   $core   the dwoo instance that requests it
      * @param string $output the template output
      *
      * @return mixed full path of the cached file or false upon failure
      */
-    public function cache(Core $dwoo, $output)
+    public function cache(Core $core, $output)
     {
-        $cacheDir   = $dwoo->getCacheDir();
-        $cachedFile = $this->getCacheFilename($dwoo);
+        $cacheDir   = $core->getCacheDir();
+        $cachedFile = $this->getCacheFilename($core);
 
         // the code below is courtesy of Rasmus Schultz,
         // thanks for his help on avoiding concurency issues
@@ -328,14 +328,14 @@ class String implements ITemplate
     /**
      * clears the cached template if it's older than the given time.
      *
-     * @param Core $dwoo      the dwoo instance that was used to cache that template
+     * @param Core $core      the dwoo instance that was used to cache that template
      * @param int  $olderThan minimum time (in seconds) required for the cache to be cleared
      *
      * @return bool true if the cache was not present or if it was deleted, false if it remains there
      */
-    public function clearCache(Core $dwoo, $olderThan = - 1)
+    public function clearCache(Core $core, $olderThan = - 1)
     {
-        $cachedFile = $this->getCacheFilename($dwoo);
+        $cachedFile = $this->getCacheFilename($core);
 
         return !file_exists($cachedFile) || (filectime($cachedFile) < (time() - $olderThan) && unlink($cachedFile));
     }
@@ -343,14 +343,14 @@ class String implements ITemplate
     /**
      * returns the compiled template file name.
      *
-     * @param Core      $dwoo     the dwoo instance that requests it
+     * @param Core      $core     the dwoo instance that requests it
      * @param ICompiler $compiler the compiler that must be used
      *
      * @return string
      */
-    public function getCompiledTemplate(Core $dwoo, ICompiler $compiler = null)
+    public function getCompiledTemplate(Core $core, ICompiler $compiler = null)
     {
-        $compiledFile = $this->getCompiledFilename($dwoo);
+        $compiledFile = $this->getCompiledFilename($core);
 
         if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
             // already checked, return compiled file
@@ -362,13 +362,9 @@ class String implements ITemplate
             $this->compilationEnforced = false;
 
             if ($compiler === null) {
-                $compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
+                $compiler = $core->getDefaultCompilerFactory($this->getResourceName());
 
-                if ($compiler === null || $compiler === array(
-                        'Dwoo\Compiler',
-                        'compilerFactory'
-                    )
-                ) {
+                if ($compiler === null || $compiler === array('Dwoo\Compiler', 'compilerFactory')) {
                     $compiler = Compiler::compilerFactory();
                 } else {
                     $compiler = call_user_func($compiler);
@@ -377,10 +373,10 @@ class String implements ITemplate
 
             $this->compiler = $compiler;
 
-            $compiler->setCustomPlugins($dwoo->getCustomPlugins());
-            $compiler->setSecurityPolicy($dwoo->getSecurityPolicy());
-            $this->makeDirectory(dirname($compiledFile), $dwoo->getCompileDir());
-            file_put_contents($compiledFile, $compiler->compile($dwoo, $this));
+            $compiler->setCustomPlugins($core->getCustomPlugins());
+            $compiler->setSecurityPolicy($core->getSecurityPolicy());
+            $this->makeDirectory(dirname($compiledFile), $core->getCompileDir());
+            file_put_contents($compiledFile, $compiler->compile($core, $this));
             if ($this->chmod !== null) {
                 chmod($compiledFile, $this->chmod);
             }
@@ -412,7 +408,7 @@ class String implements ITemplate
     /**
      * returns a new template string object with the resource id being the template source code.
      *
-     * @param Core      $dwoo                the dwoo instance requiring it
+     * @param Core      $core                the dwoo instance requiring it
      * @param mixed     $resourceId          the filename (relative to this template's dir) of the template to include
      * @param int       $cacheTime           duration of the cache validity for this template,
      *                                       if null it defaults to the Dwoo instance that will
@@ -427,7 +423,7 @@ class String implements ITemplate
      *
      * @return $this
      */
-    public static function templateFactory(Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
     {
         return new self($resourceId, $cacheTime, $cacheId, $compileId);
     }
@@ -436,29 +432,29 @@ class String implements ITemplate
      * returns the full compiled file name and assigns a default value to it if
      * required.
      *
-     * @param Core $dwoo the dwoo instance that requests the file name
+     * @param Core $core the dwoo instance that requests the file name
      *
      * @return string the full path to the compiled file
      */
-    protected function getCompiledFilename(Core $dwoo)
+    protected function getCompiledFilename(Core $core)
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
             $this->compileId = $this->name;
         }
 
-        return $dwoo->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+        return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
      * returns the full cached file name and assigns a default value to it if
      * required.
      *
-     * @param Core $dwoo the dwoo instance that requests the file name
+     * @param Core $core the dwoo instance that requests the file name
      *
      * @return string the full path to the cached file
      */
-    protected function getCacheFilename(Core $dwoo)
+    protected function getCacheFilename(Core $core)
     {
         // no cache id provided, use request_uri as default
         if ($this->cacheId === null) {
@@ -470,12 +466,12 @@ class String implements ITemplate
                 $cacheId = '';
             }
             // force compiled id generation
-            $this->getCompiledFilename($dwoo);
+            $this->getCompiledFilename($core);
 
             $this->cacheId = str_replace('../', '__', $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
-        return $dwoo->getCacheDir() . $this->cacheId . '.html';
+        return $core->getCacheDir() . $this->cacheId . '.html';
     }
 
     /**
