@@ -14,7 +14,7 @@ namespace Dwoo;
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @date      2016-10-17
  * @link      http://dwoo.org/
  */
 class Loader implements ILoader
@@ -82,7 +82,8 @@ class Loader implements ILoader
                 if (is_dir($f)) {
                     $this->rebuildClassPathCache($f, false);
                 } else {
-                    $this->classPath[str_replace(array(
+                    $this->classPath[str_replace(
+                        array(
                         'function.',
                         'block.',
                         'modifier.',
@@ -95,7 +96,8 @@ class Loader implements ILoader
                         'output.',
                         'shared.',
                         'helper.'
-                    ), '', basename($f, '.php'))] = $f;
+                        ), '', basename($f, '.php')
+                    )] = $f;
                 }
             }
         }

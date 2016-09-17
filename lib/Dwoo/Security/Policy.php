@@ -283,10 +283,12 @@ class Policy
                 continue;
             }
             if ($obj instanceof $class) {
-                return call_user_func_array(array(
+                return call_user_func_array(
+                    array(
                     $obj,
                     $method
-                ), $args);
+                    ), $args
+                );
             }
         }
         $dwoo->triggerError('The current security policy prevents you from calling ' . get_class($obj) . '::' . $method . '()');

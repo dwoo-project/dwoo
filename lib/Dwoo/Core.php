@@ -37,7 +37,7 @@ if (!defined('DWOO_DIRECTORY')) {
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @date      2016-10-17
  * @link      http://dwoo.org/
  */
 class Core

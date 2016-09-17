@@ -20,7 +20,7 @@ use Dwoo\Security\Policy as SecurityPolicy;
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @date      2016-10-17
  * @link      http://dwoo.org/
  */
 interface ICompiler
@@ -28,8 +28,8 @@ interface ICompiler
     /**
      * compiles the provided string down to php code.
      *
-     * @param Core $dwoo
-     * @param ITemplate  $template the template to compile
+     * @param Core      $dwoo
+     * @param ITemplate $template the template to compile
      *
      * @return string a compiled php code string
      */

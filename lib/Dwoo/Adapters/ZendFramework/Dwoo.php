@@ -7,15 +7,15 @@
  * In no event will the authors be held liable for any damages arising from the
  * use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @author     Marc Hodgins <mjh@hodginsmedia.com>
- * @copyright  Copyright (c) 2010, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @author    Marc Hodgins <mjh@hodginsmedia.com>
+ * @copyright Copyright (c) 2010, Jordi Boggiano
+ * @license   http://dwoo.org/LICENSE   Modified BSD License
  *
- * @link       http://dwoo.org/
+ * @link http://dwoo.org/
  *
- * @version    1.2.0
- * @date       2010-02-28
+ * @version 1.2.0
+ * @date    2010-02-28
  */
 class Dwoo_Adapters_ZendFramework_Dwoo extends Dwoo_Core
 {
@@ -33,9 +33,11 @@ class Dwoo_Adapters_ZendFramework_Dwoo extends Dwoo_Core
             return $this->getPluginProxy()->view->$name;
         }
         $trace = debug_backtrace();
-        trigger_error('Undefined property via __get(): '.$name.
+        trigger_error(
+            'Undefined property via __get(): '.$name.
                       ' in '.$trace[0]['file'].
-                      ' on line '.$trace[0]['line'], E_USER_NOTICE);
+            ' on line '.$trace[0]['line'], E_USER_NOTICE
+        );
 
         return null;
     }

@@ -14,7 +14,7 @@ namespace Dwoo;
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @date      2016-10-17
  * @link      http://dwoo.org/
  */
 interface ITemplate
@@ -136,16 +136,16 @@ interface ITemplate
      * necessary permission checks if required, if the security policy prevents the template
      * generation it should throw a new Dwoo_Security_Exception with a relevant message
      *
-     * @param mixed     $resourceId          the resource identifier
-     * @param int       $cacheTime           duration of the cache validity for this template,
+     * @param mixed     $resourceId     the resource identifier
+     * @param int       $cacheTime      duration of the cache validity for this template, if null it defaults to the Dwoo instance that will render this template
      *                                       if null it defaults to the Dwoo instance that will
      *                                       render this template
-     * @param string    $cacheId             the unique cache identifier of this page or anything else that
+     * @param string    $cacheId        the unique cache identifier of this page or anything else that makes this template's content unique, if null it defaults to the current url
      *                                       makes this template's content unique, if null it defaults
      *                                       to the current url
-     * @param string    $compileId           the unique compiled identifier, which is used to distinguish this
+     * @param string    $compileId      the unique compiled identifier, which is used to distinguish this template from others, if null it defaults to the filename+bits of the path
      *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate      the template that is requesting a new template object (through
+     * @param ITemplate $parentTemplate the template that is requesting a new template object (through an include, extends or any other plugin)
      *                                       an include, extends or any other plugin)
      *
      * @return ITemplate|null|false

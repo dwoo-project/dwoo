@@ -12,15 +12,14 @@ require 'dwoo/dwooAutoload.php';
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
+ * @author    Stefan Verstege <stefan.verstege@newmedia.nl>
+ * @copyright Copyright (c) 2008, Stefan Verstege
+ * @license   http://dwoo.org/LICENSE   Modified BSD License
  *
- * @author     Stefan Verstege <stefan.verstege@newmedia.nl>
- * @copyright  Copyright (c) 2008, Stefan Verstege
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @link http://www.newmedia.nl/
  *
- * @link       http://www.newmedia.nl/
- *
- * @version    1.1.0
- * @date       2009-07-18
+ * @version 1.1.0
+ * @date    2009-07-18
  *
  * @uses the dwoo package from http://dwoo.org
  */

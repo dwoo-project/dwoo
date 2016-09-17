@@ -37,14 +37,14 @@
  * In no event will the authors be held liable for any damages arising from the
  * use of this software.
  *
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright Copyright (c) 2008, Jordi Boggiano
+ * @license   http://dwoo.org/LICENSE   Modified BSD License
  *
- * @link       http://dwoo.org/
+ * @link http://dwoo.org/
  *
- * @version    1.1.1
- * @date       2010-04-06
+ * @version 1.1.1
+ * @date    2010-04-06
  */
 class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 {
@@ -98,8 +98,8 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
     /**
      * Initialize this Renderer.
      *
-     * @param      AgaviContext The current application context
-     * @param      array        An associative array of initialization parameters
+     * @param AgaviContext The current application context
+     * @param array        An associative array of initialization parameters
      */
     public function initialize(AgaviContext $context, array $parameters = array())
     {
@@ -137,10 +137,10 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
         if (!class_exists('Dwoo')) {
             if (file_exists(dirname(__FILE__).'/../../../dwooAutoload.php')) {
                 // file was dropped with the entire dwoo package
-                require dirname(__FILE__).'/../../../dwooAutoload.php';
+                include dirname(__FILE__).'/../../../dwooAutoload.php';
             } else {
                 // assume the dwoo package is in the include path
-                require 'dwooAutoload.php';
+                include 'dwooAutoload.php';
             }
         }
 
@@ -168,10 +168,10 @@ class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
     /**
      * Render the presentation and return the result.
      *
-     * @param      AgaviTemplateLayer The template layer to render
-     * @param      array              The template variables
-     * @param      array              The slots
-     * @param      array              Associative array of additional assigns
+     * @param AgaviTemplateLayer The template layer to render
+     * @param array              The template variables
+     * @param array              The slots
+     * @param array              Associative array of additional assigns
      *
      * @return string A rendered result
      */

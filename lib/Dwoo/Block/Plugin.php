@@ -68,15 +68,15 @@ abstract class Plugin extends DwooPlugin
      * called at compile time to define what the block should output in the compiled template code, happens when the
      * block is declared basically this will replace the {block arg arg arg} tag in the template.
      *
-     * @param DwooCompiler $compiler  the compiler instance that calls this function
-     * @param array        $params    an array containing original and compiled parameters
-     * @param string       $prepend   that is just meant to allow a child class to call
+     * @param DwooCompiler $compiler the compiler instance that calls this function
+     * @param array        $params   an array containing original and compiled parameters
+     * @param string       $prepend  that is just meant to allow a child class to call parent::postProcessing($compiler, $params, "foo();") to add a command before the default commands are executed
      *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
      *                                default commands are executed
-     * @param string       $append    that is just meant to allow a child class to call
+     * @param string       $append   that is just meant to allow a child class to call parent::postProcessing($compiler, $params, null, "foo();") to add a command after the default commands are executed
      *                                parent::postProcessing($compiler, $params, null, "foo();") to add a command after
      *                                the default commands are executed
-     * @param string       $type      the type is the plugin class name used
+     * @param string       $type     the type is the plugin class name used
      *
      * @return string
      */
@@ -91,16 +91,16 @@ abstract class Plugin extends DwooPlugin
      *
      * @see preProcessing
      *
-     * @param DwooCompiler $compiler  the compiler instance that calls this function
-     * @param array        $params    an array containing original and compiled parameters, see preProcessing() for
+     * @param DwooCompiler $compiler the compiler instance that calls this function
+     * @param array        $params   an array containing original and compiled parameters, see preProcessing() for more details
      *                                more details
-     * @param string       $prepend   that is just meant to allow a child class to call
+     * @param string       $prepend  that is just meant to allow a child class to call parent::postProcessing($compiler, $params, "foo();") to add a command before the default commands are executed
      *                                parent::postProcessing($compiler, $params, "foo();") to add a command before the
      *                                default commands are executed
-     * @param string       $append    that is just meant to allow a child class to call
+     * @param string       $append   that is just meant to allow a child class to call parent::postProcessing($compiler, $params, null, "foo();") to add a command after the default commands are executed
      *                                parent::postProcessing($compiler, $params, null, "foo();") to add a command after
      *                                the default commands are executed
-     * @param string       $content   the entire content of the block being closed
+     * @param string       $content  the entire content of the block being closed
      *
      * @return string
      */

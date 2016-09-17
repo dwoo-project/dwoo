@@ -1,7 +1,7 @@
 <?php
- if (!defined('BASEPATH')) {
-     exit('No direct script access allowed');
- }
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
 
 // The name of the directory where templates are located.
 $config['template_dir'] = dirname(FCPATH).'/../application/views/';

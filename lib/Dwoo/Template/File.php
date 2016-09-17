@@ -182,16 +182,16 @@ class File extends String
      * possible (resource not found), or false if include is not permitted by this resource type.
      *
      * @param Core                      the dwoo instance requiring it
-     * @param mixed     $resourceId          the filename (relative to this template's dir) of the template to include
-     * @param int       $cacheTime           duration of the cache validity for this template,
+     * @param mixed                                                    $resourceId     the filename (relative to this template's dir) of the template to include
+     * @param int                                                      $cacheTime      duration of the cache validity for this template, if null it defaults to the Dwoo instance that will render this template if null it defaults to the Dwoo instance that will render this template
      *                                       if null it defaults to the Dwoo instance that will
      *                                       render this template
-     * @param string    $cacheId             the unique cache identifier of this page or anything else that
+     * @param string                                                   $cacheId        the unique cache identifier of this page or anything else that makes this template's content unique, if null it defaults to the current url makes this template's content unique, if null it defaults to the current url
      *                                       makes this template's content unique, if null it defaults
      *                                       to the current url
-     * @param string    $compileId           the unique compiled identifier, which is used to distinguish this
+     * @param string                                                   $compileId      the unique compiled identifier, which is used to distinguish this template from others, if null it defaults to the filename+bits of the path template from others, if null it defaults to the filename+bits of the path
      *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate      the template that is requesting a new template object (through
+     * @param ITemplate                                                $parentTemplate the template that is requesting a new template object (through an include, extends or any other plugin) an include, extends or any other plugin)
      *                                       an include, extends or any other plugin)
      *
      * @return TemplateFile|null
@@ -201,13 +201,15 @@ class File extends String
     public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array(
+            $resourceId = str_replace(
+                array("\t", "\n", "\r", "\f", "\v"), array(
                 '\\t',
                 '\\n',
                 '\\r',
                 '\\f',
                 '\\v'
-            ), $resourceId);
+                ), $resourceId
+            );
         }
         $resourceId = strtr($resourceId, '\\', '/');
 

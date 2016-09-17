@@ -82,10 +82,12 @@ class Adapter extends Core
     public function __call($m, $a)
     {
         if (method_exists($this->dataProvider, $m)) {
-            call_user_func_array(array(
+            call_user_func_array(
+                array(
                 $this->dataProvider,
                 $m
-            ), $a);
+                ), $a
+            );
         } elseif ($this->show_compat_errors) {
             if (array_search($m, $this->compat['methods']) !== false) {
                 $this->triggerError('Method ' . $m . ' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
@@ -205,17 +207,17 @@ class Adapter extends Core
                 $phpTags = SMARTY_PHP_ALLOW;
             }
             switch ($phpTags) {
-                case SMARTY_PHP_ALLOW:
-                case SMARTY_PHP_PASSTHRU:
-                    $phpTags = SecurityPolicy::PHP_ALLOW;
-                    break;
-                case SMARTY_PHP_QUOTE:
-                    $phpTags = SecurityPolicy::PHP_ENCODE;
-                    break;
-                case SMARTY_PHP_REMOVE:
-                default:
-                    $phpTags = SecurityPolicy::PHP_REMOVE;
-                    break;
+            case SMARTY_PHP_ALLOW:
+            case SMARTY_PHP_PASSTHRU:
+                $phpTags = SecurityPolicy::PHP_ALLOW;
+                break;
+            case SMARTY_PHP_QUOTE:
+                $phpTags = SecurityPolicy::PHP_ENCODE;
+                break;
+            case SMARTY_PHP_REMOVE:
+            default:
+                $phpTags = SecurityPolicy::PHP_REMOVE;
+                break;
             }
             $policy->setPhpHandling($phpTags);
 

@@ -7,16 +7,16 @@
  * In no event will the authors be held liable for any damages arising from the
  * use of this software.
  *
- * @author	   Denis Arh <denis@arh.cc>
- * @author     Stephan Wentz <stephan@wentz.it>
- * @author     Jordi Boggiano <j.boggiano@seld.be>
- * @copyright  Copyright (c) 2008, Jordi Boggiano
- * @license    http://dwoo.org/LICENSE   Modified BSD License
+ * @author    Denis Arh <denis@arh.cc>
+ * @author    Stephan Wentz <stephan@wentz.it>
+ * @author    Jordi Boggiano <j.boggiano@seld.be>
+ * @copyright Copyright (c) 2008, Jordi Boggiano
+ * @license   http://dwoo.org/LICENSE   Modified BSD License
  *
- * @link       http://dwoo.org/
+ * @link http://dwoo.org/
  *
- * @version    1.1.0
- * @date       2009-07-18
+ * @version 1.1.0
+ * @date    2009-07-18
  */
 class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 {
