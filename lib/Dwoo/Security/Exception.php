@@ -1,12 +1,6 @@
 <?php
-namespace Dwoo\Security;
-
-use Dwoo\Exception as DwooException;
-
 /**
- * Dwoo security exception class.
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Copyright (c) 2013-2016
  *
  * @category  Library
  * @package   Dwoo\Security
@@ -15,9 +9,19 @@ use Dwoo\Exception as DwooException;
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @version   1.2.4
+ * @date      2016-09-17
  * @link      http://dwoo.org/
+ */
+
+namespace Dwoo\Security;
+
+use Dwoo\Exception as DwooException;
+
+/**
+ * Dwoo security exception class.
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 class Exception extends DwooException
 {

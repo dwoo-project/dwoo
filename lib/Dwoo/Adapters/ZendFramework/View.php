@@ -1,27 +1,23 @@
 <?php
 
 /**
- * Dwoo adapter for ZendFramework.
+ * Copyright (c) 2013-2016
  *
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from the
- * use of this software.
- *
- * @author    Denis Arh <denis@arh.cc>
- * @author    Stephan Wentz <stephan@wentz.it>
+ * @category  Library
+ * @package   Dwoo\Adapters\ZendFramework
  * @author    Jordi Boggiano <j.boggiano@seld.be>
- * @copyright Copyright (c) 2008, Jordi Boggiano
- * @license   http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link http://dwoo.org/
- *
- * @version 1.1.0
- * @date    2009-07-18
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   1.2.4
+ * @date      2016-09-17
+ * @link      http://dwoo.org/
  */
 class Dwoo_Adapters_ZendFramework_View extends Zend_View_Abstract
 {
     /**
-     * @var Dwoo
+     * @var Core
      */
     protected $_engine = null;
 

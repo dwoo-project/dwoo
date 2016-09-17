@@ -1,10 +1,6 @@
 <?php
-namespace Dwoo\Smarty\Filter;
-
-use Dwoo\Filter;
-
 /**
- * Class Adapter
+ * Copyright (c) 2013-2016
  *
  * @category  Library
  * @package   Dwoo\Smarty\Filter
@@ -13,9 +9,17 @@ use Dwoo\Filter;
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   Release: 1.2.4
- * @date      2016-10-16
+ * @version   1.2.4
+ * @date      2016-09-17
  * @link      http://dwoo.org/
+ */
+
+namespace Dwoo\Smarty\Filter;
+
+use Dwoo\Filter;
+
+/**
+ * Class Adapter
  */
 class Adapter extends Filter
 {

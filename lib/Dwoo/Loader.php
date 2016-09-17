@@ -1,10 +1,6 @@
 <?php
-namespace Dwoo;
-
 /**
- * Handles plugin loading and caching of plugins names/paths relationships.
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Copyright (c) 2013-2016
  *
  * @category  Library
  * @package   Dwoo
@@ -13,9 +9,17 @@ namespace Dwoo;
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   Release: 1.2.4
- * @date      2016-10-17
+ * @version   1.2.4
+ * @date      2016-09-17
  * @link      http://dwoo.org/
+ */
+
+namespace Dwoo;
+
+/**
+ * Handles plugin loading and caching of plugins names/paths relationships.
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 class Loader implements ILoader
 {
