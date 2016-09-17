@@ -280,15 +280,15 @@ class Core
     /**
      * Autputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true).
      *
-     * @param mixed     $tpl           template, can either be a ITemplate object (i.e. TemplateFile), a
-     *                                 valid path to a template, or a template as a string it is recommended to provide
-     *                                 a ITemplate as it will probably make things faster, especially if you
-     *                                 render a template multiple times
-     * @param mixed     $data          the data to use, can either be a IDataProvider object (i.e. Data) or
-     *                                 an associative array. if you're rendering the template from cache, it can be
-     *                                 left null
-     * @param ICompiler $compiler      the compiler that must be used to compile the template, if left empty a default
-     *                                 Compiler will be used
+     * @param mixed     $tpl      template, can either be a ITemplate object (i.e. TemplateFile), a
+     *                            valid path to a template, or a template as a string it is recommended to provide
+     *                            a ITemplate as it will probably make things faster, especially if you
+     *                            render a template multiple times
+     * @param mixed     $data     the data to use, can either be a IDataProvider object (i.e. Data) or
+     *                            an associative array. if you're rendering the template from cache, it can be
+     *                            left null
+     * @param ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
+     *                            Compiler will be used
      *
      * @return     string nothing or the template output if $output is true
      * @deprecated 1.2.3. will be deleted in 1.3.0
@@ -301,17 +301,17 @@ class Core
     /**
      * Returns the given template rendered using the provided data and optional compiler.
      *
-     * @param mixed     $_tpl           template, can either be a ITemplate object (i.e. TemplateFile), a
-     *                                  valid path to a template, or a template as a string it is recommended to
-     *                                  provide a ITemplate as it will probably make things faster, especially if
-     *                                  you render a template multiple times
-     * @param mixed     $data           the data to use, can either be a IDataProvider object (i.e. Data) or
-     *                                  an associative array. if you're rendering the template from cache, it can be
-     *                                  left null
-     * @param ICompiler $_compiler      the compiler that must be used to compile the template, if left empty a default
-     *                                  Compiler will be used
-     * @param bool      $_output        flag that defines whether the function returns the output of the template
-     *                                  (false, default) or echoes it directly (true)
+     * @param mixed     $_tpl      template, can either be a ITemplate object (i.e. TemplateFile), a
+     *                             valid path to a template, or a template as a string it is recommended to
+     *                             provide a ITemplate as it will probably make things faster, especially if
+     *                             you render a template multiple times
+     * @param mixed     $data      the data to use, can either be a IDataProvider object (i.e. Data) or
+     *                             an associative array. if you're rendering the template from cache, it can be
+     *                             left null
+     * @param ICompiler $_compiler the compiler that must be used to compile the template, if left empty a default
+     *                             Compiler will be used
+     * @param bool      $_output   flag that defines whether the function returns the output of the template
+     *                             (false, default) or echoes it directly (true)
      *
      * @return string|void or the template output if $output is false
      * @throws Exception
@@ -331,7 +331,8 @@ class Core
         } elseif (is_string($_tpl) && file_exists($_tpl)) {
             $_tpl = new TemplateFile($_tpl);
         } else {
-            throw new Exception('Dwoo->get/Dwoo->output\'s first argument must be a ITemplate (i.e. TemplateFile) or a valid path to a template file', E_USER_NOTICE);
+            throw new Exception('Dwoo->get/Dwoo->output\'s first argument must be a ITemplate (i.e. TemplateFile) or 
+            a valid path to a template file', E_USER_NOTICE);
         }
 
         // save the current template, enters render mode at the same time
@@ -346,7 +347,8 @@ class Core
         } elseif ($data instanceof ArrayAccess) {
             $this->data = $data;
         } else {
-            throw new Exception('Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or an associative array', E_USER_NOTICE);
+            throw new Exception('Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or
+            an associative array', E_USER_NOTICE);
         }
 
         $this->globals['template'] = $_tpl->getName();
@@ -521,7 +523,8 @@ class Core
                     'callback' => $callback
                 );
             } else {
-                throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
+                throw new Exception('Callback could not be processed correctly, please check that the function/class 
+                you used exists');
             }
         } elseif ($callback instanceof \Closure) {
             $this->plugins[$name] = array(
@@ -529,7 +532,8 @@ class Core
                 'callback' => $callback
             );
         } else {
-            throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
+            throw new Exception('Callback could not be processed correctly, please check that the function/class you 
+            used exists');
         }
     }
 
@@ -568,9 +572,12 @@ class Core
                 }
                 catch (Exception $e) {
                     if (strstr($callback, 'Dwoo_Filter_')) {
-                        throw new Exception('Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"');
+                        throw new Exception('Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
+                        not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"');
                     } else {
-                        throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
+                        throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must
+                         be in one of your plugin dir as "name.php" containg a class or function named
+                         "Dwoo_Filter_name"');
                     }
                 }
             }
@@ -583,7 +590,8 @@ class Core
             } elseif (function_exists($class)) {
                 $callback = $class;
             } else {
-                throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
+                throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in
+                one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
             }
 
             $this->filters[] = $callback;
@@ -971,11 +979,13 @@ class Core
     public function templateFactory($resourceName, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
     {
         if (isset($this->resources[$resourceName])) {
-            // TODO could be changed to $this->resources[$resourceName]['class']::templateFactory(..) in 5.3 maybe
-            return call_user_func(array(
-                $this->resources[$resourceName]['class'],
-                'templateFactory'
-            ), $this, $resourceId, $cacheTime, $cacheId, $compileId, $parentTemplate);
+            /**
+             * Interface ITemplate
+             * @var ITemplate $class
+             */
+            $class = $this->resources[$resourceName]['class'];
+
+            return $class::templateFactory($this, $resourceId, $cacheTime, $cacheId, $compileId, $parentTemplate);
         }
 
         throw new Exception('Unknown resource type : ' . $resourceName);
@@ -1264,10 +1274,7 @@ class Core
         } elseif ($cnt === 4) {
             return $plugin->process($params[0], $params[1], $params[2], $params[3]);
         } else {
-            return call_user_func_array(array(
-                $plugin,
-                'process'
-            ), $params);
+            return call_user_func_array(array($plugin, 'process'), $params);
         }
     }
 
