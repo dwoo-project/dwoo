@@ -4,7 +4,6 @@ namespace Dwoo;
 use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Security\Policy as SecurityPolicy;
 use Dwoo\Compilation\Exception as CompilationException;
-use Dwoo\Block\Plugin as BlockPlugin;
 use ReflectionFunction;
 use ReflectionMethod;
 
@@ -27,7 +26,7 @@ use ReflectionMethod;
 class Compiler implements ICompiler
 {
     /**
-     * constant that represents a php opening tag.
+     * Constant that represents a php opening tag.
      * use it in case it needs to be adjusted
      *
      * @var string
@@ -35,7 +34,7 @@ class Compiler implements ICompiler
     const PHP_OPEN = '<?php ';
 
     /**
-     * constant that represents a php closing tag.
+     * Constant that represents a php closing tag.
      * use it in case it needs to be adjusted
      *
      * @var string
@@ -43,42 +42,42 @@ class Compiler implements ICompiler
     const PHP_CLOSE = '?>';
 
     /**
-     * boolean flag to enable or disable debugging output.
+     * Boolean flag to enable or disable debugging output.
      *
      * @var bool
      */
     public $debug = false;
 
     /**
-     * left script delimiter.
+     * Left script delimiter.
      *
      * @var string
      */
     protected $ld = '{';
 
     /**
-     * left script delimiter with escaped regex meta characters.
+     * Left script delimiter with escaped regex meta characters.
      *
      * @var string
      */
     protected $ldr = '\\{';
 
     /**
-     * right script delimiter.
+     * Right script delimiter.
      *
      * @var string
      */
     protected $rd = '}';
 
     /**
-     * right script delimiter with escaped regex meta characters.
+     * Right script delimiter with escaped regex meta characters.
      *
      * @var string
      */
     protected $rdr = '\\}';
 
     /**
-     * defines whether the nested comments should be parsed as nested or not.
+     * Defines whether the nested comments should be parsed as nested or not.
      * defaults to false (classic block comment parsing as in all languages)
      *
      * @var bool
@@ -86,7 +85,7 @@ class Compiler implements ICompiler
     protected $allowNestedComments = false;
 
     /**
-     * defines whether opening and closing tags can contain spaces before valid data or not.
+     * Defines whether opening and closing tags can contain spaces before valid data or not.
      * turn to true if you want to be sloppy with the syntax, but when set to false it allows
      * to skip javascript and css tags as long as they are in the form "{ something", which is
      * nice. default is false.
@@ -96,7 +95,7 @@ class Compiler implements ICompiler
     protected $allowLooseOpenings = false;
 
     /**
-     * defines whether the compiler will automatically html-escape variables or not.
+     * Defines whether the compiler will automatically html-escape variables or not.
      * default is false
      *
      * @var bool
@@ -104,35 +103,35 @@ class Compiler implements ICompiler
     protected $autoEscape = false;
 
     /**
-     * security policy object.
+     * Security policy object.
      *
      * @var SecurityPolicy
      */
     protected $securityPolicy;
 
     /**
-     * stores the custom plugins registered with this compiler.
+     * Stores the custom plugins registered with this compiler.
      *
      * @var array
      */
     protected $customPlugins = array();
 
     /**
-     * stores the template plugins registered with this compiler.
+     * Stores the template plugins registered with this compiler.
      *
      * @var array
      */
     protected $templatePlugins = array();
 
     /**
-     * stores the pre- and post-processors callbacks.
+     * Stores the pre- and post-processors callbacks.
      *
      * @var array
      */
     protected $processors = array('pre' => array(), 'post' => array());
 
     /**
-     * stores a list of plugins that are used in the currently compiled
+     * Stores a list of plugins that are used in the currently compiled
      * template, and that are not compilable. these plugins will be loaded
      * during the template's runtime if required.
      * it is a 1D array formatted as key:pluginName value:pluginType
@@ -142,35 +141,35 @@ class Compiler implements ICompiler
     protected $usedPlugins;
 
     /**
-     * stores the template undergoing compilation.
+     * Stores the template undergoing compilation.
      *
      * @var string
      */
     protected $template;
 
     /**
-     * stores the current pointer position inside the template.
+     * Stores the current pointer position inside the template.
      *
      * @var int
      */
     protected $pointer;
 
     /**
-     * stores the current line count inside the template for debugging purposes.
+     * Stores the current line count inside the template for debugging purposes.
      *
      * @var int
      */
     protected $line;
 
     /**
-     * stores the current template source while compiling it.
+     * Stores the current template source while compiling it.
      *
      * @var string
      */
     protected $templateSource;
 
     /**
-     * stores the data within which the scope moves.
+     * Stores the data within which the scope moves.
      *
      * @var array
      */
@@ -295,7 +294,7 @@ class Compiler implements ICompiler
     /**
      * returns the nested comments handling setting.
      *
-     * @see setNestedCommentsHandling
+     * @see    setNestedCommentsHandling
      * @return bool true if nested comments are allowed
      */
     public function getNestedCommentsHandling()
@@ -320,7 +319,7 @@ class Compiler implements ICompiler
     /**
      * returns the tag openings handling strictness setting.
      *
-     * @see setLooseOpeningHandling
+     * @see    setLooseOpeningHandling
      * @return bool true if loose tags are allowed
      */
     public function getLooseOpeningHandling()
@@ -505,7 +504,7 @@ class Compiler implements ICompiler
      * returns all the plugins this template uses.
      *
      * @private
-     * @return array the list of used plugins in the parsed template
+     * @return  array the list of used plugins in the parsed template
      */
     public function getUsedPlugins()
     {
@@ -534,7 +533,7 @@ class Compiler implements ICompiler
      * returns all the parsed sub-templates.
      *
      * @private
-     * @return array the parsed sub-templates
+     * @return  array the parsed sub-templates
      */
     public function getTemplatePlugins()
     {
@@ -761,13 +760,13 @@ class Compiler implements ICompiler
                     }
                     switch ($this->securityPolicy->getPhpHandling()) {
 
-                        case SecurityPolicy::PHP_ALLOW:
-                            break;
-                        case SecurityPolicy::PHP_ENCODE:
-                            $tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
-                            break;
-                        case SecurityPolicy::PHP_REMOVE:
-                            $tpl = preg_replace($search, '', $tpl);
+                    case SecurityPolicy::PHP_ALLOW:
+                        break;
+                    case SecurityPolicy::PHP_ENCODE:
+                        $tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
+                        break;
+                    case SecurityPolicy::PHP_REMOVE:
+                        $tpl = preg_replace($search, '', $tpl);
                     }
                 }
             }
@@ -868,27 +867,27 @@ class Compiler implements ICompiler
 
             switch ($type) {
 
-                case Core::BLOCK_PLUGIN:
-                case Core::CLASS_PLUGIN:
-                    $output .= "if (class_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                    break;
-                case Core::FUNC_PLUGIN:
-                    $output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                    break;
-                case Core::SMARTY_MODIFIER:
-                    $output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                    break;
-                case Core::SMARTY_FUNCTION:
-                    $output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                    break;
-                case Core::SMARTY_BLOCK:
-                    $output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                    break;
-                case Core::PROXY_PLUGIN:
-                    $output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
-                    break;
-                default:
-                    throw new CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
+            case Core::BLOCK_PLUGIN:
+            case Core::CLASS_PLUGIN:
+                $output .= "if (class_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                break;
+            case Core::FUNC_PLUGIN:
+                $output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                break;
+            case Core::SMARTY_MODIFIER:
+                $output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                break;
+            case Core::SMARTY_FUNCTION:
+                $output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                break;
+            case Core::SMARTY_BLOCK:
+                $output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                break;
+            case Core::PROXY_PLUGIN:
+                $output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
+                break;
+            default:
+                throw new CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
             }
         }
 
@@ -1155,17 +1154,23 @@ class Compiler implements ICompiler
                 }
                 if (count($this->stack)) {
                     $this->curBlock = &$this->stack[count($this->stack) - 1];
-                    $this->push(call_user_func(array(
-                        $class,
-                        'postProcessing'
-                    ), $this, $top['params'], '', '', $top['buffer']), 0);
+                    $this->push(
+                        call_user_func(
+                            array(
+                            $class,
+                            'postProcessing'
+                            ), $this, $top['params'], '', '', $top['buffer']
+                        ), 0
+                    );
                 } else {
                     $null           = null;
                     $this->curBlock = &$null;
-                    $output         = call_user_func(array(
+                    $output         = call_user_func(
+                        array(
                         $class,
                         'postProcessing'
-                    ), $this, $top['params'], '', '', $top['buffer']);
+                        ), $this, $top['params'], '', '', $top['buffer']
+                    );
                 }
 
                 if ($top['type'] === $type) {
@@ -1640,12 +1645,14 @@ class Compiler implements ICompiler
             // parse modifier on funcs or vars
             $srcPointer = $pointer;
             if (is_array($parsingParams)) {
-                $tmp                     = $this->replaceModifiers(array(
+                $tmp                     = $this->replaceModifiers(
+                    array(
                     null,
                     null,
                     $out[count($out) - 1][0],
                     $match[0]
-                ), $curBlock, $pointer);
+                    ), $curBlock, $pointer
+                );
                 $out[count($out) - 1][0] = $tmp;
                 $out[count($out) - 1][1] .= substr($substr, $srcPointer, $srcPointer - $pointer);
             } else {
@@ -1887,15 +1894,19 @@ class Compiler implements ICompiler
             $params = $this->mapParams($params, null, $state);
         } elseif ($pluginType & Core::CLASS_PLUGIN) {
             if ($pluginType & Core::CUSTOM_PLUGIN) {
-                $params = $this->mapParams($params, array(
+                $params = $this->mapParams(
+                    $params, array(
                     $this->customPlugins[$func]['class'],
                     $this->customPlugins[$func]['function']
-                ), $state);
+                    ), $state
+                );
             } else {
-                $params = $this->mapParams($params, array(
+                $params = $this->mapParams(
+                    $params, array(
                     'Dwoo_Plugin_' . $func,
                     ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
-                ), $state);
+                    ), $state
+                );
             }
         } elseif ($pluginType & Core::FUNC_PLUGIN) {
             if ($pluginType & Core::CUSTOM_PLUGIN) {
@@ -2237,11 +2248,13 @@ class Compiler implements ICompiler
         $methodCall = '';
         $substr     = substr($in, $from, $to - $from);
 
-        if (preg_match('#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
+        if (preg_match(
+            '#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
             ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()') . // method call
             ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()') . // simple math expressions
             ($curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())') . // modifiers
-            '#i', $substr, $match)) {
+            '#i', $substr, $match
+        )) {
             $key = substr($match[1], 1);
 
             $matchedLength = strlen($match[0]);
@@ -2450,7 +2463,8 @@ class Compiler implements ICompiler
                 $ptr += 2;
             }
 
-            if (in_array($methodCall[$ptr], array(
+            if (in_array(
+                $methodCall[$ptr], array(
                     ';',
                     ',',
                     '/',
@@ -2465,7 +2479,8 @@ class Compiler implements ICompiler
                     '=',
                     '-',
                     '|'
-                )) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd
+                )
+            ) || substr($methodCall, $ptr, strlen($this->rd)) === $this->rd
             ) {
                 // break char found
                 break;
@@ -2664,10 +2679,14 @@ class Compiler implements ICompiler
                             preg_match('#\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*' . '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', substr($key, $last), $submatch);
 
                             $len = strlen($submatch[0]);
-                            $key = substr_replace($key, preg_replace_callback('#(\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)' . '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', array(
+                            $key = substr_replace(
+                                $key, preg_replace_callback(
+                                    '#(\$[a-z0-9_]+((?:(?:\.|->)(?:[a-z0-9_]+|(?R))|\[(?:[a-z0-9_]+|(?R))\]))*)' . '((?:(?:[+/*%-])(?:\$[a-z0-9.[\]>_:-]+(?:\([^)]*\))?|[0-9.,]*))*)#i', array(
                                         $this,
                                         'replaceVarKeyHelper'
-                                    ), substr($key, $last, $len)), $last, $len);
+                                    ), substr($key, $last, $len)
+                                ), $last, $len
+                            );
                             if ($this->debug) {
                                 echo 'RECURSIVE VAR REPLACEMENT DONE : ' . $key . "\n";
                             }
@@ -2699,7 +2718,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses various constants, operators or non-quoted strings.
+     * Parses various constants, operators or non-quoted strings.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -2848,7 +2867,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * replaces variables within a parsed string.
+     * Replaces variables within a parsed string.
      *
      * @param string $string   the parsed string
      * @param string $first    the first character parsed in the string, which is the string delimiter (' or ")
@@ -2887,10 +2906,12 @@ class Compiler implements ICompiler
 
         // handle modifiers
         // TODO Obsolete?
-        $string = preg_replace_callback('#("|\')\.(.+?)\.\1((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\4|:[^`]*))*))+)#i', array(
+        $string = preg_replace_callback(
+            '#("|\')\.(.+?)\.\1((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').+?\4|:[^`]*))*))+)#i', array(
             $this,
             'replaceModifiers'
-        ), $string);
+            ), $string
+        );
 
         // replace escaped dollar operators by unescaped ones if required
         if ($first === "'") {
@@ -2901,7 +2922,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * replaces the modifiers applied to a string or a variable.
+     * Replaces the modifiers applied to a string or a variable.
      *
      * @param array  $m        the regex matches that must be array(1=>"double or single quotes enclosing a string,
      *                         when applicable", 2=>"the string or var", 3=>"the modifiers matched")
@@ -3177,7 +3198,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * recursively implodes an array in a similar manner as var_export() does but with some tweaks
+     * Recursively implodes an array in a similar manner as var_export() does but with some tweaks
      * to handle pre-compiled values and the fact that we do not need to enclose everything with
      * "array" and do not require top-level keys to be displayed.
      *
@@ -3288,6 +3309,8 @@ class Compiler implements ICompiler
      * code runs).
      *
      * @param string $name the plugin name
+     *
+     * @return void
      */
     public function loadPlugin($name)
     {
@@ -3307,7 +3330,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * maps the parameters received from the template onto the parameters required by the given callback.
+     * Maps the parameters received from the template onto the parameters required by the given callback.
      *
      * @param array    $params   the array of parameters
      * @param callback $callback the function or method to reflect on to find out the required parameters
@@ -3342,10 +3365,14 @@ class Compiler implements ICompiler
                 // "rest" array parameter, fill every remaining params in it and then break
                 if (count($ps) === 0) {
                     if ($v[1] === false) {
-                        throw new CompilationException($this, 'Rest argument missing for ' . str_replace(array(
+                        throw new CompilationException(
+                            $this, 'Rest argument missing for ' . str_replace(
+                                array(
                                 'Dwoo_Plugin_',
                                 '_compile'
-                            ), '', (is_array($callback) ? $callback[0] : $callback)));
+                                ), '', (is_array($callback) ? $callback[0] : $callback)
+                            )
+                        );
                     } else {
                         break;
                     }
@@ -3382,10 +3409,14 @@ class Compiler implements ICompiler
                     $name = $callback;
                 }
 
-                throw new CompilationException($this, 'Argument ' . $k . '/' . $v[0] . ' missing for ' . str_replace(array(
+                throw new CompilationException(
+                    $this, 'Argument ' . $k . '/' . $v[0] . ' missing for ' . str_replace(
+                        array(
                         'Dwoo_Plugin_',
                         '_compile'
-                    ), '', $name));
+                        ), '', $name
+                    )
+                );
             } elseif ($v[2] === null) {
                 // enforce lowercased null if default value is null (php outputs NULL with var export)
                 $paramlist[$v[0]] = array('null', null, self::T_NULL);
@@ -3405,7 +3436,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the parameter map of the given callback, it filters out entries typed as Dwoo and Compiler and turns the
+     * Returns the parameter map of the given callback, it filters out entries typed as Dwoo and Compiler and turns the
      * rest parameter into a "*".
      *
      * @param callback $callback the function/method to reflect on
@@ -3446,10 +3477,10 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns a default instance of this compiler, used by default by all Dwoo templates that do not have a
+     * Returns a default instance of this compiler, used by default by all Dwoo templates that do not have a
      * specific compiler assigned and when you do not override the default compiler factory function.
      *
-     * @see Core::setDefaultCompilerFactory()
+     * @see    Core::setDefaultCompilerFactory()
      * @return Compiler
      */
     public static function compilerFactory()

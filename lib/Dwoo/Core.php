@@ -331,8 +331,10 @@ class Core
         } elseif (is_string($_tpl) && file_exists($_tpl)) {
             $_tpl = new TemplateFile($_tpl);
         } else {
-            throw new Exception('Dwoo->get/Dwoo->output\'s first argument must be a ITemplate (i.e. TemplateFile) or 
-            a valid path to a template file', E_USER_NOTICE);
+            throw new Exception(
+                'Dwoo->get/Dwoo->output\'s first argument must be a ITemplate (i.e. TemplateFile) or 
+            a valid path to a template file', E_USER_NOTICE
+            );
         }
 
         // save the current template, enters render mode at the same time
@@ -347,8 +349,10 @@ class Core
         } elseif ($data instanceof ArrayAccess) {
             $this->data = $data;
         } else {
-            throw new Exception('Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or
-            an associative array', E_USER_NOTICE);
+            throw new Exception(
+                'Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or
+            an associative array', E_USER_NOTICE
+            );
         }
 
         $this->globals['template'] = $_tpl->getName();
@@ -523,8 +527,10 @@ class Core
                     'callback' => $callback
                 );
             } else {
-                throw new Exception('Callback could not be processed correctly, please check that the function/class 
-                you used exists');
+                throw new Exception(
+                    'Callback could not be processed correctly, please check that the function/class 
+                you used exists'
+                );
             }
         } elseif ($callback instanceof \Closure) {
             $this->plugins[$name] = array(
@@ -532,8 +538,10 @@ class Core
                 'callback' => $callback
             );
         } else {
-            throw new Exception('Callback could not be processed correctly, please check that the function/class you 
-            used exists');
+            throw new Exception(
+                'Callback could not be processed correctly, please check that the function/class you 
+            used exists'
+            );
         }
     }
 
@@ -572,12 +580,16 @@ class Core
                 }
                 catch (Exception $e) {
                     if (strstr($callback, 'Dwoo_Filter_')) {
-                        throw new Exception('Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
-                        not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"');
+                        throw new Exception(
+                            'Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
+                        not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"'
+                        );
                     } else {
-                        throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must
+                        throw new Exception(
+                            'Wrong filter name : ' . $callback . ', when using autoload the filter must
                          be in one of your plugin dir as "name.php" containg a class or function named
-                         "Dwoo_Filter_name"');
+                         "Dwoo_Filter_name"'
+                        );
                     }
                 }
             }
@@ -590,8 +602,10 @@ class Core
             } elseif (function_exists($class)) {
                 $callback = $class;
             } else {
-                throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in
-                one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"');
+                throw new Exception(
+                    'Wrong filter name : ' . $callback . ', when using autoload the filter must be in
+                one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"'
+                );
             }
 
             $this->filters[] = $callback;
@@ -981,6 +995,7 @@ class Core
         if (isset($this->resources[$resourceName])) {
             /**
              * Interface ITemplate
+             *
              * @var ITemplate $class
              */
             $class = $this->resources[$resourceName]['class'];
@@ -1129,10 +1144,12 @@ class Core
         } elseif ($cnt === 4) {
             $block->init($args[0], $args[1], $args[2], $args[3]);
         } else {
-            call_user_func_array(array(
+            call_user_func_array(
+                array(
                 $block,
                 'init'
-            ), $args);
+                ), $args
+            );
         }
 
         $this->stack[] = $this->curBlock = $block;
@@ -1165,10 +1182,12 @@ class Core
         } elseif ($cnt === 4) {
             $this->curBlock->end($args[0], $args[1], $args[2], $args[3]);
         } else {
-            call_user_func_array(array(
+            call_user_func_array(
+                array(
                 $this->curBlock,
                 'end'
-            ), $args);
+                ), $args
+            );
         }
 
         $tmp = array_pop($this->stack);
@@ -1499,35 +1518,35 @@ class Core
             array_shift($m[2]);
             array_shift($m[1]);
             switch ($m[2][0]) {
-                case 'get':
-                    $cur = $_GET;
-                    break;
-                case 'post':
-                    $cur = $_POST;
-                    break;
-                case 'session':
-                    $cur = $_SESSION;
-                    break;
-                case 'cookies':
-                case 'cookie':
-                    $cur = $_COOKIE;
-                    break;
-                case 'server':
-                    $cur = $_SERVER;
-                    break;
-                case 'env':
-                    $cur = $_ENV;
-                    break;
-                case 'request':
-                    $cur = $_REQUEST;
-                    break;
-                case 'const':
-                    array_shift($m[2]);
-                    if (defined($m[2][0])) {
-                        return constant($m[2][0]);
-                    } else {
-                        return null;
-                    }
+            case 'get':
+                $cur = $_GET;
+                break;
+            case 'post':
+                $cur = $_POST;
+                break;
+            case 'session':
+                $cur = $_SESSION;
+                break;
+            case 'cookies':
+            case 'cookie':
+                $cur = $_COOKIE;
+                break;
+            case 'server':
+                $cur = $_SERVER;
+                break;
+            case 'env':
+                $cur = $_ENV;
+                break;
+            case 'request':
+                $cur = $_REQUEST;
+                break;
+            case 'const':
+                array_shift($m[2]);
+                if (defined($m[2][0])) {
+                    return constant($m[2][0]);
+                } else {
+                    return null;
+                }
             }
             if ($cur !== $this->globals) {
                 array_shift($m[2]);

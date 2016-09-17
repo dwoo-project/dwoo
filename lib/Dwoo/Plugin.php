@@ -58,10 +58,10 @@ abstract class Plugin
      *  // get all the parameters as attributes (if there is a rest array, it will be included)
      *  $attributes = Dwoo_Plugin::paramsToAttributes($p);
      *
-     * @param array    $params        an array of attributeName=>value items that will be compiled to be ready for
+     * @param array    $params   an array of attributeName=>value items that will be compiled to be ready for inclusion in a php string
      *                                inclusion in a php string
-     * @param string   $delim         the string delimiter you want to use (defaults to ')
-     * @param Compiler $compiler      the compiler instance (optional for BC, but recommended to pass it for proper
+     * @param string   $delim    the string delimiter you want to use (defaults to ')
+     * @param Compiler $compiler the compiler instance (optional for BC, but recommended to pass it for proper escaping behavior)
      *                                escaping behavior)
      *
      * @return string
