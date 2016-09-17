@@ -1,16 +1,6 @@
 <?php
-namespace Dwoo;
-
-use Dwoo\Security\Policy as SecurityPolicy;
-
 /**
- * Interface that represents a dwoo compiler.
- * while implementing this is enough to interact with Dwoo/Dwoo_Templates, it is not
- * sufficient to interact with Dwoo_Plugins, however the main purpose of creating a
- * new compiler would be to interact with other/different plugins, that is why this
- * interface has been left with the minimum requirements.
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from the use of this software.
+ * Copyright (c) 2013-2016
  *
  * @category  Library
  * @package   Dwoo
@@ -19,9 +9,23 @@ use Dwoo\Security\Policy as SecurityPolicy;
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   Release: 1.2.4
- * @date      2016-10-17
+ * @version   1.2.4
+ * @date      2016-09-17
  * @link      http://dwoo.org/
+ */
+
+namespace Dwoo;
+
+use Dwoo\Security\Policy as SecurityPolicy;
+
+/**
+ * Interface that represents a dwoo compiler.
+ * while implementing this is enough to interact with Dwoo/Templates, it is not
+ * sufficient to interact with Dwoo/Plugins, however the main purpose of creating a
+ * new compiler would be to interact with other/different plugins, that is why this
+ * interface has been left with the minimum requirements.
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 interface ICompiler
 {
