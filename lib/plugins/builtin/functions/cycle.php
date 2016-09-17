@@ -65,6 +65,6 @@ class Dwoo_Plugin_cycle extends Plugin
         if ($assign === null) {
             return $out;
         }
-        $this->dwoo->assignInScope($out, $assign);
+        $this->core->assignInScope($out, $assign);
     }
 }

@@ -28,7 +28,7 @@ class Dwoo_Plugin_dump extends Plugin
     {
         $this->outputMethods = $show_methods;
         if ($var === '$') {
-            $var = $this->dwoo->getData();
+            $var = $this->core->getData();
             $out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">data';
         } else {
             $out = '<div style="background:#aaa; padding:5px; margin:5px; color:#000;">dump';
@@ -44,7 +44,7 @@ class Dwoo_Plugin_dump extends Plugin
             }
         }
 
-        $scope = $this->dwoo->getScope();
+        $scope = $this->core->getScope();
 
         if ($var === $scope) {
             $out .= ' (current scope): <div style="background:#ccc;">';

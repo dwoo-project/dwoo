@@ -90,7 +90,7 @@ class Dwoo_Plugin_textformat extends BlockPlugin
         }
 
         if ($this->assign !== '') {
-            $this->dwoo->assignInScope(implode($this->wrapChar . $this->wrapChar, $pgs), $this->assign);
+            $this->core->assignInScope(implode($this->wrapChar . $this->wrapChar, $pgs), $this->assign);
         } else {
             return implode($this->wrapChar . $this->wrapChar, $pgs);
         }

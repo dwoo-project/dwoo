@@ -68,7 +68,7 @@ class Dwoo_Plugin_counter extends Plugin
         $out = $this->counters[$name]['count'];
 
         if ($this->counters[$name]['assign'] !== null) {
-            $this->dwoo->assignInScope($out, $this->counters[$name]['assign']);
+            $this->core->assignInScope($out, $this->counters[$name]['assign']);
         } elseif ($this->counters[$name]['print'] === true) {
             return $out;
         }
