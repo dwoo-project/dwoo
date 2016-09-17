@@ -20,9 +20,7 @@ use Dwoo\Plugin;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -60,7 +58,7 @@ class Dwoo_Plugin_cycle extends Plugin
             if ($this->cycles[$name]['index'] >= count($values) - 1) {
                 $this->cycles[$name]['index'] = 0;
             } else {
-                ++$this->cycles[$name]['index'];
+                ++ $this->cycles[$name]['index'];
             }
         }
 

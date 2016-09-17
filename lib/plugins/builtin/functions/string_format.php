@@ -15,13 +15,11 @@ use Dwoo\Compiler;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
 function Dwoo_Plugin_string_format_compile(Compiler $compiler, $value, $format)
 {
-    return 'sprintf('.$format.','.$value.')';
+    return 'sprintf(' . $format . ',' . $value . ')';
 }

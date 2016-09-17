@@ -20,14 +20,12 @@ use Dwoo\Compiler;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  *
  * @param Compiler $compiler
- * @param array         $rest
+ * @param array    $rest
  *
  * @return string
  */
@@ -36,10 +34,10 @@ function Dwoo_Plugin_array_compile(Compiler $compiler, array $rest = array())
     $out = array();
     foreach ($rest as $key => $value) {
         if (!is_numeric($key) && !strstr($key, '$this->scope')) {
-            $key = "'".$key."'";
+            $key = "'" . $key . "'";
         }
-        $out[] = $key.'=>'.$value;
+        $out[] = $key . '=>' . $value;
     }
 
-    return 'array('.implode(', ', $out).')';
+    return 'array(' . implode(', ', $out) . ')';
 }

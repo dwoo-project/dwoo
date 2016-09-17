@@ -22,9 +22,7 @@ use Dwoo\Core;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -41,19 +39,19 @@ function Dwoo_Plugin_mailto(Core $dwoo, $address, $text = null, $subject = null,
     $address .= '?';
 
     if (!empty($subject)) {
-        $address .= 'subject='.rawurlencode($subject).'&';
+        $address .= 'subject=' . rawurlencode($subject) . '&';
     }
     if (!empty($cc)) {
-        $address .= 'cc='.rawurlencode($cc).'&';
+        $address .= 'cc=' . rawurlencode($cc) . '&';
     }
     if (!empty($bcc)) {
-        $address .= 'bcc='.rawurlencode($bcc).'&';
+        $address .= 'bcc=' . rawurlencode($bcc) . '&';
     }
     if (!empty($newsgroups)) {
-        $address .= 'newsgroups='.rawurlencode($newsgroups).'&';
+        $address .= 'newsgroups=' . rawurlencode($newsgroups) . '&';
     }
     if (!empty($followupto)) {
-        $address .= 'followupto='.rawurlencode($followupto).'&';
+        $address .= 'followupto=' . rawurlencode($followupto) . '&';
     }
 
     $address = rtrim($address, '?&');
@@ -61,63 +59,62 @@ function Dwoo_Plugin_mailto(Core $dwoo, $address, $text = null, $subject = null,
     // output
     switch ($encode) {
 
-    case 'none':
-    case null:
-        return '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
+        case 'none':
+        case null:
+            return '<a href="mailto:' . $address . '" ' . $extra . '>' . $text . '</a>';
 
-    case 'js':
-    case 'javascript':
-        $str = 'document.write(\'<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>\');';
-        $len = strlen($str);
+        case 'js':
+        case 'javascript':
+            $str = 'document.write(\'<a href="mailto:' . $address . '" ' . $extra . '>' . $text . '</a>\');';
+            $len = strlen($str);
 
-        $out = '';
-        for ($i = 0; $i < $len; ++$i) {
-            $out .= '%'.bin2hex($str[$i]);
-        }
-
-        return '<script type="text/javascript">eval(unescape(\''.$out.'\'));</script>';
-
-        break;
-    case 'javascript_charcode':
-    case 'js_charcode':
-    case 'jscharcode':
-    case 'jschar':
-        $str = '<a href="mailto:'.$address.'" '.$extra.'>'.$text.'</a>';
-        $len = strlen($str);
-
-        $out = '<script type="text/javascript">'."\n<!--\ndocument.write(String.fromCharCode(";
-        for ($i = 0; $i < $len; ++$i) {
-            $out .= ord($str[$i]).',';
-        }
-
-        return rtrim($out, ',')."));\n-->\n</script>\n";
-
-        break;
-
-    case 'hex':
-        if (strpos($address, '?') !== false) {
-            $dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
-        }
-
-        $out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
-        $len = strlen($address);
-        for ($i = 0; $i < $len; ++$i) {
-            if (preg_match('#\w#', $address[$i])) {
-                $out .= '%'.bin2hex($address[$i]);
-            } else {
-                $out .= $address[$i];
+            $out = '';
+            for ($i = 0; $i < $len; ++ $i) {
+                $out .= '%' . bin2hex($str[$i]);
             }
-        }
-        $out .= '" '.$extra.'>';
-        $len = strlen($text);
-        for ($i = 0; $i < $len; ++$i) {
-            $out .= '&#x'.bin2hex($text[$i]);
-        }
 
-        return $out.'</a>';
+            return '<script type="text/javascript">eval(unescape(\'' . $out . '\'));</script>';
 
-    default:
-        $dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
+            break;
+        case 'javascript_charcode':
+        case 'js_charcode':
+        case 'jscharcode':
+        case 'jschar':
+            $str = '<a href="mailto:' . $address . '" ' . $extra . '>' . $text . '</a>';
+            $len = strlen($str);
 
+            $out = '<script type="text/javascript">' . "\n<!--\ndocument.write(String.fromCharCode(";
+            for ($i = 0; $i < $len; ++ $i) {
+                $out .= ord($str[$i]) . ',';
+            }
+
+            return rtrim($out, ',') . "));\n-->\n</script>\n";
+
+            break;
+
+        case 'hex':
+            if (strpos($address, '?') !== false) {
+                $dwoo->triggerError('Mailto: Hex encoding is not possible with extra attributes, use one of : <em>js, jscharcode or none</em>.', E_USER_WARNING);
+            }
+
+            $out = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;';
+            $len = strlen($address);
+            for ($i = 0; $i < $len; ++ $i) {
+                if (preg_match('#\w#', $address[$i])) {
+                    $out .= '%' . bin2hex($address[$i]);
+                } else {
+                    $out .= $address[$i];
+                }
+            }
+            $out .= '" ' . $extra . '>';
+            $len = strlen($text);
+            for ($i = 0; $i < $len; ++ $i) {
+                $out .= '&#x' . bin2hex($text[$i]);
+            }
+
+            return $out . '</a>';
+
+        default:
+            $dwoo->triggerError('Mailto: <em>encode</em> argument is invalid, it must be one of : <em>none (= no value), js, js_charcode or hex</em>', E_USER_WARNING);
     }
 }

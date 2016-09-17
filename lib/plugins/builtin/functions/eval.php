@@ -4,7 +4,6 @@ use Dwoo\Template\String as TemplateString;
 
 /**
  * Evaluates the given string as if it was a template.
- *
  * Although this plugin is kind of optimized and will
  * not recompile your string each time, it is still not
  * a good practice to use it. If you want to have templates
@@ -23,9 +22,7 @@ use Dwoo\Template\String as TemplateString;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -35,9 +32,9 @@ function Dwoo_Plugin_eval(Core $dwoo, $var, $assign = null)
         return '';
     }
 
-    $tpl = new TemplateString($var);
+    $tpl   = new TemplateString($var);
     $clone = clone $dwoo;
-    $out = $clone->get($tpl, $dwoo->readVar('_parent'));
+    $out   = $clone->get($tpl, $dwoo->readVar('_parent'));
 
     if ($assign !== null) {
         $dwoo->assignInScope($out, $assign);

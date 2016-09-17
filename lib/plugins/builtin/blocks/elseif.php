@@ -6,7 +6,6 @@ use Dwoo\ICompilable\Block as ICompilableBlock;
 /**
  * Acts as a php elseif block, allowing you to add one more condition
  * if the previous one(s) didn't match. See the {if} plugin for syntax details.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -15,9 +14,7 @@ use Dwoo\ICompilable\Block as ICompilableBlock;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -32,7 +29,7 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements ICompilableBlock, IEl
         $preContent = '';
         while (true) {
             $preContent .= $compiler->removeTopBlock();
-            $block = &$compiler->getCurrentBlock();
+            $block      = &$compiler->getCurrentBlock();
             $interfaces = class_implements($block['class'], false);
             if (in_array('Dwoo\IElseable', $interfaces) !== false) {
                 break;
@@ -54,15 +51,15 @@ class Dwoo_Plugin_elseif extends Dwoo_Plugin_if implements ICompilableBlock, IEl
         $tokens = $compiler->getParamTokens($params);
         $params = $compiler->getCompiledParams($params);
 
-        $pre = Compiler::PHP_OPEN.'elseif ('.implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)).") {\n".Compiler::PHP_CLOSE;
-        $post = Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
+        $pre  = Compiler::PHP_OPEN . 'elseif (' . implode(' ', self::replaceKeywords($params['*'], $tokens['*'], $compiler)) . ") {\n" . Compiler::PHP_CLOSE;
+        $post = Compiler::PHP_OPEN . "\n}" . Compiler::PHP_CLOSE;
 
         if (isset($params['hasElse'])) {
             $post .= $params['hasElse'];
         }
 
-        $block = &$compiler->getCurrentBlock();
-        $block['params']['hasElse'] = $pre.$content.$post;
+        $block                      = &$compiler->getCurrentBlock();
+        $block['params']['hasElse'] = $pre . $content . $post;
 
         return '';
     }

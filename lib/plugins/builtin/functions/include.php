@@ -22,9 +22,7 @@ use Dwoo\Security\Exception as SecurityException;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -36,26 +34,28 @@ function Dwoo_Plugin_include(Core $dwoo, $file, $cache_time = null, $cache_id = 
 
     if (preg_match('#^([a-z]{2,}):(.*)$#i', $file, $m)) {
         // resource:identifier given, extract them
-        $resource = $m[1];
+        $resource   = $m[1];
         $identifier = $m[2];
     } else {
         // get the current template's resource
-        $resource = $dwoo->getTemplate()->getResourceName();
+        $resource   = $dwoo->getTemplate()->getResourceName();
         $identifier = $file;
     }
 
     try {
         $include = $dwoo->templateFactory($resource, $identifier, $cache_time, $cache_id, $compile_id);
-    } catch (SecurityException $e) {
-        $dwoo->triggerError('Include : Security restriction : '.$e->getMessage(), E_USER_WARNING);
-    } catch (Exception $e) {
-        $dwoo->triggerError('Include : '.$e->getMessage(), E_USER_WARNING);
+    }
+    catch (SecurityException $e) {
+        $dwoo->triggerError('Include : Security restriction : ' . $e->getMessage(), E_USER_WARNING);
+    }
+    catch (Exception $e) {
+        $dwoo->triggerError('Include : ' . $e->getMessage(), E_USER_WARNING);
     }
 
     if ($include === null) {
-        $dwoo->triggerError('Include : Resource "'.$resource.':'.$identifier.'" not found.', E_USER_WARNING);
+        $dwoo->triggerError('Include : Resource "' . $resource . ':' . $identifier . '" not found.', E_USER_WARNING);
     } elseif ($include === false) {
-        $dwoo->triggerError('Include : Resource "'.$resource.'" does not support includes.', E_USER_WARNING);
+        $dwoo->triggerError('Include : Resource "' . $resource . '" does not support includes.', E_USER_WARNING);
     }
 
     if (is_string($data)) {
@@ -69,7 +69,7 @@ function Dwoo_Plugin_include(Core $dwoo, $file, $cache_time = null, $cache_id = 
     }
 
     $clone = clone $dwoo;
-    $out = $clone->get($include, $vars);
+    $out   = $clone->get($include, $vars);
 
     if ($assign !== null) {
         $dwoo->assignInScope($out, $assign);

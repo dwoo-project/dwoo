@@ -4,7 +4,8 @@ use Dwoo\Core;
 /**
  * Reads a file
  * <pre>
- *  * file : path or URI of the file to read (however reading from another website is not recommended for performance reasons)
+ *  * file : path or URI of the file to read (however reading from another website is not recommended for performance
+ *  reasons)
  *  * assign : if set, the file will be saved in this variable instead of being output
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
@@ -15,9 +16,7 @@ use Dwoo\Core;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -40,10 +39,18 @@ function Dwoo_Plugin_fetch(Core $dwoo, $file, $assign = null)
                     break 2;
                 }
             }
-            $dwoo->triggerError('The security policy prevents you to read <em>'.$file.'</em>', E_USER_WARNING);
+            $dwoo->triggerError('The security policy prevents you to read <em>' . $file . '</em>', E_USER_WARNING);
         }
     }
-    $file = str_replace(array("\t", "\n", "\r"), array('\\t', '\\n', '\\r'), $file);
+    $file = str_replace(array(
+        "\t",
+        "\n",
+        "\r"
+    ), array(
+        '\\t',
+        '\\n',
+        '\\r'
+    ), $file);
 
     $out = file_get_contents($file);
 

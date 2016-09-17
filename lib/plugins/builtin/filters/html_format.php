@@ -5,11 +5,9 @@ use Dwoo\Filter;
  * Formats any html output (must be valid xml where every tag opened is closed)
  * using a single tab for indenting. 'pre' and other whitespace sensitive
  * tags should not be affected.
- *
  * It is not recommended to use this on every template if you render multiple
  * templates per page, you should only use it once on the main page template so that
  * everything is formatted in one pass.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -18,9 +16,7 @@ use Dwoo\Filter;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -31,7 +27,7 @@ class Dwoo_Filter_html_format extends Filter
      *
      * @var int
      */
-    protected static $tabCount = -1;
+    protected static $tabCount = - 1;
 
     /**
      * stores the additional data (following a tag) of the last call to open/close/singleTag.
@@ -42,7 +38,6 @@ class Dwoo_Filter_html_format extends Filter
 
     /**
      * formats the input using the singleTag/closeTag/openTag functions.
-     *
      * It is auto indenting the whole code, excluding <textarea>, <code> and <pre> tags that must be kept intact.
      * Those tags must however contain only htmlentities-escaped text for everything to work properly.
      * Inline tags are presented on a single line with their content
@@ -53,10 +48,13 @@ class Dwoo_Filter_html_format extends Filter
      */
     public function process($input)
     {
-        self::$tabCount = -1;
+        self::$tabCount = - 1;
 
         // auto indent all but textareas & pre (or we have weird tabs inside)
-        $input = preg_replace_callback("#(<[^>]+>)(\s*)([^<]*)#", array('self', 'tagDispatcher'), $input);
+        $input = preg_replace_callback("#(<[^>]+>)(\s*)([^<]*)#", array(
+            'self',
+            'tagDispatcher'
+        ), $input);
 
         return $input;
     }
@@ -72,16 +70,17 @@ class Dwoo_Filter_html_format extends Filter
     {
         // textarea, pre, code tags and comments are to be left alone to avoid any non-wanted whitespace inside them so it just outputs them as they were
         if (substr($input[1], 0, 9) == '<textarea' || substr($input[1], 0, 4) == '<pre' || substr($input[1], 0, 5) == '<code' || substr($input[1], 0, 4) == '<!--' || substr($input[1], 0, 9) == '<![CDATA[') {
-            return $input[1].$input[3];
+            return $input[1] . $input[3];
         }
         // closing textarea, code and pre tags and self-closed tags (i.e. <br />) are printed as singleTags because we didn't use openTag for the formers and the latter is a single tag
-        if (substr($input[1], 0, 10) == '</textarea' || substr($input[1], 0, 5) == '</pre' || substr($input[1], 0, 6) == '</code' || substr($input[1], -2) == '/>') {
+        if (substr($input[1], 0, 10) == '</textarea' || substr($input[1], 0, 5) == '</pre' || substr($input[1], 0, 6) == '</code' || substr($input[1], - 2) == '/>') {
             return self::singleTag($input[1], $input[3], $input[2]);
         }
         // it's the closing tag
         if ($input[0][1] == '/') {
             return self::closeTag($input[1], $input[3], $input[2]);
         }
+
         // opening tag
         return self::openTag($input[1], $input[3], $input[2]);
     }
@@ -97,20 +96,20 @@ class Dwoo_Filter_html_format extends Filter
      */
     protected static function openTag($tag, $add, $whitespace)
     {
-        $tabs = str_pad('', self::$tabCount++, "\t");
+        $tabs = str_pad('', self::$tabCount ++, "\t");
 
         if (preg_match('#^<(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)(?: [^>]*|)>#', $tag)) {
             // if it's one of those tag it's inline so it does not require a leading line break
-            $result = $tag.$whitespace.str_replace("\n", "\n".$tabs, $add);
+            $result = $tag . $whitespace . str_replace("\n", "\n" . $tabs, $add);
         } elseif (substr($tag, 0, 9) == '<!DOCTYPE') {
             // it's the doctype declaration so no line break here either
-            $result = $tabs.$tag;
+            $result = $tabs . $tag;
         } else {
             // normal block tag
-            $result = "\n".$tabs.$tag;
+            $result = "\n" . $tabs . $tag;
 
             if (!empty($add)) {
-                $result .= "\n".$tabs."\t".str_replace("\n", "\n\t".$tabs, $add);
+                $result .= "\n" . $tabs . "\t" . str_replace("\n", "\n\t" . $tabs, $add);
             }
         }
 
@@ -130,16 +129,16 @@ class Dwoo_Filter_html_format extends Filter
      */
     protected static function closeTag($tag, $add, $whitespace)
     {
-        $tabs = str_pad('', --self::$tabCount, "\t");
+        $tabs = str_pad('', -- self::$tabCount, "\t");
 
         // if it's one of those tag it's inline so it does not require a leading line break
         if (preg_match('#^</(a|label|option|textarea|h1|h2|h3|h4|h5|h6|strong|b|em|i|abbr|acronym|cite|span|sub|sup|u|s|title)>#', $tag)) {
-            $result = $tag.$whitespace.str_replace("\n", "\n".$tabs, $add);
+            $result = $tag . $whitespace . str_replace("\n", "\n" . $tabs, $add);
         } else {
-            $result = "\n".$tabs.$tag;
+            $result = "\n" . $tabs . $tag;
 
             if (!empty($add)) {
-                $result .= "\n".$tabs."\t".str_replace("\n", "\n\t".$tabs, $add);
+                $result .= "\n" . $tabs . "\t" . str_replace("\n", "\n\t" . $tabs, $add);
             }
         }
 
@@ -163,16 +162,16 @@ class Dwoo_Filter_html_format extends Filter
         // if it's img, br it's inline so it does not require a leading line break
         // if it's a closing textarea, code or pre tag, it does not require a leading line break either or it creates whitespace at the end of those blocks
         if (preg_match('#^<(img|br|/textarea|/pre|/code)(?: [^>]*|)>#', $tag)) {
-            $result = $tag.$whitespace;
+            $result = $tag . $whitespace;
 
             if (!empty($add)) {
-                $result .= str_replace("\n", "\n".$tabs, $add);
+                $result .= str_replace("\n", "\n" . $tabs, $add);
             }
         } else {
-            $result = "\n".$tabs.$tag;
+            $result = "\n" . $tabs . $tag;
 
             if (!empty($add)) {
-                $result .= "\n".$tabs.str_replace("\n", "\n".$tabs, $add);
+                $result .= "\n" . $tabs . str_replace("\n", "\n" . $tabs, $add);
             }
         }
 

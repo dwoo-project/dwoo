@@ -15,24 +15,22 @@ use Dwoo\Core;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
 function Dwoo_Plugin_capitalize(Core $dwoo, $value, $numwords = false)
 {
     if ($numwords || preg_match('#^[^0-9]+$#', $value)) {
-        return mb_convert_case((string) $value, MB_CASE_TITLE, $dwoo->getCharset());
+        return mb_convert_case((string)$value, MB_CASE_TITLE, $dwoo->getCharset());
     } else {
-        $bits = explode(' ', (string) $value);
-        $out = '';
+        $bits = explode(' ', (string)$value);
+        $out  = '';
         while (list(, $v) = each($bits)) {
             if (preg_match('#^[^0-9]+$#', $v)) {
-                $out .= ' '.mb_convert_case($v, MB_CASE_TITLE, $dwoo->getCharset());
+                $out .= ' ' . mb_convert_case($v, MB_CASE_TITLE, $dwoo->getCharset());
             } else {
-                $out .= ' '.$v;
+                $out .= ' ' . $v;
             }
         }
 

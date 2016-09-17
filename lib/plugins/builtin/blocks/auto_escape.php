@@ -7,7 +7,8 @@ use Dwoo\Compilation\Exception as CompilationException;
 /**
  * Overrides the compiler auto-escape setting within the block
  * <pre>
- *  * enabled : if set to "on", "enable", true or 1 then the compiler autoescaping is enabled inside this block. set to "off", "disable", false or 0 to disable it
+ *  * enabled : if set to "on", "enable", true or 1 then the compiler autoescaping is enabled inside this block. set to
+ *  "off", "disable", false or 0 to disable it
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
@@ -17,9 +18,7 @@ use Dwoo\Compilation\Exception as CompilationException;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -34,25 +33,24 @@ class Dwoo_Plugin_auto_escape extends BlockPlugin implements ICompilableBlock
     public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
         $params = $compiler->getCompiledParams($params);
-        switch (strtolower(trim((string) $params['enabled'], '"\''))) {
+        switch (strtolower(trim((string)$params['enabled'], '"\''))) {
 
-        case 'on':
-        case 'true':
-        case 'enabled':
-        case 'enable':
-        case '1':
-            $enable = true;
-            break;
-        case 'off':
-        case 'false':
-        case 'disabled':
-        case 'disable':
-        case '0':
-            $enable = false;
-            break;
-        default:
-            throw new CompilationException($compiler, 'Auto_Escape : Invalid parameter ('.$params['enabled'].'), valid parameters are "enable"/true or "disable"/false');
-
+            case 'on':
+            case 'true':
+            case 'enabled':
+            case 'enable':
+            case '1':
+                $enable = true;
+                break;
+            case 'off':
+            case 'false':
+            case 'disabled':
+            case 'disable':
+            case '0':
+                $enable = false;
+                break;
+            default:
+                throw new CompilationException($compiler, 'Auto_Escape : Invalid parameter (' . $params['enabled'] . '), valid parameters are "enable"/true or "disable"/false');
         }
 
         self::$stack[] = $compiler->getAutoEscape();

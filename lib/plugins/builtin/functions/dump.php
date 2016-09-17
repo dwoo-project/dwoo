@@ -15,9 +15,7 @@ use Dwoo\Plugin;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -56,7 +54,7 @@ class Dwoo_Plugin_dump extends Plugin
 
         $out .= $this->export($var, $scope);
 
-        return $out.'</div></div>';
+        return $out . '</div></div>';
     }
 
     protected function export($var, $scope)
@@ -64,16 +62,16 @@ class Dwoo_Plugin_dump extends Plugin
         $out = '';
         foreach ($var as $i => $v) {
             if (is_array($v) || (is_object($v) && $v instanceof Iterator)) {
-                $out .= $i.' ('.(is_array($v) ? 'array' : 'object: '.get_class($v)).')';
+                $out .= $i . ' (' . (is_array($v) ? 'array' : 'object: ' . get_class($v)) . ')';
                 if ($v === $scope) {
-                    $out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">'.$this->export($v, $scope).'</div>';
+                    $out .= ' (current scope):<div style="background:#ccc;padding-left:20px;">' . $this->export($v, $scope) . '</div>';
                 } else {
-                    $out .= ':<div style="padding-left:20px;">'.$this->export($v, $scope).'</div>';
+                    $out .= ':<div style="padding-left:20px;">' . $this->export($v, $scope) . '</div>';
                 }
             } elseif (is_object($v)) {
-                $out .= $this->exportObj($i.' (object: '.get_class($v).'):', $v);
+                $out .= $this->exportObj($i . ' (object: ' . get_class($v) . '):', $v);
             } else {
-                $out .= $this->exportVar($i.' = ', $v);
+                $out .= $this->exportVar($i . ' = ', $v);
             }
         }
 
@@ -83,25 +81,25 @@ class Dwoo_Plugin_dump extends Plugin
     protected function exportVar($i, $v)
     {
         if (is_string($v) || is_bool($v) || is_numeric($v)) {
-            return $i.htmlentities(var_export($v, true)).'<br />';
+            return $i . htmlentities(var_export($v, true)) . '<br />';
         } elseif (is_null($v)) {
-            return $i.'null<br />';
+            return $i . 'null<br />';
         } elseif (is_resource($v)) {
-            return $i.'resource('.get_resource_type($v).')<br />';
+            return $i . 'resource(' . get_resource_type($v) . ')<br />';
         } else {
-            return $i.htmlentities(var_export($v, true)).'<br />';
+            return $i . htmlentities(var_export($v, true)) . '<br />';
         }
     }
 
     protected function exportObj($i, $obj)
     {
         if (array_search($obj, $this->outputObjects, true) !== false) {
-            return $i.' [recursion, skipped]<br />';
+            return $i . ' [recursion, skipped]<br />';
         }
 
         $this->outputObjects[] = $obj;
 
-        $list = (array) $obj;
+        $list = (array)$obj;
 
         $protectedLength = strlen(get_class($obj)) + 2;
 
@@ -121,10 +119,10 @@ class Dwoo_Plugin_dump extends Plugin
 
                 $params = array();
                 foreach ($method->getParameters() as $param) {
-                    $params[] = ($param->isPassedByReference() ? '&' : '').'$'.$param->getName().($param->isOptional() ? ' = '.var_export($param->getDefaultValue(), true) : '');
+                    $params[] = ($param->isPassedByReference() ? '&' : '') . '$' . $param->getName() . ($param->isOptional() ? ' = ' . var_export($param->getDefaultValue(), true) : '');
                 }
 
-                $out['method'] .= '(method) '.$method->getName().'('.implode(', ', $params).')<br />';
+                $out['method'] .= '(method) ' . $method->getName() . '(' . implode(', ', $params) . ')<br />';
             }
         }
 
@@ -132,10 +130,10 @@ class Dwoo_Plugin_dump extends Plugin
             if (property_exists($obj, $attributeName)) {
                 $key = 'public';
             } elseif (substr($attributeName, 0, 3) === "\0*\0") {
-                $key = 'protected';
+                $key           = 'protected';
                 $attributeName = substr($attributeName, 3);
             } else {
-                $key = 'private';
+                $key           = 'private';
                 $attributeName = substr($attributeName, $protectedLength);
             }
 
@@ -143,19 +141,19 @@ class Dwoo_Plugin_dump extends Plugin
                 $out[$key] = '';
             }
 
-            $out[$key] .= '('.$key.') ';
+            $out[$key] .= '(' . $key . ') ';
 
             if (is_array($attributeValue)) {
-                $out[$key] .= $attributeName.' (array):<br />
-							<div style="padding-left:20px;">'.$this->export($attributeValue, false).'</div>';
+                $out[$key] .= $attributeName . ' (array):<br />
+							<div style="padding-left:20px;">' . $this->export($attributeValue, false) . '</div>';
             } elseif (is_object($attributeValue)) {
-                $out[$key] .= $this->exportObj($attributeName.' (object: '.get_class($attributeValue).'):', $attributeValue);
+                $out[$key] .= $this->exportObj($attributeName . ' (object: ' . get_class($attributeValue) . '):', $attributeValue);
             } else {
-                $out[$key] .= $this->exportVar($attributeName.' = ', $attributeValue);
+                $out[$key] .= $this->exportVar($attributeName . ' = ', $attributeValue);
             }
         }
 
-        $return = $i.'<br /><div style="padding-left:20px;">';
+        $return = $i . '<br /><div style="padding-left:20px;">';
 
         if (!empty($out['method'])) {
             $return .= $out['method'];
@@ -173,6 +171,6 @@ class Dwoo_Plugin_dump extends Plugin
             $return .= $out['private'];
         }
 
-        return $return.'</div>';
+        return $return . '</div>';
     }
 }

@@ -16,13 +16,11 @@ use Dwoo\Compiler;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
 function Dwoo_Plugin_indent_compile(Compiler $compiler, $value, $by = 4, $char = ' ')
 {
-    return "preg_replace('#^#m', '".str_repeat(substr($char, 1, -1), trim($by, '"\''))."', $value)";
+    return "preg_replace('#^#m', '" . str_repeat(substr($char, 1, - 1), trim($by, '"\'')) . "', $value)";
 }

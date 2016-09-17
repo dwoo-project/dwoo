@@ -22,9 +22,7 @@ use Dwoo\Block\Plugin as BlockPlugin;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -46,30 +44,32 @@ class Dwoo_Plugin_textformat extends BlockPlugin
 
         switch ($style) {
 
-        case 'email':
-            $wrap = 72;
-            $indent_first = 0;
-            break;
-        case 'html':
-            $wrap_char = '<br />';
-            $indent_char = $indent_char == "\t" ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '&nbsp;';
-            break;
-
+            case 'email':
+                $wrap         = 72;
+                $indent_first = 0;
+                break;
+            case 'html':
+                $wrap_char   = '<br />';
+                $indent_char = $indent_char == "\t" ? '&nbsp;&nbsp;&nbsp;&nbsp;' : '&nbsp;';
+                break;
         }
 
-        $this->wrap = (int) $wrap;
-        $this->wrapChar = (string) $wrap_char;
-        $this->wrapCut = (bool) $wrap_cut;
-        $this->indent = (int) $indent;
-        $this->indChar = (string) $indent_char;
-        $this->indFirst = (int) $indent_first + $this->indent;
-        $this->assign = (string) $assign;
+        $this->wrap     = (int)$wrap;
+        $this->wrapChar = (string)$wrap_char;
+        $this->wrapCut  = (bool)$wrap_cut;
+        $this->indent   = (int)$indent;
+        $this->indChar  = (string)$indent_char;
+        $this->indFirst = (int)$indent_first + $this->indent;
+        $this->assign   = (string)$assign;
     }
 
     public function process()
     {
         // gets paragraphs
-        $pgs = explode("\n", str_replace(array("\r\n", "\r"), "\n", $this->buffer));
+        $pgs = explode("\n", str_replace(array(
+            "\r\n",
+            "\r"
+        ), "\n", $this->buffer));
 
         while (list($i) = each($pgs)) {
             if (empty($pgs[$i])) {
@@ -77,22 +77,22 @@ class Dwoo_Plugin_textformat extends BlockPlugin
             }
 
             // removes line breaks and extensive white space
-            $pgs[$i] = preg_replace(array('#\s+#', '#^\s*(.+?)\s*$#m'), array(' ', '$1'), str_replace("\n", '', $pgs[$i]));
+            $pgs[$i] = preg_replace(array(
+                '#\s+#',
+                '#^\s*(.+?)\s*$#m'
+            ), array(
+                ' ',
+                '$1'
+            ), str_replace("\n", '', $pgs[$i]));
 
             // wordwraps + indents lines
-            $pgs[$i] = str_repeat($this->indChar, $this->indFirst).
-                    wordwrap(
-                            $pgs[$i],
-                            max($this->wrap - $this->indent, 1),
-                            $this->wrapChar.str_repeat($this->indChar, $this->indent),
-                            $this->wrapCut
-                    );
+            $pgs[$i] = str_repeat($this->indChar, $this->indFirst) . wordwrap($pgs[$i], max($this->wrap - $this->indent, 1), $this->wrapChar . str_repeat($this->indChar, $this->indent), $this->wrapCut);
         }
 
         if ($this->assign !== '') {
-            $this->dwoo->assignInScope(implode($this->wrapChar.$this->wrapChar, $pgs), $this->assign);
+            $this->dwoo->assignInScope(implode($this->wrapChar . $this->wrapChar, $pgs), $this->assign);
         } else {
-            return implode($this->wrapChar.$this->wrapChar, $pgs);
+            return implode($this->wrapChar . $this->wrapChar, $pgs);
         }
     }
 }

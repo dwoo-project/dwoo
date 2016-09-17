@@ -16,9 +16,7 @@ use Dwoo\Core;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -42,15 +40,31 @@ function Dwoo_Plugin_date_format(Core $dwoo, $value, $format = '%b %e, %Y', $def
 
     // Credits for that windows compat block to Monte Ohrt who made smarty's date_format plugin
     if (DIRECTORY_SEPARATOR == '\\') {
-        $_win_from = array('%D',       '%h', '%n', '%r',          '%R',    '%t', '%T');
-        $_win_to = array('%m/%d/%y', '%b', "\n", '%I:%M:%S %p', '%H:%M', "\t", '%H:%M:%S');
+        $_win_from = array(
+            '%D',
+            '%h',
+            '%n',
+            '%r',
+            '%R',
+            '%t',
+            '%T'
+        );
+        $_win_to   = array(
+            '%m/%d/%y',
+            '%b',
+            "\n",
+            '%I:%M:%S %p',
+            '%H:%M',
+            "\t",
+            '%H:%M:%S'
+        );
         if (strpos($format, '%e') !== false) {
             $_win_from[] = '%e';
-            $_win_to[] = sprintf('%\' 2d', date('j', $value));
+            $_win_to[]   = sprintf('%\' 2d', date('j', $value));
         }
         if (strpos($format, '%l') !== false) {
             $_win_from[] = '%l';
-            $_win_to[] = sprintf('%\' 2d', date('h', $value));
+            $_win_to[]   = sprintf('%\' 2d', date('h', $value));
         }
         $format = str_replace($_win_from, $_win_to, $format);
     }

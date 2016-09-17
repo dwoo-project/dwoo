@@ -18,9 +18,7 @@ use Dwoo\Compilation\Exception as CompilationException;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -32,14 +30,14 @@ class Dwoo_Plugin_template extends BlockPlugin implements ICompilableBlock
 
     public static function preProcessing(Compiler $compiler, array $params, $prepend, $append, $type)
     {
-        $params = $compiler->getCompiledParams($params);
+        $params       = $compiler->getCompiledParams($params);
         $parsedParams = array();
         if (!isset($params['*'])) {
             $params['*'] = array();
         }
         foreach ($params['*'] as $param => $defValue) {
             if (is_numeric($param)) {
-                $param = $defValue;
+                $param    = $defValue;
                 $defValue = null;
             }
             $param = trim($param, '\'"');
@@ -48,11 +46,11 @@ class Dwoo_Plugin_template extends BlockPlugin implements ICompilableBlock
             }
             $parsedParams[$param] = $defValue;
         }
-        $params['name'] = substr($params['name'], 1, -1);
-        $params['*'] = $parsedParams;
+        $params['name'] = substr($params['name'], 1, - 1);
+        $params['*']    = $parsedParams;
         $params['uuid'] = uniqid();
         $compiler->addTemplatePlugin($params['name'], $parsedParams, $params['uuid']);
-        $currentBlock = &$compiler->getCurrentBlock();
+        $currentBlock           = &$compiler->getCurrentBlock();
         $currentBlock['params'] = $params;
 
         return '';
@@ -61,23 +59,21 @@ class Dwoo_Plugin_template extends BlockPlugin implements ICompilableBlock
     public static function postProcessing(Compiler $compiler, array $params, $prepend, $append, $content)
     {
         $paramstr = 'Dwoo\Core $dwoo';
-        $init = 'static $_callCnt = 0;'."\n".
-        '$dwoo->scope[\' '.$params['uuid'].'\'.$_callCnt] = array();'."\n".
-        '$_scope = $dwoo->setScope(array(\' '.$params['uuid'].'\'.($_callCnt++)));'."\n";
-        $cleanup = '/* -- template end output */ $dwoo->setScope($_scope, true);';
+        $init     = 'static $_callCnt = 0;' . "\n" . '$dwoo->scope[\' ' . $params['uuid'] . '\'.$_callCnt] = array();' . "\n" . '$_scope = $dwoo->setScope(array(\' ' . $params['uuid'] . '\'.($_callCnt++)));' . "\n";
+        $cleanup  = '/* -- template end output */ $dwoo->setScope($_scope, true);';
         foreach ($params['*'] as $param => $defValue) {
             if ($defValue === null) {
-                $paramstr .= ', $'.$param;
+                $paramstr .= ', $' . $param;
             } else {
-                $paramstr .= ', $'.$param.' = '.$defValue;
+                $paramstr .= ', $' . $param . ' = ' . $defValue;
             }
-            $init .= '$dwoo->scope[\''.$param.'\'] = $'.$param.";\n";
+            $init .= '$dwoo->scope[\'' . $param . '\'] = $' . $param . ";\n";
         }
         $init .= '/* -- template start output */';
 
-        $funcName = 'Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'];
+        $funcName = 'Dwoo_Plugin_' . $params['name'] . '_' . $params['uuid'];
 
-        $search = array(
+        $search      = array(
             '$this->charset',
             '$this->',
             '$this,',
@@ -87,11 +83,9 @@ class Dwoo_Plugin_template extends BlockPlugin implements ICompilableBlock
             '$dwoo->',
             '$dwoo,',
         );
-        $content = str_replace($search, $replacement, $content);
+        $content     = str_replace($search, $replacement, $content);
 
-        $body = 'if (!function_exists(\''.$funcName."')) {\nfunction ".$funcName.'('.$paramstr.') {'."\n$init".Compiler::PHP_CLOSE.
-            $prepend.$content.$append.
-            Compiler::PHP_OPEN.$cleanup."\n}\n}";
+        $body = 'if (!function_exists(\'' . $funcName . "')) {\nfunction " . $funcName . '(' . $paramstr . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n}\n}";
         $compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
     }
 }

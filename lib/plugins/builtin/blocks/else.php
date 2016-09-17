@@ -6,12 +6,9 @@ use Dwoo\Compilation\Exception as CompilationException;
 
 /**
  * Generic else block, it supports all builtin optional-display blocks which are if/for/foreach/loop/with.
- *
  * If any of those block contains an else statement, the content between {else} and {/block} (you do not
  * need to close the else block) will be shown if the block's condition has no been met
- *
  * Example :
- *
  * <code>
  * {foreach $array val}
  *   $array is not empty so we display it's values : {$val}
@@ -19,7 +16,6 @@ use Dwoo\Compilation\Exception as CompilationException;
  *   if this shows, it means that $array is empty or doesn't exist.
  * {/foreach}
  * </code>
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -28,9 +24,7 @@ use Dwoo\Compilation\Exception as CompilationException;
  * @copyright  2008-2013 Jordi Boggiano
  * @copyright  2013-2016 David Sanchez
  * @license    http://dwoo.org/LICENSE   Modified BSD License
- *
  * @link       http://dwoo.org/
- *
  * @version    1.2.3
  * @date       2016-10-15
  */
@@ -67,8 +61,8 @@ class Dwoo_Plugin_else extends BlockPlugin implements ICompilableBlock
             return '';
         }
 
-        $block = &$compiler->getCurrentBlock();
-        $block['params']['hasElse'] = Compiler::PHP_OPEN."else {\n".Compiler::PHP_CLOSE.$content.Compiler::PHP_OPEN."\n}".Compiler::PHP_CLOSE;
+        $block                      = &$compiler->getCurrentBlock();
+        $block['params']['hasElse'] = Compiler::PHP_OPEN . "else {\n" . Compiler::PHP_CLOSE . $content . Compiler::PHP_OPEN . "\n}" . Compiler::PHP_CLOSE;
 
         return '';
     }
