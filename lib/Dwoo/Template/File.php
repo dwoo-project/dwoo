@@ -9,7 +9,6 @@ use Dwoo\Template\File as TemplateFile;
 
 /**
  * represents a Dwoo template contained in a file.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -42,7 +41,6 @@ class File extends String
 
     /**
      * resolved path cache when looking for a file in multiple include paths.
-     *
      * this is reset when the include path is changed
      *
      * @var string
@@ -65,16 +63,16 @@ class File extends String
      */
     public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null)
     {
-        $this->file = $file;
-        $this->name = basename($file);
+        $this->file      = $file;
+        $this->name      = basename($file);
         $this->cacheTime = $cacheTime;
 
         if ($compileId !== null) {
-            $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
+            $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
         if ($cacheId !== null) {
-            $this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
+            $this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
         if (is_string($includePath)) {
@@ -95,7 +93,7 @@ class File extends String
             $paths = array($paths);
         }
 
-        $this->includePath = $paths;
+        $this->includePath  = $paths;
         $this->resolvedPath = null;
     }
 
@@ -119,7 +117,7 @@ class File extends String
      */
     protected function isValidCompiledFile($file)
     {
-        return parent::isValidCompiledFile($file) && (int) $this->getUid() <= filemtime($file);
+        return parent::isValidCompiledFile($file) && (int)$this->getUid() <= filemtime($file);
     }
 
     /**
@@ -146,7 +144,6 @@ class File extends String
      * returns this template's source filename.
      *
      * @return string
-     *
      * @throws DwooException
      */
     public function getResourceIdentifier()
@@ -158,14 +155,14 @@ class File extends String
         } else {
             foreach ($this->includePath as $path) {
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
-                if (file_exists($path.DIRECTORY_SEPARATOR.$this->file) === true) {
-                    $this->resolvedPath = $path.DIRECTORY_SEPARATOR.$this->file;
+                if (file_exists($path . DIRECTORY_SEPARATOR . $this->file) === true) {
+                    $this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
 
                     return $this->resolvedPath;
                 }
             }
 
-            throw new DwooException('Template "'.$this->file.'" could not be found in any of your include path(s)');
+            throw new DwooException('Template "' . $this->file . '" could not be found in any of your include path(s)');
         }
     }
 
@@ -177,35 +174,46 @@ class File extends String
      */
     public function getUid()
     {
-        return (string) filemtime($this->getResourceIdentifier());
+        return (string)filemtime($this->getResourceIdentifier());
     }
 
     /**
      * returns a new template object from the given include name, null if no include is
      * possible (resource not found), or false if include is not permitted by this resource type.
      *
-     * @param Core      $dwoo           the dwoo instance requiring it
-     * @param mixed          $resourceId     the filename (relative to this template's dir) of the template to include
-     * @param int            $cacheTime      duration of the cache validity for this template,
+     * @param Core      $dwoo                the dwoo instance requiring it
+     * @param mixed     $resourceId          the filename (relative to this template's dir) of the template to include
+     * @param int       $cacheTime           duration of the cache validity for this template,
      *                                       if null it defaults to the Dwoo instance that will
      *                                       render this template
-     * @param string         $cacheId        the unique cache identifier of this page or anything else that
+     * @param string    $cacheId             the unique cache identifier of this page or anything else that
      *                                       makes this template's content unique, if null it defaults
      *                                       to the current url
-     * @param string         $compileId      the unique compiled identifier, which is used to distinguish this
+     * @param string    $compileId           the unique compiled identifier, which is used to distinguish this
      *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate the template that is requesting a new template object (through
+     * @param ITemplate $parentTemplate      the template that is requesting a new template object (through
      *                                       an include, extends or any other plugin)
      *
      * @return TemplateFile|null
-     *
      * @throws DwooException
      * @throws SecurityException
      */
     public static function templateFactory(Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array('\\t', '\\n', '\\r', '\\f', '\\v'), $resourceId);
+            $resourceId = str_replace(array(
+                "\t",
+                "\n",
+                "\r",
+                "\f",
+                "\v"
+            ), array(
+                '\\t',
+                '\\n',
+                '\\r',
+                '\\f',
+                '\\v'
+            ), $resourceId);
         }
         $resourceId = strtr($resourceId, '\\', '/');
 
@@ -221,7 +229,7 @@ class File extends String
                         throw new DwooException('When using an include path you can not reference a template into a parent directory (using ../)');
                     }
                 } else {
-                    $resourceId = dirname($parentTemplate->getResourceIdentifier()).DIRECTORY_SEPARATOR.$resourceId;
+                    $resourceId = dirname($parentTemplate->getResourceIdentifier()) . DIRECTORY_SEPARATOR . $resourceId;
                     if (file_exists($resourceId) === false) {
                         return null;
                     }
@@ -234,7 +242,7 @@ class File extends String
         if ($policy = $dwoo->getSecurityPolicy()) {
             while (true) {
                 if (preg_match('{^([a-z]+?)://}i', $resourceId)) {
-                    throw new SecurityException('The security policy prevents you to read files from external sources : <em>'.$resourceId.'</em>.');
+                    throw new SecurityException('The security policy prevents you to read files from external sources : <em>' . $resourceId . '</em>.');
                 }
 
                 if ($includePath) {
@@ -242,13 +250,13 @@ class File extends String
                 }
 
                 $resourceId = realpath($resourceId);
-                $dirs = $policy->getAllowedDirectories();
+                $dirs       = $policy->getAllowedDirectories();
                 foreach ($dirs as $dir => $dummy) {
                     if (strpos($resourceId, $dir) === 0) {
                         break 2;
                     }
                 }
-                throw new SecurityException('The security policy prevents you to read <em>'.$resourceId.'</em>');
+                throw new SecurityException('The security policy prevents you to read <em>' . $resourceId . '</em>');
             }
         }
 
@@ -276,18 +284,17 @@ class File extends String
             $this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
         }
 
-        return $dwoo->getCompileDir().$this->compileId.'.d'.Core::RELEASE_TAG.'.php';
+        return $dwoo->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
      * returns some php code that will check if this template has been modified or not.
-     *
      * if the function returns null, the template will be instanciated and then the Uid checked
      *
      * @return string
      */
     public function getIsModifiedCode()
     {
-        return '"'.$this->getUid().'" == filemtime('.var_export($this->getResourceIdentifier(), true).')';
+        return '"' . $this->getUid() . '" == filemtime(' . var_export($this->getResourceIdentifier(), true) . ')';
     }
 }

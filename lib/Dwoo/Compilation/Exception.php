@@ -6,7 +6,6 @@ use Dwoo\Compiler as DwooCompiler;
 
 /**
  * Dwoo compilation exception class.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -30,7 +29,7 @@ class Exception extends DwooException
     {
         $this->compiler = $compiler;
         $this->template = $compiler->getDwoo()->getTemplate();
-        parent::__construct('Compilation error at line '.$compiler->getLine().' in "'.$this->template->getResourceName().':'.$this->template->getResourceIdentifier().'" : '.$message);
+        parent::__construct('Compilation error at line ' . $compiler->getLine() . ' in "' . $this->template->getResourceName() . ':' . $this->template->getResourceIdentifier() . '" : ' . $message);
     }
 
     public function getCompiler()

@@ -9,7 +9,6 @@ use Dwoo\Exception;
 
 /**
  * represents a Dwoo template contained in a string.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -44,7 +43,6 @@ class String implements ITemplate
      * template cache id, if not provided in the constructor, it is set to
      * the md4 hash of the request_uri. it is however highly recommended to
      * provide one that will fit your needs.
-     *
      * in all cases, the compilation id is prepended to the cache id to separate
      * templates with similar cache ids from one another
      *
@@ -54,7 +52,6 @@ class String implements ITemplate
 
     /**
      * validity duration of the generated cache file (in seconds).
-     *
      * set to -1 for infinite cache, 0 to disable and null to inherit the Dwoo instance's cache time
      *
      * @var int
@@ -76,7 +73,10 @@ class String implements ITemplate
      *
      * @var array
      */
-    protected static $cache = array('cached' => array(), 'compiled' => array());
+    protected static $cache = array(
+        'cached'   => array(),
+        'compiled' => array()
+    );
 
     /**
      * holds the compiler that built this template.
@@ -87,7 +87,6 @@ class String implements ITemplate
 
     /**
      * chmod value for all files written (cached or compiled ones).
-     *
      * set to null if you don't want any chmod operation to happen
      *
      * @var int
@@ -120,17 +119,16 @@ class String implements ITemplate
         $this->cacheTime = $cacheTime;
 
         if ($compileId !== null) {
-            $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
+            $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
         if ($cacheId !== null) {
-            $this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
+            $this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
     }
 
     /**
      * returns the cache duration for this template.
-     *
      * defaults to null if it was not provided
      *
      * @return int|null
@@ -142,7 +140,6 @@ class String implements ITemplate
 
     /**
      * sets the cache duration for this template.
-     *
      * can be used to set it after the object is created if you did not provide
      * it in the constructor
      *
@@ -157,7 +154,6 @@ class String implements ITemplate
 
     /**
      * returns the chmod value for all files written (cached or compiled ones).
-     *
      * defaults to 0777
      *
      * @return int|null
@@ -169,7 +165,6 @@ class String implements ITemplate
 
     /**
      * set the chmod value for all files written (cached or compiled ones).
-     *
      * set to null if you don't want to do any chmod() operation
      *
      * @param int $mask new bitmask to use for all files
@@ -276,7 +271,7 @@ class String implements ITemplate
         if (isset(self::$cache['cached'][$this->cacheId]) === true && file_exists($cachedFile)) {
             // already checked, return cache file
             return $cachedFile;
-        } elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === -1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength)) && $this->isValidCompiledFile($this->getCompiledFilename($dwoo))) {
+        } elseif ($this->compilationEnforced !== true && file_exists($cachedFile) && ($cacheLength === - 1 || filemtime($cachedFile) > ($_SERVER['REQUEST_TIME'] - $cacheLength)) && $this->isValidCompiledFile($this->getCompiledFilename($dwoo))) {
             // cache is still valid and can be loaded
             self::$cache['cached'][$this->cacheId] = true;
 
@@ -290,23 +285,23 @@ class String implements ITemplate
     /**
      * caches the provided output into the cache file.
      *
-     * @param Core $dwoo   the dwoo instance that requests it
-     * @param string    $output the template output
+     * @param Core   $dwoo   the dwoo instance that requests it
+     * @param string $output the template output
      *
      * @return mixed full path of the cached file or false upon failure
      */
     public function cache(Core $dwoo, $output)
     {
-        $cacheDir = $dwoo->getCacheDir();
+        $cacheDir   = $dwoo->getCacheDir();
         $cachedFile = $this->getCacheFilename($dwoo);
 
         // the code below is courtesy of Rasmus Schultz,
         // thanks for his help on avoiding concurency issues
         $temp = tempnam($cacheDir, 'temp');
         if (!($file = @fopen($temp, 'wb'))) {
-            $temp = $cacheDir.uniqid('temp');
+            $temp = $cacheDir . uniqid('temp');
             if (!($file = @fopen($temp, 'wb'))) {
-                trigger_error('Error writing temporary file \''.$temp.'\'', E_USER_WARNING);
+                trigger_error('Error writing temporary file \'' . $temp . '\'', E_USER_WARNING);
 
                 return false;
             }
@@ -334,11 +329,11 @@ class String implements ITemplate
      * clears the cached template if it's older than the given time.
      *
      * @param Core $dwoo      the dwoo instance that was used to cache that template
-     * @param int       $olderThan minimum time (in seconds) required for the cache to be cleared
+     * @param int  $olderThan minimum time (in seconds) required for the cache to be cleared
      *
      * @return bool true if the cache was not present or if it was deleted, false if it remains there
      */
-    public function clearCache(Core $dwoo, $olderThan = -1)
+    public function clearCache(Core $dwoo, $olderThan = - 1)
     {
         $cachedFile = $this->getCacheFilename($dwoo);
 
@@ -369,7 +364,11 @@ class String implements ITemplate
             if ($compiler === null) {
                 $compiler = $dwoo->getDefaultCompilerFactory($this->getResourceName());
 
-                if ($compiler === null || $compiler === array('Dwoo\Compiler', 'compilerFactory')) {
+                if ($compiler === null || $compiler === array(
+                        'Dwoo\Compiler',
+                        'compilerFactory'
+                    )
+                ) {
                     $compiler = Compiler::compilerFactory();
                 } else {
                     $compiler = call_user_func($compiler);
@@ -413,17 +412,17 @@ class String implements ITemplate
     /**
      * returns a new template string object with the resource id being the template source code.
      *
-     * @param Core      $dwoo           the dwoo instance requiring it
-     * @param mixed          $resourceId     the filename (relative to this template's dir) of the template to include
-     * @param int            $cacheTime      duration of the cache validity for this template,
+     * @param Core      $dwoo                the dwoo instance requiring it
+     * @param mixed     $resourceId          the filename (relative to this template's dir) of the template to include
+     * @param int       $cacheTime           duration of the cache validity for this template,
      *                                       if null it defaults to the Dwoo instance that will
      *                                       render this template
-     * @param string         $cacheId        the unique cache identifier of this page or anything else that
+     * @param string    $cacheId             the unique cache identifier of this page or anything else that
      *                                       makes this template's content unique, if null it defaults
      *                                       to the current url
-     * @param string         $compileId      the unique compiled identifier, which is used to distinguish this
+     * @param string    $compileId           the unique compiled identifier, which is used to distinguish this
      *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate the template that is requesting a new template object (through
+     * @param ITemplate $parentTemplate      the template that is requesting a new template object (through
      *                                       an include, extends or any other plugin)
      *
      * @return $this
@@ -448,7 +447,7 @@ class String implements ITemplate
             $this->compileId = $this->name;
         }
 
-        return $dwoo->getCompileDir().$this->compileId.'.d'.Core::RELEASE_TAG.'.php';
+        return $dwoo->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
@@ -466,22 +465,21 @@ class String implements ITemplate
             if (isset($_SERVER['REQUEST_URI']) === true) {
                 $cacheId = $_SERVER['REQUEST_URI'];
             } elseif (isset($_SERVER['SCRIPT_FILENAME']) && isset($_SERVER['argv'])) {
-                $cacheId = $_SERVER['SCRIPT_FILENAME'].'-'.implode('-', $_SERVER['argv']);
+                $cacheId = $_SERVER['SCRIPT_FILENAME'] . '-' . implode('-', $_SERVER['argv']);
             } else {
                 $cacheId = '';
             }
             // force compiled id generation
             $this->getCompiledFilename($dwoo);
 
-            $this->cacheId = str_replace('../', '__', $this->compileId.strtr($cacheId, '\\%?=!:;'.PATH_SEPARATOR, '/-------'));
+            $this->cacheId = str_replace('../', '__', $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
-        return $dwoo->getCacheDir().$this->cacheId.'.html';
+        return $dwoo->getCacheDir() . $this->cacheId . '.html';
     }
 
     /**
      * returns some php code that will check if this template has been modified or not.
-     *
      * if the function returns null, the template will be instanciated and then the Uid checked
      *
      * @return string
@@ -514,7 +512,7 @@ class String implements ITemplate
         }
 
         $retries = 3;
-        while ($retries--) {
+        while ($retries --) {
             @mkdir($path, $chmod, true);
             if (is_dir($path)) {
                 break;
@@ -524,14 +522,12 @@ class String implements ITemplate
 
         // enforce the correct mode for all directories created
         if (strpos(PHP_OS, 'WIN') !== 0 && $baseDir !== null) {
-            $path = strtr(str_replace($baseDir, '', $path), '\\', '/');
+            $path    = strtr(str_replace($baseDir, '', $path), '\\', '/');
             $folders = explode('/', trim($path, '/'));
             foreach ($folders as $folder) {
-                $baseDir .= $folder.DIRECTORY_SEPARATOR;
+                $baseDir .= $folder . DIRECTORY_SEPARATOR;
                 if (!chmod($baseDir, $chmod)) {
-                    throw new Exception('Unable to chmod '.
-                        "$baseDir to $chmod: ".
-                        print_r(error_get_last(), true));
+                    throw new Exception('Unable to chmod ' . "$baseDir to $chmod: " . print_r(error_get_last(), true));
                 }
             }
         }

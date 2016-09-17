@@ -3,7 +3,6 @@ namespace Dwoo;
 
 /**
  * Interface that represents a dwoo template.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -22,7 +21,6 @@ interface ITemplate
 {
     /**
      * returns the cache duration for this template.
-     *
      * defaults to null if it was not provided
      *
      * @return int|null
@@ -31,7 +29,6 @@ interface ITemplate
 
     /**
      * sets the cache duration for this template.
-     *
      * can be used to set it after the object is created if you did not provide
      * it in the constructor
      *
@@ -54,8 +51,8 @@ interface ITemplate
     /**
      * caches the provided output into the cache file.
      *
-     * @param Core $dwoo   the dwoo instance that requests it
-     * @param string    $output the template output
+     * @param Core   $dwoo   the dwoo instance that requests it
+     * @param string $output the template output
      *
      * @return mixed full path of the cached file or false upon failure
      */
@@ -65,11 +62,11 @@ interface ITemplate
      * clears the cached template if it's older than the given time.
      *
      * @param Core $dwoo      the dwoo instance that was used to cache that template
-     * @param int       $olderThan minimum time (in seconds) required for the cache to be cleared
+     * @param int  $olderThan minimum time (in seconds) required for the cache to be cleared
      *
      * @return bool true if the cache was not present or if it was deleted, false if it remains there
      */
-    public function clearCache(Core $dwoo, $olderThan = -1);
+    public function clearCache(Core $dwoo, $olderThan = - 1);
 
     /**
      * returns the compiled template file name.
@@ -126,7 +123,6 @@ interface ITemplate
 
     /**
      * returns some php code that will check if this template has been modified or not.
-     *
      * if the function returns null, the template will be instanciated and then the Uid checked
      *
      * @return string
@@ -136,21 +132,20 @@ interface ITemplate
     /**
      * returns a new template object from the given resource identifier, null if no include is
      * possible (resource not found), or false if include is not permitted by this resource type.
-     *
      * this method should also check if $dwoo->getSecurityPolicy() is null or not and do the
      * necessary permission checks if required, if the security policy prevents the template
      * generation it should throw a new Dwoo_Security_Exception with a relevant message
      *
-     * @param mixed          $resourceId     the resource identifier
-     * @param int            $cacheTime      duration of the cache validity for this template,
+     * @param mixed     $resourceId          the resource identifier
+     * @param int       $cacheTime           duration of the cache validity for this template,
      *                                       if null it defaults to the Dwoo instance that will
      *                                       render this template
-     * @param string         $cacheId        the unique cache identifier of this page or anything else that
+     * @param string    $cacheId             the unique cache identifier of this page or anything else that
      *                                       makes this template's content unique, if null it defaults
      *                                       to the current url
-     * @param string         $compileId      the unique compiled identifier, which is used to distinguish this
+     * @param string    $compileId           the unique compiled identifier, which is used to distinguish this
      *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate the template that is requesting a new template object (through
+     * @param ITemplate $parentTemplate      the template that is requesting a new template object (through
      *                                       an include, extends or any other plugin)
      *
      * @return ITemplate|null|false

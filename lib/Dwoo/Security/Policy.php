@@ -5,7 +5,6 @@ use Dwoo\Core;
 
 /**
  * Represents the security settings of a dwoo instance, it can be passed around to different dwoo instances.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -24,7 +23,6 @@ class Policy
 {
     /**#@+
      * php handling constants, defaults to PHP_REMOVE
-     *
      * PHP_REMOVE : remove all <?php ?> (+ short tags if your short tags option is on) from the input template
      * PHP_ALLOW : leave them as they are
      * PHP_ENCODE : run htmlentities over them
@@ -33,18 +31,15 @@ class Policy
      */
     const PHP_ENCODE = 1;
     const PHP_REMOVE = 2;
-    const PHP_ALLOW = 3;
-    /**#@-*/
+    const PHP_ALLOW  = 3;
 
-    /**#@+
+    /**
      * constant handling constants, defaults to CONST_DISALLOW
-     *
      * CONST_DISALLOW : throw an error if {$dwoo.const.*} is used in the template
      * CONST_ALLOW : allow {$dwoo.const.*} calls
      */
     const CONST_DISALLOW = false;
-    const CONST_ALLOW = true;
-    /**#@-*/
+    const CONST_ALLOW    = true;
 
     /**
      * php functions that are allowed to be used within the template.
@@ -52,18 +47,18 @@ class Policy
      * @var array
      */
     protected $allowedPhpFunctions = array(
-        'str_repeat' => true,
-        'number_format' => true,
-        'htmlentities' => true,
+        'str_repeat'       => true,
+        'number_format'    => true,
+        'htmlentities'     => true,
         'htmlspecialchars' => true,
-        'long2ip' => true,
-        'strlen' => true,
-        'list' => true,
-        'empty' => true,
-        'count' => true,
-        'sizeof' => true,
-        'in_array' => true,
-        'is_array' => true,
+        'long2ip'          => true,
+        'strlen'           => true,
+        'list'             => true,
+        'empty'            => true,
+        'count'            => true,
+        'sizeof'           => true,
+        'in_array'         => true,
+        'is_array'         => true,
     );
 
     /**
@@ -82,7 +77,6 @@ class Policy
 
     /**
      * stores the php handling level.
-     *
      * defaults to Dwoo_Security_Policy::PHP_REMOVE
      *
      * @var int
@@ -91,7 +85,6 @@ class Policy
 
     /**
      * stores the constant handling level.
-     *
      * defaults to Dwoo_Security_Policy::CONST_DISALLOW
      *
      * @var bool
@@ -190,7 +183,6 @@ class Policy
 
     /**
      * adds a directory to the safelist for includes and other file-access plugins.
-     *
      * note that all the includePath directories you provide to the Dwoo_Template_File class
      * are automatically marked as safe
      *
@@ -277,10 +269,10 @@ class Policy
     /**
      * this is used at run time to check whether method calls are allowed or not.
      *
-     * @param Core $dwoo   dwoo instance that calls this
-     * @param object    $obj    any object on which the method must be called
-     * @param string    $method lowercased method name
-     * @param array     $args   arguments array
+     * @param Core   $dwoo   dwoo instance that calls this
+     * @param object $obj    any object on which the method must be called
+     * @param string $method lowercased method name
+     * @param array  $args   arguments array
      *
      * @return mixed result of method call or unll + E_USER_NOTICE if not allowed
      */
@@ -291,10 +283,13 @@ class Policy
                 continue;
             }
             if ($obj instanceof $class) {
-                return call_user_func_array(array($obj, $method), $args);
+                return call_user_func_array(array(
+                    $obj,
+                    $method
+                ), $args);
             }
         }
-        $dwoo->triggerError('The current security policy prevents you from calling '.get_class($obj).'::'.$method.'()');
+        $dwoo->triggerError('The current security policy prevents you from calling ' . get_class($obj) . '::' . $method . '()');
 
         return null;
     }

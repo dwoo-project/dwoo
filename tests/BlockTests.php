@@ -171,7 +171,7 @@ baz'));
         $tpl = new Dwoo\Template\File(dirname(__FILE__).DIRECTORY_SEPARATOR.'resources/extends_huge/home.html');
         $tpl->forceCompilation();
 		$this->dwoo->get($tpl, array(), $this->compiler);
-//        $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>'.str_repeat('A', 40000).str_repeat('a', 40000).'</html>'));
+        $this->assertThat($this->dwoo->get($tpl, array(), $this->compiler), new DwooConstraintStringEquals('<html>'.str_repeat('A', 40000).str_repeat('a', 40000).'</html>'));
     }
 
     public function testNonExtendedBlocksFromParent()

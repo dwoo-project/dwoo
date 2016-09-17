@@ -15,15 +15,14 @@ if (!defined('DIR_SEP')) {
 }
 
 if (!defined('SMARTY_PHP_PASSTHRU')) {
-    define('SMARTY_PHP_PASSTHRU',   0);
-    define('SMARTY_PHP_QUOTE',      1);
-    define('SMARTY_PHP_REMOVE',     2);
-    define('SMARTY_PHP_ALLOW',      3);
+    define('SMARTY_PHP_PASSTHRU', 0);
+    define('SMARTY_PHP_QUOTE', 1);
+    define('SMARTY_PHP_REMOVE', 2);
+    define('SMARTY_PHP_ALLOW', 3);
 }
 
 /**
  * a Smarty compatibility layer for Dwoo.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -55,12 +54,12 @@ class Adapter extends Core
         }
         if (array_key_exists($p, $this->compat['properties']) !== false) {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Property ' . $p . ' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             }
             $this->compat['properties'][$p] = $v;
         } else {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Property ' . $p . ' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
@@ -69,13 +68,13 @@ class Adapter extends Core
     {
         if (array_key_exists($p, $this->compat['properties']) !== false) {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Property ' . $p . ' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             }
 
             return $this->compat['properties'][$p];
         } else {
             if ($this->show_compat_errors) {
-                $this->triggerError('Property '.$p.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Property ' . $p . ' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
@@ -83,92 +82,108 @@ class Adapter extends Core
     public function __call($m, $a)
     {
         if (method_exists($this->dataProvider, $m)) {
-            call_user_func_array(array($this->dataProvider, $m), $a);
+            call_user_func_array(array(
+                $this->dataProvider,
+                $m
+            ), $a);
         } elseif ($this->show_compat_errors) {
             if (array_search($m, $this->compat['methods']) !== false) {
-                $this->triggerError('Method '.$m.' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
+                $this->triggerError('Method ' . $m . ' is not available in the Dwoo\Smarty\Adapter, however it might be implemented in the future, check out http://wiki.dwoo.org/index.php/SmartySupport for more details.', E_USER_NOTICE);
             } else {
-                $this->triggerError('Method '.$m.' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
+                $this->triggerError('Method ' . $m . ' is not available in the Dwoo\Smarty\Adapter, but it is not listed as such, so you might want to tell me about it at j.boggiano@seld.be', E_USER_NOTICE);
             }
         }
     }
 
     // list of unsupported properties and methods
     protected $compat = array(
-        'methods' => array(
-            'register_resource', 'unregister_resource', 'load_filter', 'clear_compiled_tpl',
-            'clear_config', 'get_config_vars', 'config_load',
+        'methods'    => array(
+            'register_resource',
+            'unregister_resource',
+            'load_filter',
+            'clear_compiled_tpl',
+            'clear_config',
+            'get_config_vars',
+            'config_load',
         ),
         'properties' => array(
-            'cache_handler_func' => null,
-            'debugging' => false,
-            'error_reporting' => null,
-            'debugging_ctrl' => 'NONE',
-            'request_vars_order' => 'EGPCS',
-            'request_use_auto_globals' => true,
-            'use_sub_dirs' => false,
-            'autoload_filters' => array(),
+            'cache_handler_func'            => null,
+            'debugging'                     => false,
+            'error_reporting'               => null,
+            'debugging_ctrl'                => 'NONE',
+            'request_vars_order'            => 'EGPCS',
+            'request_use_auto_globals'      => true,
+            'use_sub_dirs'                  => false,
+            'autoload_filters'              => array(),
             'default_template_handler_func' => '',
-            'debug_tpl' => '',
-            'cache_modified_check' => false,
-            'default_modifiers' => array(),
-            'default_resource_type' => 'file',
-            'config_overwrite' => true,
-            'config_booleanize' => true,
-            'config_read_hidden' => false,
-            'config_fix_newlines' => true,
-            'config_class' => 'Config_File',
+            'debug_tpl'                     => '',
+            'cache_modified_check'          => false,
+            'default_modifiers'             => array(),
+            'default_resource_type'         => 'file',
+            'config_overwrite'              => true,
+            'config_booleanize'             => true,
+            'config_read_hidden'            => false,
+            'config_fix_newlines'           => true,
+            'config_class'                  => 'Config_File',
         ),
     );
 
     // security vars
-    public $security = false;
-    public $trusted_dir = array();
-    public $secure_dir = array();
-    public $php_handling = SMARTY_PHP_PASSTHRU;
+    public $security          = false;
+    public $trusted_dir       = array();
+    public $secure_dir        = array();
+    public $php_handling      = SMARTY_PHP_PASSTHRU;
     public $security_settings = array(
-        'PHP_HANDLING' => false,
-        'IF_FUNCS' => array(
-            'list', 'empty', 'count', 'sizeof',
-            'in_array', 'is_array',
+        'PHP_HANDLING'    => false,
+        'IF_FUNCS'        => array(
+            'list',
+            'empty',
+            'count',
+            'sizeof',
+            'in_array',
+            'is_array',
         ),
-        'INCLUDE_ANY' => false,
-        'PHP_TAGS' => false,
-        'MODIFIER_FUNCS' => array(),
+        'INCLUDE_ANY'     => false,
+        'PHP_TAGS'        => false,
+        'MODIFIER_FUNCS'  => array(),
         'ALLOW_CONSTANTS' => false,
     );
 
     // paths
     public $template_dir = 'templates';
-    public $compile_dir = 'templates_c';
-    public $config_dir = 'configs';
-    public $cache_dir = 'cache';
-    public $plugins_dir = array();
+    public $compile_dir  = 'templates_c';
+    public $config_dir   = 'configs';
+    public $cache_dir    = 'cache';
+    public $plugins_dir  = array();
 
     // misc options
-    public $left_delimiter = '{';
+    public $left_delimiter  = '{';
     public $right_delimiter = '}';
-    public $compile_check = true;
-    public $force_compile = false;
-    public $caching = 0;
-    public $cache_lifetime = 3600;
-    public $compile_id = null;
-    public $compiler_file = null;
-    public $compiler_class = null;
+    public $compile_check   = true;
+    public $force_compile   = false;
+    public $caching         = 0;
+    public $cache_lifetime  = 3600;
+    public $compile_id      = null;
+    public $compiler_file   = null;
+    public $compiler_class  = null;
 
     // dwoo/smarty compat layer
-    public $show_compat_errors = false;
-    protected $dataProvider;
-    protected $_filters = array('pre' => array(), 'post' => array(), 'output' => array());
-    protected static $tplCache = array();
-    protected $compiler = null;
+    public           $show_compat_errors = false;
+    protected        $dataProvider;
+    protected        $_filters           = array(
+        'pre'    => array(),
+        'post'   => array(),
+        'output' => array()
+    );
+    protected static $tplCache           = array();
+    protected        $compiler           = null;
 
     public function __construct()
     {
         parent::__construct();
-        $this->charset = 'iso-8859-1';
+        $this->charset      = 'iso-8859-1';
         $this->dataProvider = new Data();
-        $this->compiler = new Compiler();
+        $this->compiler     = new Compiler();
     }
 
     public function display($filename, $cacheId = null, $compileId = null)
@@ -261,7 +276,10 @@ class Adapter extends Core
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION) {
             throw new Exception('Multiple plugins of different types can not share the same name');
         }
-        $this->plugins[$name] = array('type' => self::SMARTY_FUNCTION, 'callback' => $callback);
+        $this->plugins[$name] = array(
+            'type'     => self::SMARTY_FUNCTION,
+            'callback' => $callback
+        );
     }
 
     public function unregister_function($name)
@@ -274,7 +292,10 @@ class Adapter extends Core
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK) {
             throw new Exception('Multiple plugins of different types can not share the same name');
         }
-        $this->plugins[$name] = array('type' => self::SMARTY_BLOCK, 'callback' => $callback);
+        $this->plugins[$name] = array(
+            'type'     => self::SMARTY_BLOCK,
+            'callback' => $callback
+        );
     }
 
     public function unregister_block($name)
@@ -287,7 +308,10 @@ class Adapter extends Core
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER) {
             throw new Exception('Multiple plugins of different types can not share the same name');
         }
-        $this->plugins[$name] = array('type' => self::SMARTY_MODIFIER, 'callback' => $callback);
+        $this->plugins[$name] = array(
+            'type'     => self::SMARTY_MODIFIER,
+            'callback' => $callback
+        );
     }
 
     public function unregister_modifier($name)
@@ -381,17 +405,17 @@ class Adapter extends Core
         if (isset($data[$name]) && is_object($data[$name])) {
             return $data[$name];
         } else {
-            trigger_error('Dwoo_Compiler: object "'.$name.'" was not registered or is not an object', E_USER_ERROR);
+            trigger_error('Dwoo_Compiler: object "' . $name . '" was not registered or is not an object', E_USER_ERROR);
         }
     }
 
     public function template_exists($filename)
     {
         if (!is_array($this->template_dir)) {
-            return file_exists($this->template_dir.DIRECTORY_SEPARATOR.$filename);
+            return file_exists($this->template_dir . DIRECTORY_SEPARATOR . $filename);
         } else {
             foreach ($this->template_dir as $tpl_dir) {
-                if (file_exists($tpl_dir.DIRECTORY_SEPARATOR.$filename)) {
+                if (file_exists($tpl_dir . DIRECTORY_SEPARATOR . $filename)) {
                     return true;
                 }
             }
@@ -469,7 +493,7 @@ class Adapter extends Core
             $compileId = $this->compile_id;
         }
 
-        $hash = bin2hex(md5($file.$cacheId.$compileId, true));
+        $hash = bin2hex(md5($file . $cacheId . $compileId, true));
         if (!isset(self::$tplCache[$hash])) {
             // abs path
             if (substr($file, 0, 1) === '/' || substr($file, 1, 1) === ':') {
@@ -477,7 +501,7 @@ class Adapter extends Core
             } elseif (is_string($this->template_dir) || is_array($this->template_dir)) {
                 self::$tplCache[$hash] = new TemplateFile($file, null, $cacheId, $compileId, $this->template_dir);
             } else {
-                throw new Exception('Unable to load "'.$file.'", check the template_dir');
+                throw new Exception('Unable to load "' . $file . '", check the template_dir');
             }
         }
 
@@ -489,6 +513,6 @@ class Adapter extends Core
         if (is_object($this->template)) {
             return parent::triggerError($message, $level);
         }
-        trigger_error('Dwoo error : '.$message, $level);
+        trigger_error('Dwoo error : ' . $message, $level);
     }
 }

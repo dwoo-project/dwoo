@@ -3,7 +3,6 @@ namespace Dwoo;
 
 /**
  * Handles plugin loading and caching of plugins names/paths relationships.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -24,7 +23,6 @@ class Loader implements ILoader
      * stores the plugin directories.
      *
      * @see addDirectory
-     *
      * @var array
      */
     protected $paths = array();
@@ -34,7 +32,6 @@ class Loader implements ILoader
      * don't edit this on your own, use addDirectory.
      *
      * @see addDirectory
-     *
      * @var array
      */
     protected $classPath = array();
@@ -50,13 +47,13 @@ class Loader implements ILoader
 
     public function __construct($cacheDir)
     {
-        $this->corePluginDir = DWOO_DIRECTORY.'plugins';
-        $this->cacheDir = rtrim($cacheDir, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+        $this->corePluginDir = DWOO_DIRECTORY . 'plugins';
+        $this->cacheDir      = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         // include class paths or rebuild paths if the cache file isn't there
-        $cacheFile = $this->cacheDir.'classpath.cache.d'.Core::RELEASE_TAG.'.php';
+        $cacheFile = $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php';
         if (file_exists($cacheFile)) {
-            $classpath = file_get_contents($cacheFile);
+            $classpath       = file_get_contents($cacheFile);
             $this->classPath = unserialize($classpath) + $this->classPath;
         } else {
             $this->rebuildClassPathCache($this->corePluginDir, $cacheFile);
@@ -74,18 +71,31 @@ class Loader implements ILoader
     protected function rebuildClassPathCache($path, $cacheFile)
     {
         if ($cacheFile !== false) {
-            $tmp = $this->classPath;
+            $tmp             = $this->classPath;
             $this->classPath = array();
         }
 
         // iterates over all files/folders
-        $list = glob(rtrim($path, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'*');
+        $list = glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*');
         if (is_array($list)) {
             foreach ($list as $f) {
                 if (is_dir($f)) {
                     $this->rebuildClassPathCache($f, false);
                 } else {
-                    $this->classPath[str_replace(array('function.', 'block.', 'modifier.', 'outputfilter.', 'filter.', 'prefilter.', 'postfilter.', 'pre.', 'post.', 'output.', 'shared.', 'helper.'), '', basename($f, '.php'))] = $f;
+                    $this->classPath[str_replace(array(
+                        'function.',
+                        'block.',
+                        'modifier.',
+                        'outputfilter.',
+                        'filter.',
+                        'prefilter.',
+                        'postfilter.',
+                        'pre.',
+                        'post.',
+                        'output.',
+                        'shared.',
+                        'helper.'
+                    ), '', basename($f, '.php'))] = $f;
                 }
             }
         }
@@ -93,7 +103,7 @@ class Loader implements ILoader
         // save in file if it's the first call (not recursed)
         if ($cacheFile !== false) {
             if (!file_put_contents($cacheFile, serialize($this->classPath))) {
-                throw new Exception('Could not write into '.$cacheFile.', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
+                throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
             }
             $this->classPath += $tmp;
         }
@@ -103,7 +113,8 @@ class Loader implements ILoader
      * loads a plugin file.
      *
      * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
-     * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it has just been added, defaults to true
+     * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it
+     *                            has just been added, defaults to true
      *
      * @throws Exception
      */
@@ -114,20 +125,18 @@ class Loader implements ILoader
         // with an uncatchable error if the file doesn't exist, which
         // usually means that the cache is stale and must be rebuilt,
         // so we check for that before trying to include() the plugin.
-        if (!isset($this->classPath[$class]) ||
-            !is_readable($this->classPath[$class]) ||
-            !(include $this->classPath[$class])) {
+        if (!isset($this->classPath[$class]) || !is_readable($this->classPath[$class]) || !(include $this->classPath[$class])) {
             if ($forceRehash) {
-                $this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir.'classpath.cache.d'.Core::RELEASE_TAG.'.php');
+                $this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php');
                 foreach ($this->paths as $path => $file) {
                     $this->rebuildClassPathCache($path, $file);
                 }
                 if (isset($this->classPath[$class])) {
                     include $this->classPath[$class];
                 }
-                throw new Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
-            throw new Exception('Plugin <em>'.$class.'</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+            throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
         }
     }
 
@@ -148,12 +157,12 @@ class Loader implements ILoader
     {
         $pluginDir = realpath($pluginDirectory);
         if (!$pluginDir) {
-            throw new Exception('Plugin directory does not exist or can not be read : '.$pluginDirectory);
+            throw new Exception('Plugin directory does not exist or can not be read : ' . $pluginDirectory);
         }
-        $cacheFile = $this->cacheDir.'classpath-'.substr(strtr($pluginDir, '/\\:'.PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? -80 : 0).'.d'.Core::RELEASE_TAG.'.php';
+        $cacheFile               = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
         $this->paths[$pluginDir] = $cacheFile;
         if (file_exists($cacheFile)) {
-            $classpath = file_get_contents($cacheFile);
+            $classpath       = file_get_contents($cacheFile);
             $this->classPath = unserialize($classpath) + $this->classPath;
         } else {
             $this->rebuildClassPathCache($pluginDir, $cacheFile);

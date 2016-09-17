@@ -3,7 +3,6 @@ namespace Dwoo;
 
 /**
  * Interface that represents a dwoo plugin proxy.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -43,7 +42,6 @@ interface IPluginProxy
     /**
      * returns a callback to the plugin, this is used with the reflection API to
      * find out about the plugin's parameter names etc.
-     *
      * should you need a rest array without the possibility to edit the
      * plugin's code, you can provide a callback to some
      * other function with the correct parameter signature, i.e. :

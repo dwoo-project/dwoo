@@ -280,14 +280,14 @@ class Core
     /**
      * Autputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true).
      *
-     * @param mixed          $tpl      template, can either be a ITemplate object (i.e. TemplateFile), a
+     * @param mixed     $tpl           template, can either be a ITemplate object (i.e. TemplateFile), a
      *                                 valid path to a template, or a template as a string it is recommended to provide
      *                                 a ITemplate as it will probably make things faster, especially if you
      *                                 render a template multiple times
-     * @param mixed          $data     the data to use, can either be a IDataProvider object (i.e. Data) or
+     * @param mixed     $data          the data to use, can either be a IDataProvider object (i.e. Data) or
      *                                 an associative array. if you're rendering the template from cache, it can be
      *                                 left null
-     * @param ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
+     * @param ICompiler $compiler      the compiler that must be used to compile the template, if left empty a default
      *                                 Compiler will be used
      *
      * @return     string nothing or the template output if $output is true
@@ -301,16 +301,16 @@ class Core
     /**
      * Returns the given template rendered using the provided data and optional compiler.
      *
-     * @param mixed          $_tpl      template, can either be a ITemplate object (i.e. TemplateFile), a
+     * @param mixed     $_tpl           template, can either be a ITemplate object (i.e. TemplateFile), a
      *                                  valid path to a template, or a template as a string it is recommended to
      *                                  provide a ITemplate as it will probably make things faster, especially if
      *                                  you render a template multiple times
-     * @param mixed          $data      the data to use, can either be a IDataProvider object (i.e. Data) or
+     * @param mixed     $data           the data to use, can either be a IDataProvider object (i.e. Data) or
      *                                  an associative array. if you're rendering the template from cache, it can be
      *                                  left null
-     * @param ICompiler $_compiler the compiler that must be used to compile the template, if left empty a default
+     * @param ICompiler $_compiler      the compiler that must be used to compile the template, if left empty a default
      *                                  Compiler will be used
-     * @param bool           $_output   flag that defines whether the function returns the output of the template
+     * @param bool      $_output        flag that defines whether the function returns the output of the template
      *                                  (false, default) or echoes it directly (true)
      *
      * @return string|void or the template output if $output is false
@@ -430,7 +430,7 @@ class Core
             }
         }
 
-//        return '';
+        return '';
     }
 
     /**
@@ -485,7 +485,7 @@ class Core
     {
         $compilable = $compilable ? self::COMPILABLE_PLUGIN : 0;
         if (is_array($callback)) {
-			if (is_subclass_of(is_object($callback[0]) ? get_class($callback[0]) : $callback[0], 'Dwoo\Block\Plugin')) {
+            if (is_subclass_of(is_object($callback[0]) ? get_class($callback[0]) : $callback[0], 'Dwoo\Block\Plugin')) {
                 $this->plugins[$name] = array(
                     'type'     => self::BLOCK_PLUGIN | $compilable,
                     'callback' => $callback,
@@ -501,7 +501,7 @@ class Core
             }
         } elseif (is_string($callback)) {
             if (class_exists($callback)) {
-				if (is_subclass_of($callback, 'Dwoo\Block\Plugin')) {
+                if (is_subclass_of($callback, 'Dwoo\Block\Plugin')) {
                     $this->plugins[$name] = array(
                         'type'     => self::BLOCK_PLUGIN | $compilable,
                         'callback' => $callback,
@@ -638,8 +638,8 @@ class Core
             throw new Exception('Resource class does not exist');
         }
 
-		$interfaces = class_implements($class);
-		if (in_array('Dwoo\ITemplate', $interfaces) === false) {
+        $interfaces = class_implements($class);
+        if (in_array('Dwoo\ITemplate', $interfaces) === false) {
             throw new Exception('Resource class must implement ITemplate');
         }
 
@@ -958,11 +958,11 @@ class Core
     /**
      * Fetches a template object of the given resource.
      *
-     * @param string         $resourceName   the resource name (i.e. file, string)
-     * @param string         $resourceId     the resource identifier (i.e. file path)
-     * @param int            $cacheTime      the cache time setting for this resource
-     * @param string         $cacheId        the unique cache identifier
-     * @param string         $compileId      the unique compiler identifier
+     * @param string    $resourceName   the resource name (i.e. file, string)
+     * @param string    $resourceId     the resource identifier (i.e. file path)
+     * @param int       $cacheTime      the cache time setting for this resource
+     * @param string    $cacheId        the unique cache identifier
+     * @param string    $compileId      the unique compiler identifier
      * @param ITemplate $parentTemplate the parent template
      *
      * @return ITemplate
@@ -1454,7 +1454,7 @@ class Core
                 } elseif ($varstr === '__' || $varstr === '_root') {
                     return $this->data;
                 } elseif ($varstr === '_' || $varstr === '_parent') {
-					$varstr = '.' . $varstr;
+                    $varstr = '.' . $varstr;
                     $tree   = $this->scopeTree;
                     $cur    = $this->data;
                     array_pop($tree);
@@ -1586,8 +1586,8 @@ class Core
      */
     public function assignInScope($value, $scope)
     {
-		$tree = &$this->scopeTree;
-		$data = &$this->data;
+        $tree = &$this->scopeTree;
+        $data = &$this->data;
 
         if (!is_string($scope)) {
             $this->triggerError('Assignments must be done into strings, (' . gettype($scope) . ') ' . var_export($scope, true) . ' given', E_USER_ERROR);
@@ -1630,9 +1630,9 @@ class Core
                     $cur = new stdClass();
                 }
                 $cur->$last[1] = $value;
-			} else {
-				return false;
-			}
+            } else {
+                return false;
+            }
         }
     }
 

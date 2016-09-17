@@ -2,10 +2,8 @@
 namespace Dwoo\ICompilable;
 
 /**
- * interface that represents a compilable block plugin.
- *
+ * Interface that represents a compilable block plugin.
  * implement this to notify the compiler that this plugin does not need to be loaded at runtime.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *

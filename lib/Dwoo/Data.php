@@ -4,7 +4,6 @@ namespace Dwoo;
 /**
  * Dwoo data object, use it for complex data assignments or if you want to easily pass it
  * around multiple functions to avoid passing an array by reference.
- *
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
@@ -249,7 +248,6 @@ class Data implements IDataProvider
      * @param string $name the variable name
      *
      * @return mixed
-     *
      * @throws Exception
      */
     public function __get($name)
@@ -257,7 +255,7 @@ class Data implements IDataProvider
         if (isset($this->data[$name])) {
             return $this->data[$name];
         } else {
-            throw new Exception('Tried to read a value that was not assigned yet : "'.$name.'"');
+            throw new Exception('Tried to read a value that was not assigned yet : "' . $name . '"');
         }
     }
 }
