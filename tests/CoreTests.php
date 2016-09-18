@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class CoreTests extends PHPUnit_Framework_TestCase
 {
@@ -21,7 +23,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
         $this->assertEquals('', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_topLevelBlock($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginTopLevelBlock($this->dwoo);
         $fixCall->init('');
     }
 

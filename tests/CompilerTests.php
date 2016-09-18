@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class CompilerTests extends PHPUnit_Framework_TestCase
 {
@@ -10,7 +12,9 @@ class CompilerTests extends PHPUnit_Framework_TestCase
     {
         // extend this class and override this in your constructor to test a modded compiler
         $this->compiler = new Dwoo\Compiler();
-        $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
+        $this->dwoo = new Dwoo\Core(
+            dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'compiled',
+            dirname(__FILE__).DIRECTORY_SEPARATOR.'temp'.DIRECTORY_SEPARATOR.'cache');
     }
 
     public function testVarReplacement()

@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class BlockTests extends PHPUnit_Framework_TestCase
 {
@@ -41,7 +43,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
 <a href="http://foo/">http://foo/</a>', $this->dwoo->get($tpl, array('url' => 'http://foo/'), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_a($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginA($this->dwoo);
         $fixCall->init('');
     }
 
@@ -83,7 +85,7 @@ class BlockTests extends PHPUnit_Framework_TestCase
         $this->assertEquals('a<b>ca&lt;b&gt;c', $this->dwoo->get($tpl, array('foo' => 'a<b>c')));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_auto_escape($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginAutoEscape($this->dwoo);
         $fixCall->init('');
     }
 
@@ -115,7 +117,7 @@ BAZZ       {/capture}{$foo}');
         $this->assertEquals('BAZZ', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_capture($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginCapture($this->dwoo);
         $fixCall->init('');
     }
 
@@ -132,7 +134,7 @@ BAZZ       {/capture}{$foo}');
         $this->assertEquals('t'.$preTime.$postTime, $this->dwoo->get($tpl, array('pre' => $postTime), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_dynamic($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginDynamic($this->dwoo);
         $fixCall->init('');
     }
 
@@ -149,7 +151,7 @@ BAZZ       {/capture}{$foo}');
         $this->assertEquals('t'.$preTime.$postTime.$postTime, $this->dwoo->get($tpl, array('pre' => $postTime), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_dynamic($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginDynamic($this->dwoo);
         $fixCall->init('');
     }
 
@@ -189,7 +191,7 @@ toplevelContent2
 
 baz'));
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_block($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginBlock($this->dwoo);
         $fixCall->init('');
     }
 
@@ -244,7 +246,7 @@ Root Footer
         $this->assertEquals('true', $this->dwoo->get($tpl, array('foo' => 'bar'), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_if($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginIf($this->dwoo);
         $fixCall->init(array());
     }
 
@@ -288,7 +290,7 @@ Root Footer
         $this->assertEquals('false', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_elseif($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginElseif($this->dwoo);
         $fixCall->init(array());
     }
 
@@ -300,7 +302,7 @@ Root Footer
         $this->assertEquals('false', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_else($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginElse($this->dwoo);
         $fixCall->init();
     }
 
@@ -365,7 +367,7 @@ Root Footer
         $this->assertEquals('0.foo1.bar', $this->dwoo->get($tpl, array('sub' => array('foo', 'bar', 'baz', 'qux')), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_for($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginFor($this->dwoo);
         $fixCall->init(null, null);
     }
 
@@ -407,7 +409,7 @@ Root Footer
         $this->assertEquals('0369', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_forelse($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginForelse($this->dwoo);
         $fixCall->init(null, null);
     }
 
@@ -419,7 +421,7 @@ Root Footer
         $this->assertEquals('0.foo1.bar', $this->dwoo->get($tpl, array('sub' => array('foo', 'bar')), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_foreach($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginForeach($this->dwoo);
         $fixCall->init('');
     }
 
@@ -493,7 +495,7 @@ Root Footer
         $this->assertEquals('bar', $this->dwoo->get($tpl, array('sub' => array()), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_foreachelse($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginForeachelse($this->dwoo);
         $fixCall->init('');
     }
 
@@ -513,7 +515,7 @@ Root Footer
         $this->assertEquals('0>a/b1>c/d', $this->dwoo->get($tpl, array('foo' => array(array('a', 'b'), array('c', 'd'))), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_loop($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginLoop($this->dwoo);
         $fixCall->init('');
     }
 
@@ -525,7 +527,7 @@ Root Footer
         $this->assertEquals('MOO', $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_loop($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginLoop($this->dwoo);
         $fixCall->init('');
     }
 
@@ -543,7 +545,7 @@ Root Footer
         $this->assertEquals("abca\nb\nc", $this->dwoo->get($tpl, array(), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_strip($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginStrip($this->dwoo);
         $fixCall->init('');
     }
 
@@ -575,7 +577,7 @@ bleh();
 //			$this->dwoo->get($tpl, array('menu'=>array('foo', 'bar'=>array('baz','qux'), 'boo'=>array('far'=>array('faz','mux')), 'duck')), $this->compiler));
 
 //		// fixes the init call not being called (which is normal)
-//		$fixCall = new Dwoo_Plugin_template($this->dwoo);
+//		$fixCall = new Dwoo\Plugins\Blocks\PluginTemplate($this->dwoo);
 //		$fixCall->init('');
 //	}
 
@@ -589,7 +591,7 @@ bleh();
 //		$this->compiler->setAutoEscape(false);
 
 //		// fixes the init call not being called (which is normal)
-//		$fixCall = new Dwoo_Plugin_template($this->dwoo);
+//		$fixCall = new Dwoo\Plugins\Blocks\PluginTemplate($this->dwoo);
 //		$fixCall->init('');
 //	}
 
@@ -651,9 +653,9 @@ works.bb', $this->dwoo->get($tpl, array(), $this->compiler));
         $this->assertEquals('barbarNOB--b', $this->dwoo->get($tpl, array('foo' => array('a' => array('bar'))), $this->compiler));
 
         // fixes the init call not being called (which is normal)
-        $fixCall = new Dwoo_Plugin_with($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginWith($this->dwoo);
         $fixCall->init('');
-        $fixCall = new Dwoo_Plugin_withelse($this->dwoo);
+        $fixCall = new Dwoo\Plugins\Blocks\PluginWithelse($this->dwoo);
         $fixCall->init('');
     }
 }
