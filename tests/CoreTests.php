@@ -2,6 +2,9 @@
 /**
  */
 
+/**
+ */
+
 class CoreTests extends PHPUnit_Framework_TestCase
 {
     protected $compiler;
@@ -10,6 +13,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
     public function __construct()
     {
         $this->compiler = new Dwoo\Compiler();
+//        $this->compiler->debug=true;
         $this->dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
     }
 

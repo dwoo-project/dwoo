@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class SmartyTests extends PHPUnit_Framework_TestCase
 {
@@ -13,7 +15,7 @@ class SmartyTests extends PHPUnit_Framework_TestCase
         $this->dwoo->cache_dir = TEST_DIRECTORY.'/temp/cache/';
         $this->dwoo->config_dir = TEST_DIRECTORY.'/resources/configs/';
         $this->compiler = new Dwoo\Compiler();
-        $this->compiler->addPreProcessor('smarty_compat', true);
+        $this->compiler->addPreProcessor('PluginSmartyCompatible', true);
     }
 
     public function testSmartyCompat()

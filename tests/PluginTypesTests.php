@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class PluginTypesTests extends PHPUnit_Framework_TestCase
 {
@@ -202,17 +204,17 @@ class PluginTypesTests extends PHPUnit_Framework_TestCase
     }
 }
 
-function Dwoo_Plugin_CompilableFunctionPlugin_compile(Dwoo\Compiler $compiler, $number, $number2)
+function PluginCompilableFunctionPluginCompile(Dwoo\Compiler $compiler, $number, $number2)
 {
     return "$number * $number2";
 }
 
-function Dwoo_Plugin_FunctionPlugin(Dwoo\Core $dwoo, $number, $number2)
+function PluginFunctionPlugin(Dwoo\Core $dwoo, $number, $number2)
 {
     return $number * $number2;
 }
 
-class Dwoo_Plugin_CompilableClassPlugin extends Dwoo\Plugin implements Dwoo\ICompilable
+class PluginCompilableClassPlugin extends Dwoo\Plugin implements Dwoo\ICompilable
 {
 	public function process(){}
 
@@ -222,7 +224,7 @@ class Dwoo_Plugin_CompilableClassPlugin extends Dwoo\Plugin implements Dwoo\ICom
     }
 }
 
-class Dwoo_Plugin_ClassPlugin extends Dwoo\Plugin
+class PluginClassPlugin extends Dwoo\Plugin
 {
     public function process($number, $number2)
     {

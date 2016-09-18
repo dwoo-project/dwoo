@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class FiltersTests extends PHPUnit_Framework_TestCase
 {
@@ -18,7 +20,7 @@ class FiltersTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         $dwoo = new Dwoo\Core(DWOO_COMPILE_DIR, DWOO_CACHE_DIR);
-        $dwoo->addFilter('html_format', true);
+        $dwoo->addFilter('PluginHtmlFormat', true);
 
         $this->assertEquals(str_replace("\r", '', <<<'SNIPPET'
 
@@ -42,7 +44,7 @@ SNIPPET
         $tpl = new Dwoo\Template\String('{ldelim}{$smarty.version}{rdelim}');
         $tpl->forceCompilation();
         $cmp = new Dwoo\Compiler();
-        $cmp->addPreProcessor('smarty_compat', true);
+        $cmp->addPreProcessor('PluginSmartyCompatible', true);
 
         $this->assertEquals('{'.Dwoo\Core::VERSION.'}', $this->dwoo->get($tpl, array(), $cmp));
     }

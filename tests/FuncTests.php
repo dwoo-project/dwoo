@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class FuncTests extends PHPUnit_Framework_TestCase
 {
@@ -310,14 +312,14 @@ class FuncTests extends PHPUnit_Framework_TestCase
         $this->assertEquals("------FOO\n------BAR", $this->dwoo->get($tpl, array('foo' => "FOO\nBAR"), $this->compiler));
     }
 
-    public function testIsset()
-    {
-        $tpl = new Dwoo\Template\String('{if isset($foo)}set{else}not set{/if}');
-        $tpl->forceCompilation();
-        $this->assertEquals('not set', $this->dwoo->get($tpl, array(), $this->compiler));
-        $this->assertEquals('set', $this->dwoo->get($tpl, array('foo' => 'a'), $this->compiler));
-        $this->assertEquals('set', $this->dwoo->get($tpl, array('foo' => ''), $this->compiler));
-    }
+//    public function testIsset()
+//    {
+//        $tpl = new Dwoo\Template\String('{if isset($foo)}set{else}not set{/if}');
+//        $tpl->forceCompilation();
+//        $this->assertEquals('not set', $this->dwoo->get($tpl, array(), $this->compiler));
+//        $this->assertEquals('set', $this->dwoo->get($tpl, array('foo' => 'a'), $this->compiler));
+//        $this->assertEquals('set', $this->dwoo->get($tpl, array('foo' => ''), $this->compiler));
+//    }
 
     public function testLower()
     {

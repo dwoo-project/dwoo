@@ -9,7 +9,7 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
+ * @version   1.3.0
  * @date      2016-09-18
  * @link      http://dwoo.org/
  */
@@ -587,14 +587,13 @@ class Core
     public function addFilter($callback, $autoload = false)
     {
         if ($autoload) {
-            $class = self::NAMESPACE_PLUGINS_FILTERS . 'Filter' . $this->toCamelCase($callback);
-
+            $class = self::NAMESPACE_PLUGINS_FILTERS . self::toCamelCase($callback);
             if (!class_exists($class) && !function_exists($class)) {
                 try {
                     $this->getLoader()->loadPlugin($callback);
                 }
                 catch (Exception $e) {
-                    if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS . 'Filter')) {
+                    if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS)) {
                         throw new Exception(
                             'Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
                         not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"'
@@ -602,7 +601,7 @@ class Core
                     } else {
                         throw new Exception(
                             'Wrong filter name : ' . $callback . ', when using autoload the filter must
-                         be in one of your plugin dir as "name.php" containg a class or function named
+                         be in one of your plugin dir as "name.php" containig a class or function named
                          "Dwoo_Filter_name"'
                         );
                     }
@@ -610,16 +609,13 @@ class Core
             }
 
             if (class_exists($class)) {
-                $callback = array(
-                    new $class($this),
-                    'process'
-                );
+                $callback = array(new $class($this), 'process');
             } elseif (function_exists($class)) {
                 $callback = $class;
             } else {
                 throw new Exception(
                     'Wrong filter name : ' . $callback . ', when using autoload the filter must be in
-                one of your plugin dir as "name.php" containg a class or function named "Dwoo_Filter_name"'
+                one of your plugin dir as "name.php" containig a class or function named "Dwoo_Filter_name"'
                 );
             }
 
@@ -1780,7 +1776,7 @@ class Core
      *
      * @return mixed
      */
-    public function toCamelCase($input, $separator = '_')
+    public static function toCamelCase($input, $separator = '_')
     {
         return join(array_map('ucfirst', explode($separator, $input)));
 

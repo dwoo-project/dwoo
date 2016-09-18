@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
- * @date      2016-09-17
+ * @version   1.3.0
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -28,7 +28,7 @@ use Dwoo\Filter;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-class HtmlFormat extends Filter
+class PluginHtmlFormat extends Filter
 {
     /**
      * tab count to auto-indent the source.

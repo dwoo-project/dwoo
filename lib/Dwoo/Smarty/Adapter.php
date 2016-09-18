@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
- * @date      2016-09-17
+ * @version   1.3.0
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -259,7 +259,7 @@ class Adapter extends Core
             }
             $this->compiler = new $this->compiler_class();
         } else {
-            $this->compiler->addPreProcessor('smarty_compat', true);
+            $this->compiler->addPreProcessor('PluginSmartyCompatible', true);
             $this->compiler->setLooseOpeningHandling(true);
         }
 

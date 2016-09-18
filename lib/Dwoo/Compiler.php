@@ -9,7 +9,7 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
+ * @version   1.3.0
  * @date      2016-09-18
  * @link      http://dwoo.org/
  */
@@ -225,7 +225,7 @@ class Compiler implements ICompiler
      *
      * @var Core
      */
-    protected $dwoo;
+    public $dwoo;
 
     /**
      * holds an instance of this class, used by getInstance when you don't
@@ -369,8 +369,8 @@ class Compiler implements ICompiler
     public function addPreProcessor($callback, $autoload = false)
     {
         if ($autoload) {
-            $name  = str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
-            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . ucfirst($name);
+            $name  = str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', Core::toCamelCase($callback));
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . $name;
 
             if (class_exists($class)) {
                 $callback = array(new $class($this), 'process');
@@ -423,7 +423,7 @@ class Compiler implements ICompiler
     {
         if ($autoload) {
             $name  = str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
-            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . ucfirst($name);
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . Core::toCamelCase($name);
 
             if (class_exists($class)) {
                 $callback = array(new $class($this), 'process');
@@ -758,7 +758,7 @@ class Compiler implements ICompiler
 
                 // show template source if debug
                 if ($this->debug) {
-                    //                    echo '<pre>'.print_r(htmlentities($tpl), true).'</pre>'."\n";
+                    echo '<pre>'.print_r(htmlentities($tpl), true).'</pre>'."\n";
                 }
 
                 // strips php tags if required by the security policy
@@ -768,14 +768,13 @@ class Compiler implements ICompiler
                         $search = array('{<\?.*?\?>}', '{<%.*?%>}');
                     }
                     switch ($this->securityPolicy->getPhpHandling()) {
-
-                    case SecurityPolicy::PHP_ALLOW:
-                        break;
-                    case SecurityPolicy::PHP_ENCODE:
-                        $tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
-                        break;
-                    case SecurityPolicy::PHP_REMOVE:
-                        $tpl = preg_replace($search, '', $tpl);
+                        case SecurityPolicy::PHP_ALLOW:
+                            break;
+                        case SecurityPolicy::PHP_ENCODE:
+                            $tpl = preg_replace_callback($search, array($this, 'phpTagEncodingHelper'), $tpl);
+                            break;
+                        case SecurityPolicy::PHP_REMOVE:
+                            $tpl = preg_replace($search, '', $tpl);
                     }
                 }
             }
@@ -875,31 +874,30 @@ class Compiler implements ICompiler
             }
 
             switch ($type) {
-
-            case Core::BLOCK_PLUGIN:
-            case Core::CLASS_PLUGIN:
-                $output .= "if (class_exists('".Core::NAMESPACE_PLUGINS_BLOCKS."Plugin".$plugin."')===false)
+                case Core::BLOCK_PLUGIN:
+                case Core::CLASS_PLUGIN:
+                    $output .= "if (class_exists('" . Core::NAMESPACE_PLUGINS_BLOCKS . "Plugin" . $plugin . "')===false)
                 \n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                break;
-            case Core::FUNC_PLUGIN:
-                $output .= "if (function_exists('".Core::NAMESPACE_PLUGINS_FUNCTIONS."Plugin".$plugin."')
+                    break;
+                case Core::FUNC_PLUGIN:
+                    $output .= "if (function_exists('" . Core::NAMESPACE_PLUGINS_FUNCTIONS . "Plugin" . $plugin . "')
                 ===false)\n\t\$this->getLoader()->loadPlugin
                 ('$plugin');\n";
-                break;
-            case Core::SMARTY_MODIFIER:
-                $output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                break;
-            case Core::SMARTY_FUNCTION:
-                $output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                break;
-            case Core::SMARTY_BLOCK:
-                $output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
-                break;
-            case Core::PROXY_PLUGIN:
-                $output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
-                break;
-            default:
-                throw new CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
+                    break;
+                case Core::SMARTY_MODIFIER:
+                    $output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                    break;
+                case Core::SMARTY_FUNCTION:
+                    $output .= "if (function_exists('smarty_function_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                    break;
+                case Core::SMARTY_BLOCK:
+                    $output .= "if (function_exists('smarty_block_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                    break;
+                case Core::PROXY_PLUGIN:
+                    $output .= $this->getDwoo()->getPluginProxy()->getPreloader($plugin);
+                    break;
+                default:
+                    throw new CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
             }
         }
 
@@ -926,15 +924,15 @@ class Compiler implements ICompiler
         // as we do not know whether it's intended, and PHP will strip it otherwise
         $output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
-//        if ($this->debug) {
-//            echo '=============================================================================================' . "\n";
-//            $lines = preg_split('{\r\n|\n|<br />}', $output);
-//            array_shift($lines);
-//            foreach ($lines as $i => $line) {
-//                echo ($i + 1) . '. ' . $line . "\r\n";
-//            }
-//            echo '=============================================================================================' . "\n";
-//        }
+        if ($this->debug) {
+            echo '=============================================================================================' . "\n";
+            $lines = preg_split('{\r\n|\n|<br />}', $output);
+            array_shift($lines);
+            foreach ($lines as $i => $line) {
+                echo ($i + 1) . '. ' . $line . "\r\n";
+            }
+            echo '=============================================================================================' . "\n";
+        }
 
         $this->template = $this->dwoo = null;
         $tpl            = null;
@@ -956,7 +954,7 @@ class Compiler implements ICompiler
         $body = $this->templatePlugins[$function]['body'];
         foreach ($this->templatePlugins as $func => $attr) {
             if ($func !== $function && !isset($attr['called']) && strpos($body, Core::NAMESPACE_PLUGINS_FUNCTIONS .
-            'Plugin' . ucfirst($func)) !== false) {
+            'Plugin' . Core::toCamelCase($func)) !== false) {
                 $this->templatePlugins[$func]['called'] = true;
                 $this->resolveSubTemplateDependencies($func);
             }
@@ -1060,7 +1058,7 @@ class Compiler implements ICompiler
             echo 'Compiler::' . __FUNCTION__ . "\n";
         }
 
-        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($type);
+        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type);
         if (class_exists($class) === false) {
             $this->getDwoo()->getLoader()->loadPlugin($type);
         }
@@ -1123,7 +1121,7 @@ class Compiler implements ICompiler
             echo 'Compiler::' . __FUNCTION__ . "\n";
         }
 
-        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($type);
+        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type);
         if (class_exists($class) === false) {
             $this->getDwoo()->getLoader()->loadPlugin($type);
         }
@@ -1163,7 +1161,7 @@ class Compiler implements ICompiler
                 if ($top['custom']) {
                     $class = $top['class'];
                 } else {
-                    $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($top['type']);
+                    $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($top['type']);
                 }
                 if (count($this->stack)) {
                     $this->curBlock = &$this->stack[count($this->stack) - 1];
@@ -1259,7 +1257,7 @@ class Compiler implements ICompiler
         if ($o['custom']) {
             $class = $o['class'];
         } else {
-            $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($o['type']);
+            $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($o['type']);
         }
 
         $this->curBlock = &$this->stack[count($this->stack) - 1];
@@ -1912,7 +1910,7 @@ class Compiler implements ICompiler
             } else {
                 $params = $this->mapParams(
                     $params, array(
-                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
+                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
                     ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
                     ), $state
                 );
@@ -1921,7 +1919,7 @@ class Compiler implements ICompiler
             if ($pluginType & Core::CUSTOM_PLUGIN) {
                 $params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
             } else {
-                $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst
+                $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase
                     ($func) . (($pluginType &
                         Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
             }
@@ -1983,7 +1981,7 @@ class Compiler implements ICompiler
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
                     $funcCompiler = $this->customPlugins[$func]['callback'];
                 } else {
-                    $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . 'Compile';
+                    $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . 'Compile';
                 }
                 array_unshift($params, $this);
                 if ($func === 'tif') {
@@ -2004,7 +2002,7 @@ class Compiler implements ICompiler
                 } else {
                     array_unshift($params, '$this');
                     $params = self::implode_r($params);
-                    $output = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . '(' . $params .
+                    $output = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '(' . $params .
                         ')';
                 }
             }
@@ -2025,7 +2023,7 @@ class Compiler implements ICompiler
                         $funcCompiler = $callback;
                     }
                 } else {
-                    $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
+                    $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
                                           'compile');
                     array_unshift($params, $this);
                 }
@@ -2083,7 +2081,7 @@ class Compiler implements ICompiler
         } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
             array_unshift($params, '$this');
             $params                                 = self::implode_r($params);
-            $output                                 = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) .
+            $output                                 = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
                 '_' .
             $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
             $this->templatePlugins[$func]['called'] = true;
@@ -3121,7 +3119,7 @@ class Compiler implements ICompiler
                     $callback   = $this->customPlugins[$func]['callback'];
                     $pluginName = $callback;
                 } else {
-                    $pluginName = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func);
+                    $pluginName = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func);
 
                     if ($pluginType & Core::CLASS_PLUGIN) {
                         $callback = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
@@ -3144,7 +3142,7 @@ class Compiler implements ICompiler
                         if ($pluginType & Core::CUSTOM_PLUGIN) {
                             $funcCompiler = $this->customPlugins[$func]['callback'];
                         } else {
-                            $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) .
+                            $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
                                 'Compile';
                         }
                         array_unshift($params, $this);
@@ -3179,7 +3177,7 @@ class Compiler implements ICompiler
                                 $funcCompiler = $callback;
                             }
                         } else {
-                            $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
+                            $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
                             'compile');
                             array_unshift($params, $this);
                         }
@@ -3195,7 +3193,7 @@ class Compiler implements ICompiler
                             }
                         } elseif ($mapped) {
                             $output = '$this->arrayMap(array($this->getObjectPlugin(\''.
-                                Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . '\'), 
+                                Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '\'), 
                             \'process\'), array(' . $params . '))';
                         } else {
                             $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
@@ -3272,20 +3270,29 @@ class Compiler implements ICompiler
                 $pluginType = Core::TEMPLATE_PLUGIN | Core::COMPILABLE_PLUGIN;
             } elseif (isset($this->customPlugins[$name])) {
                 $pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
-            } elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name)) !== false) {
-                if (is_subclass_of(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name), 'Dwoo\Block\Plugin')) {
+            } elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name), false) !==
+                false) {
+                if (is_subclass_of(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name), 'Dwoo\Block\Plugin')) {
                     $pluginType = Core::BLOCK_PLUGIN;
                 } else {
                     $pluginType = Core::CLASS_PLUGIN;
                 }
-                $interfaces = class_implements(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name));
+                $interfaces = class_implements(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
                 }
-            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $this->getDwoo()->toCamelCase($name)) !==
+            } elseif(class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name), false) !==
+                false) {
+                $pluginType = Core::CLASS_PLUGIN;
+                $interfaces = class_implements(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name));
+                if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
+                    $pluginType |= Core::COMPILABLE_PLUGIN;
+                }
+            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase
+                    ($name)) !==
                 false) {
                 $pluginType = Core::FUNC_PLUGIN;
-            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $this->getDwoo()->toCamelCase($name) .
+            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name) .
                     'Compile') !== false) {
                 $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
             } elseif (function_exists('smarty_modifier_' . $name) !== false) {
@@ -3298,7 +3305,7 @@ class Compiler implements ICompiler
                 if ($pluginType === - 1) {
                     try {
                         $this->getDwoo()->getLoader()->loadPlugin(
-                            'Plugin' . $this->getDwoo()->toCamelCase($name), isset($phpFunc)  === false);
+                            'Plugin' . Core::toCamelCase($name), isset($phpFunc)  === false);
                     }
                     catch (Exception $e) {
                         if (isset($phpFunc)) {
@@ -3311,7 +3318,7 @@ class Compiler implements ICompiler
                         }
                     }
                 } else {
-                    throw new Exception('Plugin "' . $name . '" could not be found');
+                    throw new Exception('Plugin "' . $name . '" could not be found, type:' . $pluginType);
                 }
                 ++ $pluginType;
             }
