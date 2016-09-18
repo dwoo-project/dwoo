@@ -49,7 +49,7 @@ class PluginElseif extends BlockIf implements ICompilableBlock, IElseable
         while (true) {
             $preContent .= $compiler->removeTopBlock();
             $block      = &$compiler->getCurrentBlock();
-            $interfaces = class_implements($block['class'], false);
+            $interfaces = class_implements($block['class']);
             if (in_array('Dwoo\IElseable', $interfaces) !== false) {
                 break;
             }

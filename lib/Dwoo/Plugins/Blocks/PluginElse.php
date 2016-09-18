@@ -61,7 +61,7 @@ class PluginElse extends BlockPlugin implements ICompilableBlock
             if (!$block) {
                 throw new CompilationException($compiler, 'An else block was found but it was not preceded by an if or other else-able construct');
             }
-            $interfaces = class_implements($block['class'], false);
+            $interfaces = class_implements($block['class']);
             if (in_array('Dwoo\IElseable', $interfaces) !== false) {
                 break;
             }
