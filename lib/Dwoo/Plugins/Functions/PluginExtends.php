@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -143,7 +143,7 @@ class PluginExtends extends Plugin implements ICompilable
                 $newSource = $parent['source'];
             }
             $newSource = preg_replace_callback(self::$regex, array(
-                'Dwoo_Plugin_extends',
+                'Dwoo\Plugins\Functions\PluginExtends',
                 'replaceBlock'
             ), $newSource);
             $newSource = $l . 'do extendsCheck(' . var_export($parent['resource'] . ':' . $parent['identifier'], true) . ')' . $r . $newSource;
@@ -181,7 +181,7 @@ class PluginExtends extends Plugin implements ICompilable
 
         if (preg_match(self::$regex, $matches[3])) {
             return preg_replace_callback(self::$regex, array(
-                'Dwoo_Plugin_extends',
+                'Dwoo\Plugins\Functions\PluginExtends',
                 'replaceBlock'
             ), $matches[3]);
         }

@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -18,6 +18,7 @@ namespace Dwoo;
 
 use ArrayAccess;
 use Countable;
+use Dwoo\Plugins\Blocks\PluginDynamic;
 use Dwoo\Security\Policy as SecurityPolicy;
 use Dwoo\Block\Plugin as BlockPlugin;
 use Dwoo\Template\File as TemplateFile;
@@ -79,6 +80,16 @@ class Core
     const SMARTY_FUNCTION   = 256;
     const PROXY_PLUGIN      = 512;
     const TEMPLATE_PLUGIN   = 1024;
+
+    /**
+     * Constant to default namespaces of builtin plugins
+     *
+     * @var string
+     */
+    const NAMESPACE_PLUGINS_BLOCKS     = 'Dwoo\Plugins\Blocks\\';
+    const NAMESPACE_PLUGINS_FILTERS    = 'Dwoo\Plugins\Filters\\';
+    const NAMESPACE_PLUGINS_FUNCTIONS  = 'Dwoo\Plugins\Functions\\';
+    const NAMESPACE_PLUGINS_PROCESSORS = 'Dwoo\Plugins\Processors\\';
 
     /**
      * Character set of the template, used by string manipulation plugins.
@@ -395,10 +406,10 @@ class Core
 
             if ($doCache === true) {
                 $out = preg_replace('/(<%|%>|<\?php|<\?|\?>)/', '<?php /*' . $dynamicId . '*/ echo \'$1\'; ?>', $out);
-                if (!class_exists('Dwoo_plugin_dynamic')) {
-                    $this->getLoader()->loadPlugin('dynamic');
+                if (!class_exists(self::NAMESPACE_PLUGINS_BLOCKS . 'PluginDynamic')) {
+                    $this->getLoader()->loadPlugin('PluginDynamic');
                 }
-                $out = \Dwoo_Plugin_dynamic::unescape($out, $dynamicId, $compiledTemplate);
+                $out = PluginDynamic::unescape($out, $dynamicId, $compiledTemplate);
             }
 
             // process filters
@@ -576,14 +587,14 @@ class Core
     public function addFilter($callback, $autoload = false)
     {
         if ($autoload) {
-            $class = 'Dwoo_Filter_' . $callback;
+            $class = self::NAMESPACE_PLUGINS_FILTERS . 'Filter' . $this->toCamelCase($callback);
 
             if (!class_exists($class) && !function_exists($class)) {
                 try {
                     $this->getLoader()->loadPlugin($callback);
                 }
                 catch (Exception $e) {
-                    if (strstr($callback, 'Dwoo_Filter_')) {
+                    if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS . 'Filter')) {
                         throw new Exception(
                             'Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
                         not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"'
@@ -627,12 +638,14 @@ class Core
      */
     public function removeFilter($callback)
     {
-        if (($index = array_search('Dwoo_Filter_' . $callback, $this->filters, true)) !== false) {
+        if (($index = array_search(self::NAMESPACE_PLUGINS_FILTERS. 'Filter' . ucfirst($callback), $this->filters,
+                true)) !==
+            false) {
             unset($this->filters[$index]);
         } elseif (($index = array_search($callback, $this->filters, true)) !== false) {
             unset($this->filters[$index]);
         } else {
-            $class = 'Dwoo_Filter_' . $callback;
+            $class = self::NAMESPACE_PLUGINS_FILTERS . 'Filter' . $callback;
             foreach ($this->filters as $index => $filter) {
                 if (is_array($filter) && $filter[0] instanceof $class) {
                     unset($this->filters[$index]);
@@ -1123,7 +1136,7 @@ class Core
         if (isset($this->plugins[$blockName])) {
             $class = $this->plugins[$blockName]['class'];
         } else {
-            $class = 'Dwoo_Plugin_' . $blockName;
+            $class = self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($blockName);
         }
 
         if ($this->curBlock !== null) {
@@ -1148,12 +1161,7 @@ class Core
         } elseif ($cnt === 4) {
             $block->init($args[0], $args[1], $args[2], $args[3]);
         } else {
-            call_user_func_array(
-                array(
-                $block,
-                'init'
-                ), $args
-            );
+            call_user_func_array(array($block, 'init'), $args);
         }
 
         $this->stack[] = $this->curBlock = $block;
@@ -1240,7 +1248,8 @@ class Core
         if (isset($this->plugins[$type])) {
             $type = $this->plugins[$type]['class'];
         } else {
-            $type = 'Dwoo_Plugin_' . str_replace('Dwoo_Plugin_', '', $type);
+            $type = self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin_' . str_replace(self::NAMESPACE_PLUGINS_BLOCKS.'Plugin',
+                    '', $type);
         }
 
         $keys = array_keys($this->stack);
@@ -1281,24 +1290,11 @@ class Core
      */
     public function classCall($plugName, array $params = array())
     {
-        $class = 'Dwoo_Plugin_' . $plugName;
+        $class = self::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($plugName);
 
         $plugin = $this->getObjectPlugin($class);
 
-        $cnt = count($params);
-        if ($cnt === 0) {
-            return $plugin->process();
-        } elseif ($cnt === 1) {
-            return $plugin->process($params[0]);
-        } elseif ($cnt === 2) {
-            return $plugin->process($params[0], $params[1]);
-        } elseif ($cnt === 3) {
-            return $plugin->process($params[0], $params[1], $params[2]);
-        } elseif ($cnt === 4) {
-            return $plugin->process($params[0], $params[1], $params[2], $params[3]);
-        } else {
-            return call_user_func_array(array($plugin, 'process'), $params);
-        }
+        return call_user_func_array(array($plugin, 'process'), $params);
     }
 
     /**
@@ -1775,5 +1771,20 @@ class Core
         }
 
         return call_user_func_array($proxy->getCallback($method), $args);
+    }
+
+    /**
+     * Convert plugin name from `auto_escape` to `AutoEscape`.
+     * @param string $input
+     * @param string $separator
+     *
+     * @return mixed
+     */
+    public function toCamelCase($input, $separator = '_')
+    {
+        return join(array_map('ucfirst', explode($separator, $input)));
+
+        // TODO >= PHP5.4.32
+        //return str_replace($separator, '', ucwords($input, $separator));
     }
 }

@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -49,9 +49,14 @@ class Loader implements ILoader
 
     protected $corePluginDir;
 
+    /**
+     * Loader constructor.
+     *
+     * @param $cacheDir
+     */
     public function __construct($cacheDir)
     {
-        $this->corePluginDir = DWOO_DIRECTORY . 'plugins';
+        $this->corePluginDir = __DIR__ . DIRECTORY_SEPARATOR . 'Plugins';
         $this->cacheDir      = rtrim($cacheDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
         // include class paths or rebuild paths if the cache file isn't there
@@ -126,23 +131,28 @@ class Loader implements ILoader
      */
     public function loadPlugin($class, $forceRehash = true)
     {
+        var_dump($this->classPath);
+        exit;
         // An unknown class was requested (maybe newly added) or the
         // include failed so we rebuild the cache. include() will fail
         // with an uncatchable error if the file doesn't exist, which
         // usually means that the cache is stale and must be rebuilt,
         // so we check for that before trying to include() the plugin.
-        if (!isset($this->classPath[$class]) || !is_readable($this->classPath[$class]) || !(include $this->classPath[$class])) {
+        if (!isset($this->classPath[$class]) || !is_readable($this->classPath[$class]) || !(include_once
+        $this->classPath[$class])) {
             if ($forceRehash) {
                 $this->rebuildClassPathCache($this->corePluginDir, $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php');
                 foreach ($this->paths as $path => $file) {
                     $this->rebuildClassPathCache($path, $file);
                 }
                 if (isset($this->classPath[$class])) {
-                    include $this->classPath[$class];
+                    include_once $this->classPath[$class];
+                } else {
+                    throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
                 }
+            } else {
                 throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
-            throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
         }
     }
 

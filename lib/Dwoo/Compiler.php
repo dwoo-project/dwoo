@@ -10,12 +10,13 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo;
 
+use Dwoo\Plugins\Blocks\PluginIf;
 use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Security\Policy as SecurityPolicy;
 use Dwoo\Compilation\Exception as CompilationException;
@@ -368,8 +369,8 @@ class Compiler implements ICompiler
     public function addPreProcessor($callback, $autoload = false)
     {
         if ($autoload) {
-            $name  = str_replace('Dwoo_Processor_', '', $callback);
-            $class = 'Dwoo_Processor_' . $name;
+            $name  = str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . ucfirst($name);
 
             if (class_exists($class)) {
                 $callback = array(new $class($this), 'process');
@@ -394,10 +395,12 @@ class Compiler implements ICompiler
     {
         if (($index = array_search($callback, $this->processors['pre'], true)) !== false) {
             unset($this->processors['pre'][$index]);
-        } elseif (($index = array_search('Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback), $this->processors['pre'], true)) !== false) {
+        } elseif (($index = array_search(Core::NAMESPACE_PLUGINS_PROCESSORS . str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '',
+                    $callback),
+                $this->processors['pre'], true)) !== false) {
             unset($this->processors['pre'][$index]);
         } else {
-            $class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
             foreach ($this->processors['pre'] as $index => $proc) {
                 if (is_array($proc) && ($proc[0] instanceof $class) || (isset($proc['class']) && $proc['class'] == $class)) {
                     unset($this->processors['pre'][$index]);
@@ -419,8 +422,8 @@ class Compiler implements ICompiler
     public function addPostProcessor($callback, $autoload = false)
     {
         if ($autoload) {
-            $name  = str_replace('Dwoo_Processor_', '', $callback);
-            $class = 'Dwoo_Processor_' . $name;
+            $name  = str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . ucfirst($name);
 
             if (class_exists($class)) {
                 $callback = array(new $class($this), 'process');
@@ -445,10 +448,12 @@ class Compiler implements ICompiler
     {
         if (($index = array_search($callback, $this->processors['post'], true)) !== false) {
             unset($this->processors['post'][$index]);
-        } elseif (($index = array_search('Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback), $this->processors['post'], true)) !== false) {
+        } elseif (($index = array_search(Core::NAMESPACE_PLUGINS_PROCESSORS . str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '',
+                    $callback),
+                $this->processors['post'], true)) !== false) {
             unset($this->processors['post'][$index]);
         } else {
-            $class = 'Dwoo_Processor_' . str_replace('Dwoo_Processor_', '', $callback);
+            $class = Core::NAMESPACE_PLUGINS_PROCESSORS . str_replace(Core::NAMESPACE_PLUGINS_PROCESSORS, '', $callback);
             foreach ($this->processors['post'] as $index => $proc) {
                 if (is_array($proc) && ($proc[0] instanceof $class) || (isset($proc['class']) && $proc['class'] == $class)) {
                     unset($this->processors['post'][$index]);
@@ -471,7 +476,7 @@ class Compiler implements ICompiler
     {
         if (!class_exists($class) && !function_exists($class)) {
             try {
-                $this->dwoo->getLoader()->loadPlugin($name);
+                $this->getDwoo()->getLoader()->loadPlugin($name);
             }
             catch (Exception $e) {
                 throw new Exception('Processor ' . $name . ' could not be found in your plugin directories, please ensure it is in a file named ' . $name . '.php in the plugin directory');
@@ -639,7 +644,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the dwoo object that initiated this template compilation, only available during compilation of a
+     * Returns the dwoo object that initiated this template compilation, only available during compilation of a
      * template.
      *
      * @return Core
@@ -650,7 +655,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * overwrites the template that is being compiled.
+     * Overwrites the template that is being compiled.
      *
      * @param string $newSource   the template source that must replace the current one
      * @param bool   $fromPointer if set to true, only the source from the current pointer position is replaced
@@ -667,7 +672,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the template that is being compiled.
+     * Returns the template that is being compiled.
      *
      * @param mixed $fromPointer if set to true, only the source from the current pointer
      *                           position is returned, if a number is given it overrides the current pointer
@@ -726,7 +731,7 @@ class Compiler implements ICompiler
                 $this->line            = 1;
                 $this->templatePlugins = array();
                 // add top level block
-                $compiled                 = $this->addBlock('topLevelBlock', array(), 0);
+                $compiled                 = $this->addBlock('TopLevelBlock', array(), 0);
                 $this->stack[0]['buffer'] = '';
 
                 if ($this->debug) {
@@ -839,7 +844,7 @@ class Compiler implements ICompiler
             }
         }
 
-        $compiled .= $this->removeBlock('topLevelBlock');
+        $compiled .= $this->removeBlock('TopLevelBlock');
 
         if ($this->debug) {
             echo 'PROCESSING POSTPROCESSORS' . "\n";
@@ -873,10 +878,13 @@ class Compiler implements ICompiler
 
             case Core::BLOCK_PLUGIN:
             case Core::CLASS_PLUGIN:
-                $output .= "if (class_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                $output .= "if (class_exists('".Core::NAMESPACE_PLUGINS_BLOCKS."Plugin".$plugin."')===false)
+                \n\t\$this->getLoader()->loadPlugin('$plugin');\n";
                 break;
             case Core::FUNC_PLUGIN:
-                $output .= "if (function_exists('Dwoo_Plugin_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
+                $output .= "if (function_exists('".Core::NAMESPACE_PLUGINS_FUNCTIONS."Plugin".$plugin."')
+                ===false)\n\t\$this->getLoader()->loadPlugin
+                ('$plugin');\n";
                 break;
             case Core::SMARTY_MODIFIER:
                 $output .= "if (function_exists('smarty_modifier_$plugin')===false)\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
@@ -918,15 +926,15 @@ class Compiler implements ICompiler
         // as we do not know whether it's intended, and PHP will strip it otherwise
         $output = preg_replace('/(?<!"|<\?xml)\s*\?>\n/', '$0' . "\n", $output);
 
-        //        if ($this->debug) {
-        //            echo '============================================================================================='."\n";
-        //            $lines = preg_split('{\r\n|\n|<br />}', $output);
-        //            array_shift($lines);
-        //            foreach ($lines as $i => $line) {
-        //                echo($i + 1).'. '.$line."\r\n";
-        //            }
-        //            echo '============================================================================================='."\n";
-        //        }
+//        if ($this->debug) {
+//            echo '=============================================================================================' . "\n";
+//            $lines = preg_split('{\r\n|\n|<br />}', $output);
+//            array_shift($lines);
+//            foreach ($lines as $i => $line) {
+//                echo ($i + 1) . '. ' . $line . "\r\n";
+//            }
+//            echo '=============================================================================================' . "\n";
+//        }
 
         $this->template = $this->dwoo = null;
         $tpl            = null;
@@ -947,7 +955,8 @@ class Compiler implements ICompiler
 
         $body = $this->templatePlugins[$function]['body'];
         foreach ($this->templatePlugins as $func => $attr) {
-            if ($func !== $function && !isset($attr['called']) && strpos($body, 'Dwoo_Plugin_' . $func) !== false) {
+            if ($func !== $function && !isset($attr['called']) && strpos($body, Core::NAMESPACE_PLUGINS_FUNCTIONS .
+            'Plugin' . ucfirst($func)) !== false) {
                 $this->templatePlugins[$func]['called'] = true;
                 $this->resolveSubTemplateDependencies($func);
             }
@@ -1037,7 +1046,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds a block to the top of the block stack.
+     * Adds a block to the top of the block stack.
      *
      * @param string $type      block type (name)
      * @param array  $params    the parameters array
@@ -1051,9 +1060,9 @@ class Compiler implements ICompiler
             echo 'Compiler::' . __FUNCTION__ . "\n";
         }
 
-        $class = 'Dwoo_Plugin_' . $type;
+        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($type);
         if (class_exists($class) === false) {
-            $this->dwoo->getLoader()->loadPlugin($type);
+            $this->getDwoo()->getLoader()->loadPlugin($type);
         }
         $params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
@@ -1114,9 +1123,9 @@ class Compiler implements ICompiler
             echo 'Compiler::' . __FUNCTION__ . "\n";
         }
 
-        $class = 'Dwoo_Plugin_' . $type;
+        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($type);
         if (class_exists($class) === false) {
-            $this->dwoo->getLoader()->loadPlugin($type);
+            $this->getDwoo()->getLoader()->loadPlugin($type);
         }
         $this->stack[]  = array(
             'type'   => $type,
@@ -1147,25 +1156,21 @@ class Compiler implements ICompiler
 
         $pluginType = $this->getPluginType($type);
         if ($pluginType & Core::SMARTY_BLOCK) {
-            $type = 'smartyinterface';
+            $type = 'Smartyinterface';
         }
         while (true) {
             while ($top = array_pop($this->stack)) {
                 if ($top['custom']) {
                     $class = $top['class'];
                 } else {
-                    $class = 'Dwoo_Plugin_' . $top['type'];
+                    $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($top['type']);
                 }
                 if (count($this->stack)) {
                     $this->curBlock = &$this->stack[count($this->stack) - 1];
-                    $this->push(
-                        call_user_func(
-                            array(
-                            $class,
-                            'postProcessing'
-                            ), $this, $top['params'], '', '', $top['buffer']
-                        ), 0
-                    );
+                    $this->push(call_user_func(array(
+                        $class,
+                        'postProcessing'
+                    ), $this, $top['params'], '', '', $top['buffer']), 0);
                 } else {
                     $null           = null;
                     $this->curBlock = &$null;
@@ -1254,7 +1259,7 @@ class Compiler implements ICompiler
         if ($o['custom']) {
             $class = $o['class'];
         } else {
-            $class = 'Dwoo_Plugin_' . $o['type'];
+            $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($o['type']);
         }
 
         $this->curBlock = &$this->stack[count($this->stack) - 1];
@@ -1613,11 +1618,11 @@ class Compiler implements ICompiler
                         throw new CompilationException($this, 'Assignments require the "if" plugin to be accessible');
                     }
 
-                    $parts  = $this->mapParams($parts, array('Dwoo_Plugin_if', 'init'), 1);
+                    $parts  = $this->mapParams($parts, array(Core::NAMESPACE_PLUGINS_BLOCKS . 'PluginIf', 'init'), 1);
                     $tokens = $this->getParamTokens($parts);
                     $parts  = $this->getCompiledParams($parts);
 
-                    $value = \Dwoo_Plugin_if::replaceKeywords($parts['*'], $tokens['*'], $this);
+                    $value = PluginIf::replaceKeywords($parts['*'], $tokens['*'], $this);
                     $echo  = '';
                 } else {
                     $value = array();
@@ -1757,9 +1762,9 @@ class Compiler implements ICompiler
         } else {
             if ($curBlock === 'condition') {
                 // load if plugin
-                $this->getPluginType('if');
+                $this->getPluginType('If');
 
-                if (\Dwoo_Plugin_if::replaceKeywords(array($func), array(self::T_UNQUOTED_STRING), $this) !== array($func)) {
+                if (PluginIf::replaceKeywords(array($func), array(self::T_UNQUOTED_STRING), $this) !== array($func)) {
                     return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
                 }
             }
@@ -1907,7 +1912,7 @@ class Compiler implements ICompiler
             } else {
                 $params = $this->mapParams(
                     $params, array(
-                    'Dwoo_Plugin_' . $func,
+                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
                     ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
                     ), $state
                 );
@@ -1916,7 +1921,9 @@ class Compiler implements ICompiler
             if ($pluginType & Core::CUSTOM_PLUGIN) {
                 $params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
             } else {
-                $params = $this->mapParams($params, 'Dwoo_Plugin_' . $func . (($pluginType & Core::COMPILABLE_PLUGIN) ? '_compile' : ''), $state);
+                $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst
+                    ($func) . (($pluginType &
+                        Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
             }
         } elseif ($pluginType & Core::SMARTY_MODIFIER) {
             $output = 'smarty_modifier_' . $func . '(' . implode(', ', $params) . ')';
@@ -1976,7 +1983,7 @@ class Compiler implements ICompiler
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
                     $funcCompiler = $this->customPlugins[$func]['callback'];
                 } else {
-                    $funcCompiler = 'Dwoo_Plugin_' . $func . '_compile';
+                    $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . 'Compile';
                 }
                 array_unshift($params, $this);
                 if ($func === 'tif') {
@@ -1997,7 +2004,8 @@ class Compiler implements ICompiler
                 } else {
                     array_unshift($params, '$this');
                     $params = self::implode_r($params);
-                    $output = 'Dwoo_Plugin_' . $func . '(' . $params . ')';
+                    $output = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . '(' . $params .
+                        ')';
                 }
             }
         } elseif ($pluginType & Core::CLASS_PLUGIN) {
@@ -2017,7 +2025,8 @@ class Compiler implements ICompiler
                         $funcCompiler = $callback;
                     }
                 } else {
-                    $funcCompiler = array('Dwoo_Plugin_' . $func, 'compile');
+                    $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
+                                          'compile');
                     array_unshift($params, $this);
                 }
                 $output = call_user_func_array($funcCompiler, $params);
@@ -2049,7 +2058,7 @@ class Compiler implements ICompiler
                 }
             }
         } elseif ($pluginType & Core::PROXY_PLUGIN) {
-            $output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
+            $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
         } elseif ($pluginType & Core::SMARTY_FUNCTION) {
             if (isset($params['*'])) {
                 $params = self::implode_r($params['*'], true);
@@ -2074,7 +2083,9 @@ class Compiler implements ICompiler
         } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
             array_unshift($params, '$this');
             $params                                 = self::implode_r($params);
-            $output                                 = 'Dwoo_Plugin_' . $func . '_' . $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
+            $output                                 = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) .
+                '_' .
+            $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
             $this->templatePlugins[$func]['called'] = true;
         }
 
@@ -3080,7 +3091,7 @@ class Compiler implements ICompiler
                 foreach ($params as &$p) {
                     $p = $p[0];
                 }
-                $output = call_user_func(array($this->dwoo->getPluginProxy(), 'getCode'), $func, $params);
+                $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
             } elseif ($pluginType & Core::SMARTY_MODIFIER) {
                 $params = $this->mapParams($params, null, $state);
                 $params = $params['*'][0];
@@ -3110,12 +3121,12 @@ class Compiler implements ICompiler
                     $callback   = $this->customPlugins[$func]['callback'];
                     $pluginName = $callback;
                 } else {
-                    $pluginName = 'Dwoo_Plugin_' . $func;
+                    $pluginName = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func);
 
                     if ($pluginType & Core::CLASS_PLUGIN) {
                         $callback = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
                     } else {
-                        $callback = $pluginName . (($pluginType & Core::COMPILABLE_PLUGIN) ? '_compile' : '');
+                        $callback = $pluginName . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : '');
                     }
                 }
 
@@ -3133,7 +3144,8 @@ class Compiler implements ICompiler
                         if ($pluginType & Core::CUSTOM_PLUGIN) {
                             $funcCompiler = $this->customPlugins[$func]['callback'];
                         } else {
-                            $funcCompiler = 'Dwoo_Plugin_' . $func . '_compile';
+                            $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) .
+                                'Compile';
                         }
                         array_unshift($params, $this);
                         $output = call_user_func_array($funcCompiler, $params);
@@ -3167,7 +3179,8 @@ class Compiler implements ICompiler
                                 $funcCompiler = $callback;
                             }
                         } else {
-                            $funcCompiler = array('Dwoo_Plugin_' . $func, 'compile');
+                            $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func),
+                            'compile');
                             array_unshift($params, $this);
                         }
                         $output = call_user_func_array($funcCompiler, $params);
@@ -3181,7 +3194,9 @@ class Compiler implements ICompiler
                                 $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
                             }
                         } elseif ($mapped) {
-                            $output = '$this->arrayMap(array($this->getObjectPlugin(\'Dwoo_Plugin_' . $func . '\'), \'process\'), array(' . $params . '))';
+                            $output = '$this->arrayMap(array($this->getObjectPlugin(\''.
+                                Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($func) . '\'), 
+                            \'process\'), array(' . $params . '))';
                         } else {
                             $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
                         }
@@ -3257,19 +3272,21 @@ class Compiler implements ICompiler
                 $pluginType = Core::TEMPLATE_PLUGIN | Core::COMPILABLE_PLUGIN;
             } elseif (isset($this->customPlugins[$name])) {
                 $pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
-            } elseif (class_exists('Dwoo_Plugin_' . $name) !== false) {
-                if (is_subclass_of('Dwoo_Plugin_' . $name, 'Dwoo\Block\Plugin')) {
+            } elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name)) !== false) {
+                if (is_subclass_of(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name), 'Dwoo\Block\Plugin')) {
                     $pluginType = Core::BLOCK_PLUGIN;
                 } else {
                     $pluginType = Core::CLASS_PLUGIN;
                 }
-                $interfaces = class_implements('Dwoo_Plugin_' . $name);
+                $interfaces = class_implements(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $this->getDwoo()->toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
                 }
-            } elseif (function_exists('Dwoo_Plugin_' . $name) !== false) {
+            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $this->getDwoo()->toCamelCase($name)) !==
+                false) {
                 $pluginType = Core::FUNC_PLUGIN;
-            } elseif (function_exists('Dwoo_Plugin_' . $name . '_compile')) {
+            } elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $this->getDwoo()->toCamelCase($name) .
+                    'Compile') !== false) {
                 $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
             } elseif (function_exists('smarty_modifier_' . $name) !== false) {
                 $pluginType = Core::SMARTY_MODIFIER;
@@ -3280,12 +3297,13 @@ class Compiler implements ICompiler
             } else {
                 if ($pluginType === - 1) {
                     try {
-                        $this->dwoo->getLoader()->loadPlugin($name, isset($phpFunc) === false);
+                        $this->getDwoo()->getLoader()->loadPlugin(
+                            'Plugin' . $this->getDwoo()->toCamelCase($name), isset($phpFunc)  === false);
                     }
                     catch (Exception $e) {
                         if (isset($phpFunc)) {
                             $pluginType = Core::NATIVE_PLUGIN;
-                        } elseif (is_object($this->dwoo->getPluginProxy()) && $this->dwoo->getPluginProxy()->handles($name)) {
+                        } elseif (is_object($this->getDwoo()->getPluginProxy()) && $this->getDwoo()->getPluginProxy()->handles($name)) {
                             $pluginType = Core::PROXY_PLUGIN;
                             break;
                         } else {
@@ -3372,8 +3390,8 @@ class Compiler implements ICompiler
                         throw new CompilationException(
                             $this, 'Rest argument missing for ' . str_replace(
                                 array(
-                                'Dwoo_Plugin_',
-                                '_compile'
+                                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin',
+                                'Compile'
                                 ), '', (is_array($callback) ? $callback[0] : $callback)
                             )
                         );
@@ -3416,8 +3434,8 @@ class Compiler implements ICompiler
                 throw new CompilationException(
                     $this, 'Argument ' . $k . '/' . $v[0] . ' missing for ' . str_replace(
                         array(
-                        'Dwoo_Plugin_',
-                        '_compile'
+                            Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin',
+                        'Compile'
                         ), '', $name
                     )
                 );

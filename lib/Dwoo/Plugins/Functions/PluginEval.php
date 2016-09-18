@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -24,7 +24,7 @@ use Dwoo\Template\String as TemplateString;
  * not recompile your string each time, it is still not
  * a good practice to use it. If you want to have templates
  * stored in a database or something you should probably use
- * the Dwoo_Template_String class or make another class that
+ * the Dwoo\Template\String class or make another class that
  * extends it
  * <pre>
  *  * var : the string to use as a template

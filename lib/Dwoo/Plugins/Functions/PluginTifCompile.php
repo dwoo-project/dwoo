@@ -10,13 +10,14 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Compiler;
+use Dwoo\Core;
 use Dwoo\Exception;
 use Dwoo\Compilation\Exception as CompilationException;
 use Dwoo\Plugins\Blocks\PluginIf;
@@ -34,7 +35,7 @@ use Dwoo\Plugins\Blocks\PluginIf;
 function PluginTifCompile(Compiler $compiler, array $rest, array $tokens)
 {
     // load if plugin
-    if (!class_exists('Dwoo_Plugin_if')) {
+    if (!class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'PluginIf')) {
         try {
             $compiler->getDwoo()->getLoader()->loadPlugin('if');
         }

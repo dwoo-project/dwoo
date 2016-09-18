@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.2.4
- * @date      2016-09-17
+ * @date      2016-09-18
  * @link      http://dwoo.org/
  */
 
@@ -101,7 +101,7 @@ class PluginTemplate extends BlockPlugin implements ICompilableBlock
         }
         $init .= '/* -- template start output */';
 
-        $funcName = 'Dwoo_Plugin_' . $params['name'] . '_' . $params['uuid'];
+        $funcName = 'Dwoo\Plugins\Functions\Plugin' . ucfirst($params['name']) . ucfirst($params['uuid']);
 
         $search      = array(
             '$this->charset',
