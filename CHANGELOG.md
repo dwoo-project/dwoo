@@ -12,6 +12,9 @@
 * Follows PSR-4: Autoloader
 * Update **README** with namespace examples.
 * Move all plugins from `plugins/builtin` to `Dwoo/Plugins`.
+* Processor `smarty_compat` become `PluginSmartyCompatible`.
+* All plugins **functions** and **classes** names MUST start with `Plugin` keyword.
+* All plugins filename MUST have the same name as the **function** or **classe**.
 
 `Removed`
 * Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
