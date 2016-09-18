@@ -1,4 +1,4 @@
-## 1.2.4 (2016-XX-XX)
+## 1.3.0 (2016-09-XX)
 `Added`
 * Add namespaces.
 * Implement [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) pattern.
