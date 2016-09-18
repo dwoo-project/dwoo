@@ -2,6 +2,7 @@
 `Added`
 * Add namespaces.
 * Implement [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) pattern.
+* Add new PHPDoc block for each files.
 
 `Changed`
 * Follows [PHP Coding Standards Fixer](http://cs.sensiolabs.org/).
@@ -10,6 +11,7 @@
 * Follows PSR-2: Cosing Style Guide.
 * Follows PSR-4: Autoloader
 * Update **README** with namespace examples.
+* Move all plugins from `plugins/builtin` to `Dwoo/Plugins`.
 
 `Removed`
 * Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
