@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-18
+ * @date      2016-09-19
  * @link      http://dwoo.org/
  */
 
@@ -150,10 +150,10 @@ class Loader implements ILoader
                 } elseif (isset($this->classPath[$class . 'Compile'])) {
                     include_once $this->classPath[$class . 'Compile'];
                 } else {
-                    throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                    throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
                 }
             } else {
-                throw new Exception('Plugin <em>' . $class . '</em> can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
         }
     }

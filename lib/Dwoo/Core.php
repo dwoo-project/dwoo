@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-18
+ * @date      2016-09-19
  * @link      http://dwoo.org/
  */
 
@@ -634,7 +634,7 @@ class Core
      */
     public function removeFilter($callback)
     {
-        if (($index = array_search(self::NAMESPACE_PLUGINS_FILTERS. 'Filter' . ucfirst($callback), $this->filters,
+        if (($index = array_search(self::NAMESPACE_PLUGINS_FILTERS. 'Filter' . self::toCamelCase($callback), $this->filters,
                 true)) !==
             false) {
             unset($this->filters[$index]);
@@ -1132,7 +1132,7 @@ class Core
         if (isset($this->plugins[$blockName])) {
             $class = $this->plugins[$blockName]['class'];
         } else {
-            $class = self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . ucfirst($blockName);
+            $class = self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . self::toCamelCase($blockName);
         }
 
         if ($this->curBlock !== null) {
@@ -1286,8 +1286,7 @@ class Core
      */
     public function classCall($plugName, array $params = array())
     {
-        $class = self::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . ucfirst($plugName);
-
+        $class  = self::toCamelCase($plugName);
         $plugin = $this->getObjectPlugin($class);
 
         return call_user_func_array(array($plugin, 'process'), $params);
