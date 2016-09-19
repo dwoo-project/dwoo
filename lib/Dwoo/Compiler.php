@@ -3181,8 +3181,9 @@ class Compiler implements ICompiler
                     $callback   = $this->customPlugins[$func]['callback'];
                     $pluginName = $callback;
                 } else {
-                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false || function_exists('Plugin' .
-                            Core::toCamelCase($func)) !== false) {
+                    if (class_exists('Plugin' . Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ?
+                        'Compile' : '')) !== false || function_exists('Plugin' . Core::toCamelCase($func) . (
+                            ($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : '')) !== false) {
                         $pluginName = 'Plugin' . Core::toCamelCase($func);
                     } else {
                         $pluginName = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func);
@@ -3207,8 +3208,12 @@ class Compiler implements ICompiler
                         if ($pluginType & Core::CUSTOM_PLUGIN) {
                             $funcCompiler = $this->customPlugins[$func]['callback'];
                         } else {
-                            $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
-                                'Compile';
+                            if (function_exists('Plugin' . Core::toCamelCase($func) . 'Compile') !== false) {
+                                $funcCompiler = 'Plugin' . Core::toCamelCase($func) . 'Compile';
+                            } else {
+                                $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
+                                    'Compile';
+                            }
                         }
                         array_unshift($params, $this);
                         $output = call_user_func_array($funcCompiler, $params);
