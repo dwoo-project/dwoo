@@ -89,6 +89,7 @@ class Core
     const NAMESPACE_PLUGINS_BLOCKS     = 'Dwoo\Plugins\Blocks\\';
     const NAMESPACE_PLUGINS_FILTERS    = 'Dwoo\Plugins\Filters\\';
     const NAMESPACE_PLUGINS_FUNCTIONS  = 'Dwoo\Plugins\Functions\\';
+    const NAMESPACE_PLUGINS_HELPERS    = 'Dwoo\Plugins\Helpers\\';
     const NAMESPACE_PLUGINS_PROCESSORS = 'Dwoo\Plugins\Processors\\';
 
     /**

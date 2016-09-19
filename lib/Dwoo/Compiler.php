@@ -1935,11 +1935,18 @@ class Compiler implements ICompiler
             if ($pluginType & Core::CUSTOM_PLUGIN) {
                 $params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
             } else {
+                // Custom plugin
                 if (function_exists('Plugin' . Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ?
                         'Compile' : '')) !== false) {
                     $params = $this->mapParams($params, 'Plugin' . Core::toCamelCase($func) . (($pluginType &
                             Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
-                } else {
+                } // Builtin helper plugin
+                elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) . (
+                    ($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : '')) !== false) {
+                    $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase
+                        ($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
+                } // Builtin function plugin
+                else {
                     $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase
                         ($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
                 }
@@ -2002,10 +2009,18 @@ class Compiler implements ICompiler
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
                     $funcCompiler = $this->customPlugins[$func]['callback'];
                 } else {
+                    // Custom plugin
                     if (function_exists('Plugin' . Core::toCamelCase($func) . 'Compile') !== false) {
                         $funcCompiler = 'Plugin' . Core::toCamelCase($func) . 'Compile';
-                    } else {
-                        $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . 'Compile';
+                    } // Builtin helper plugin
+                    elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) .
+                            'Compile') !== false) {
+                        $funcCompiler = Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) .
+                            'Compile';
+                    } // Builtin function plugin
+                    else {
+                        $funcCompiler = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
+                            'Compile';
                     }
                 }
                 array_unshift($params, $this);
@@ -2027,12 +2042,19 @@ class Compiler implements ICompiler
                 } else {
                     array_unshift($params, '$this');
                     $params = self::implode_r($params);
+                    // Custom plugin
                     if (function_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                         $output = 'Plugin' . Core::toCamelCase($func) . '(' . $params .
                             ')';
-                    } else {
-                        $output = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '(' . $params .
-                            ')';
+                    } // Builtin helper plugin
+                    elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func)) !==
+                        false) {
+                        $output = Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) . '(' .
+                            $params . ')';
+                    } // Builtin function plugin
+                    else {
+                        $output = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '(' .
+                            $params . ')';
                     }
                 }
             }
@@ -3361,6 +3383,10 @@ class Compiler implements ICompiler
             elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name) .
                     'Compile') !== false || function_exists('Plugin' . Core::toCamelCase($name) . 'Compile') !==
                 false) {
+                $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
+            } // Helper plugin compile
+            elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($name) . 'Compile')
+                !== false) {
                 $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
             } // Smarty modifier
             elseif (function_exists('smarty_modifier_' . $name) !== false) {

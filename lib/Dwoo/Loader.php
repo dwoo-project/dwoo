@@ -91,6 +91,7 @@ class Loader implements ILoader
                 if (is_dir($f)) {
                     $this->rebuildClassPathCache($f, false);
                 } else {
+                    // TODO: is it still valid now?
                     $this->classPath[str_replace(
                         array(
                         'function.',
