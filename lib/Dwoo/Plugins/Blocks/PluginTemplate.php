@@ -9,12 +9,14 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
- * @date      2016-09-18
+ * @version   1.3.0
+ * @date      2016-09-19
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Blocks;
+
+use Dwoo\Core;
 use Dwoo\Compiler;
 use Dwoo\Block\Plugin as BlockPlugin;
 use Dwoo\ICompilable\Block as ICompilableBlock;
@@ -31,14 +33,6 @@ use Dwoo\Compilation\Exception as CompilationException;
  */
 class PluginTemplate extends BlockPlugin implements ICompilableBlock
 {
-    /**
-     * @param       $name
-     * @param array $rest
-     */
-    public function init($name, array $rest = array())
-    {
-    }
-
     /**
      * @param Compiler $compiler
      * @param array    $params
@@ -101,21 +95,21 @@ class PluginTemplate extends BlockPlugin implements ICompilableBlock
         }
         $init .= '/* -- template start output */';
 
-        $funcName = 'Dwoo\Plugins\Functions\Plugin' . ucfirst($params['name']) . ucfirst($params['uuid']);
+        $funcName = 'Dwoo\Plugins\Functions\Plugin' . Core::toCamelCase($params['name']) . Core::toCamelCase($params['uuid']);
 
-        $search      = array(
-            '$this->charset',
-            '$this->',
-            '$this,',
-        );
-        $replacement = array(
-            '$dwoo->getCharset()',
-            '$dwoo->',
-            '$dwoo,',
-        );
+        $search      = array('$this->charset', '$this->', '$this,',);
+        $replacement = array('$dwoo->getCharset()', '$dwoo->', '$dwoo,',);
         $content     = str_replace($search, $replacement, $content);
 
         $body = 'if (!function_exists(\'' . $funcName . "')) {\nfunction " . $funcName . '(' . $paramstr . ') {' . "\n$init" . Compiler::PHP_CLOSE . $prepend . $content . $append . Compiler::PHP_OPEN . $cleanup . "\n}\n}";
         $compiler->addTemplatePlugin($params['name'], $params['*'], $params['uuid'], $body);
+    }
+
+    /**
+     * @param       $name
+     * @param array $rest
+     */
+    public function init($name, array $rest = array())
+    {
     }
 }
