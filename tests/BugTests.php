@@ -1,4 +1,6 @@
 <?php
+/**
+ */
 
 class BugTests extends PHPUnit_Framework_TestCase
 {
@@ -169,7 +171,7 @@ aaa
     }
 }
 
-function Dwoo_Plugin_X_compile(Dwoo\Compiler $cmp, $text)
+function PluginXCompile(Dwoo\Compiler $cmp, $text)
 {
     return $text;
 }
