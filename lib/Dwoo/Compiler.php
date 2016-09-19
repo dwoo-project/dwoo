@@ -1905,15 +1905,20 @@ class Compiler implements ICompiler
                     $params, array(
                     $this->customPlugins[$func]['class'],
                     $this->customPlugins[$func]['function']
-                    ), $state
-                );
+                ), $state);
             } else {
-                $params = $this->mapParams(
-                    $params, array(
-                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
-                    ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
-                    ), $state
-                );
+                if (class_exists('Plugin' . Core::toCamelCase($func). (($pluginType & Core::COMPILABLE_PLUGIN) ?
+                    'compile' : 'process'), false) !== false) {
+                    $params = $this->mapParams($params, array(
+                        'Plugin' . Core::toCamelCase($func),
+                        ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
+                    ), $state);
+                } else {
+                    $params = $this->mapParams($params, array(
+                        Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
+                        ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
+                    ), $state);
+                }
             }
         } elseif ($pluginType & Core::FUNC_PLUGIN) {
             if ($pluginType & Core::CUSTOM_PLUGIN) {
