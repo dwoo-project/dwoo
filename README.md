@@ -49,14 +49,14 @@ $dwoo = new Dwoo\Core();
 $tpl = new Dwoo\Template\File('path/to/index.tpl');
 
 // Create a data set, if you don't like this you can directly input an
-// associative array in $dwoo->output()
+// associative array in $dwoo->get()
 $data = new Dwoo\Data();
 // Fill it with some data
 $data->assign('foo', 'BAR');
 $data->assign('bar', 'BAZ');
 
 // Outputs the result ...
-$dwoo->output($tpl, $data);
+echo $dwoo->get($tpl, $data);
 // ... or get it to use it somewhere else
 $dwoo->get($tpl, $data);
 ```
