@@ -10,11 +10,12 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-18
+ * @date      2016-09-19
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Compiler;
 
 /**

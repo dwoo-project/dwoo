@@ -9,12 +9,13 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.2.4
- * @date      2016-09-17
+ * @version   1.3.0
+ * @date      2016-09-19
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
+
 use Dwoo\Core;
 
 /**
@@ -33,8 +34,7 @@ use Dwoo\Core;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-function PluginMailto(Core $dwoo, $address, $text = null, $subject = null, $encode = null, $cc = null, $bcc = null,
-                      $newsgroups = null, $followupto = null, $extra = null)
+function PluginMailto(Core $dwoo, $address, $text = null, $subject = null, $encode = null, $cc = null, $bcc = null, $newsgroups = null, $followupto = null, $extra = null)
 {
     if (empty($address)) {
         return '';
