@@ -3185,9 +3185,9 @@ class Compiler implements ICompiler
                     $callback   = $this->customPlugins[$func]['callback'];
                     $pluginName = $callback;
                 } else {
-                    if (class_exists('Plugin' . Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ?
-                        'Compile' : '')) !== false || function_exists('Plugin' . Core::toCamelCase($func) . (
-                            ($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : '')) !== false) {
+                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false || function_exists('Plugin' .
+                            Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''))
+                        !== false) {
                         $pluginName = 'Plugin' . Core::toCamelCase($func);
                     } else {
                         $pluginName = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func);
