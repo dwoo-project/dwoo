@@ -1,50 +1,18 @@
 <?php
 
 /**
- * Dwoo adapter for Agavi.
+ * Copyright (c) 2013-2016
  *
- * Install instructions :
- *  - download dwoo from dwoo.org and unzip it somewhere in your agavi app
- *  - add a renderer to your output_types.xml as such :
- *     <renderer name="dwoo" class="DwooRenderer">
- *        <parameter name="assigns">
- *           <parameter name="routing">ro</parameter>
- *           <parameter name="request">rq</parameter>
- *           <parameter name="controller">ct</parameter>
- *           <parameter name="user">us</parameter>
- *           <parameter name="translation_manager">tm</parameter>
- *           <parameter name="request_data">rd</parameter>
- *        </parameter>
- *        <parameter name="extract_vars">true</parameter>
- *        <parameters name="plugin_dir">
- *           <parameter>%core.lib_dir%/dwoo_plugins</parameter>
- *           <parameter>%core.lib_dir%/other_dwoo_plugins</parameter>
- *        </parameters>
- *     </renderer>
- *
- *  - add dwoo's directory to your include path or include dwooAutoload.php yourself
- *    either through agavi's autoload.xml (with name="Dwoo") or through your index.php
- *
- * Notes:
- *  - you can copy the /Dwoo/Adapters/Agavi/dwoo_plugins directory to your agavi app's
- *    lib directory, or change the plugin_dir parameter in the output_types.xml file.
- *    these plugins are agavi-specific helpers that shortens the syntax to call common
- *    agavi helpers (i18n, routing, ..)
- *  - in the previous versions of this adapter, only a single value could be passed to
- *    plugin_dir parameter; now you can pass several plugin directories (see example)
- *
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from the
- * use of this software.
- *
+ * @category  Library
+ * @package   Dwoo\Adapters\Agavi
  * @author    Jordi Boggiano <j.boggiano@seld.be>
- * @copyright Copyright (c) 2008, Jordi Boggiano
- * @license   http://dwoo.org/LICENSE   Modified BSD License
- *
- * @link http://dwoo.org/
- *
- * @version 1.1.1
- * @date    2010-04-06
+ * @author    David Sanchez <david38sanchez@gmail.com>
+ * @copyright 2008-2013 Jordi Boggiano
+ * @copyright 2013-2016 David Sanchez
+ * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @version   1.3.0
+ * @date      2016-09-19
+ * @link      http://dwoo.org/
  */
 class DwooRenderer extends AgaviRenderer implements AgaviIReusableRenderer
 {

@@ -52,7 +52,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.2.4';
+    const VERSION = '1.3.0';
 
     /**
      * Unique number of this dwoo release.
@@ -291,27 +291,6 @@ class Core
         $this->template = null;
         unset($this->data);
         unset($this->returnData);
-    }
-
-    /**
-     * Autputs the template instead of returning it, this is basically a shortcut for get(*, *, *, true).
-     *
-     * @param mixed     $tpl      template, can either be a ITemplate object (i.e. TemplateFile), a
-     *                            valid path to a template, or a template as a string it is recommended to provide
-     *                            a ITemplate as it will probably make things faster, especially if you
-     *                            render a template multiple times
-     * @param mixed     $data     the data to use, can either be a IDataProvider object (i.e. Data) or
-     *                            an associative array. if you're rendering the template from cache, it can be
-     *                            left null
-     * @param ICompiler $compiler the compiler that must be used to compile the template, if left empty a default
-     *                            Compiler will be used
-     *
-     * @return     string nothing or the template output if $output is true
-     * @deprecated 1.2.3. will be deleted in 1.3.0
-     */
-    public function output($tpl, $data = array(), ICompiler $compiler = null)
-    {
-        return $this->get($tpl, $data, $compiler, true);
     }
 
     /**
