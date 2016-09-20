@@ -868,7 +868,7 @@ class Compiler implements ICompiler
         $output = "<?php\n/* template head */\n";
 
         // build plugin preloader
-        foreach ($this->usedPlugins as $plugin => $type) {
+        foreach ($this->getUsedPlugins() as $plugin => $type) {
             if ($type & Core::CUSTOM_PLUGIN) {
                 continue;
             }
@@ -1772,7 +1772,7 @@ class Compiler implements ICompiler
         } else {
             if ($curBlock === 'condition') {
                 // load if plugin
-                $this->getPluginType('If');
+                $this->getPluginType('if');
 
                 if (PluginIf::replaceKeywords(array($func), array(self::T_UNQUOTED_STRING), $this) !== array($func)) {
                     return $this->parseOthers($in, $from, $to, $parsingParams, $curBlock, $pointer);
@@ -1882,7 +1882,7 @@ class Compiler implements ICompiler
             $pluginType = $this->getPluginType($func);
         }
 
-        // blocks
+        // Blocks plugin
         if ($pluginType & Core::BLOCK_PLUGIN) {
             if ($curBlock !== 'root' || is_array($parsingParams)) {
                 throw new CompilationException($this, 'Block plugins can not be used as other plugin\'s arguments');
@@ -1908,7 +1908,7 @@ class Compiler implements ICompiler
             return $this->addBlock('smartyinterface', $params, $state);
         }
 
-        // funcs
+        // Functions plugin
         if ($pluginType & Core::NATIVE_PLUGIN || $pluginType & Core::SMARTY_FUNCTION || $pluginType & Core::SMARTY_BLOCK) {
             $params = $this->mapParams($params, null, $state);
         } elseif ($pluginType & Core::CLASS_PLUGIN) {
@@ -2110,9 +2110,13 @@ class Compiler implements ICompiler
                         $output = substr($output, 0, - 3) . ')';
                     }
                 } else {
-                    if (class_exists('Plugin' . $func) !== false) {
+                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                         $output = '$this->classCall(\'Plugin' . $func . '\', array(' . $params . '))';
-                    }else{
+                    } elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func)) !==
+                    false) {
+                        $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\', 
+                        array(' . $params . '))';
+                    } else{
                         $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
                     }
                 }
@@ -3272,8 +3276,8 @@ class Compiler implements ICompiler
                                 Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '\'), 
                             \'process\'), array(' . $params . '))';
                         } else {
-                            if (class_exists('Plugin' . $func) !== false) {
-                                $output = '$this->classCall(\'Plugin' . $func . '\', array(' . $params . '))';
+                            if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
+                                $output = '$this->classCall(\'Plugin' . Core::toCamelCase($func) . '\', array(' . $params . '))';
                             } else {
                                 $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
                             }
@@ -3427,7 +3431,7 @@ class Compiler implements ICompiler
         }
 
         if (($pluginType & Core::COMPILABLE_PLUGIN) === 0 && ($pluginType & Core::NATIVE_PLUGIN) === 0 && ($pluginType & Core::PROXY_PLUGIN) === 0) {
-            $this->addUsedPlugin($name, $pluginType);
+            $this->addUsedPlugin(Core::toCamelCase($name), $pluginType);
         }
 
         return $pluginType;
