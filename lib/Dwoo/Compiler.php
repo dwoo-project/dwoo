@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-20
  * @link      http://dwoo.org/
  */
 
@@ -2145,6 +2145,7 @@ class Compiler implements ICompiler
                 $output = 'smarty_function_' . $func . '(array(' . $params . '), $this)';
             }
         } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
+            // TODO: check namespace need or not, remove `_` too
             array_unshift($params, '$this');
             $params                                 = self::implode_r($params);
             $output                                 = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+  -->
+
 <phpunit backupGlobals="false"
          backupStaticAttributes="false"
          colors="true"
@@ -13,13 +16,12 @@
 >
     <testsuites>
         <testsuite name="Dwoo Test Suite">
-            <file>tests/DwooTests.php</file>
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">./lib/plugins/builtin</directory>
             <directory suffix=".php">./lib/Dwoo</directory>
             <exclude>
                 <directory>./lib/Dwoo/Adapters/</directory>

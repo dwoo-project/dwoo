@@ -13,7 +13,12 @@
         "psr-4": {
             "Dwoo\\": "lib/Dwoo/"
         }
-    },
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Dwoo\\Tests\\": "tests/"
+		}
+	},
     "require": {
         "php": ">=5.3"
     },
