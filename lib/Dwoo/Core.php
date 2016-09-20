@@ -305,19 +305,17 @@ class Core
      *                             left null
      * @param ICompiler $_compiler the compiler that must be used to compile the template, if left empty a default
      *                             Compiler will be used
-     * @param bool      $_output   flag that defines whether the function returns the output of the template
-     *                             (false, default) or echoes it directly (true)
      *
      * @return string|void or the template output if $output is false
      * @throws Exception
      */
-    public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
+    public function get($_tpl, $data = array(), $_compiler = null)
     {
         // a render call came from within a template, so we need a new dwoo instance in order to avoid breaking this one
         if ($this->template instanceof ITemplate) {
             $clone = clone $this;
 
-            return $clone->get($_tpl, $data, $_compiler, $_output);
+            return $clone->get($_tpl, $data, $_compiler);
         }
 
         // auto-create template if required
@@ -360,16 +358,11 @@ class Core
 
         if ($cacheLoaded === true) {
             // cache is present, run it
-            if ($_output === true) {
-                include $file;
-                $this->template = null;
-            } else {
-                ob_start();
-                include $file;
-                $this->template = null;
+            ob_start();
+            include $file;
+            $this->template = null;
 
-                return ob_get_clean();
-            }
+            return ob_get_clean();
         } else {
             $dynamicId = uniqid();
 
@@ -406,26 +399,16 @@ class Core
                 $file = $_tpl->cache($this, $out);
 
                 // run it from the cache to be sure dynamics are rendered
-                if ($_output === true) {
-                    include $file;
-                    // exit render mode
-                    $this->template = null;
-                } else {
-                    ob_start();
-                    include $file;
-                    // exit render mode
-                    $this->template = null;
+                ob_start();
+                include $file;
+                // exit render mode
+                $this->template = null;
 
-                    return ob_get_clean();
-                }
+                return ob_get_clean();
             } else {
                 // no need to build cache
                 // exit render mode
                 $this->template = null;
-                // output
-                if ($_output === true) {
-                    echo $out;
-                }
 
                 return $out;
             }
