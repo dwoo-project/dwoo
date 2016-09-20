@@ -2,22 +2,26 @@
 `Added`
 * Add namespaces.
 * Implement [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) pattern.
-* Add new PHPDoc block for each files.
+* Add new PHPDoc block **Copyright** for each files.
 
 `Changed`
 * Follows [PHP Coding Standards Fixer](http://cs.sensiolabs.org/).
-* Follows [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer).
+* Refactoring code, following [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) Standard.
 * Follows PSR-1: Basic Coding Standard.
 * Follows PSR-2: Cosing Style Guide.
-* Follows PSR-4: Autoloader
-* Update **README** with namespace examples.
+* Follows PSR-4: Autoloader Standard instead of PSR-0.
+* Update **README** examples with namespace.
 * Move all plugins from `plugins/builtin` to `Dwoo/Plugins`.
 * Processor `smarty_compat` become `PluginSmartyCompatible`.
 * All plugins **functions** and **classes** names MUST start with `Plugin` keyword.
-* All plugins filename MUST have the same name as the **function** or **classe**.
+* All plugins filename MUST have the same name as the **function** or **class**.
+* Plugins name changed from **underscore_case** to **CamelCase** (e.g. `Dwoo_Plugin_assign_compile` is now `PluginAssignCompile`).
+* Helper `Dwoo_Plugin_array_compile` move to `Dwoo\Plugins\Helpers\PluginArrayCompile`.
 
 `Removed`
 * Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
+* Delete method `Core::output()`, use now `echo Core::get()` method.
+* Last parameter `$_output` of `Core::get()` method has been removed, use `echo Core::get()` instead.
 
 ## 1.2.3 (2016-09-15)
 `Added`
