@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-20
  * @link      http://dwoo.org/
  */
 
@@ -95,7 +95,7 @@ class PluginTemplate extends BlockPlugin implements ICompilableBlock
         }
         $init .= '/* -- template start output */';
 
-        $funcName = 'Dwoo\Plugins\Functions\Plugin' . Core::toCamelCase($params['name']) . Core::toCamelCase($params['uuid']);
+        $funcName = 'Plugin' . Core::toCamelCase($params['name']) . Core::toCamelCase($params['uuid']);
 
         $search      = array('$this->charset', '$this->', '$this,',);
         $replacement = array('$dwoo->getCharset()', '$dwoo->', '$dwoo,',);
