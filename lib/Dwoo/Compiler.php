@@ -3411,7 +3411,7 @@ class Compiler implements ICompiler
                 if ($pluginType === - 1) {
                     try {
                         $this->getDwoo()->getLoader()->loadPlugin(
-                            'Plugin' . Core::toCamelCase($name), isset($phpFunc)  === false);
+                            'Plugin' . Core::toCamelCase($name));
                     }
                     catch (Exception $e) {
                         if (isset($phpFunc)) {

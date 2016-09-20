@@ -5,6 +5,9 @@
 /**
  */
 
+/**
+ */
+
 class CoreTests extends PHPUnit_Framework_TestCase
 {
     protected $compiler;
@@ -66,7 +69,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         ob_start();
-        $this->dwoo->output($tpl, array());
+        echo $this->dwoo->get($tpl, array());
         $output = ob_get_clean();
         $this->assertEquals('a', $output);
     }
@@ -76,7 +79,7 @@ class CoreTests extends PHPUnit_Framework_TestCase
      */
     public function testDwoo_GetNonTemplate()
     {
-        $this->dwoo->output(null, array());
+        echo $this->dwoo->get(null, array());
     }
 
     /**
@@ -250,12 +253,12 @@ class CoreTests extends PHPUnit_Framework_TestCase
         $tpl->forceCompilation();
 
         ob_start();
-        $this->dwoo->output($tpl, array('foo' => 1));
+        echo $this->dwoo->get($tpl, array('foo' => 1));
         $cap = ob_get_clean();
         $this->assertEquals('foo1', $cap);
         $this->assertEquals(true, $this->dwoo->isCached($tpl));
         ob_start();
-        $this->dwoo->output($tpl, array('foo' => 1));
+        echo $this->dwoo->get($tpl, array('foo' => 1));
         $cap = ob_get_clean();
         $this->assertEquals('foo1', $cap);
         $this->assertEquals(1, $this->dwoo->clearCache(-11));

@@ -327,7 +327,7 @@ class Core
             $_tpl = new TemplateFile($_tpl);
         } else {
             throw new Exception(
-                'Dwoo->get/Dwoo->output\'s first argument must be a ITemplate (i.e. TemplateFile) or 
+                'Dwoo->get\'s first argument must be a ITemplate (i.e. TemplateFile) or 
             a valid path to a template file', E_USER_NOTICE
             );
         }

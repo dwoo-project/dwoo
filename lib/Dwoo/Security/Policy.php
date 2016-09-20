@@ -25,11 +25,11 @@ use Dwoo\Core;
  */
 class Policy
 {
-    /**#@+
+    /**
      * php handling constants, defaults to PHP_REMOVE
      * PHP_REMOVE : remove all <?php ?> (+ short tags if your short tags option is on) from the input template
-     * PHP_ALLOW : leave them as they are
      * PHP_ENCODE : run htmlentities over them
+     * PHP_ALLOW : leave them as they are
      *
      * @var int
      */
@@ -81,7 +81,7 @@ class Policy
 
     /**
      * stores the php handling level.
-     * defaults to Dwoo_Security_Policy::PHP_REMOVE
+     * defaults to self::PHP_REMOVE
      *
      * @var int
      */
@@ -89,7 +89,7 @@ class Policy
 
     /**
      * stores the constant handling level.
-     * defaults to Dwoo_Security_Policy::CONST_DISALLOW
+     * defaults to self::CONST_DISALLOW
      *
      * @var bool
      */
@@ -287,12 +287,7 @@ class Policy
                 continue;
             }
             if ($obj instanceof $class) {
-                return call_user_func_array(
-                    array(
-                    $obj,
-                    $method
-                    ), $args
-                );
+                return call_user_func_array(array($obj, $method), $args);
             }
         }
         $dwoo->triggerError('The current security policy prevents you from calling ' . get_class($obj) . '::' . $method . '()');
