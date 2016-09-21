@@ -8,7 +8,12 @@ namespace Dwoo\Tests
     use Dwoo\Template\String as TemplateString;
     use PluginProxyTest_PluginProxy;
 
-    class PluginProxyTests extends BaseTests
+    /**
+     * Class PluginProxyTest
+     *
+     * @package Dwoo\Tests
+     */
+    class PluginProxyTest extends BaseTests
     {
 
         public function tearDown()

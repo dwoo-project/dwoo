@@ -8,7 +8,12 @@ namespace Dwoo\Tests
     use Dwoo\Data;
     use Dwoo\Template\String as TemplateString;
 
-    class DataTests extends BaseTests
+    /**
+     * Class DataTest
+     *
+     * @package Dwoo\Tests
+     */
+    class DataTest extends BaseTests
     {
         protected $tpl;
 

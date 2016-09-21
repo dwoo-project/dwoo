@@ -11,7 +11,12 @@ namespace Dwoo\Tests
     use Dwoo\Template\String as TemplateString;
     use Dwoo\Security\Policy as SecurityPolicy;
 
-    class CompilerTests extends BaseTests
+    /**
+     * Class CompilerTest
+     *
+     * @package Dwoo\Tests
+     */
+    class CompilerTest extends BaseTests
     {
         const FOO = 3;
 
@@ -298,7 +303,7 @@ replace="BAR"
 
         public function testShortClassConstants()
         {
-            $tpl = new TemplateString('{if %Dwoo\Tests\CompilerTests::FOO == 3}{%Dwoo\Tests\CompilerTests::FOO}{/}');
+            $tpl = new TemplateString('{if %Dwoo\Tests\CompilerTest::FOO == 3}{%Dwoo\Tests\CompilerTest::FOO}{/}');
             $tpl->forceCompilation();
 
             $this->assertEquals(self::FOO, $this->dwoo->get($tpl, array(), $this->compiler));

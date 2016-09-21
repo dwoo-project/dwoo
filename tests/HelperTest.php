@@ -7,7 +7,12 @@ namespace Dwoo\Tests
 
     use Dwoo\Template\String as TemplateString;
 
-    class HelperTests extends BaseTests
+    /**
+     * Class HelperTest
+     *
+     * @package Dwoo\Tests
+     */
+    class HelperTest extends BaseTests
     {
 
         public function testArray()

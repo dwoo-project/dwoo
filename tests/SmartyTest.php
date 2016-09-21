@@ -9,7 +9,12 @@ namespace Dwoo\Tests
     use Dwoo\Core;
     use Dwoo\Smarty\Adapter as SmartyAdapter;
 
-    class SmartyTests extends BaseTests
+    /**
+     * Class SmartyTest
+     *
+     * @package Dwoo\Tests
+     */
+    class SmartyTest extends BaseTests
     {
 
         /**

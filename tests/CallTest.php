@@ -9,27 +9,37 @@ namespace Dwoo\Tests
     use Dwoo\Template\String as TemplateString;
     use plugin_full_custom;
 
-    class CallTests extends BaseTests
+    /**
+     * Class CallTest
+     *
+     * @package Dwoo\Tests
+     */
+    class CallTest extends BaseTests
     {
 
         public function __construct($name = null, array $data = array(), $dataName = '')
         {
             parent::__construct($name, $data, $dataName);
 
-//            $this->compiler->debug = true;
+            $this->compiler->debug = true;
         }
 
-//        public function testClosureFunctionPlugin()
-//        {
-//            $this->dwoo->addPlugin('test', function (Core $dwoo, $foo, $bar = "bar") {
-//                return $foo . $bar;
-//            });
-//            $tpl = new TemplateString('{test "xxx"}');
-//            $tpl->forceCompilation();
-//
-//            $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
-//            $this->dwoo->removePlugin('test');
-//        }
+        public function testClosureFunctionPlugin()
+        {
+            $this->dwoo->addPlugin('test', function (Core $dwoo, $foo, $bar = "bar") {
+                return $foo . $bar;
+            });
+
+            $tpl = new TemplateString('{test "xxx"}');
+            $tpl->forceCompilation();
+
+            $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
+            $this->dwoo->removePlugin('test');
+        }
+
+        public function tearDown()
+        {
+        }
 
         public function testCustomFunctionPlugin()
         {

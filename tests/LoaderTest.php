@@ -8,7 +8,12 @@ namespace Dwoo\Tests
     use Dwoo\Loader;
     use Dwoo\Template\String as TemplateString;
 
-    class LoaderTests extends BaseTests
+    /**
+     * Class LoaderTest
+     *
+     * @package Dwoo\Tests
+     */
+    class LoaderTest extends BaseTests
     {
 
         public function testLoaderGetSet()

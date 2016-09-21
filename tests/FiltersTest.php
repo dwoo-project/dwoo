@@ -9,7 +9,12 @@ namespace Dwoo\Tests
     use Dwoo\Core;
     use Dwoo\Template\String as TemplateString;
 
-    class FiltersTests extends BaseTests
+    /**
+     * Class FiltersTest
+     *
+     * @package Dwoo\Tests
+     */
+    class FiltersTest extends BaseTests
     {
         public function testHtmlFormat()
         {

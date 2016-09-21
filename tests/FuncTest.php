@@ -8,7 +8,12 @@ namespace Dwoo\Tests
     use Dwoo\Template\String as TemplateString;
     use Dwoo\Template\File as TemplateFile;
 
-    class FuncTests extends BaseTests
+    /**
+     * Class FuncTest
+     *
+     * @package Dwoo\Tests
+     */
+    class FuncTest extends BaseTests
     {
 
         public function testAssign()

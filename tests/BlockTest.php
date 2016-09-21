@@ -25,7 +25,12 @@ namespace Dwoo\Tests
     use Dwoo\Template\String as TemplateString;
     use Dwoo\Template\File as TemplateFile;
 
-    class BlockTests extends BaseTests
+    /**
+     * Class BlockTest
+     *
+     * @package Dwoo\Tests
+     */
+    class BlockTest extends BaseTests
     {
 
         public function testA()

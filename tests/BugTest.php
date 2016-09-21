@@ -8,7 +8,12 @@ namespace Dwoo\Tests
     use Dwoo\Compiler;
     use Dwoo\Template\String as TemplateString;
 
-    class BugTests extends BaseTests
+    /**
+     * Class BugTest
+     *
+     * @package Dwoo\Tests
+     */
+    class BugTest extends BaseTests
     {
 
         public function testBlockStackBufferingBug()

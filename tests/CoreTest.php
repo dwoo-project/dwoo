@@ -18,7 +18,12 @@ namespace Dwoo\Tests
     use TestCountableIterator;
     use TestIterator;
 
-    class CoreTests extends BaseTests
+    /**
+     * Class CoreTest
+     *
+     * @package Dwoo\Tests
+     */
+    class CoreTest extends BaseTests
     {
 
         public function testCoverConstructorsEtc()

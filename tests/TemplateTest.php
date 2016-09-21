@@ -7,7 +7,12 @@ namespace Dwoo\Tests
 
     use Dwoo\Template\File as TemplateFile;
 
-    class TemplateTests extends BaseTests
+    /**
+     * Class TemplateTest
+     *
+     * @package Dwoo\Tests
+     */
+    class TemplateTest extends BaseTests
     {
 
         public function testIncludePath()

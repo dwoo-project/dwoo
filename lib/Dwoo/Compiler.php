@@ -16,6 +16,7 @@
 
 namespace Dwoo;
 
+use Closure;
 use Dwoo\Plugins\Blocks\PluginIf;
 use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Security\Policy as SecurityPolicy;
@@ -2029,19 +2030,16 @@ class Compiler implements ICompiler
                 }
                 $output = call_user_func_array($funcCompiler, $params);
             } else {
+                array_unshift($params, '$this');
+                $params = self::implode_r($params);
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
                     $callback = $this->customPlugins[$func]['callback'];
-                    if ($callback instanceof \Closure) {
-                        array_unshift($params, $this->getDwoo());
-                        $output = call_user_func_array($callback, $params);
+                    if ($callback instanceof Closure) {
+                        $output = 'call_user_func($this->getCustomPlugin(\'' . $func . '\'), ' . $params . ')';
                     } else {
-                        array_unshift($params, '$this');
-                        $params = self::implode_r($params);
                         $output = 'call_user_func(\'' . $callback . '\', ' . $params . ')';
                     }
                 } else {
-                    array_unshift($params, '$this');
-                    $params = self::implode_r($params);
                     // Custom plugin
                     if (function_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                         $output = 'Plugin' . Core::toCamelCase($func) . '(' . $params .

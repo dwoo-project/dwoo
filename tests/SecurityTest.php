@@ -10,7 +10,12 @@ namespace Dwoo\Tests
     use PHPUnit_Framework_Error;
     use testSecurityClass;
 
-    class SecurityTests extends BaseTests
+    /**
+     * Class SecurityTest
+     *
+     * @package Dwoo\Tests
+     */
+    class SecurityTest extends BaseTests
     {
         protected $policy;
 

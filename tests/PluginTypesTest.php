@@ -9,7 +9,12 @@ namespace Dwoo\Tests
     use custom_compilable_class_plugin_obj;
     use Dwoo\Template\String as TemplateString;
 
-    class PluginTypesTests extends BaseTests
+    /**
+     * Class PluginTypesTest
+     *
+     * @package Dwoo\Tests
+     */
+    class PluginTypesTest extends BaseTests
     {
 
         // Functions - Dwoo style

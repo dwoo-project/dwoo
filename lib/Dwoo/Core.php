@@ -10,13 +10,14 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-20
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo;
 
 use ArrayAccess;
+use Closure;
 use Countable;
 use Dwoo\Plugins\Blocks\PluginDynamic;
 use Dwoo\Security\Policy as SecurityPolicy;
@@ -413,8 +414,6 @@ class Core
                 return $out;
             }
         }
-
-        return '';
     }
 
     /**
@@ -510,7 +509,7 @@ class Core
                 you used exists'
                 );
             }
-        } elseif ($callback instanceof \Closure) {
+        } elseif ($callback instanceof Closure) {
             $this->plugins[$name] = array(
                 'type'     => self::FUNC_PLUGIN | $compilable,
                 'callback' => $callback
@@ -693,13 +692,30 @@ class Core
 
     /**
      * Returns the custom plugins loaded.
-     * used by the ITemplate classes to pass the custom plugins to their ICompiler instance
+     * Used by the ITemplate classes to pass the custom plugins to their ICompiler instance.
      *
      * @return array
      */
     public function getCustomPlugins()
     {
         return $this->plugins;
+    }
+
+    /**
+     * Return a specified custom plugin loaded by his name.
+     * Used by the compiler, for executing a Closure.
+     *
+     * @param string $name
+     *
+     * @return mixed|null
+     */
+    public function getCustomPlugin($name)
+    {
+        if (isset($this->plugins[$name])) {
+            return $this->plugins[$name]['callback'];
+        }
+
+        return null;
     }
 
     /**
@@ -1108,20 +1124,7 @@ class Core
 
         $block = new $class($this);
 
-        $cnt = count($args);
-        if ($cnt === 0) {
-            $block->init();
-        } elseif ($cnt === 1) {
-            $block->init($args[0]);
-        } elseif ($cnt === 2) {
-            $block->init($args[0], $args[1]);
-        } elseif ($cnt === 3) {
-            $block->init($args[0], $args[1], $args[2]);
-        } elseif ($cnt === 4) {
-            $block->init($args[0], $args[1], $args[2], $args[3]);
-        } else {
-            call_user_func_array(array($block, 'init'), $args);
-        }
+        call_user_func_array(array($block, 'init'), $args);
 
         $this->stack[] = $this->curBlock = $block;
 
@@ -1141,25 +1144,7 @@ class Core
         $this->curBlock->buffer(ob_get_contents());
         ob_clean();
 
-        $cnt = count($args);
-        if ($cnt === 0) {
-            $this->curBlock->end();
-        } elseif ($cnt === 1) {
-            $this->curBlock->end($args[0]);
-        } elseif ($cnt === 2) {
-            $this->curBlock->end($args[0], $args[1]);
-        } elseif ($cnt === 3) {
-            $this->curBlock->end($args[0], $args[1], $args[2]);
-        } elseif ($cnt === 4) {
-            $this->curBlock->end($args[0], $args[1], $args[2], $args[3]);
-        } else {
-            call_user_func_array(
-                array(
-                $this->curBlock,
-                'end'
-                ), $args
-            );
-        }
+        call_user_func_array(array($this->curBlock, 'end'), $args);
 
         $tmp = array_pop($this->stack);
 
@@ -1570,9 +1555,6 @@ class Core
      */
     public function assignInScope($value, $scope)
     {
-        $tree = &$this->scopeTree;
-        $data = &$this->data;
-
         if (!is_string($scope)) {
             $this->triggerError('Assignments must be done into strings, (' . gettype($scope) . ') ' . var_export($scope, true) . ' given', E_USER_ERROR);
         }
