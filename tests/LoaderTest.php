@@ -1,7 +1,4 @@
 <?php
-/**
- */
-
 namespace Dwoo\Tests
 {
 
@@ -36,18 +33,18 @@ namespace Dwoo\Tests
             $this->assertEquals('Moo', $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
-//        public function testRebuildClassPath()
-//        {
-//            $loader = new Loader(__DIR__ . '/temp/cache');
-//
-//            $this->dwoo->setLoader($loader);
-//            file_put_contents(__DIR__ . '/resources/plugins/loaderTest2.php', '<?php function PluginLoaderTest2(Dwoo\Core $dwoo) { return "It works!"; }');
-//            $loader->addDirectory(__DIR__ . '/resources/plugins');
-//
-//            $tpl = new TemplateString('{loaderTest2}');
-//            $tpl->forceCompilation();
-//            $this->assertEquals('It works!', $this->dwoo->get($tpl, array(), $this->compiler));
-//            unlink(__DIR__ . '/resources/plugins/loaderTest2.php');
-//        }
+        public function testRebuildClassPath()
+        {
+            $loader = new Loader(__DIR__ . '/temp/cache');
+
+            $this->dwoo->setLoader($loader);
+            file_put_contents(__DIR__ . '/resources/plugins/PluginLoaderTest2.php', '<?php function PluginLoaderTest2(Dwoo\Core $dwoo) { return "It works!"; }');
+            $loader->addDirectory(__DIR__ . '/resources/plugins');
+
+            $tpl = new TemplateString('{loaderTest2}');
+            $tpl->forceCompilation();
+            $this->assertEquals('It works!', $this->dwoo->get($tpl, array(), $this->compiler));
+            unlink(__DIR__ . '/resources/plugins/PluginLoaderTest2.php');
+        }
     }
 }
