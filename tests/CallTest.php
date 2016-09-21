@@ -1,7 +1,4 @@
 <?php
-/**
- */
-
 namespace Dwoo\Tests
 {
 
@@ -28,10 +25,6 @@ namespace Dwoo\Tests
 
             $this->assertEquals('xxxbar', $this->dwoo->get($tpl, array(), $this->compiler));
             $this->dwoo->removePlugin('test');
-        }
-
-        public function tearDown()
-        {
         }
 
         public function testCustomFunctionPlugin()
