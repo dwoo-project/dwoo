@@ -17,13 +17,6 @@ namespace Dwoo\Tests
     class CallTest extends BaseTests
     {
 
-        public function __construct($name = null, array $data = array(), $dataName = '')
-        {
-            parent::__construct($name, $data, $dataName);
-
-            $this->compiler->debug = true;
-        }
-
         public function testClosureFunctionPlugin()
         {
             $this->dwoo->addPlugin('test', function (Core $dwoo, $foo, $bar = "bar") {
