@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-21
  * @link      http://dwoo.org/
  */
 
@@ -114,12 +114,8 @@ class String implements ITemplate
      */
     public function __construct($templateString, $cacheTime = null, $cacheId = null, $compileId = null)
     {
-        $this->template = $templateString;
-        if (function_exists('hash')) {
-            $this->name = hash('md4', $templateString);
-        } else {
-            $this->name = md5($templateString);
-        }
+        $this->template  = $templateString;
+        $this->name      = hash('md4', $templateString);
         $this->cacheTime = $cacheTime;
 
         if ($compileId !== null) {
