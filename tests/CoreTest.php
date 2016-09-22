@@ -1,7 +1,4 @@
 <?php
-/**
- */
-
 namespace Dwoo\Tests
 {
 
@@ -217,22 +214,22 @@ namespace Dwoo\Tests
             $this->dwoo->setDefaultCompilerFactory('file', array('Dwoo\Compiler', 'compilerFactory'));
         }
 
-//        public function testAddAndRemoveResource()
-//        {
-//            $this->dwoo->addResource('news', 'Dwoo\Template\File', array('Dwoo\Compiler', 'compilerFactory'));
-//            $tpl = new TemplateString('{include file="news:' . __DIR__ . '/resources/test.html" foo=3 bar=4}');
-//            $tpl->forceCompilation();
-//
-//            $compiler = new Compiler();
-//            $this->assertEquals('34', $this->dwoo->get($tpl, array(), $compiler));
-//            $this->dwoo->removeResource('news');
-//
-//            $this->dwoo->addResource('file', 'Dwoo\Template\String', 'Fake');
-//            $this->dwoo->removeResource('file');
-//            $tpl = new TemplateString('{include file="file:' . __DIR__ . '/resources/test.html" foo=3 bar=4}');
-//            $tpl->forceCompilation();
-//            $this->assertEquals('34', $this->dwoo->get($tpl, array()));
-//        }
+        public function testAddAndRemoveResource()
+        {
+            $this->dwoo->addResource('news', 'Dwoo\Template\File', array('Dwoo\Compiler', 'compilerFactory'));
+            $tpl = new TemplateString('{include file="news:' . __DIR__ . '/resources/test.html" foo=3 bar=4}');
+            $tpl->forceCompilation();
+
+            $compiler = new Compiler();
+            $this->assertEquals('34', $this->dwoo->get($tpl, array(), $compiler));
+            $this->dwoo->removeResource('news');
+
+            $this->dwoo->addResource('file', 'Dwoo\Template\String', 'Fake');
+            $this->dwoo->removeResource('file');
+            $tpl = new TemplateString('{include file="file:' . __DIR__ . '/resources/test.html" foo=3 bar=4}');
+            $tpl->forceCompilation();
+            $this->assertEquals('34', $this->dwoo->get($tpl));
+        }
 
         public function testTemplateFile()
         {
