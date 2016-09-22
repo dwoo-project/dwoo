@@ -2143,12 +2143,10 @@ class Compiler implements ICompiler
                 $output = 'smarty_function_' . $func . '(array(' . $params . '), $this)';
             }
         } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
-            // TODO: check namespace need or not, remove `_` too
             array_unshift($params, '$this');
             $params                                 = self::implode_r($params);
-            $output                                 = Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) .
-                '_' .
-            $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
+            $output                                 = 'Plugin' . Core::toCamelCase($func) .
+                $this->templatePlugins[$func]['uuid'] . '(' . $params . ')';
             $this->templatePlugins[$func]['called'] = true;
         }
 
