@@ -274,27 +274,24 @@ namespace Dwoo\Tests
             $this->assertEquals('{$foo}{$bar}|{$foo}{$bar}', $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
-//        public function testInclude()
-//        {
-//            $tpl = new TemplateString('{include file=\'file:' . dirname(__FILE__) . '/resources/test.html\' foo=$a bar=$b}');
-//            $tpl->forceCompilation();
-//
-//            $this->assertEquals('AB', $this->dwoo->get($tpl, array('a' => 'A', 'b' => 'B')));
-//
-//            $tpl = new TemplateString('{include file="" foo=$a bar=$b}');
-//            $tpl->forceCompilation();
-//            $this->assertEquals('', $this->dwoo->get($tpl, array('a' => 'A', 'b' => 'B')));
-//
-//            $tpl = new TemplateString('{include file=\'file:' .  dirname(__FILE__) . '/resources/test.html\'}');
-//            $tpl->forceCompilation();
-//
-//            $this->assertEquals('ab', $this->dwoo->get($tpl, array('foo' => 'a', 'bar' => 'b'), $this->compiler));
-//
-//            $tpl = new TemplateFile(dirname(__FILE__) . '/resources/inctest.html');
-//            $tpl->forceCompilation();
-//
-//            $this->assertEquals('34', $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+        public function testInclude()
+        {
+            $tpl = new TemplateString('{include file=\'file:tests/resources/test.html\' foo=$a bar=$b}');
+            $tpl->forceCompilation();
+            $this->assertEquals('AB', $this->dwoo->get($tpl, array('a' => 'A', 'b' => 'B')));
+
+            $tpl = new TemplateString('{include file="" foo=$a bar=$b}');
+            $tpl->forceCompilation();
+            $this->assertEquals('', $this->dwoo->get($tpl, array('a' => 'A', 'b' => 'B')));
+
+            $tpl = new TemplateString('{include file=\'file:' .  __DIR__ . '/resources/test.html\'}');
+            $tpl->forceCompilation();
+            $this->assertEquals('ab', $this->dwoo->get($tpl, array('foo' => 'a', 'bar' => 'b'), $this->compiler));
+
+            $tpl = new TemplateFile(__DIR__ . '/resources/inctest.html');
+            $tpl->forceCompilation();
+            $this->assertEquals('34', $this->dwoo->get($tpl, array(), $this->compiler));
+        }
 
         public function testIncludeString()
         {
