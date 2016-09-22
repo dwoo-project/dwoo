@@ -1,5 +1,15 @@
-To run those tests you have to get the latest version of PHPUnit : http://www.phpunit.de/
+Dwoo PHPUnit Tests
+==================
+The unit tests for Dwoo are implemented using the PHPUnit testing framework and require PHPUnit to run.
 
-Then simply run it with those parameters : --verbose DwooTests /path/to/dwoo/tests/DwooTests.php
+Installation
+------------
+PHPUnit is already declared inside the `require-dev` section of the **composer.json** file of this project.
+The only thing you need to do is to run the next command, to install all packages listed, including `require-dev`:
 
-That will run the entire test suite, checking all plugins and most of the compiler.
+	composer install
+
+Running tests
+-------------
+
+	vendor/bin/phpunit
