@@ -20,7 +20,7 @@ years to switch their application over to Dwoo progressively.
 
 > ⚠ Dwoo **1.3.x** is only compatible with **PHP 5.x** ⚠
 
-DOCUMENTATION
+Documentation
 =============
 Dwoo's website to get the latest version is at http://dwoo.org/   
 The wiki/documentation pages are available at http://dwoo.org/documentation/
@@ -31,12 +31,11 @@ Requirements
 * PHP <= **7.0**
 * [Multibyte String](http://php.net/manual/en/book.mbstring.php)
 
-LICENSE
+License
 =======
 Dwoo is released under the [GNU LESSER GENERAL PUBLIC LICENSE V3](./LICENSE.md) license.
-See the LICENSE file included in the archive or go to the URL below to obtain a copy.
 
-QUICK START - RUNNING DWOO
+Quick start - Running Dwoo
 ==========================
 
 Basic Example
