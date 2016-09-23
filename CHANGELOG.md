@@ -1,7 +1,6 @@
 ## 1.3.0 (2016-09-XX)
 `Added`
 * Add namespaces.
-* Implement [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) pattern.
 * Add new PHPDoc block **Copyright** for each files.
 
 `Changed`
@@ -20,8 +19,8 @@
 
 `Removed`
 * Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
-* Delete method `Core::output()`, use now `echo Core::get()` method.
-* Last parameter `$_output` of `Core::get()` method has been removed, use `echo Core::get()` instead.
+* Delete method `Dwoo\Core::output()`, use now `echo Dwoo\Core::get()` method.
+* Last parameter `$_output` of `Dwoo\Core::get()` method has been removed, use `echo Dwoo\Core::get()` instead.
 
 ## 1.2.3 (2016-09-15)
 `Added`
@@ -40,7 +39,7 @@
 * Fix return statements in correlation with PHPDoc.
 
 `Deprecated`
-* Method `Dwoo\Core::output()` is now deprecated, will be removed in **1.3.0**.
+* Method `Dwoo_Core::output()` is now deprecated, will be removed in **1.3.0**.
 
 ## 1.2.2 (2016-09-10)
 `Added`
