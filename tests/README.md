@@ -11,5 +11,10 @@ The only thing you need to do is to run the next command, to install all package
 
 Running tests
 -------------
+To execute all tests, run the next command:
 
 	vendor/bin/phpunit
+	
+To run a single test, you can execute a command like:
+
+	vendor/bin/phpunit --filter testA tests/Blocktest
