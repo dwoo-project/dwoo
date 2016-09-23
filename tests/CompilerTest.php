@@ -2,6 +2,9 @@
 /**
  */
 
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -284,8 +287,9 @@ replace="BAR"
 //            if (!defined('TEST')) {
 //                define('TEST', 'Test');
 //            }
-//            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\Core::BLOCK_PLUGIN}');
+//            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
 //            $tpl->forceCompilation();
+//            $this->compiler->debug=true;
 //
 //            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
 //        }
@@ -295,10 +299,11 @@ replace="BAR"
 //            if (!defined('TEST')) {
 //                define('TEST', 'Test');
 //            }
-//            $tpl = new TemplateString('{%TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*%Dwoo\\Core::BLOCK_PLUGIN}');
+//            $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
 //            $tpl->forceCompilation();
+//            $this->compiler->debug=true;
 //
-//            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+//            $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
 //        }
 
         public function testShortClassConstants()

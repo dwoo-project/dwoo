@@ -1466,8 +1466,8 @@ class Compiler implements ICompiler
             // var
             $out    = $this->parseVar($in, $from, $to, $parsingParams, $curBlock, $pointer);
             $parsed = 'var';
-        } elseif ($first === '%' && preg_match('#^%[a-z_]#i', $substr)) {
-            // const
+        } elseif ($first === '%' && preg_match('#^%[a-z_\\\\]#i', $substr)) {
+            // Short constant
             $out = $this->parseConst($in, $from, $to, $parsingParams, $curBlock, $pointer);
         } elseif (($first === '"' || $first === "'") && !(is_array($parsingParams) && preg_match('#^([\'"])[a-z0-9_]+\1\s*=>?(?:\s+|[^=])#i', $substr))) {
             // string
