@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-18
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -37,13 +37,18 @@ if (!defined('SMARTY_PHP_PASSTHRU')) {
 }
 
 /**
- * a Smarty compatibility layer for Dwoo.
+ * A Smarty compatibility layer for Dwoo.
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 class Adapter extends Core
 {
-    // magic get/set/call functions that handle unsupported features
+    /**
+     * Magic get/set/call functions that handle unsupported features
+     *
+     * @param string $p
+     * @param string $v
+     */
     public function __set($p, $v)
     {
         if ($p === 'scope') {
@@ -68,6 +73,11 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param $p
+     *
+     * @return mixed
+     */
     public function __get($p)
     {
         if (array_key_exists($p, $this->compat['properties']) !== false) {
@@ -83,6 +93,12 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param string $m
+     * @param array  $a
+     *
+     * @return mixed|void
+     */
     public function __call($m, $a)
     {
         if (method_exists($this->dataProvider, $m)) {
@@ -101,7 +117,9 @@ class Adapter extends Core
         }
     }
 
-    // list of unsupported properties and methods
+    /**
+     * List of unsupported properties and methods
+     */
     protected $compat = array(
         'methods'    => array(
             'register_resource',
@@ -134,7 +152,9 @@ class Adapter extends Core
         ),
     );
 
-    // security vars
+    /**
+     * Security vars
+     */
     public $security          = false;
     public $trusted_dir       = array();
     public $secure_dir        = array();
@@ -155,14 +175,18 @@ class Adapter extends Core
         'ALLOW_CONSTANTS' => false,
     );
 
-    // paths
+    /**
+     * Paths
+     */
     public $template_dir = 'templates';
     public $compile_dir  = 'templates_c';
     public $config_dir   = 'configs';
     public $cache_dir    = 'cache';
     public $plugins_dir  = array();
 
-    // misc options
+    /**
+     * Misc options
+     */
     public $left_delimiter  = '{';
     public $right_delimiter = '}';
     public $compile_check   = true;
@@ -173,7 +197,9 @@ class Adapter extends Core
     public $compiler_file   = null;
     public $compiler_class  = null;
 
-    // dwoo/smarty compat layer
+    /**
+     * Dwoo/Smarty compat layer
+     */
     public           $show_compat_errors = false;
     protected        $dataProvider;
     protected        $_filters           = array(
@@ -184,6 +210,9 @@ class Adapter extends Core
     protected static $tplCache           = array();
     protected        $compiler           = null;
 
+    /**
+     * Adapter constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -192,11 +221,24 @@ class Adapter extends Core
         $this->compiler     = new Compiler();
     }
 
+    /**
+     * @param      $filename
+     * @param null $cacheId
+     * @param null $compileId
+     */
     public function display($filename, $cacheId = null, $compileId = null)
     {
         $this->fetch($filename, $cacheId, $compileId, true);
     }
 
+    /**
+     * @param      $filename
+     * @param null $cacheId
+     * @param null $compileId
+     * @param bool $display
+     *
+     * @return string|void
+     */
     public function fetch($filename, $cacheId = null, $compileId = null, $display = false)
     {
         $this->setCacheDir($this->cache_dir);
@@ -268,6 +310,14 @@ class Adapter extends Core
         return $this->get($tpl, $this->dataProvider, $this->compiler, $display === true);
     }
 
+    /**
+     * @param mixed $_tpl
+     * @param array $data
+     * @param null  $_compiler
+     * @param bool  $_output
+     *
+     * @return string|void
+     */
     public function get($_tpl, $data = array(), $_compiler = null, $_output = false)
     {
         if ($_compiler === null) {
@@ -277,6 +327,14 @@ class Adapter extends Core
         return parent::get($_tpl, $data, $_compiler, $_output);
     }
 
+    /**
+     * @param      $name
+     * @param      $callback
+     * @param bool $cacheable
+     * @param null $cache_attrs
+     *
+     * @throws Exception
+     */
     public function register_function($name, $callback, $cacheable = true, $cache_attrs = null)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_FUNCTION) {
@@ -288,11 +346,22 @@ class Adapter extends Core
         );
     }
 
+    /**
+     * @param $name
+     */
     public function unregister_function($name)
     {
         unset($this->plugins[$name]);
     }
 
+    /**
+     * @param      $name
+     * @param      $callback
+     * @param bool $cacheable
+     * @param null $cache_attrs
+     *
+     * @throws Exception
+     */
     public function register_block($name, $callback, $cacheable = true, $cache_attrs = null)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_BLOCK) {
@@ -304,11 +373,20 @@ class Adapter extends Core
         );
     }
 
+    /**
+     * @param $name
+     */
     public function unregister_block($name)
     {
         unset($this->plugins[$name]);
     }
 
+    /**
+     * @param $name
+     * @param $callback
+     *
+     * @throws Exception
+     */
     public function register_modifier($name, $callback)
     {
         if (isset($this->plugins[$name]) && $this->plugins[$name][0] !== self::SMARTY_MODIFIER) {
@@ -320,11 +398,17 @@ class Adapter extends Core
         );
     }
 
+    /**
+     * @param $name
+     */
     public function unregister_modifier($name)
     {
         unset($this->plugins[$name]);
     }
 
+    /**
+     * @param $callback
+     */
     public function register_prefilter($callback)
     {
         $processor = new ProcessorAdapter($this->compiler);
@@ -333,6 +417,9 @@ class Adapter extends Core
         $this->compiler->addPreProcessor($processor);
     }
 
+    /**
+     * @param $callback
+     */
     public function unregister_prefilter($callback)
     {
         foreach ($this->_filters['pre'] as $index => $processor) {
@@ -343,6 +430,9 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param $callback
+     */
     public function register_postfilter($callback)
     {
         $processor = new ProcessorAdapter($this->compiler);
@@ -351,6 +441,9 @@ class Adapter extends Core
         $this->compiler->addPostProcessor($processor);
     }
 
+    /**
+     * @param $callback
+     */
     public function unregister_postfilter($callback)
     {
         foreach ($this->_filters['post'] as $index => $processor) {
@@ -361,6 +454,9 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param $callback
+     */
     public function register_outputfilter($callback)
     {
         $filter = new FilterAdapter($this);
@@ -369,6 +465,9 @@ class Adapter extends Core
         $this->addFilter($filter);
     }
 
+    /**
+     * @param $callback
+     */
     public function unregister_outputfilter($callback)
     {
         foreach ($this->_filters['output'] as $index => $filter) {
@@ -379,6 +478,13 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param       $object
+     * @param       $object_impl
+     * @param array $allowed
+     * @param bool  $smarty_args
+     * @param array $block_methods
+     */
     public function register_object($object, $object_impl, $allowed = array(), $smarty_args = false, $block_methods = array())
     {
         settype($allowed, 'array');
@@ -400,11 +506,19 @@ class Adapter extends Core
         $this->dataProvider->assign($object, $object_impl);
     }
 
+    /**
+     * @param $object
+     */
     public function unregister_object($object)
     {
         $this->dataProvider->clear($object);
     }
 
+    /**
+     * @param $name
+     *
+     * @return mixed
+     */
     public function get_registered_object($name)
     {
         $data = $this->dataProvider->getData();
@@ -415,6 +529,11 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param $filename
+     *
+     * @return bool
+     */
     public function template_exists($filename)
     {
         if (!is_array($this->template_dir)) {
@@ -430,31 +549,58 @@ class Adapter extends Core
         }
     }
 
+    /**
+     * @param      $tpl
+     * @param null $cacheId
+     * @param null $compileId
+     *
+     * @return bool
+     */
     public function is_cached($tpl, $cacheId = null, $compileId = null)
     {
         return $this->isCached($this->makeTemplate($tpl, $cacheId, $compileId));
     }
 
+    /**
+     * @param      $var
+     * @param      $value
+     * @param bool $merge
+     */
     public function append_by_ref($var, &$value, $merge = false)
     {
         $this->dataProvider->appendByRef($var, $value, $merge);
     }
 
+    /**
+     * @param $name
+     * @param $val
+     */
     public function assign_by_ref($name, &$val)
     {
         $this->dataProvider->assignByRef($name, $val);
     }
 
+    /**
+     * @param $var
+     */
     public function clear_assign($var)
     {
         $this->dataProvider->clear($var);
     }
 
+    /**
+     *
+     */
     public function clear_all_assign()
     {
         $this->dataProvider->clear();
     }
 
+    /**
+     * @param null $name
+     *
+     * @return array|null
+     */
     public function get_template_vars($name = null)
     {
         if ($this->show_compat_errors) {
@@ -471,21 +617,37 @@ class Adapter extends Core
         return null;
     }
 
+    /**
+     * @param int $olderThan
+     */
     public function clear_all_cache($olderThan = 0)
     {
         $this->clearCache($olderThan);
     }
 
+    /**
+     * @param      $template
+     * @param null $cacheId
+     * @param null $compileId
+     * @param int  $olderThan
+     */
     public function clear_cache($template, $cacheId = null, $compileId = null, $olderThan = 0)
     {
         $this->makeTemplate($template, $cacheId, $compileId)->clearCache($olderThan);
     }
 
+    /**
+     * @param     $error_msg
+     * @param int $error_type
+     */
     public function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
         $this->triggerError($error_msg, $error_type);
     }
 
+    /**
+     *
+     */
     protected function initGlobals()
     {
         parent::initGlobals();
@@ -493,6 +655,14 @@ class Adapter extends Core
         $this->globals['rdelim'] = '}';
     }
 
+    /**
+     * @param $file
+     * @param $cacheId
+     * @param $compileId
+     *
+     * @return mixed
+     * @throws Exception
+     */
     protected function makeTemplate($file, $cacheId, $compileId)
     {
         if ($compileId === null) {
@@ -514,10 +684,14 @@ class Adapter extends Core
         return self::$tplCache[$hash];
     }
 
+    /**
+     * @param string $message
+     * @param int    $level
+     */
     public function triggerError($message, $level = E_USER_NOTICE)
     {
         if (is_object($this->template)) {
-            return parent::triggerError($message, $level);
+            parent::triggerError($message, $level);
         }
         trigger_error('Dwoo error : ' . $message, $level);
     }

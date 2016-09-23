@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -58,9 +58,9 @@ abstract class Plugin
      * attributes. this is to be used in preProcessing or postProcessing functions, example :
      *  $p = $compiler->getCompiledParams($params);
      *  // get only the rest array as attributes
-     *  $attributes = Dwoo_Plugin::paramsToAttributes($p['*']);
+     *  $attributes = Plugin::paramsToAttributes($p['*']);
      *  // get all the parameters as attributes (if there is a rest array, it will be included)
-     *  $attributes = Dwoo_Plugin::paramsToAttributes($p);
+     *  $attributes = Plugin::paramsToAttributes($p);
      *
      * @param array    $params   an array of attributeName=>value items that will be compiled to be ready for inclusion in a php string
      *                                inclusion in a php string

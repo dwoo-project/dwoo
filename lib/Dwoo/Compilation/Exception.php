@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -29,6 +29,12 @@ class Exception extends DwooException
     protected $compiler;
     protected $template;
 
+    /**
+     * Exception constructor.
+     *
+     * @param DwooCompiler $compiler
+     * @param int          $message
+     */
     public function __construct(DwooCompiler $compiler, $message)
     {
         $this->compiler = $compiler;
@@ -36,11 +42,17 @@ class Exception extends DwooException
         parent::__construct('Compilation error at line ' . $compiler->getLine() . ' in "' . $this->template->getResourceName() . ':' . $this->template->getResourceIdentifier() . '" : ' . $message);
     }
 
+    /**
+     * @return DwooCompiler
+     */
     public function getCompiler()
     {
         return $this->compiler;
     }
 
+    /**
+     * @return \Dwoo\ITemplate|null
+     */
     public function getTemplate()
     {
         return $this->template;

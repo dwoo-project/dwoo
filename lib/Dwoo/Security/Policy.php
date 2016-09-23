@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -26,9 +26,9 @@ use Dwoo\Core;
 class Policy
 {
     /**
-     * php handling constants, defaults to PHP_REMOVE
-     * PHP_REMOVE : remove all <?php ?> (+ short tags if your short tags option is on) from the input template
+     * Php handling constants, defaults to PHP_REMOVE
      * PHP_ENCODE : run htmlentities over them
+     * PHP_REMOVE : remove all <?php ?> (+ short tags if your short tags option is on) from the input template
      * PHP_ALLOW : leave them as they are
      *
      * @var int
@@ -38,7 +38,7 @@ class Policy
     const PHP_ALLOW  = 3;
 
     /**
-     * constant handling constants, defaults to CONST_DISALLOW
+     * Constant handling constants, defaults to CONST_DISALLOW
      * CONST_DISALLOW : throw an error if {$dwoo.const.*} is used in the template
      * CONST_ALLOW : allow {$dwoo.const.*} calls
      */
@@ -46,7 +46,7 @@ class Policy
     const CONST_ALLOW    = true;
 
     /**
-     * php functions that are allowed to be used within the template.
+     * Php functions that are allowed to be used within the template.
      *
      * @var array
      */
@@ -66,21 +66,21 @@ class Policy
     );
 
     /**
-     * methods that are allowed to be used within the template.
+     * Methods that are allowed to be used within the template.
      *
      * @var array
      */
     protected $allowedMethods = array();
 
     /**
-     * paths that are safe to use with include or other file-access plugins.
+     * Paths that are safe to use with include or other file-access plugins.
      *
      * @var array
      */
     protected $allowedDirectories = array();
 
     /**
-     * stores the php handling level.
+     * Stores the php handling level.
      * defaults to self::PHP_REMOVE
      *
      * @var int
@@ -88,7 +88,7 @@ class Policy
     protected $phpHandling = self::PHP_REMOVE;
 
     /**
-     * stores the constant handling level.
+     * Stores the constant handling level.
      * defaults to self::CONST_DISALLOW
      *
      * @var bool
@@ -96,7 +96,7 @@ class Policy
     protected $constHandling = self::CONST_DISALLOW;
 
     /**
-     * adds a php function to the allowed list.
+     * Adds a php function to the allowed list.
      *
      * @param mixed $func function name or array of function names
      */
@@ -112,7 +112,7 @@ class Policy
     }
 
     /**
-     * removes a php function from the allowed list.
+     * Removes a php function from the allowed list.
      *
      * @param mixed $func function name or array of function names
      */
@@ -128,7 +128,7 @@ class Policy
     }
 
     /**
-     * returns the list of php functions allowed to run, note that the function names
+     * Returns the list of php functions allowed to run, note that the function names
      * are stored in the array keys and not values.
      *
      * @return array
@@ -139,7 +139,7 @@ class Policy
     }
 
     /**
-     * adds a class method to the allowed list, this must be used for
+     * Adds a class method to the allowed list, this must be used for
      * both static and non static method by providing the class name
      * and method name to use.
      *
@@ -158,7 +158,7 @@ class Policy
     }
 
     /**
-     * removes a class method from the allowed list.
+     * Removes a class method from the allowed list.
      *
      * @param mixed  $class  class name or array of array('class', 'method') couples
      * @param string $method method name
@@ -175,7 +175,7 @@ class Policy
     }
 
     /**
-     * returns the list of class methods allowed to run, note that the class names
+     * Returns the list of class methods allowed to run, note that the class names
      * and method names are stored in the array keys and not values.
      *
      * @return array
@@ -186,7 +186,7 @@ class Policy
     }
 
     /**
-     * adds a directory to the safelist for includes and other file-access plugins.
+     * Adds a directory to the safelist for includes and other file-access plugins.
      * note that all the includePath directories you provide to the Dwoo_Template_File class
      * are automatically marked as safe
      *
@@ -204,7 +204,7 @@ class Policy
     }
 
     /**
-     * removes a directory from the safelist.
+     * Removes a directory from the safe list.
      *
      * @param mixed $path a path name or an array of paths
      */
@@ -220,7 +220,7 @@ class Policy
     }
 
     /**
-     * returns the list of safe paths, note that the paths are stored in the array
+     * Returns the list of safe paths, note that the paths are stored in the array
      * keys and not values.
      *
      * @return array
@@ -231,7 +231,7 @@ class Policy
     }
 
     /**
-     * sets the php handling level, defaults to REMOVE.
+     * Sets the php handling level, defaults to REMOVE.
      *
      * @param int $level one of the Dwoo_Security_Policy::PHP_* constants
      */
@@ -241,7 +241,7 @@ class Policy
     }
 
     /**
-     * returns the php handling level.
+     * Returns the php handling level.
      *
      * @return int the current level, one of the Dwoo_Security_Policy::PHP_* constants
      */
@@ -251,7 +251,7 @@ class Policy
     }
 
     /**
-     * sets the constant handling level, defaults to CONST_DISALLOW.
+     * Sets the constant handling level, defaults to CONST_DISALLOW.
      *
      * @param bool $level one of the Dwoo_Security_Policy::CONST_* constants
      */
@@ -261,7 +261,7 @@ class Policy
     }
 
     /**
-     * returns the constant handling level.
+     * Returns the constant handling level.
      *
      * @return bool the current level, one of the Dwoo_Security_Policy::CONST_* constants
      */
@@ -271,7 +271,7 @@ class Policy
     }
 
     /**
-     * this is used at run time to check whether method calls are allowed or not.
+     * This is used at run time to check whether method calls are allowed or not.
      *
      * @param Core   $dwoo   dwoo instance that calls this
      * @param object $obj    any object on which the method must be called
@@ -296,7 +296,7 @@ class Policy
     }
 
     /**
-     * this is used at compile time to check whether static method calls are allowed or not.
+     * This is used at compile time to check whether static method calls are allowed or not.
      *
      * @param mixed  $class  lowercased class name or array('class', 'method') couple
      * @param string $method lowercased method name

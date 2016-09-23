@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -24,7 +24,7 @@ namespace Dwoo;
 class Loader implements ILoader
 {
     /**
-     * stores the plugin directories.
+     * Stores the plugin directories.
      *
      * @see addDirectory
      * @var array
@@ -32,7 +32,7 @@ class Loader implements ILoader
     protected $paths = array();
 
     /**
-     * stores the plugins names/paths relationships
+     * Stores the plugins names/paths relationships
      * don't edit this on your own, use addDirectory.
      *
      * @see addDirectory
@@ -41,12 +41,17 @@ class Loader implements ILoader
     protected $classPath = array();
 
     /**
-     * path where class paths cache files are written.
+     * Path where class paths cache files are written.
      *
      * @var string
      */
     protected $cacheDir;
 
+    /**
+     * Path where builtin plugins are stored.
+     *
+     * @var string
+     */
     protected $corePluginDir;
 
     /**
@@ -70,7 +75,7 @@ class Loader implements ILoader
     }
 
     /**
-     * rebuilds class paths, scans the given directory recursively and saves all paths in the given file.
+     * Rebuilds class paths, scans the given directory recursively and saves all paths in the given file.
      *
      * @param string $path      the plugin path to scan
      * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
@@ -121,9 +126,9 @@ class Loader implements ILoader
     }
 
     /**
-     * loads a plugin file.
+     * Loads a plugin file.
      *
-     * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
+     * @param string $class       the plugin name, without the `Plugin` prefix
      * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it
      *                            has just been added, defaults to true
      *
@@ -162,7 +167,7 @@ class Loader implements ILoader
     }
 
     /**
-     * adds a plugin directory, the plugins found in the new plugin directory
+     * Adds a plugin directory, the plugins found in the new plugin directory
      * will take precedence over the other directories (including the default
      * dwoo plugin directory), you can use this for example to override plugins
      * in a specific directory for a specific application while keeping all your
@@ -180,9 +185,8 @@ class Loader implements ILoader
         if (!$pluginDir) {
             throw new Exception('Plugin directory does not exist or can not be read : ' . $pluginDirectory);
         }
-        $cacheFile               = $this->cacheDir . 'classpath-' .
-            substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'), strlen($pluginDir) > 80 ? - 80 : 0) . '.d' .
-            Core::RELEASE_TAG . '.php';
+        $cacheFile = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'),
+                strlen($pluginDir) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
         $this->paths[$pluginDir] = $cacheFile;
         if (file_exists($cacheFile)) {
             $classpath       = file_get_contents($cacheFile);

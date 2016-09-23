@@ -2,6 +2,9 @@
 /**
  */
 
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -29,17 +32,17 @@ namespace Dwoo\Tests
 
         public function testConstantHandling()
         {
-            $tpl = new TemplateString('{$dwoo.const.DWOO_DIRECTORY}');
+            $tpl = new TemplateString('{$dwoo.const.PHP_VERSION}');
             $tpl->forceCompilation();
 
             $this->assertEquals('', $this->dwoo->get($tpl, array(), $this->compiler));
 
             $this->policy->setConstantHandling(SecurityPolicy::CONST_ALLOW);
 
-            $tpl = new TemplateString('{$dwoo.const.DWOO_DIRECTORY}');
+            $tpl = new TemplateString('{$dwoo.const.PHP_VERSION}');
             $tpl->forceCompilation();
 
-            $this->assertEquals(DWOO_DIRECTORY, $this->dwoo->get($tpl, array(), $this->compiler));
+            $this->assertEquals(PHP_VERSION, $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
         public function testPhpHandling()

@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -25,14 +25,14 @@ namespace Dwoo;
 class Data implements IDataProvider
 {
     /**
-     * data array.
+     * Data array.
      *
      * @var array
      */
     protected $data = array();
 
     /**
-     * returns the data array.
+     * Returns the data array.
      *
      * @return array
      */
@@ -42,7 +42,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * clears a the entire data or only the given key.
+     * Clears a the entire data or only the given key.
      *
      * @param array|string $name clears only one value if you give a name, multiple values if
      *                           you give an array of names, or the entire data if left null
@@ -61,7 +61,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * overwrites the entire data with the given array.
+     * Overwrites the entire data with the given array.
      *
      * @param array $data the new data array to use
      */
@@ -74,7 +74,6 @@ class Data implements IDataProvider
      * merges the given array(s) with the current data with array_merge.
      *
      * @param array $data  the array to merge
-     * @param array $data2 $data3 ... other arrays to merge, optional, etc
      */
     public function mergeData(array $data)
     {
@@ -87,7 +86,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * assigns a value or an array of values to the data object.
+     * Assigns a value or an array of values to the data object.
      *
      * @param array|string $name an associative array of multiple (index=>value) or a string
      *                           that is the index to use, i.e. a value assigned to "foo" will be
@@ -107,7 +106,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * allows to assign variables using the object syntax.
+     * Allows to assign variables using the object syntax.
      *
      * @param string $name  the variable name
      * @param string $value the value to assign to it
@@ -118,7 +117,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * assigns a value by reference to the data object.
+     * Assigns a value by reference to the data object.
      *
      * @param string $name the index to use, i.e. a value assigned to "foo" will be
      *                     accessible in the template through {$foo}
@@ -130,7 +129,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * appends values or an array of values to the data object.
+     * Appends values or an array of values to the data object.
      *
      * @param array|string $name  an associative array of multiple (index=>value) or a string
      *                            that is the index to use, i.e. a value assigned to "foo" will be
@@ -168,7 +167,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * appends a value by reference to the data object.
+     * Appends a value by reference to the data object.
      *
      * @param string $name  the index to use, i.e. a value assigned to "foo" will be
      *                      accessible in the template through {$foo}
@@ -191,7 +190,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * returns true if the variable has been assigned already, false otherwise.
+     * Returns true if the variable has been assigned already, false otherwise.
      *
      * @param string $name the variable name
      *
@@ -203,7 +202,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * supports calls to isset($dwooData->var).
+     * Supports calls to isset($dwoo->var).
      *
      * @param string $name the variable name
      *
@@ -215,7 +214,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * unassigns/removes a variable.
+     * Unassigns/removes a variable.
      *
      * @param string $name the variable name
      */
@@ -225,7 +224,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * supports unsetting variables using the object syntax.
+     * Supports unsetting variables using the object syntax.
      *
      * @param string $name the variable name
      */
@@ -235,7 +234,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * returns a variable if it was assigned.
+     * Returns a variable if it was assigned.
      *
      * @param string $name the variable name
      *
@@ -247,7 +246,7 @@ class Data implements IDataProvider
     }
 
     /**
-     * allows to read variables using the object syntax.
+     * Allows to read variables using the object syntax.
      *
      * @param string $name the variable name
      *

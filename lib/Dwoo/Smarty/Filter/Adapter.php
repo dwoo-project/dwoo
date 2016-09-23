@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -25,11 +25,19 @@ class Adapter extends Filter
 {
     public $callback;
 
+    /**
+     * @param string $input
+     *
+     * @return mixed
+     */
     public function process($input)
     {
         return call_user_func($this->callback, $input);
     }
 
+    /**
+     * @param $callback
+     */
     public function registerCallback($callback)
     {
         $this->callback = $callback;

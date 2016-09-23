@@ -29,7 +29,8 @@ mail to:        stefan.verstege@newmedia.nl
 IM me on GTALK: verstege@gmail.com
 Contact me on the Dwoo forums: stefanv
 
----------[ copyright notice ]-----------------------------------------------------------------------
+Copyright notice
+----------------
 This software is provided 'as-is', without any express or implied warranty.
 In no event will the authors be held liable for any damages arising from the use of this software.
 

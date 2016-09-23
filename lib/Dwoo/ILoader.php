@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -24,12 +24,12 @@ namespace Dwoo;
 interface ILoader
 {
     /**
-     * loads a plugin file.
+     * Loads a plugin file.
      * the second parameter is used to avoid permanent rehashing when using php functions,
      * however this means that if you have add a plugin that overrides a php function you have
      * to delete the classpath.cache file(s) by hand to force a rehash of the plugins
      *
-     * @param string $class       the plugin name, without the Dwoo_Plugin_ prefix
+     * @param string $class       the plugin name, without the `Plugin` prefix
      * @param bool   $forceRehash if true, the class path caches will be rebuilt if the plugin is not found, in case it
      *                            has just been added, defaults to true
      */

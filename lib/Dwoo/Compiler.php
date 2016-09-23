@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-22
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -182,7 +182,7 @@ class Compiler implements ICompiler
     protected $data;
 
     /**
-     * variable scope of the compiler, set to null if
+     * Variable scope of the compiler, set to null if
      * it can not be resolved to a static string (i.e. if some
      * plugin defines a new scope based on a variable array key).
      *
@@ -191,7 +191,7 @@ class Compiler implements ICompiler
     protected $scope;
 
     /**
-     * variable scope tree, that allows to rebuild the current
+     * Variable scope tree, that allows to rebuild the current
      * scope if required, i.e. when going to a parent level.
      *
      * @var array
@@ -199,7 +199,7 @@ class Compiler implements ICompiler
     protected $scopeTree;
 
     /**
-     * block plugins stack, accessible through some methods.
+     * Block plugins stack, accessible through some methods.
      *
      * @see findBlock
      * @see getCurrentBlock
@@ -213,7 +213,7 @@ class Compiler implements ICompiler
     protected $stack = array();
 
     /**
-     * current block at the top of the block plugins stack,
+     * Current block at the top of the block plugins stack,
      * accessible through getCurrentBlock.
      *
      * @see getCurrentBlock
@@ -222,14 +222,14 @@ class Compiler implements ICompiler
     protected $curBlock;
 
     /**
-     * current dwoo object that uses this compiler, or null.
+     * Current dwoo object that uses this compiler, or null.
      *
      * @var Core
      */
     public $dwoo;
 
     /**
-     * holds an instance of this class, used by getInstance when you don't
+     * Holds an instance of this class, used by getInstance when you don't
      * provide a custom compiler in order to save resources.
      *
      * @var Compiler
@@ -237,7 +237,7 @@ class Compiler implements ICompiler
     protected static $instance;
 
     /**
-     * token types.
+     * Token types.
      *
      * @var int
      */
@@ -249,7 +249,7 @@ class Compiler implements ICompiler
     const T_BREAKCHAR       = 32;
 
     /**
-     * constructor.
+     * Compiler constructor.
      * saves the created instance so that child templates get the same one
      */
     public function __construct()
@@ -258,7 +258,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the delimiters to use in the templates.
+     * Sets the delimiters to use in the templates.
      * delimiters can be multi-character strings but should not be one of those as they will
      * make it very hard to work with templates or might even break the compiler entirely : "\", "$", "|", ":" and
      * finally "#" only if you intend to use config-vars with the #var# syntax.
@@ -275,7 +275,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the left and right template delimiters.
+     * Returns the left and right template delimiters.
      *
      * @return array containing the left and the right delimiters
      */
@@ -285,7 +285,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the way to handle nested comments, if set to true
+     * Sets the way to handle nested comments, if set to true
      * {* foo {* some other *} comment *} will be stripped correctly.
      * if false it will remove {* foo {* some other *} and leave "comment *}" alone,
      * this is the default behavior
@@ -298,7 +298,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the nested comments handling setting.
+     * Returns the nested comments handling setting.
      *
      * @see    setNestedCommentsHandling
      * @return bool true if nested comments are allowed
@@ -309,7 +309,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the tag openings handling strictness, if set to true, template tags can
+     * Sets the tag openings handling strictness, if set to true, template tags can
      * contain spaces before the first function/string/variable such as { $foo} is valid.
      * if set to false (default setting), { $foo} is invalid but that is however a good thing
      * as it allows css (i.e. #foo { color:red; }) to be parsed silently without triggering
@@ -323,7 +323,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the tag openings handling strictness setting.
+     * Returns the tag openings handling strictness setting.
      *
      * @see    setLooseOpeningHandling
      * @return bool true if loose tags are allowed
@@ -334,7 +334,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * changes the auto escape setting.
+     * Changes the auto escape setting.
      * if enabled, the compiler will automatically html-escape variables,
      * unless they are passed through the safe function such as {$var|safe}
      * or {safe $var}
@@ -348,7 +348,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the auto escape setting.
+     * Returns the auto escape setting.
      * default setting is disabled/false
      *
      * @return bool
@@ -359,7 +359,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds a preprocessor to the compiler, it will be called
+     * Adds a preprocessor to the compiler, it will be called
      * before the template is compiled.
      *
      * @param mixed $callback either a valid callback to the preprocessor or a simple name if the autoload is set to
@@ -388,7 +388,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * removes a preprocessor from the compiler.
+     * Removes a preprocessor from the compiler.
      *
      * @param mixed $callback either a valid callback to the preprocessor or a simple name if it was autoloaded
      */
@@ -412,7 +412,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds a postprocessor to the compiler, it will be called
+     * Adds a postprocessor to the compiler, it will be called
      * before the template is compiled.
      *
      * @param mixed $callback either a valid callback to the postprocessor or a simple name if the autoload is set to
@@ -441,7 +441,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * removes a postprocessor from the compiler.
+     * Removes a postprocessor from the compiler.
      *
      * @param mixed $callback either a valid callback to the postprocessor or a simple name if it was autoloaded
      */
@@ -465,7 +465,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * internal function to autoload processors at runtime if required.
+     * Internal function to autoload processors at runtime if required.
      *
      * @param string $class the class/function name
      * @param string $name  the plugin name (without Dwoo_Plugin_ prefix)
@@ -496,7 +496,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds an used plugin, this is reserved for use by the {template} plugin.
+     * Adds an used plugin, this is reserved for use by the {template} plugin.
      * this is required so that plugin loading bubbles up from loaded
      * template files to the current one
      *
@@ -511,7 +511,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns all the plugins this template uses.
+     * Returns all the plugins this template uses.
      *
      * @private
      * @return  array the list of used plugins in the parsed template
@@ -522,7 +522,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds a template plugin, this is reserved for use by the {template} plugin.
+     * Adds a template plugin, this is reserved for use by the {template} plugin.
      * this is required because the template functions are not declared yet
      * during compilation, so we must have a way of validating their argument
      * signature without using the reflection api
@@ -540,7 +540,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns all the parsed sub-templates.
+     * Returns all the parsed sub-templates.
      *
      * @private
      * @return  array the parsed sub-templates
@@ -551,7 +551,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * marks a template plugin as being called, which means its source must be included in the compiled template.
+     * Marks a template plugin as being called, which means its source must be included in the compiled template.
      *
      * @param string $name function name
      */
@@ -561,7 +561,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds the custom plugins loaded into Dwoo to the compiler so it can load them.
+     * Adds the custom plugins loaded into Dwoo to the compiler so it can load them.
      *
      * @see Core::addPlugin
      *
@@ -573,7 +573,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the security policy object to enforce some php security settings.
+     * Sets the security policy object to enforce some php security settings.
      * use this if untrusted persons can modify templates,
      * set it on the Dwoo object as it will be passed onto the compiler automatically
      *
@@ -585,7 +585,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the current security policy object or null by default.
+     * Returns the current security policy object or null by default.
      *
      * @return SecurityPolicy|null the security policy object if any
      */
@@ -595,7 +595,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the pointer position.
+     * Sets the pointer position.
      *
      * @param int  $position the new pointer position
      * @param bool $isOffset if set to true, the position acts as an offset and not an absolute position
@@ -610,7 +610,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the current pointer position, only available during compilation of a template.
+     * Returns the current pointer position, only available during compilation of a template.
      *
      * @return int
      */
@@ -620,7 +620,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the line number.
+     * Sets the line number.
      *
      * @param int  $number   the new line number
      * @param bool $isOffset if set to true, the position acts as an offset and not an absolute position
@@ -635,7 +635,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the current line number, only available during compilation of a template.
+     * Returns the current line number, only available during compilation of a template.
      *
      * @return int
      */
@@ -692,7 +692,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * resets the compilation pointer, effectively restarting the compilation process.
+     * Resets the compilation pointer, effectively restarting the compilation process.
      * this is useful if a plugin modifies the template source since it might need to be recompiled
      */
     public function recompile()
@@ -701,7 +701,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * compiles the provided string down to php code.
+     * Compiles the provided string down to php code.
      *
      * @param Core      $dwoo
      * @param ITemplate $template the template to compile
@@ -954,7 +954,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * checks what sub-templates are used in every sub-template so that we're sure they are all compiled.
+     * Checks what sub-templates are used in every sub-template so that we're sure they are all compiled.
      *
      * @param string $function the sub-template name
      */
@@ -976,7 +976,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds compiled content to the current block.
+     * Adds compiled content to the current block.
      *
      * @param string $content   the content to push
      * @param int    $lineCount newlines count in content, optional
@@ -1004,7 +1004,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * sets the scope.
+     * Sets the scope.
      * set to null if the scope becomes "unstable" (i.e. too variable or unknown) so that
      * variables are compiled in a more evaluative way than just $this->scope['key']
      *
@@ -1090,7 +1090,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * adds a custom block to the top of the block stack.
+     * Adds a custom block to the top of the block stack.
      *
      * @param string $type      block type (name)
      * @param array  $params    the parameters array
@@ -1122,7 +1122,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * injects a block at the top of the plugin stack without calling its preProcessing method.
+     * Injects a block at the top of the plugin stack without calling its preProcessing method.
      * used by {else} blocks to re-add themselves after having closed everything up to their parent
      *
      * @param string $type   block type (name)
@@ -1149,7 +1149,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * removes the closest-to-top block of the given type and all other
+     * Removes the closest-to-top block of the given type and all other
      * blocks encountered while going down the block stack.
      *
      * @param string $type block type (name)
@@ -1206,7 +1206,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns a reference to the first block of the given type encountered and
+     * Returns a reference to the first block of the given type encountered and
      * optionally closes all blocks until it finds it
      * this is mainly used by {else} plugins to close everything that was opened
      * between their parent and themselves.
@@ -1252,7 +1252,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * removes the block at the top of the stack and calls its postProcessing() method.
+     * Removes the block at the top of the stack and calls its postProcessing() method.
      *
      * @return string the postProcessing() method's output
      * @throws CompilationException
@@ -1279,7 +1279,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the compiled parameters (for example a variable's compiled parameter will be "$this->scope['key']") out
+     * Returns the compiled parameters (for example a variable's compiled parameter will be "$this->scope['key']") out
      * of the given parameter array.
      *
      * @param array $params parameter array
@@ -1298,7 +1298,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the real parameters (for example a variable's real parameter will be its key, etc) out of the given
+     * Returns the real parameters (for example a variable's real parameter will be its key, etc) out of the given
      * parameter array.
      *
      * @param array $params parameter array
@@ -1317,7 +1317,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the token of each parameter out of the given parameter array.
+     * Returns the token of each parameter out of the given parameter array.
      *
      * @param array $params parameter array
      *
@@ -1335,7 +1335,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * entry point of the parser, it redirects calls to other parse* functions.
+     * Entry point of the parser, it redirects calls to other parse* functions.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -1705,7 +1705,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a function call.
+     * Parses a function call.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -2162,7 +2162,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a string.
+     * Parses a string.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -2238,7 +2238,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a constant.
+     * Parses a constant.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -2282,7 +2282,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a constant.
+     * Parses a constant.
      *
      * @param string $key      the constant to parse
      * @param string $curBlock the current parser-block being processed
@@ -2305,7 +2305,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a variable.
+     * Parses a variable.
      *
      * @param string $in            the string within which we must parse something
      * @param int    $from          the starting offset of the parsed area
@@ -2520,7 +2520,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses any number of chained method calls/property reads.
+     * Parses any number of chained method calls/property reads.
      *
      * @param string $output     the variable or whatever upon which the method are called
      * @param string $methodCall method call source, starting at "->"
@@ -2607,7 +2607,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * parses a constant variable (a variable that doesn't contain another variable) and preprocesses it to save
+     * Parses a constant variable (a variable that doesn't contain another variable) and preprocesses it to save
      * runtime processing time.
      *
      * @param string $key      the variable to parse
@@ -2720,7 +2720,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * flattens a variable tree, this helps in parsing very complex variables such as $var.foo[$foo.bar->baz].baz,
+     * Flattens a variable tree, this helps in parsing very complex variables such as $var.foo[$foo.bar->baz].baz,
      * it computes the contents of the brackets first and works out from there.
      *
      * @param array $tree     the variable tree parsed by he parseVar() method that must be flattened
@@ -2782,7 +2782,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * helper function that parses a variable.
+     * Helper function that parses a variable.
      *
      * @param array $match the matched variable, array(1=>"string match")
      *
@@ -3327,7 +3327,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * returns the plugin type of a plugin and adds it to the used plugins array if required.
+     * Returns the plugin type of a plugin and adds it to the used plugins array if required.
      *
      * @param string $name plugin name, as found in the template
      *
@@ -3435,7 +3435,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * allows a plugin to load another one at compile time, this will also mark
+     * Allows a plugin to load another one at compile time, this will also mark
      * it as used by this template so it will be loaded at runtime (which can be
      * useful for compiled plugins that rely on another plugin when their compiled
      * code runs).
@@ -3450,7 +3450,7 @@ class Compiler implements ICompiler
     }
 
     /**
-     * runs htmlentities over the matched <?php ?> blocks when the security policy enforces that.
+     * Runs htmlentities over the matched <?php ?> blocks when the security policy enforces that.
      *
      * @param array $match matched php block
      *

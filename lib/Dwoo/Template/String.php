@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-21
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -23,28 +23,28 @@ use Dwoo\ICompiler;
 use Dwoo\Exception;
 
 /**
- * represents a Dwoo template contained in a string.
+ * Represents a Dwoo template contained in a string.
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 class String implements ITemplate
 {
     /**
-     * template name.
+     * Template name.
      *
      * @var string
      */
     protected $name;
 
     /**
-     * template compilation id.
+     * Template compilation id.
      *
      * @var string
      */
     protected $compileId;
 
     /**
-     * template cache id, if not provided in the constructor, it is set to
+     * Template cache id, if not provided in the constructor, it is set to
      * the md4 hash of the request_uri. it is however highly recommended to
      * provide one that will fit your needs.
      * in all cases, the compilation id is prepended to the cache id to separate
@@ -55,7 +55,7 @@ class String implements ITemplate
     protected $cacheId;
 
     /**
-     * validity duration of the generated cache file (in seconds).
+     * Validity duration of the generated cache file (in seconds).
      * set to -1 for infinite cache, 0 to disable and null to inherit the Dwoo instance's cache time
      *
      * @var int
@@ -63,7 +63,7 @@ class String implements ITemplate
     protected $cacheTime;
 
     /**
-     * boolean flag that defines whether the compilation should be enforced (once) or
+     * Boolean flag that defines whether the compilation should be enforced (once) or
      * not use this if you have issues with the compiled templates not being updated
      * but if you do need this it's most likely that you should file a bug report.
      *
@@ -72,7 +72,7 @@ class String implements ITemplate
     protected $compilationEnforced;
 
     /**
-     * caches the results of the file checks to save some time when the same
+     * Caches the results of the file checks to save some time when the same
      * templates is rendered several times.
      *
      * @var array
@@ -83,24 +83,29 @@ class String implements ITemplate
     );
 
     /**
-     * holds the compiler that built this template.
+     * Holds the compiler that built this template.
      *
      * @var ICompiler
      */
     protected $compiler;
 
     /**
-     * chmod value for all files written (cached or compiled ones).
+     * Chmod value for all files written (cached or compiled ones).
      * set to null if you don't want any chmod operation to happen
      *
      * @var int
      */
     protected $chmod = 0777;
 
+    /**
+     * Containing template string.
+     *
+     * @var string
+     */
     protected $template;
 
     /**
-     * creates a template from a string.
+     * Creates a template from a string.
      *
      * @param string $templateString the template to use
      * @param int    $cacheTime      duration of the cache validity for this template,
@@ -128,7 +133,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the cache duration for this template.
+     * Returns the cache duration for this template.
      * defaults to null if it was not provided
      *
      * @return int|null
@@ -139,7 +144,7 @@ class String implements ITemplate
     }
 
     /**
-     * sets the cache duration for this template.
+     * Sets the cache duration for this template.
      * can be used to set it after the object is created if you did not provide
      * it in the constructor
      *
@@ -153,7 +158,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the chmod value for all files written (cached or compiled ones).
+     * Returns the chmod value for all files written (cached or compiled ones).
      * defaults to 0777
      *
      * @return int|null
@@ -164,7 +169,7 @@ class String implements ITemplate
     }
 
     /**
-     * set the chmod value for all files written (cached or compiled ones).
+     * Set the chmod value for all files written (cached or compiled ones).
      * set to null if you don't want to do any chmod() operation
      *
      * @param int $mask new bitmask to use for all files
@@ -175,7 +180,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the template name.
+     * Returns the template name.
      *
      * @return string
      */
@@ -185,7 +190,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the resource name for this template class.
+     * Returns the resource name for this template class.
      *
      * @return string
      */
@@ -195,7 +200,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the resource identifier for this template, false here as strings don't have identifiers.
+     * Returns the resource identifier for this template, false here as strings don't have identifiers.
      *
      * @return false
      */
@@ -205,7 +210,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the template source of this template.
+     * Returns the template source of this template.
      *
      * @return string
      */
@@ -215,7 +220,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns an unique value identifying the current version of this template,
+     * Returns an unique value identifying the current version of this template,
      * in this case it's the md4 hash of the content.
      *
      * @return string
@@ -226,7 +231,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the compiler used by this template, if it was just compiled, or null.
+     * Returns the compiler used by this template, if it was just compiled, or null.
      *
      * @return ICompiler
      */
@@ -236,7 +241,7 @@ class String implements ITemplate
     }
 
     /**
-     * marks this template as compile-forced, which means it will be recompiled even if it
+     * Marks this template as compile-forced, which means it will be recompiled even if it
      * was already saved and wasn't modified since the last compilation. do not use this in production,
      * it's only meant to be used in development (and the development of dwoo particularly).
      */
@@ -246,7 +251,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the cached template output file name, true if it's cache-able but not cached
+     * Returns the cached template output file name, true if it's cache-able but not cached
      * or false if it's not cached.
      *
      * @param Core $core the dwoo instance that requests it
@@ -283,7 +288,7 @@ class String implements ITemplate
     }
 
     /**
-     * caches the provided output into the cache file.
+     * Caches the provided output into the cache file.
      *
      * @param Core   $core   the dwoo instance that requests it
      * @param string $output the template output
@@ -326,7 +331,7 @@ class String implements ITemplate
     }
 
     /**
-     * clears the cached template if it's older than the given time.
+     * Clears the cached template if it's older than the given time.
      *
      * @param Core $core      the dwoo instance that was used to cache that template
      * @param int  $olderThan minimum time (in seconds) required for the cache to be cleared
@@ -341,7 +346,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the compiled template file name.
+     * Returns the compiled template file name.
      *
      * @param Core      $core     the dwoo instance that requests it
      * @param ICompiler $compiler the compiler that must be used
@@ -406,20 +411,21 @@ class String implements ITemplate
     }
 
     /**
-     * returns a new template string object with the resource id being the template source code.
+     * Returns a new template string object with the resource id being the template source code.
      *
      * @param Core      $core           the dwoo instance requiring it
      * @param mixed     $resourceId     the filename (relative to this template's dir) of the template to include
-     * @param int       $cacheTime      duration of the cache validity for this template, if null it defaults to the Dwoo instance that will render this template
-     *                                       if null it defaults to the Dwoo instance that will
-     *                                       render this template
-     * @param string    $cacheId        the unique cache identifier of this page or anything else that makes this template's content unique, if null it defaults to the current url
-     *                                       makes this template's content unique, if null it defaults
-     *                                       to the current url
-     * @param string    $compileId      the unique compiled identifier, which is used to distinguish this template from others, if null it defaults to the filename+bits of the path
-     *                                       template from others, if null it defaults to the filename+bits of the path
-     * @param ITemplate $parentTemplate the template that is requesting a new template object (through an include, extends or any other plugin)
-     *                                       an include, extends or any other plugin)
+     * @param int       $cacheTime      duration of the cache validity for this template, if null it defaults to the
+     *                                  Dwoo instance that will render this template if null it defaults to the Dwoo
+     *                                  instance that will render this template
+     * @param string    $cacheId        the unique cache identifier of this page or anything else that makes this
+     *                                  template's content unique, if null it defaults to the current url makes this
+     *                                  template's content unique, if null it defaults to the current url
+     * @param string    $compileId      the unique compiled identifier, which is used to distinguish this template from
+     *                                  others, if null it defaults to the filename+bits of the path template from
+     *                                  others, if null it defaults to the filename+bits of the path
+     * @param ITemplate $parentTemplate the template that is requesting a new template object (through an include,
+     *                                  extends or any other plugin) an include, extends or any other plugin)
      *
      * @return $this
      */
@@ -429,7 +435,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the full compiled file name and assigns a default value to it if
+     * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
      * @param Core $core the dwoo instance that requests the file name
@@ -447,7 +453,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns the full cached file name and assigns a default value to it if
+     * Returns the full cached file name and assigns a default value to it if
      * required.
      *
      * @param Core $core the dwoo instance that requests the file name
@@ -475,7 +481,7 @@ class String implements ITemplate
     }
 
     /**
-     * returns some php code that will check if this template has been modified or not.
+     * Returns some php code that will check if this template has been modified or not.
      * if the function returns null, the template will be instanciated and then the Uid checked
      *
      * @return string
@@ -486,7 +492,7 @@ class String implements ITemplate
     }
 
     /**
-     * ensures the given path exists.
+     * Ensures the given path exists.
      *
      * @param string $path    any path
      * @param string $baseDir the base directory where the directory is created

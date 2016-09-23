@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-20
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -26,10 +26,6 @@ use Dwoo\Template\File as TemplateFile;
 use Iterator;
 use stdClass;
 use Traversable;
-
-if (!defined('DWOO_DIRECTORY')) {
-    define('DWOO_DIRECTORY', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
-}
 
 /**
  * Main dwoo class, allows communication between the compiler, template and data classes.
@@ -56,12 +52,12 @@ class Core
     const VERSION = '1.3.0';
 
     /**
-     * Unique number of this dwoo release.
+     * Unique number of this dwoo release, based on version number.
      * this can be used by templates classes to check whether the compiled template
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 17;
+    const RELEASE_TAG = 130;
 
     /**
      * Constants that represents all plugin types
@@ -726,7 +722,7 @@ class Core
     public function getCacheDir()
     {
         if ($this->cacheDir === null) {
-            $this->setCacheDir(DWOO_DIRECTORY . 'cache' . DIRECTORY_SEPARATOR);
+            $this->setCacheDir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR);
         }
 
         return $this->cacheDir;
@@ -756,7 +752,7 @@ class Core
     public function getCompileDir()
     {
         if ($this->compileDir === null) {
-            $this->setCompileDir(DWOO_DIRECTORY . 'compiled' . DIRECTORY_SEPARATOR);
+            $this->setCompileDir(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'compiled' . DIRECTORY_SEPARATOR);
         }
 
         return $this->compileDir;

@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -31,7 +31,7 @@ abstract class Processor
     protected $compiler;
 
     /**
-     * Constructor, if you override it, call parent::__construct($dwoo); or assign
+     * Constructor, if you override it, call parent::__construct($compiler); or assign
      * the dwoo instance yourself if you need it.
      *
      * @param Compiler $compiler the compiler class

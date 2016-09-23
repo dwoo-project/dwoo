@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-19
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -24,7 +24,7 @@ namespace Dwoo;
 interface IPluginProxy
 {
     /**
-     * returns true or false to say whether the given plugin is handled by this proxy or not.
+     * Returns true or false to say whether the given plugin is handled by this proxy or not.
      *
      * @param string $name the plugin name
      *
@@ -33,7 +33,7 @@ interface IPluginProxy
     public function handles($name);
 
     /**
-     * returns the code (as a string) to call the plugin
+     * Returns the code (as a string) to call the plugin
      * (this will be executed at runtime inside the Dwoo class).
      *
      * @param string $name   the plugin name
@@ -44,7 +44,7 @@ interface IPluginProxy
     public function getCode($name, $params);
 
     /**
-     * returns a callback to the plugin, this is used with the reflection API to
+     * Returns a callback to the plugin, this is used with the reflection API to
      * find out about the plugin's parameter names etc.
      * should you need a rest array without the possibility to edit the
      * plugin's code, you can provide a callback to some
@@ -62,7 +62,7 @@ interface IPluginProxy
     public function getCallback($name);
 
     /**
-     * returns some code that will check if the plugin is loaded and if not load it
+     * Returns some code that will check if the plugin is loaded and if not load it
      * this is optional, if your plugins are autoloaded or whatever, just return an
      * empty string.
      *

@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-22
+ * @date      2016-09-23
  * @link      http://dwoo.org/
  */
 
@@ -23,28 +23,28 @@ use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Template\File as TemplateFile;
 
 /**
- * represents a Dwoo template contained in a file.
+ * Represents a Dwoo template contained in a file.
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
 class File extends String
 {
     /**
-     * template filename.
+     * Template filename.
      *
      * @var string
      */
     protected $file;
 
     /**
-     * include path(s) to look into to find this template.
+     * Include path(s) to look into to find this template.
      *
      * @var array
      */
     protected $includePath = null;
 
     /**
-     * resolved path cache when looking for a file in multiple include paths.
+     * Resolved path cache when looking for a file in multiple include paths.
      * this is reset when the include path is changed
      *
      * @var string
@@ -52,7 +52,7 @@ class File extends String
     protected $resolvedPath = null;
 
     /**
-     * creates a template from a file.
+     * Creates a template from a file.
      *
      * @param string $file        the path to the template file, make sure it exists
      * @param int    $cacheTime   duration of the cache validity for this template,
@@ -87,7 +87,7 @@ class File extends String
     }
 
     /**
-     * sets the include path(s) to where the given template filename must be looked up.
+     * Sets the include path(s) to where the given template filename must be looked up.
      *
      * @param mixed $paths the path to look into, can be string for a single path or an array of paths
      */
@@ -102,7 +102,7 @@ class File extends String
     }
 
     /**
-     * return the current include path(s).
+     * Return the current include path(s).
      *
      * @return array
      */
@@ -125,7 +125,7 @@ class File extends String
     }
 
     /**
-     * returns the template source of this template.
+     * Returns the template source of this template.
      *
      * @return string
      */
@@ -135,7 +135,7 @@ class File extends String
     }
 
     /**
-     * returns the resource name for this template class.
+     * Returns the resource name for this template class.
      *
      * @return string
      */
@@ -145,7 +145,7 @@ class File extends String
     }
 
     /**
-     * returns this template's source filename.
+     * Returns this template's source filename.
      *
      * @return string
      * @throws DwooException
@@ -171,7 +171,7 @@ class File extends String
     }
 
     /**
-     * returns an unique value identifying the current version of this template,
+     * Returns an unique value identifying the current version of this template,
      * in this case it's the unix timestamp of the last modification.
      *
      * @return string
@@ -185,26 +185,26 @@ class File extends String
      * Returns a new template object from the given include name, null if no include is
      * possible (resource not found), or false if include is not permitted by this resource type.
      *
-     * @param Core      $core                     the dwoo instance requiring it
-     * @param mixed     $resourceId               the filename (relative to this template's dir) of the template to
-     *                                            include
-     * @param int       $cacheTime                duration of the cache validity for this template, if null it defaults
-     *                                            to the Dwoo instance that will render this template if null it
-     *                                            defaults to the Dwoo instance that will render this template if null
-     *                                            it defaults to the Dwoo instance that will render this template
-     * @param string    $cacheId                  the unique cache identifier of this page or anything else that makes
-     *                                            this template's content unique, if null it defaults to the current
-     *                                            url makes this template's content unique, if null it defaults to the
-     *                                            current url makes this template's content unique, if null it defaults
-     *                                            to the current url
-     * @param string    $compileId                the unique compiled identifier, which is used to distinguish this
-     *                                            template from others, if null it defaults to the filename+bits of the
-     *                                            path template from others, if null it defaults to the filename+bits
-     *                                            of the path template from others, if null it defaults to the
-     *                                            filename+bits of the path
-     * @param ITemplate $parentTemplate           the template that is requesting a new template object (through an
-     *                                            include, extends or any other plugin) an include, extends or any
-     *                                            other plugin) an include, extends or any other plugin)
+     * @param Core      $core           the dwoo instance requiring it
+     * @param mixed     $resourceId     the filename (relative to this template's dir) of the template to
+     *                                  include
+     * @param int       $cacheTime      duration of the cache validity for this template, if null it defaults
+     *                                  to the Dwoo instance that will render this template if null it
+     *                                  defaults to the Dwoo instance that will render this template if null
+     *                                  it defaults to the Dwoo instance that will render this template
+     * @param string    $cacheId        the unique cache identifier of this page or anything else that makes
+     *                                  this template's content unique, if null it defaults to the current
+     *                                  url makes this template's content unique, if null it defaults to the
+     *                                  current url makes this template's content unique, if null it defaults
+     *                                  to the current url
+     * @param string    $compileId      the unique compiled identifier, which is used to distinguish this
+     *                                  template from others, if null it defaults to the filename+bits of the
+     *                                  path template from others, if null it defaults to the filename+bits
+     *                                  of the path template from others, if null it defaults to the
+     *                                  filename+bits of the path
+     * @param ITemplate $parentTemplate the template that is requesting a new template object (through an
+     *                                  include, extends or any other plugin) an include, extends or any
+     *                                  other plugin) an include, extends or any other plugin)
      *
      * @return TemplateFile|null
      * @throws DwooException
@@ -277,7 +277,7 @@ class File extends String
     }
 
     /**
-     * returns the full compiled file name and assigns a default value to it if
+     * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
      * @param Core $core the dwoo instance that requests the file name
@@ -295,7 +295,7 @@ class File extends String
     }
 
     /**
-     * returns some php code that will check if this template has been modified or not.
+     * Returns some php code that will check if this template has been modified or not.
      * if the function returns null, the template will be instanciated and then the Uid checked
      *
      * @return string
