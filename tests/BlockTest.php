@@ -2,6 +2,9 @@
 /**
  */
 
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -20,6 +23,7 @@ namespace Dwoo\Tests
     use Dwoo\Plugins\Blocks\PluginIf;
     use Dwoo\Plugins\Blocks\PluginLoop;
     use Dwoo\Plugins\Blocks\PluginStrip;
+    use Dwoo\Plugins\Blocks\PluginTemplate;
     use Dwoo\Plugins\Blocks\PluginWith;
     use Dwoo\Plugins\Blocks\PluginWithelse;
     use Dwoo\Template\String as TemplateString;
@@ -655,66 +659,86 @@ bleh();
 
         public function testSubTemplates()
         {
-//            $tpl = new TemplateString('{load_templates "file:' . __DIR__ . '/resources/templates.html"}{menu $menu}{noparam}{load_templates ""}');
-//            $tpl->forceCompilation();
-//            $this->assertEquals('<ul class="level0"><li>foo</li><li>bar</li><ul class="level1"><li>baz</li><li>qux</li></ul><li>boo</li><ul class="level1"><li>far</li><ul class="level2"><li>faz</li><li>mux</li></ul></ul><li>duck</li></ul>noparamoutput', $this->dwoo->get($tpl, array(
-//                'menu' => array(
-//                    'foo',
-//                    'bar' => array(
-//                        'baz',
-//                        'qux'
-//                    ),
-//                    'boo' => array(
-//                        'far' => array(
-//                            'faz',
-//                            'mux'
-//                        )
-//                    ),
-//                    'duck'
-//                )
-//            ), $this->compiler));
-//
-//            // fixes the init call not being called (which is normal)
-//            $fixCall = new PluginTemplate($this->dwoo);
-//            $fixCall->init('');
+            $tpl = new TemplateString('{load_templates "file:' . __DIR__ . '/resources/templates.html"}{menu $menu}{noparam}{load_templates ""}');
+            $tpl->forceCompilation();
+            $this->assertEquals('
+<ul class="level0"><li>foo</li><li>bar</li>
+<ul class="level1"><li>baz</li><li>qux</li></ul>
+<li>boo</li>
+<ul class="level1"><li>far</li>
+<ul class="level2"><li>faz</li><li>mux</li></ul>
+</ul>
+<li>duck</li></ul>
+
+noparamoutput
+', $this->dwoo->get($tpl, array(
+                'menu' => array(
+                    'foo',
+                    'bar' => array(
+                        'baz',
+                        'qux'
+                    ),
+                    'boo' => array(
+                        'far' => array(
+                            'faz',
+                            'mux'
+                        )
+                    ),
+                    'duck'
+                )
+            ), $this->compiler));
+
+            // fixes the init call not being called (which is normal)
+            $fixCall = new PluginTemplate($this->dwoo);
+            $fixCall->init('');
         }
 
-//        public function testSubTemplatesWithAutoEscape()
-//        {
-//            $tpl = new TemplateString('{load_templates "file:' . __DIR__ . '/resources/templates.html"}{menu
-//            $menu}{noparam}{load_templates ""}');
-//            $tpl->forceCompilation();
-//            $this->compiler->setAutoEscape(true);
-//            $this->assertEquals('<ul class="level0"><li>foo</li><li>bar</li><ul class="level1"><li>baz</li><li>qux</li></ul><li>boo</li><ul class="level1"><li>far</li><ul class="level2"><li>faz</li><li>mux</li></ul></ul><li>duck</li></ul>noparamoutput' . "\n", $this->dwoo->get($tpl, array(
-//                'menu' => array(
-//                    'foo',
-//                    'bar' => array(
-//                        'baz',
-//                        'qux'
-//                    ),
-//                    'boo' => array(
-//                        'far' => array(
-//                            'faz',
-//                            'mux'
-//                        )
-//                    ),
-//                    'duck'
-//                )
-//            ), $this->compiler));
-//            $this->compiler->setAutoEscape(false);
-//
-//            // fixes the init call not being called (which is normal)
-//            $fixCall = new PluginTemplate($this->dwoo);
-//            $fixCall->init('');
-//        }
+        public function testSubTemplatesWithAutoEscape()
+        {
+            $tpl = new TemplateString('{load_templates "file:' . __DIR__ . '/resources/templates.html"}{menu
+            $menu}{noparam}{load_templates ""}');
+            $tpl->forceCompilation();
+            $this->compiler->setAutoEscape(true);
+            $this->assertEquals('
+<ul class="level0"><li>foo</li><li>bar</li>
+<ul class="level1"><li>baz</li><li>qux</li></ul>
+<li>boo</li>
+<ul class="level1"><li>far</li>
+<ul class="level2"><li>faz</li><li>mux</li></ul>
+</ul>
+<li>duck</li></ul>
 
-//        public function testSubTemplatesMultiInc()
-//        {
-//            $tpl = new TemplateFile(__DIR__ . '/resources/templateUsage.html');
-//            $tpl->forceCompilation();
-//            $this->assertEquals("\n" . 'noparamoutput' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
-//            $this->assertEquals("\n" . 'noparamoutput' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+noparamoutput
+', $this->dwoo->get($tpl, array(
+                'menu' => array(
+                    'foo',
+                    'bar' => array(
+                        'baz',
+                        'qux'
+                    ),
+                    'boo' => array(
+                        'far' => array(
+                            'faz',
+                            'mux'
+                        )
+                    ),
+                    'duck'
+                )
+            ), $this->compiler));
+            $this->compiler->setAutoEscape(false);
+
+            // fixes the init call not being called (which is normal)
+            $fixCall = new PluginTemplate($this->dwoo);
+            $fixCall->init('');
+        }
+
+        public function testSubTemplatesMultiInc()
+        {
+            $tpl = new TemplateFile(__DIR__ . '/resources/templateUsage.html');
+            $tpl->forceCompilation();
+            $this->assertEquals("\n\n" . 'noparamoutput' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
+            $this->assertEquals("\n\n" . 'noparamoutput' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
+        }
 
         public function testTextFormat()
         {
