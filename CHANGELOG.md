@@ -1,3 +1,27 @@
+## 1.3.0 (2016-09-25)
+`Added`
+* Add namespaces.
+* Add new PHPDoc block **Copyright** for each files.
+
+`Changed`
+* Follows [PHP Coding Standards Fixer](http://cs.sensiolabs.org/).
+* Refactoring code, following [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) Standard.
+* Follows PSR-1: Basic Coding Standard.
+* Follows PSR-2: Cosing Style Guide.
+* Follows PSR-4: Autoloader Standard instead of PSR-0.
+* Update **README** examples with namespace.
+* Move all plugins from `plugins/builtin` to `Dwoo/Plugins`.
+* Processor `smarty_compat` become `PluginSmartyCompatible`.
+* All plugins **functions** and **classes** names MUST start with `Plugin` keyword.
+* All plugins filename MUST have the same name as the **function** or **class**.
+* Plugins name changed from **underscore_case** to **CamelCase** (e.g. `Dwoo_Plugin_assign_compile` is now `PluginAssignCompile`).
+* Helper `Dwoo_Plugin_array_compile` move to `Dwoo\Plugins\Helpers\PluginArrayCompile`.
+
+`Removed`
+* Delete `Dwoo` class, now you need to use: `new Dwoo\Core()`.
+* Delete method `Dwoo\Core::output()`, use now `echo Dwoo\Core::get()` method.
+* Last parameter `$_output` of `Dwoo\Core::get()` method has been removed, use `echo Dwoo\Core::get()` instead.
+
 ## 1.2.3 (2016-09-15)
 `Added`
 * Continuously integrated **Travis** config file.
@@ -15,7 +39,7 @@
 * Fix return statements in correlation with PHPDoc.
 
 `Deprecated`
-* Method `Dwoo\Core::output()` is now deprecated, will be removed in **1.3.0**.
+* Method `Dwoo_Core::output()` is now deprecated, will be removed in **1.3.0**.
 
 ## 1.2.2 (2016-09-10)
 `Added`
@@ -31,6 +55,7 @@
 * Support for Composer, adding `composer.json` file.
 
 `Changed`
+* Follows PSR-0: Autoloader Standard.
 * Minimum PHP version required is now **PHP 5.3**
 
 `Deprecated`
