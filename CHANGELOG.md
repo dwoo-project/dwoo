@@ -1,4 +1,4 @@
-## 1.3.0 (2016-09-XX)
+## 1.3.0 (2016-09-25)
 `Added`
 * Add namespaces.
 * Add new PHPDoc block **Copyright** for each files.
@@ -18,7 +18,7 @@
 * Helper `Dwoo_Plugin_array_compile` move to `Dwoo\Plugins\Helpers\PluginArrayCompile`.
 
 `Removed`
-* Delete `Dwoo` class, now you need to use: `new \Dwoo\Core()`.
+* Delete `Dwoo` class, now you need to use: `new Dwoo\Core()`.
 * Delete method `Dwoo\Core::output()`, use now `echo Dwoo\Core::get()` method.
 * Last parameter `$_output` of `Dwoo\Core::get()` method has been removed, use `echo Dwoo\Core::get()` instead.
 
