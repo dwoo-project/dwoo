@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  -->
+
 <ruleset name="dwoo">
-	<description>Default PHP CodeSniffer configuration for Dwoo.</description>
-	<file>.</file>
-	<rule ref="PEAR"/>
-	<rule ref="Generic.Files.LineLength">
-		<properties>
-			<property name="lineLimit" value="120"/>
-			<property name="absoluteLineLimit" value="120"/>
-		</properties>
-	</rule>
+    <description>Default PHP CodeSniffer configuration for Dwoo.</description>
+    <file>.</file>
+    <rule ref="PEAR"/>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="120"/>
+        </properties>
+    </rule>
 </ruleset>
