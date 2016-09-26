@@ -1,8 +1,8 @@
 Dwoo
 ====
-[![Latest Stable Version](https://poser.pugx.org/dwoo/dwoo/v/stable?format=flat-square)](https://packagist.org/packages/dwoo/dwoo)
-[![Total Downloads](https://poser.pugx.org/dwoo/dwoo/downloads?format=flat-square)](https://packagist.org/packages/dwoo/dwoo)
-[![License](https://poser.pugx.org/dwoo/dwoo/license?format=flat-square)](https://packagist.org/packages/dwoo/dwoo)
+[![Latest Stable Version](https://poser.pugx.org/dwoo/dwoo/v/stable)](https://packagist.org/packages/dwoo/dwoo)
+[![Total Downloads](https://poser.pugx.org/dwoo/dwoo/downloads)](https://packagist.org/packages/dwoo/dwoo)
+[![License](https://poser.pugx.org/dwoo/dwoo/license)](https://packagist.org/packages/dwoo/dwoo)
 [![Build Status](https://travis-ci.org/dwoo-project/dwoo.svg?branch=master)](https://travis-ci.org/dwoo-project/dwoo)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dwoo-project/dwoo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dwoo-project/dwoo/?branch=master)
 
