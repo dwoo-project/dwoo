@@ -42,7 +42,7 @@ Basic Example
 -------------
 ```php
 <?php
-// Include the main class (it should handle the rest on its own)
+// Include Composer autoloader
 require __DIR__ . '/vendor/autoload.php';
 
 // Create the controller, this is reusable
