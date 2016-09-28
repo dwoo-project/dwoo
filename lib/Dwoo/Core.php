@@ -178,7 +178,7 @@ class Core
             'compiler' => null,
         ),
         'string' => array(
-            'class'    => 'Dwoo\Template\String',
+            'class'    => 'Dwoo\Template\Str',
             'compiler' => null,
         ),
     );
@@ -628,7 +628,7 @@ class Core
         }
 
         if (!class_exists($class)) {
-            throw new Exception('Resource class does not exist');
+            throw new Exception(sprintf('Resource class %s does not exist', $class));
         }
 
         $interfaces = class_implements($class);
@@ -1356,8 +1356,8 @@ class Core
                     return null;
                 }
             } else {
-                if (is_object($data) && ($safeRead === false || isset($data->$m[2][$k]))) {
-                    $data = $data->$m[2][$k];
+                if (is_object($data) && ($safeRead === false || isset($data->{$m[2][$k]}))) {
+                    $data = $data->{$m[2][$k]};
                 } else {
                     return null;
                 }
@@ -1387,7 +1387,7 @@ class Core
 
         while (($i = array_shift($tree)) !== null) {
             if (is_object($cur)) {
-                $cur = $cur->$i;
+                $cur = $cur->{$i};
             } else {
                 $cur = $cur[$i];
             }
@@ -1426,7 +1426,7 @@ class Core
 
                     while (($i = array_shift($tree)) !== null) {
                         if (is_object($cur)) {
-                            $cur = $cur->$i;
+                            $cur = $cur->{$i};
                         } else {
                             $cur = $cur[$i];
                         }
@@ -1509,7 +1509,7 @@ class Core
 
                 while (($i = array_shift($tree)) !== null) {
                     if (is_object($cur)) {
-                        $cur = $cur->$i;
+                        $cur = $cur->{$i};
                     } else {
                         $cur = $cur[$i];
                     }
@@ -1529,7 +1529,7 @@ class Core
                 }
             } elseif ($sep === '->') {
                 if (is_object($cur)) {
-                    $cur = $cur->$m[2][$k];
+                    $cur = $cur->{$m[2][$k]};
                 } else {
                     return null;
                 }
@@ -1576,7 +1576,7 @@ class Core
                     if (is_object($cur) === false) {
                         $cur = new stdClass();
                     }
-                    $cur = &$cur->$m[2][$k];
+                    $cur = &$cur->{$m[2][$k]};
                 } else {
                     return false;
                 }
@@ -1591,7 +1591,7 @@ class Core
                 if (is_object($cur) === false) {
                     $cur = new stdClass();
                 }
-                $cur->$last[1] = $value;
+                $cur->{$last[1]} = $value;
             } else {
                 return false;
             }
