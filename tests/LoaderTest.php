@@ -1,9 +1,15 @@
 <?php
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Loader;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
 
     /**
      * Class LoaderTest

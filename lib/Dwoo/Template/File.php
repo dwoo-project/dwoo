@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-23
+ * @version   1.4.0
+ * @date      2016-12-16
  * @link      http://dwoo.org/
  */
 
@@ -27,7 +27,7 @@ use Dwoo\Template\File as TemplateFile;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-class File extends String
+class File extends Str
 {
     /**
      * Template filename.

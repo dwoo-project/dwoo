@@ -5,13 +5,19 @@
 /**
  */
 
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Compiler;
     use Dwoo\Core;
     use PluginHelper;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Security\Policy as SecurityPolicy;
 
     /**

@@ -1,11 +1,17 @@
 <?php
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Compiler;
     use Dwoo\Core;
     use Dwoo\Plugins\Blocks\PluginTopLevelBlock;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Template\File as TemplateFile;
     use Dwoo\Security\Policy as SecurityPolicy;
     use ProxyHelper;

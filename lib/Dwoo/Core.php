@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-25
+ * @version   1.4.0
+ * @date      2016-12-16
  * @link      http://dwoo.org/
  */
 
@@ -35,7 +35,7 @@ use Traversable;
  *  SPL and PCRE extensions (for php versions prior to 5.3.0)
  *  mbstring extension for some string manipulation plugins (especially if you intend to use UTF-8)
  * recommended :
- *  hash extension (for Dwoo\Template\String - minor performance boost)
+ *  hash extension (for Dwoo\Template\Str - minor performance boost)
  * project created :
  *  2008-01-05
  * </pre>
