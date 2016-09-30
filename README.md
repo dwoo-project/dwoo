@@ -5,6 +5,7 @@ Dwoo
 [![License](https://poser.pugx.org/dwoo/dwoo/license?format=flat-square)](https://packagist.org/packages/dwoo/dwoo)
 [![Build Status](https://travis-ci.org/dwoo-project/dwoo.svg?branch=master)](https://travis-ci.org/dwoo-project/dwoo)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dwoo-project/dwoo/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dwoo-project/dwoo/?branch=1.2)
+[![Gitter](https://badges.gitter.im/dwoo_project/support.svg)](https://gitter.im/dwoo_project/support?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 Dwoo is a PHP5/PHP7 Template Engine that was started in early 2008. The idea came
 from the fact that Smarty, a well known template engine, is getting older and
