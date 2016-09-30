@@ -1,5 +1,7 @@
 Dwoo
 ====
+
+[![Join the chat at https://gitter.im/dwoo_project/Lobby](https://badges.gitter.im/dwoo_project/Lobby.svg)](https://gitter.im/dwoo_project/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Latest Stable Version](https://poser.pugx.org/dwoo/dwoo/v/stable)](https://packagist.org/packages/dwoo/dwoo)
 [![Total Downloads](https://poser.pugx.org/dwoo/dwoo/downloads)](https://packagist.org/packages/dwoo/dwoo)
 [![License](https://poser.pugx.org/dwoo/dwoo/license)](https://packagist.org/packages/dwoo/dwoo)
