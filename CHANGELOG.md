@@ -1,3 +1,8 @@
+## 1.3.1 (2016-XX-XX)
+`Fixed`
+* Fixing all adapters.
+* Fixing constant calls from classes with namespaces.
+
 ## 1.3.0 (2016-09-25)
 `Added`
 * Add namespaces.

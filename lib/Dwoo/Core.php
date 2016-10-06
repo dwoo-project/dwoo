@@ -10,7 +10,7 @@
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.0
- * @date      2016-09-23
+ * @date      2016-09-25
  * @link      http://dwoo.org/
  */
 
@@ -132,7 +132,7 @@ class Core
 
     /**
      * Defines how long (in seconds) the cached files must remain valid.
-     * can be overriden on a per-template basis
+     * can be overridden on a per-template basis
      * -1 = never delete
      * 0 = disabled
      * >0 = duration in seconds
