@@ -1,4 +1,9 @@
-## 1.3.1 (2016-XX-XX)
+## 1.3.1 (2016-12-16)
+* Now fully compatible with PHP7.0 and PHP7.1.
+
+`Changed`
+* Rename class `Dwoo\Template\String` to `Dwoo\Template\Str`.
+
 `Fixed`
 * Fixing all adapters.
 * Fixing constant calls from classes with namespaces.
