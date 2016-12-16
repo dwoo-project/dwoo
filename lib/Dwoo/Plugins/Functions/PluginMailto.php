@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.4.0
+ * @date      2016-12-16
  * @link      http://dwoo.org/
  */
 
@@ -91,7 +91,7 @@ function PluginMailto(Core $dwoo, $address, $text = null, $subject = null, $enco
             $str = '<a href="mailto:' . $address . '" ' . $extra . '>' . $text . '</a>';
             $len = strlen($str);
 
-            $out = '<script type="text/javascript">' . "\n<!--\ndocument.write(String.fromCharCode(";
+            $out = '<script type="text/javascript">' . "\n<!--\ndocument.write(Str.fromCharCode(";
             for ($i = 0; $i < $len; ++ $i) {
                 $out .= ord($str[$i]) . ',';
             }

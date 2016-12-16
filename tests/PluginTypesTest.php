@@ -2,12 +2,18 @@
 /**
  */
 
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use custom_class_plugin_obj;
     use custom_compilable_class_plugin_obj;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
 
     /**
      * Class PluginTypesTest

@@ -5,10 +5,16 @@
 /**
  */
 
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Security\Policy as SecurityPolicy;
     use PHPUnit_Framework_Error;
     use testSecurityClass;

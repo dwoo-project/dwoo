@@ -1,9 +1,15 @@
 <?php
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Core;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use plugin_full_custom;
 
     /**

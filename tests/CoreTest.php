@@ -1,11 +1,20 @@
 <?php
+/**
+ */
+
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Compiler;
     use Dwoo\Core;
     use Dwoo\Plugins\Blocks\PluginTopLevelBlock;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Template\File as TemplateFile;
     use Dwoo\Security\Policy as SecurityPolicy;
     use ProxyHelper;
@@ -224,7 +233,7 @@ namespace Dwoo\Tests
             $this->assertEquals('34', $this->dwoo->get($tpl, array(), $compiler));
             $this->dwoo->removeResource('news');
 
-            $this->dwoo->addResource('file', 'Dwoo\Template\String', 'Fake');
+            $this->dwoo->addResource('file', 'Dwoo\Template\Str', 'Fake');
             $this->dwoo->removeResource('file');
             $tpl = new TemplateString('{include file="file:' . __DIR__ . '/resources/test.html" foo=3 bar=4}');
             $tpl->forceCompilation();

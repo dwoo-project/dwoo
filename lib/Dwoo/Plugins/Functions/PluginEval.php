@@ -9,15 +9,15 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2016 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.4.0
+ * @date      2016-12-16
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Core;
-use Dwoo\Template\String as TemplateString;
+use Dwoo\Template\Str as TemplateString;
 
 /**
  * Evaluates the given string as if it was a template.
@@ -25,7 +25,7 @@ use Dwoo\Template\String as TemplateString;
  * not recompile your string each time, it is still not
  * a good practice to use it. If you want to have templates
  * stored in a database or something you should probably use
- * the Dwoo\Template\String class or make another class that
+ * the Dwoo\Template\Str class or make another class that
  * extends it
  * <pre>
  *  * var : the string to use as a template

@@ -1,8 +1,14 @@
 <?php
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Template\File as TemplateFile;
 
     /**
@@ -336,7 +342,7 @@ namespace Dwoo\Tests
             $tpl = new TemplateString('{mailto address="me@example.com" encode="jschar"}');
             $tpl->forceCompilation();
 
-            $this->assertEquals('<script type="text/javascript">' . "\n" . '<!--' . "\n" . 'document.write(String.fromCharCode(60,97,32,104,114,101,102,61,34,109,97,105,108,116,111,58,109,101,64,101,120,97,109,112,108,101,46,99,111,109,34,32,62,109,101,64,101,120,97,109,112,108,101,46,99,111,109,60,47,97,62));' . "\n" . '-->' . "\n" . '</script>' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
+            $this->assertEquals('<script type="text/javascript">' . "\n" . '<!--' . "\n" . 'document.write(Str.fromCharCode(60,97,32,104,114,101,102,61,34,109,97,105,108,116,111,58,109,101,64,101,120,97,109,112,108,101,46,99,111,109,34,32,62,109,101,64,101,120,97,109,112,108,101,46,99,111,109,60,47,97,62));' . "\n" . '-->' . "\n" . '</script>' . "\n", $this->dwoo->get($tpl, array(), $this->compiler));
 
             $tpl = new TemplateString('{mailto address="me@example.com" text="send me some mail"}');
             $tpl->forceCompilation();

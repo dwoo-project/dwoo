@@ -2,12 +2,18 @@
 /**
  */
 
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
     use Dwoo\Compiler;
     use Dwoo\Core;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
 
     /**
      * Class FiltersTest

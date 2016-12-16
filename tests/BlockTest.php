@@ -5,6 +5,12 @@
 /**
  */
 
+/**
+ */
+
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -26,7 +32,7 @@ namespace Dwoo\Tests
     use Dwoo\Plugins\Blocks\PluginTemplate;
     use Dwoo\Plugins\Blocks\PluginWith;
     use Dwoo\Plugins\Blocks\PluginWithelse;
-    use Dwoo\Template\String as TemplateString;
+    use Dwoo\Template\Str as TemplateString;
     use Dwoo\Template\File as TemplateFile;
 
     /**
