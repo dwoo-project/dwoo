@@ -11,6 +11,9 @@
 /**
  */
 
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -300,17 +303,17 @@ replace="BAR"
 //            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
 //        }
 
-//        public function testShortConstants()
-//        {
-//            if (!defined('TEST')) {
-//                define('TEST', 'Test');
-//            }
-//            $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
-//            $tpl->forceCompilation();
-//            $this->compiler->debug=true;
-//
-//            $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+        public function testShortConstants()
+        {
+            if (!defined('TEST')) {
+                define('TEST', 'Test');
+            }
+            $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
+            $tpl->forceCompilation();
+            $this->compiler->debug=true;
+
+            $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
+        }
 
         public function testShortClassConstants()
         {
