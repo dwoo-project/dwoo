@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Template
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.4.0
- * @date      2016-12-16
+ * @version   1.3.2
+ * @date      2017-01-03
  * @link      http://dwoo.org/
  */
 
@@ -67,17 +67,10 @@ class File extends Str
      */
     public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null)
     {
-        $this->file      = $file;
-        $this->name      = basename($file);
-        $this->cacheTime = $cacheTime;
-
-        if ($compileId !== null) {
-            $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
-        }
-
-        if ($cacheId !== null) {
-            $this->cacheId = str_replace('../', '__', strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
-        }
+        parent::__construct($file, $cacheTime, $cacheId, $compileId);
+        $this->template = null;
+        $this->file     = $file;
+        $this->name     = basename($file);
 
         if (is_string($includePath)) {
             $this->includePath = array($includePath);
