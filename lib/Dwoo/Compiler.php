@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-23
+ * @version   1.3.2
+ * @date      2017-01-03
  * @link      http://dwoo.org/
  */
 
@@ -2324,13 +2324,30 @@ class Compiler implements ICompiler
         $methodCall = '';
         $substr     = substr($in, $from, $to - $from);
 
-        if (preg_match(
-            '#(\$?\.?[a-z0-9_:]*(?:(?:(?:\.|->)(?:[a-z0-9_:]+|(?R))|\[(?:[a-z0-9_:]+|(?R)|(["\'])[^\2]*?\2)\]))*)' . // var key
-            ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()') . // method call
-            ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\]>_:-]+(?:\([^)]*\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()') . // simple math expressions
-            ($curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())') . // modifiers
-            '#i', $substr, $match
-        )) {
+
+        // var key
+        $varRegex = '(\\$?\\.?[a-z0-9\\\\_:]*(?:(?:(?:\\.|->)(?:[a-z0-9\\\\_:]+|(?R))|\\[(?:[a-z0-9\\\\_:]+|(?R)|(["\'])[^\\2]*?\\2)\\]))*)';
+        // method call
+        $methodCall = ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()');
+        // simple math expressions
+        $simpleMathExpressions = ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\\]>_:-]+(?:\\([^)]*\\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()');
+        // modifiers
+        $modifiers = $curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9\\_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())';
+
+        $regex = '#';
+        $regex .= $varRegex;
+        $regex .= $methodCall;
+        $regex .= $simpleMathExpressions;
+        $regex .= $modifiers;
+        $regex .= '#i';
+
+//        $regex = '#(\\$?\\.?[a-z0-9\\\\_:]*(?:(?:(?:\\.|->)(?:[a-z0-9\\\\_:]+|(?R))|\\[(?:[a-z0-9\\\\_:]+|(?R)|(["\'])[^\\2]*?\\2)\\]))*)' . // var key
+//            ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'expression' || $curBlock === 'delimited_string' ? '(\(.*)?' : '()') . // method call
+//            ($curBlock === 'root' || $curBlock === 'function' || $curBlock === 'namedparam' || $curBlock === 'condition' || $curBlock === 'variable' || $curBlock === 'delimited_string' ? '((?:(?:[+/*%=-])(?:(?<!=)=?-?[$%][a-z0-9.[\\]>_:-]+(?:\\([^)]*\\))?|(?<!=)=?-?[0-9.,]*|[+-]))*)' : '()') . // simple math expressions
+//            ($curBlock !== 'modifier' ? '((?:\|(?:@?[a-z0-9\\_]+(?:(?::("|\').*?\5|:[^`]*))*))+)?' : '(())') . // modifiers
+//            '#i';
+
+        if (preg_match($regex, $substr, $match)) {
             $key = substr($match[1], 1);
 
             $matchedLength = strlen($match[0]);
@@ -2432,6 +2449,7 @@ class Compiler implements ICompiler
             } else {
                 $output = $this->parseVarKey($key, $hasModifiers ? 'modifier' : $curBlock);
             }
+
 
             // methods
             if ($hasMethodCall) {
@@ -2637,7 +2655,7 @@ class Compiler implements ICompiler
             } else {
                 $output = '(isset(' . $key . ')?' . $key . ':null)';
             }
-        } elseif (preg_match('#dwoo\.const\.([a-z0-9_:]+)#i', $key, $m)) {
+        } elseif (preg_match('#dwoo\\.const\\.([a-z0-9\\\\_:]+)#i', $key, $m)) {
             return $this->parseConstKey($m[1], $curBlock);
         } elseif ($this->scope !== null) {
             if (strstr($key, '.') === false && strstr($key, '[') === false && strstr($key, '->') === false) {

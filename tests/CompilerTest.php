@@ -14,6 +14,9 @@
 /**
  */
 
+/**
+ */
+
 namespace Dwoo\Tests
 {
 
@@ -310,7 +313,6 @@ replace="BAR"
             }
             $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
             $tpl->forceCompilation();
-            $this->compiler->debug=true;
 
             $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
         }
