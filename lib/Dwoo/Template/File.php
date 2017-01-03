@@ -41,7 +41,7 @@ class File extends Str
      *
      * @var array
      */
-    protected $includePath = null;
+    protected $includePath = array();
 
     /**
      * Resolved path cache when looking for a file in multiple include paths.
@@ -65,18 +65,13 @@ class File extends Str
      *                            template from others, if null it defaults to the filename+bits of the path
      * @param mixed  $includePath a string for a single path to look into for the given file, or an array of paths
      */
-    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = null)
+    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = array())
     {
         parent::__construct($file, $cacheTime, $cacheId, $compileId);
         $this->template = null;
         $this->file     = $file;
         $this->name     = basename($file);
-
-        if (is_string($includePath)) {
-            $this->includePath = array($includePath);
-        } elseif (is_array($includePath)) {
-            $this->includePath = $includePath;
-        }
+        $this->setIncludePath($includePath);
     }
 
     /**
@@ -147,15 +142,13 @@ class File extends Str
     {
         if ($this->resolvedPath !== null) {
             return $this->resolvedPath;
-        } elseif ($this->includePath === null) {
+        } elseif (array_filter($this->getIncludePath()) == array()) {
             return $this->file;
         } else {
-            foreach ($this->includePath as $path) {
+            foreach ($this->getIncludePath() as $path) {
                 $path = rtrim($path, DIRECTORY_SEPARATOR);
                 if (file_exists($path . DIRECTORY_SEPARATOR . $this->file) === true) {
-                    $this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
-
-                    return $this->resolvedPath;
+                    return $this->resolvedPath = $path . DIRECTORY_SEPARATOR . $this->file;
                 }
             }
 

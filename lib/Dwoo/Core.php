@@ -131,6 +131,13 @@ class Core
     protected $cacheDir;
 
     /**
+     * Directory where the template files are stored
+     *
+     * @var array
+     */
+    protected $templateDir = array();
+
+    /**
      * Defines how long (in seconds) the cached files must remain valid.
      * can be overridden on a per-template basis
      * -1 = never delete
@@ -318,8 +325,9 @@ class Core
         // auto-create template if required
         if ($_tpl instanceof ITemplate) {
             // valid, skip
-        } elseif (is_string($_tpl) && file_exists($_tpl)) {
+        } elseif (is_string($_tpl)) {
             $_tpl = new TemplateFile($_tpl);
+            $_tpl->setIncludePath($this->getTemplateDir());
         } else {
             throw new Exception(
                 'Dwoo->get\'s first argument must be a ITemplate (i.e. TemplateFile) or 
@@ -772,6 +780,33 @@ class Core
         if (is_writable($this->compileDir) === false) {
             throw new Exception('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable');
         }
+    }
+
+    /**
+     * Returns an array of the template directory with a trailing DIRECTORY_SEPARATOR
+     *
+     * @return array
+     */
+    public function getTemplateDir()
+    {
+        return $this->templateDir;
+    }
+
+    /**
+     * sets the template directory and automatically appends a DIRECTORY_SEPARATOR
+     * template directory is stored in an array
+     *
+     * @param string $dir
+     *
+     * @throws Exception
+     */
+    public function setTemplateDir($dir)
+    {
+        $tmpDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (is_dir($tmpDir) === false) {
+            throw new Exception('The template directory: "' . $tmpDir . '" does not exists, create the directory or specify an other location !');
+        }
+        $this->templateDir[] = $tmpDir;
     }
 
     /**

@@ -1,12 +1,4 @@
 <?php
-/**
- */
-
-/**
- */
-
-/**
- */
 
 namespace Dwoo\Tests
 {
@@ -385,6 +377,21 @@ namespace Dwoo\Tests
             $data = new TestCountableIterator(array('moo'));
             $this->assertEquals(true, $dwoo->isTraversable($data));
             $this->assertEquals(1, $dwoo->isTraversable($data, true));
+        }
+
+        public function testSetters()
+        {
+            $dwoo = new Core();
+            $dwoo->setCacheDir($this->cacheDir);
+            $dwoo->setCompileDir($this->compileDir);
+            $dwoo->setTemplateDir(__DIR__ . DIRECTORY_SEPARATOR . 'resources');
+
+            $this->assertThat($dwoo->get('extend1.html', array(), $this->compiler), new DwooConstraintStringEquals('foo
+child1
+toplevelContent1
+bar
+toplevelContent2
+baz'));
         }
     }
 }
