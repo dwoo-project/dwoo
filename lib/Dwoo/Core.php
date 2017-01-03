@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.4.0
- * @date      2016-12-16
+ * @version   1.3.2
+ * @date      2017-01-03
  * @link      http://dwoo.org/
  */
 
@@ -49,7 +49,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.3.0';
+    const VERSION = '1.3.2';
 
     /**
      * Unique number of this dwoo release, based on version number.
@@ -57,7 +57,7 @@ class Core
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 130;
+    const RELEASE_TAG = 132;
 
     /**
      * Constants that represents all plugin types
