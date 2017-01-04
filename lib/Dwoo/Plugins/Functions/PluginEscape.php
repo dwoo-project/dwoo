@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-04
  * @link      http://dwoo.org/
  */
 
@@ -29,6 +29,13 @@ use Dwoo\Core;
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
+ * @param Core   $dwoo
+ * @param string $value
+ * @param string $format
+ * @param null   $charset
+ *
+ * @return mixed|string
  */
 function PluginEscape(Core $dwoo, $value = '', $format = 'html', $charset = null)
 {
@@ -37,7 +44,6 @@ function PluginEscape(Core $dwoo, $value = '', $format = 'html', $charset = null
     }
 
     switch ($format) {
-
         case 'html':
             return htmlspecialchars((string)$value, ENT_QUOTES, $charset);
         case 'htmlall':
@@ -65,6 +71,7 @@ function PluginEscape(Core $dwoo, $value = '', $format = 'html', $charset = null
 
             return $out;
         case 'javascript':
+        case 'js':
             return strtr((string)$value, array(
                 '\\' => '\\\\',
                 "'"  => "\\'",
