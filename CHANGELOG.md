@@ -2,6 +2,7 @@
 `Added`
 * Add new test: `Core::testSetters`.
 * Add new methods: `Core::setTemplateDir` and `Core::getTemplateDir`.
+* Add new alias `js` for *javascript* available format in **escape** plugin.
 
 `Fixed`
 * Fix PHPUnit test: `CompilerTest::testConstants`.
