@@ -277,17 +277,16 @@ replace="BAR"
             $this->assertEquals('5/5', $this->dwoo->get($tpl, array('foo' => 5), $this->compiler));
         }
 
-//        public function testConstants()
-//        {
-//            if (!defined('TEST')) {
-//                define('TEST', 'Test');
-//            }
-//            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
-//            $tpl->forceCompilation();
-//            $this->compiler->debug=true;
-//
-//            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+        public function testConstants()
+        {
+            if (!defined('TEST')) {
+                define('TEST', 'Test');
+            }
+            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
+            $tpl->forceCompilation();
+
+            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+        }
 
         public function testShortConstants()
         {

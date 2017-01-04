@@ -1,3 +1,11 @@
+## 1.3.2 (2017-XX-XX)
+`Added`
+* Add new test: `Core::testSetters`.
+* Add new methods: `Core::setTemplateDir` and `Core::getTemplateDir`.
+
+`Fixed`
+* Fix PHPUnit test: `CompilerTest::testConstants`.
+
 ## 1.3.1 (2016-12-16)
 * Now fully compatible with PHP7.0 and PHP7.1.
 
