@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.4.0
- * @date      2016-12-16
+ * @version   1.3.2
+ * @date      2017-01-04
  * @link      http://dwoo.org/
  */
 
@@ -49,7 +49,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.3.0';
+    const VERSION = '1.3.2';
 
     /**
      * Unique number of this dwoo release, based on version number.
@@ -57,7 +57,7 @@ class Core
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 130;
+    const RELEASE_TAG = 132;
 
     /**
      * Constants that represents all plugin types
@@ -112,7 +112,7 @@ class Core
      *
      * @var array
      */
-    public $globals;
+    protected $globals = array();
 
     /**
      * Directory where the compiled templates are stored.
@@ -129,6 +129,13 @@ class Core
      * @var string
      */
     protected $cacheDir;
+
+    /**
+     * Directory where the template files are stored
+     *
+     * @var array
+     */
+    protected $templateDir = array();
 
     /**
      * Defines how long (in seconds) the cached files must remain valid.
@@ -202,21 +209,21 @@ class Core
      *
      * @var array
      */
-    protected $runtimePlugins;
+    protected $runtimePlugins = array();
 
     /**
      * Stores the returned values during template runtime.
      *
      * @var array
      */
-    protected $returnData;
+    protected $returnData = array();
 
     /**
      * Stores the data during template runtime.
      *
      * @var array
      */
-    public $data;
+    protected $data = array();
 
     /**
      * Stores the current scope during template runtime.
@@ -231,14 +238,14 @@ class Core
      *
      * @var array
      */
-    protected $scopeTree;
+    protected $scopeTree = array();
 
     /**
      * Stores the block plugins stack during template runtime.
      *
      * @var array
      */
-    protected $stack;
+    protected $stack = array();
 
     /**
      * Stores the current block plugin at the top of the stack during template runtime.
@@ -318,8 +325,9 @@ class Core
         // auto-create template if required
         if ($_tpl instanceof ITemplate) {
             // valid, skip
-        } elseif (is_string($_tpl) && file_exists($_tpl)) {
+        } elseif (is_string($_tpl)) {
             $_tpl = new TemplateFile($_tpl);
+            $_tpl->setIncludePath($this->getTemplateDir());
         } else {
             throw new Exception(
                 'Dwoo->get\'s first argument must be a ITemplate (i.e. TemplateFile) or 
@@ -345,7 +353,7 @@ class Core
             );
         }
 
-        $this->globals['template'] = $_tpl->getName();
+        $this->addGlobal('template', $_tpl->getName());
         $this->initRuntimeVars($_tpl);
 
         // try to get cached template
@@ -413,6 +421,38 @@ class Core
     }
 
     /**
+     * Registers a Global.
+     * New globals can be added before compiling or rendering a template
+     * but after, you can only update existing globals.
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function addGlobal($name, $value)
+    {
+        if (null === $this->globals) {
+            $this->initGlobals();
+        }
+
+        $this->globals[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Gets the registered Globals.
+     *
+     * @return array
+     */
+    public function getGlobals()
+    {
+        return $this->globals;
+    }
+
+    /**
      * Re-initializes the globals array before each template run.
      * this method is only callede once when the Dwoo object is created
      *
@@ -424,7 +464,7 @@ class Core
             'version' => self::VERSION,
             'ad'      => '<a href="http://dwoo.org/">Powered by Dwoo</a>',
             'now'     => $_SERVER['REQUEST_TIME'],
-            'charset' => $this->charset,
+            'charset' => $this->getCharset(),
         );
     }
 
@@ -772,6 +812,33 @@ class Core
         if (is_writable($this->compileDir) === false) {
             throw new Exception('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable');
         }
+    }
+
+    /**
+     * Returns an array of the template directory with a trailing DIRECTORY_SEPARATOR
+     *
+     * @return array
+     */
+    public function getTemplateDir()
+    {
+        return $this->templateDir;
+    }
+
+    /**
+     * sets the template directory and automatically appends a DIRECTORY_SEPARATOR
+     * template directory is stored in an array
+     *
+     * @param string $dir
+     *
+     * @throws Exception
+     */
+    public function setTemplateDir($dir)
+    {
+        $tmpDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (is_dir($tmpDir) === false) {
+            throw new Exception('The template directory: "' . $tmpDir . '" does not exists, create the directory or specify an other location !');
+        }
+        $this->templateDir[] = $tmpDir;
     }
 
     /**
@@ -1415,7 +1482,7 @@ class Core
         } else {
             if (strstr($varstr, '.') === false && strstr($varstr, '[') === false && strstr($varstr, '->') === false) {
                 if ($varstr === 'dwoo') {
-                    return $this->globals;
+                    return $this->getGlobals();
                 } elseif ($varstr === '__' || $varstr === '_root') {
                     return $this->data;
                 } elseif ($varstr === '_' || $varstr === '_parent') {
@@ -1453,7 +1520,7 @@ class Core
 
         $i = $m[2][0];
         if ($i === 'dwoo') {
-            $cur = $this->globals;
+            $cur = $this->getGlobals();
             array_shift($m[2]);
             array_shift($m[1]);
             switch ($m[2][0]) {
@@ -1487,7 +1554,7 @@ class Core
                     return null;
                 }
             }
-            if ($cur !== $this->globals) {
+            if ($cur !== $this->getGlobals()) {
                 array_shift($m[2]);
                 array_shift($m[1]);
             }

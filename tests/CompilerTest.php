@@ -1,15 +1,4 @@
 <?php
-/**
- */
-
-/**
- */
-
-/**
- */
-
-/**
- */
 
 namespace Dwoo\Tests
 {
@@ -288,29 +277,27 @@ replace="BAR"
             $this->assertEquals('5/5', $this->dwoo->get($tpl, array('foo' => 5), $this->compiler));
         }
 
-//        public function testConstants()
-//        {
-//            if (!defined('TEST')) {
-//                define('TEST', 'Test');
-//            }
-//            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
-//            $tpl->forceCompilation();
-//            $this->compiler->debug=true;
-//
-//            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+        public function testConstants()
+        {
+            if (!defined('TEST')) {
+                define('TEST', 'Test');
+            }
+            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
+            $tpl->forceCompilation();
 
-//        public function testShortConstants()
-//        {
-//            if (!defined('TEST')) {
-//                define('TEST', 'Test');
-//            }
-//            $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
-//            $tpl->forceCompilation();
-//            $this->compiler->debug=true;
-//
-//            $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
-//        }
+            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+        }
+
+        public function testShortConstants()
+        {
+            if (!defined('TEST')) {
+                define('TEST', 'Test');
+            }
+            $tpl = new TemplateString('{%TEST} {$dwoo.const.PHP_MAJOR_VERSION*%PHP_MINOR_VERSION}');
+            $tpl->forceCompilation();
+
+            $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
+        }
 
         public function testShortClassConstants()
         {
