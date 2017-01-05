@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.2
- * @date      2017-01-03
+ * @date      2017-01-04
  * @link      http://dwoo.org/
  */
 
@@ -112,7 +112,7 @@ class Core
      *
      * @var array
      */
-    public $globals;
+    protected $globals = array();
 
     /**
      * Directory where the compiled templates are stored.
@@ -209,21 +209,21 @@ class Core
      *
      * @var array
      */
-    protected $runtimePlugins;
+    protected $runtimePlugins = array();
 
     /**
      * Stores the returned values during template runtime.
      *
      * @var array
      */
-    protected $returnData;
+    protected $returnData = array();
 
     /**
      * Stores the data during template runtime.
      *
      * @var array
      */
-    public $data;
+    protected $data = array();
 
     /**
      * Stores the current scope during template runtime.
@@ -238,14 +238,14 @@ class Core
      *
      * @var array
      */
-    protected $scopeTree;
+    protected $scopeTree = array();
 
     /**
      * Stores the block plugins stack during template runtime.
      *
      * @var array
      */
-    protected $stack;
+    protected $stack = array();
 
     /**
      * Stores the current block plugin at the top of the stack during template runtime.
@@ -353,7 +353,7 @@ class Core
             );
         }
 
-        $this->globals['template'] = $_tpl->getName();
+        $this->addGlobal('template', $_tpl->getName());
         $this->initRuntimeVars($_tpl);
 
         // try to get cached template
@@ -421,6 +421,38 @@ class Core
     }
 
     /**
+     * Registers a Global.
+     * New globals can be added before compiling or rendering a template
+     * but after, you can only update existing globals.
+     *
+     * @param string $name
+     * @param mixed  $value
+     *
+     * @return $this
+     * @throws Exception
+     */
+    public function addGlobal($name, $value)
+    {
+        if (null === $this->globals) {
+            $this->initGlobals();
+        }
+
+        $this->globals[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Gets the registered Globals.
+     *
+     * @return array
+     */
+    public function getGlobals()
+    {
+        return $this->globals;
+    }
+
+    /**
      * Re-initializes the globals array before each template run.
      * this method is only callede once when the Dwoo object is created
      *
@@ -432,7 +464,7 @@ class Core
             'version' => self::VERSION,
             'ad'      => '<a href="http://dwoo.org/">Powered by Dwoo</a>',
             'now'     => $_SERVER['REQUEST_TIME'],
-            'charset' => $this->charset,
+            'charset' => $this->getCharset(),
         );
     }
 
@@ -1450,7 +1482,7 @@ class Core
         } else {
             if (strstr($varstr, '.') === false && strstr($varstr, '[') === false && strstr($varstr, '->') === false) {
                 if ($varstr === 'dwoo') {
-                    return $this->globals;
+                    return $this->getGlobals();
                 } elseif ($varstr === '__' || $varstr === '_root') {
                     return $this->data;
                 } elseif ($varstr === '_' || $varstr === '_parent') {
@@ -1488,7 +1520,7 @@ class Core
 
         $i = $m[2][0];
         if ($i === 'dwoo') {
-            $cur = $this->globals;
+            $cur = $this->getGlobals();
             array_shift($m[2]);
             array_shift($m[1]);
             switch ($m[2][0]) {
@@ -1522,7 +1554,7 @@ class Core
                     return null;
                 }
             }
-            if ($cur !== $this->globals) {
+            if ($cur !== $this->getGlobals()) {
                 array_shift($m[2]);
                 array_shift($m[1]);
             }

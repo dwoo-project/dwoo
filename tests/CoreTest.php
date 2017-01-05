@@ -191,6 +191,13 @@ namespace Dwoo\Tests
             ), $this->compiler));
         }
 
+        public function testGlobal()
+        {
+            $this->dwoo->addGlobal('test', 'value');
+            $tpl = new TemplateString('{$.test}');
+            $this->assertEquals('value', $this->dwoo->get($tpl, array(), $this->compiler));
+        }
+
         public function testSuperGlobals()
         {
             $_GET[5] = 'Yay';

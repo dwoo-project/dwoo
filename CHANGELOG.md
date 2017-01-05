@@ -1,8 +1,12 @@
-## 1.3.2 (2017-XX-XX)
+## 1.3.2 (2017-01-XX)
 `Added`
-* Add new test: `Core::testSetters`.
+* Add new tests: `CoreTest::testSetters`, `CoreTest::testGlobal`.
 * Add new methods: `Core::setTemplateDir` and `Core::getTemplateDir`.
 * Add new alias `js` for *javascript* available format in **escape** plugin.
+* Add new methods `Core::addGlobal` and `Core::getGlobals`.
+
+`Changed`
+* Properties `Core::$data` and `Core::$globals` are now protected.
 
 `Fixed`
 * Fix PHPUnit test: `CompilerTest::testConstants`.
