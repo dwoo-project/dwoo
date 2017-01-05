@@ -1,4 +1,4 @@
-## 1.3.2 (2017-01-XX)
+## 1.3.2 (2017-01-05)
 `Added`
 * Add new tests: `CoreTest::testSetters`, `CoreTest::testGlobal`.
 * Add new methods: `Core::setTemplateDir` and `Core::getTemplateDir`.
