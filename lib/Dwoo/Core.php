@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.2
- * @date      2017-01-04
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
@@ -593,14 +593,14 @@ class Core
                 catch (Exception $e) {
                     if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS)) {
                         throw new Exception(
-                            'Wrong filter name : ' . $callback . ', the "Dwoo_Filter_" prefix should 
-                        not be used, please only use "' . str_replace('Dwoo_Filter_', '', $callback) . '"'
+                            'Wrong filter name : ' . $callback . ', the "Filter" prefix should 
+                        not be used, please only use "' . str_replace('Filter', '', $callback) . '"'
                         );
                     } else {
                         throw new Exception(
                             'Wrong filter name : ' . $callback . ', when using autoload the filter must
                          be in one of your plugin dir as "name.php" containig a class or function named
-                         "Dwoo_Filter_name"'
+                         "Filter<name>"'
                         );
                     }
                 }
@@ -613,7 +613,7 @@ class Core
             } else {
                 throw new Exception(
                     'Wrong filter name : ' . $callback . ', when using autoload the filter must be in
-                one of your plugin dir as "name.php" containig a class or function named "Dwoo_Filter_name"'
+                one of your plugin dir as "name.php" containig a class or function named "Filter<name>"'
                 );
             }
 
@@ -1164,7 +1164,7 @@ class Core
     /**
      * Adds a block to the block stack.
      *
-     * @param string $blockName the block name (without Dwoo_Plugin_ prefix)
+     * @param string $blockName the block name (without `Plugin` prefix)
      * @param array  $args      the arguments to be passed to the block's init() function
      *
      * @return BlockPlugin the newly created block
@@ -1290,7 +1290,7 @@ class Core
     /**
      * Calls the process() method of the given class-plugin name.
      *
-     * @param string $plugName the class plugin name (without Dwoo_Plugin_ prefix)
+     * @param string $plugName the class plugin name (without `Plugin` prefix)
      * @param array  $params   an array of parameters to send to the process() method
      *
      * @return string the process() return value
