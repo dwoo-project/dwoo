@@ -1,9 +1,4 @@
 <?php
-/**
- */
-
-/**
- */
 
 namespace Dwoo\Tests
 {
