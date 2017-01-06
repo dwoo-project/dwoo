@@ -1,29 +1,43 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
- * Returns the correct end of line character(s) for the current operating system.
+ * Makes the input string lower cased
+ * <pre>
+ *  * value : the string to process
+ * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-function PluginEolCompile(Compiler $compiler)
+class PluginLower extends Plugin implements ICompilable
 {
-    return 'PHP_EOL';
+    /**
+     * @param Compiler $compiler
+     * @param string   $value
+     *
+     * @return string
+     */
+    public static function compile(Compiler $compiler, $value)
+    {
+        return 'mb_strtolower((string) ' . $value . ', $this->charset)';
+    }
 }

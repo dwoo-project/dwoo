@@ -1,22 +1,24 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Removes all html tags
@@ -34,11 +36,21 @@ use Dwoo\Compiler;
  *
  * @return string
  */
-function PluginStripTagsCompile(Compiler $compiler, $value, $addspace = true)
+class PluginStripTags extends Plugin implements ICompilable
 {
-    if ($addspace === 'true') {
-        return "preg_replace('#<[^>]*>#', ' ', $value)";
-    } else {
+    /**
+     * @param Compiler $compiler
+     * @param string   $value
+     * @param bool     $addspace
+     *
+     * @return string
+     */
+    public static function compile(Compiler $compiler, $value, $addspace = true)
+    {
+        if ($addspace === 'true') {
+            return "preg_replace('#<[^>]*>#', ' ', $value)";
+        }
+
         return "strip_tags($value)";
     }
 }

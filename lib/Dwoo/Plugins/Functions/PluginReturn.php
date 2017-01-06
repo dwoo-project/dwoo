@@ -1,22 +1,24 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
  * Inserts another template into the current one
@@ -32,12 +34,21 @@ use Dwoo\Compiler;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-function PluginReturnCompile(Compiler $compiler, array $rest = array())
+class PluginReturn extends Plugin implements ICompilable
 {
-    $out = array();
-    foreach ($rest as $var => $val) {
-        $out[] = '$this->setReturnValue(' . var_export($var, true) . ', ' . $val . ')';
-    }
+    /**
+     * @param Compiler $compiler
+     * @param array    $rest
+     *
+     * @return string
+     */
+    public static function compile(Compiler $compiler, array $rest = array())
+    {
+        $out = array();
+        foreach ($rest as $var => $val) {
+            $out[] = '$this->setReturnValue(' . var_export($var, true) . ', ' . $val . ')';
+        }
 
-    return '(' . implode('.', $out) . ')';
+        return '(' . implode('.', $out) . ')';
+    }
 }

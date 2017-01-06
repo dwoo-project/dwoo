@@ -1,37 +1,43 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Compiler;
+use Dwoo\ICompilable;
+use Dwoo\Plugin;
 
 /**
- * Counts the characters in a string
+ * Converts line breaks into <br /> tags
  * <pre>
  *  * value : the string to process
- *  * count_spaces : if true, the white-space characters are counted as well
  * </pre>
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  */
-function PluginCountCharactersCompile(Compiler $compiler, $value, $count_spaces = false)
+class PluginNl2br extends Plugin implements ICompilable
 {
-    if ($count_spaces === 'false') {
-        return 'preg_match_all(\'#[^\s\pZ]#u\', ' . $value . ', $tmp)';
-    } else {
-        return 'mb_strlen(' . $value . ', $this->charset)';
+    /**
+     * @param Compiler $compiler
+     * @param string   $value
+     *
+     * @return string
+     */
+    public static function compile(Compiler $compiler, $value)
+    {
+        return 'nl2br((string) ' . $value . ')';
     }
 }
