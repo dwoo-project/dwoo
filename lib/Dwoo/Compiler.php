@@ -1998,17 +1998,16 @@ class Compiler implements ICompiler
         // Native plugin
         if ($pluginType & Core::NATIVE_PLUGIN) {
             if ($func === 'do') {
+                $output = '';
                 if (isset($params['*'])) {
                     $output = implode(';', $params['*']) . ';';
-                } else {
-                    $output = '';
                 }
 
                 if (is_array($parsingParams) || $curBlock !== 'root') {
                     throw new CompilationException($this, 'Do can not be used inside another function or block');
-                } else {
-                    return self::PHP_OPEN . $output . self::PHP_CLOSE;
                 }
+
+                return self::PHP_OPEN . $output . self::PHP_CLOSE;
             } else {
                 if (isset($params['*'])) {
                     $output = $func . '(' . implode(', ', $params['*']) . ')';
@@ -2043,6 +2042,10 @@ class Compiler implements ICompiler
                         );
                     }
                     array_unshift($params, $this);
+                }
+                // @TODO: Is it a real fix ?
+                if ($func === 'tif') {
+                    $params[] = $tokens;
                 }
                 $output = call_user_func_array($funcCompiler, $params);
             } else {
@@ -2100,6 +2103,7 @@ class Compiler implements ICompiler
                     }
                 }
                 array_unshift($params, $this);
+                // @TODO: Is it a real fix ?
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
@@ -2136,10 +2140,9 @@ class Compiler implements ICompiler
             $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
         } // Smarty function (@deprecated)
         elseif ($pluginType & Core::SMARTY_FUNCTION) {
+            $params = '';
             if (isset($params['*'])) {
                 $params = self::implode_r($params['*'], true);
-            } else {
-                $params = '';
             }
 
             if ($pluginType & Core::CUSTOM_PLUGIN) {
