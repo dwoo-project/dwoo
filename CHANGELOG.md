@@ -1,3 +1,8 @@
+## 1.3.3 (2017-XX-XX)
+`Changed`
+* All **function's plugins** as *PHP function* has been converted to *PHP class*, following now PSR-0 and PSR-4 standards.
+* `array` helper as *PHP function* has been converted to *PHP class*, following now PSR-0 and PSR-4 standards.
+
 ## 1.3.2 (2017-01-05)
 `Added`
 * Add new tests: `CoreTest::testSetters`, `CoreTest::testGlobal`.
