@@ -1,4 +1,7 @@
-## 1.3.3 (2017-XX-XX)
+## 1.3.3 (2017-01-09)
+`Added`
+* Add new parameter `allowed_tags` for **strip_tags** plugin.
+
 `Changed`
 * All **function's plugins** as *PHP function* has been converted to *PHP class*, following now PSR-0 and PSR-4 standards.
 * `array` helper as *PHP function* has been converted to *PHP class*, following now PSR-0 and PSR-4 standards.
