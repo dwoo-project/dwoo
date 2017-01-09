@@ -10,13 +10,13 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.2
- * @date      2017-01-04
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
-use Dwoo\Core;
+use Dwoo\Plugin;
 
 /**
  * Applies various escaping schemes on the given string
@@ -30,65 +30,74 @@ use Dwoo\Core;
  * This software is provided 'as-is', without any express or implied warranty.
  * In no event will the authors be held liable for any damages arising from the use of this software.
  *
- * @param Core   $dwoo
- * @param string $value
- * @param string $format
- * @param null   $charset
- *
  * @return mixed|string
  */
-function PluginEscape(Core $dwoo, $value = '', $format = 'html', $charset = null)
+class PluginEscape extends Plugin
 {
-    if ($charset === null) {
-        $charset = $dwoo->getCharset();
-    }
+    /**
+     * @param string $value
+     * @param string $format
+     * @param null   $charset
+     *
+     * @return mixed|string
+     */
+    public function process($value = '', $format = 'html', $charset = null)
+    {
+        if ($charset === null) {
+            $charset = $this->core->getCharset();
+        }
 
-    switch ($format) {
-        case 'html':
-            return htmlspecialchars((string)$value, ENT_QUOTES, $charset);
-        case 'htmlall':
-            return htmlentities((string)$value, ENT_QUOTES, $charset);
-        case 'url':
-            return rawurlencode((string)$value);
-        case 'urlpathinfo':
-            return str_replace('%2F', '/', rawurlencode((string)$value));
-        case 'quotes':
-            return preg_replace("#(?<!\\\\)'#", "\\'", (string)$value);
-        case 'hex':
-            $out = '';
-            $cnt = strlen((string)$value);
-            for ($i = 0; $i < $cnt; ++ $i) {
-                $out .= '%' . bin2hex((string)$value[$i]);
-            }
+        switch ($format) {
+            case 'html':
+                return htmlspecialchars((string)$value, ENT_QUOTES, $charset);
+            case 'htmlall':
+                return htmlentities((string)$value, ENT_QUOTES, $charset);
+            case 'url':
+                return rawurlencode((string)$value);
+            case 'urlpathinfo':
+                return str_replace('%2F', '/', rawurlencode((string)$value));
+            case 'quotes':
+                return preg_replace("#(?<!\\\\)'#", "\\'", (string)$value);
+            case 'hex':
+                $out = '';
+                $cnt = strlen((string)$value);
+                for ($i = 0; $i < $cnt; ++ $i) {
+                    $out .= '%' . bin2hex((string)$value[$i]);
+                }
 
-            return $out;
-        case 'hexentity':
-            $out = '';
-            $cnt = strlen((string)$value);
-            for ($i = 0; $i < $cnt; ++ $i) {
-                $out .= '&#x' . bin2hex((string)$value[$i]) . ';';
-            }
+                return $out;
+            case 'hexentity':
+                $out = '';
+                $cnt = strlen((string)$value);
+                for ($i = 0; $i < $cnt; ++ $i) {
+                    $out .= '&#x' . bin2hex((string)$value[$i]) . ';';
+                }
 
-            return $out;
-        case 'javascript':
-        case 'js':
-            return strtr((string)$value, array(
-                '\\' => '\\\\',
-                "'"  => "\\'",
-                '"'  => '\\"',
-                "\r" => '\\r',
-                "\n" => '\\n',
-                '</' => '<\/'
-            ));
-        case 'mail':
-            return str_replace(array(
-                '@',
-                '.'
-            ), array(
-                '&nbsp;(AT)&nbsp;',
-                '&nbsp;(DOT)&nbsp;'
-            ), (string)$value);
-        default:
-            $dwoo->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript or mail, "' . $format . '" given.', E_USER_WARNING);
+                return $out;
+            case 'javascript':
+            case 'js':
+                return strtr((string)$value,
+                    array(
+                        '\\' => '\\\\',
+                        "'"  => "\\'",
+                        '"'  => '\\"',
+                        "\r" => '\\r',
+                        "\n" => '\\n',
+                        '</' => '<\/'
+                    ));
+            case 'mail':
+                return str_replace(array(
+                    '@',
+                    '.'
+                ),
+                    array(
+                        '&nbsp;(AT)&nbsp;',
+                        '&nbsp;(DOT)&nbsp;'
+                    ),
+                    (string)$value);
+            default:
+                $this->core->triggerError('Escape\'s format argument must be one of : html, htmlall, url, urlpathinfo, hex, hexentity, javascript, js or mail, "' . $format . '" given.',
+                    E_USER_WARNING);
+        }
     }
 }

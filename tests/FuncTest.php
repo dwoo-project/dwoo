@@ -1,9 +1,4 @@
 <?php
-/**
- */
-
-/**
- */
 
 namespace Dwoo\Tests
 {
@@ -502,13 +497,19 @@ a"}');
         {
             $tpl = new TemplateString('{strip_tags "<a href=\'foo\'>test</a>test"}');
             $tpl->forceCompilation();
-
             $this->assertEquals(' test test', $this->dwoo->get($tpl, array(), $this->compiler));
 
             $tpl = new TemplateString('{strip_tags "<a href=\'foo\'>test</a>test" false}');
             $tpl->forceCompilation();
-
             $this->assertEquals('testtest', $this->dwoo->get($tpl, array(), $this->compiler));
+
+            $tpl = new TemplateString('{strip_tags "<a href=\'foo\'>test</a>test" true "<a>"}');
+            $tpl->forceCompilation();
+            $this->assertEquals('<a href=\'foo\'>test</a>test', $this->dwoo->get($tpl, array(), $this->compiler));
+
+            $tpl = new TemplateString('{strip_tags "<a href=\'foo\'>test</a>test" false "<a>"}');
+            $tpl->forceCompilation();
+            $this->assertEquals('<a href=\'foo\'>test</a>test', $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
         public function testWhitespace()

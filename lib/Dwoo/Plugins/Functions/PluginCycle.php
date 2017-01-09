@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
@@ -45,7 +45,7 @@ class PluginCycle extends Plugin
      * @param null   $assign
      * @param bool   $reset
      *
-     * @return null
+     * @return string|null
      */
     public function process($name = 'default', $values = null, $print = true, $advance = true, $delimiter = ',', $assign = null, $reset = false)
     {
@@ -85,5 +85,7 @@ class PluginCycle extends Plugin
             return $out;
         }
         $this->core->assignInScope($out, $assign);
+
+        return null;
     }
 }

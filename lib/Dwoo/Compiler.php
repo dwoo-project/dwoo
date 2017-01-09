@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.2
- * @date      2017-01-04
+ * @date      2017-01-07
  * @link      http://dwoo.org/
  */
 
@@ -875,14 +875,23 @@ class Compiler implements ICompiler
             }
 
             switch ($type) {
-                case Core::BLOCK_PLUGIN:
                 case Core::CLASS_PLUGIN:
+                case Core::CLASS_PLUGIN + Core::BLOCK_PLUGIN:
                     if (class_exists('Plugin' . $plugin) !== false) {
                         $output .= "if (class_exists('" . "Plugin" . $plugin . "')===false)".
                         "\n\t\$this->getLoader()->loadPlugin('Plugin$plugin');\n";
                     } else {
                         $output .= "if (class_exists('" . Core::NAMESPACE_PLUGINS_BLOCKS . "Plugin" . $plugin . "')===false)".
                         "\n\t\$this->getLoader()->loadPlugin('Plugin$plugin');\n";
+                    }
+                    break;
+                case Core::CLASS_PLUGIN + Core::FUNC_PLUGIN:
+                    if (class_exists('Plugin' . $plugin) !== false) {
+                        $output .= "if (class_exists('" . "Plugin" . $plugin . "')===false)".
+                            "\n\t\$this->getLoader()->loadPlugin('Plugin$plugin');\n";
+                    } else {
+                        $output .= "if (class_exists('" . Core::NAMESPACE_PLUGINS_FUNCTIONS . "Plugin" . $plugin . "')===false)".
+                            "\n\t\$this->getLoader()->loadPlugin('Plugin$plugin');\n";
                     }
                     break;
                 case Core::FUNC_PLUGIN:
@@ -1909,10 +1918,11 @@ class Compiler implements ICompiler
             return $this->addBlock('smartyinterface', $params, $state);
         }
 
-        // Functions plugin
+        // Native & Smarty plugins
         if ($pluginType & Core::NATIVE_PLUGIN || $pluginType & Core::SMARTY_FUNCTION || $pluginType & Core::SMARTY_BLOCK) {
             $params = $this->mapParams($params, null, $state);
-        } elseif ($pluginType & Core::CLASS_PLUGIN) {
+        } // PHP class plugin
+        elseif ($pluginType & Core::CLASS_PLUGIN) {
             if ($pluginType & Core::CUSTOM_PLUGIN) {
                 $params = $this->mapParams(
                     $params, array(
@@ -1925,6 +1935,11 @@ class Compiler implements ICompiler
                         'Plugin' . Core::toCamelCase($func),
                         ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
                     ), $state);
+                } elseif (class_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func)) !== false) {
+                    $params = $this->mapParams($params, array(
+                        Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func),
+                        ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process'
+                    ), $state);
                 } else {
                     $params = $this->mapParams($params, array(
                         Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
@@ -1932,7 +1947,8 @@ class Compiler implements ICompiler
                     ), $state);
                 }
             }
-        } elseif ($pluginType & Core::FUNC_PLUGIN) {
+        } // PHP function plugin
+        elseif ($pluginType & Core::FUNC_PLUGIN) {
             if ($pluginType & Core::CUSTOM_PLUGIN) {
                 $params = $this->mapParams($params, $this->customPlugins[$func]['callback'], $state);
             } else {
@@ -1942,7 +1958,7 @@ class Compiler implements ICompiler
                     $params = $this->mapParams($params, 'Plugin' . Core::toCamelCase($func) . (($pluginType &
                             Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
                 } // Builtin helper plugin
-                elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) . (
+                elseif (function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) . (
                     ($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : '')) !== false) {
                     $params = $this->mapParams($params, Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase
                         ($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
@@ -1952,11 +1968,14 @@ class Compiler implements ICompiler
                         ($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''), $state);
                 }
             }
-        } elseif ($pluginType & Core::SMARTY_MODIFIER) {
+        } // Smarty modifier
+        elseif ($pluginType & Core::SMARTY_MODIFIER) {
             $output = 'smarty_modifier_' . $func . '(' . implode(', ', $params) . ')';
-        } elseif ($pluginType & Core::PROXY_PLUGIN) {
+        } // Proxy plugin
+        elseif ($pluginType & Core::PROXY_PLUGIN) {
             $params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
-        } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
+        } // Template plugin
+        elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
             // transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
             $map = array();
             foreach ($this->templatePlugins[$func]['params'] as $param => $defValue) {
@@ -1985,19 +2004,20 @@ class Compiler implements ICompiler
             $tokens[$k] = isset($p[2]) ? $p[2] : 0;
             $params[$k] = $p[0];
         }
+
+        // Native plugin
         if ($pluginType & Core::NATIVE_PLUGIN) {
             if ($func === 'do') {
+                $output = '';
                 if (isset($params['*'])) {
                     $output = implode(';', $params['*']) . ';';
-                } else {
-                    $output = '';
                 }
 
                 if (is_array($parsingParams) || $curBlock !== 'root') {
                     throw new CompilationException($this, 'Do can not be used inside another function or block');
-                } else {
-                    return self::PHP_OPEN . $output . self::PHP_CLOSE;
                 }
+
+                return self::PHP_OPEN . $output . self::PHP_CLOSE;
             } else {
                 if (isset($params['*'])) {
                     $output = $func . '(' . implode(', ', $params['*']) . ')';
@@ -2005,7 +2025,77 @@ class Compiler implements ICompiler
                     $output = $func . '()';
                 }
             }
-        } elseif ($pluginType & Core::FUNC_PLUGIN) {
+        } // Block class OR Function class
+        elseif ($pluginType & Core::CLASS_PLUGIN || ($pluginType & Core::FUNC_PLUGIN && $pluginType & Core::CLASS_PLUGIN)) {
+            if ($pluginType & Core::COMPILABLE_PLUGIN) {
+                if ($pluginType & Core::CUSTOM_PLUGIN) {
+                    $callback = $this->customPlugins[$func]['callback'];
+                    if (!is_array($callback)) {
+                        if (!method_exists($callback, 'compile')) {
+                            throw new Exception('Custom plugin ' . $func . ' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
+                        }
+                        if (($ref = new ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
+                            $funcCompiler = array($callback, 'compile');
+                        } else {
+                            $funcCompiler = array(new $callback(), 'compile');
+                        }
+                    } else {
+                        $funcCompiler = $callback;
+                    }
+                } else {
+                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
+                        $funcCompiler = array('Plugin' . Core::toCamelCase($func), 'compile');
+                    } elseif (class_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func)) !== false) {
+                        $funcCompiler = array(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func), 'compile');
+                    } else {
+                        $funcCompiler = array(
+                            Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
+                            'compile'
+                        );
+                    }
+                    array_unshift($params, $this);
+                }
+                // @TODO: Is it a real fix ?
+                if ($func === 'tif') {
+                    $params[] = $tokens;
+                }
+                $output = call_user_func_array($funcCompiler, $params);
+            } else {
+                $params = self::implode_r($params);
+                if ($pluginType & Core::CUSTOM_PLUGIN) {
+                    $callback = $this->customPlugins[$func]['callback'];
+                    if (!is_array($callback)) {
+                        if (!method_exists($callback, 'process')) {
+                            throw new Exception('Custom plugin ' . $func . ' must implement the "process" method to be usable, or you should provide a full callback to the method to use');
+                        }
+                        if (($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic()) {
+                            $output = 'call_user_func(array(\'' . $callback . '\', \'process\'), ' . $params . ')';
+                        } else {
+                            $output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback . '\'), \'process\'), ' . $params . ')';
+                        }
+                    } elseif (is_object($callback[0])) {
+                        $output = 'call_user_func(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), ' . $params . ')';
+                    } elseif (($ref = new ReflectionMethod($callback[0], $callback[1])) && $ref->isStatic()) {
+                        $output = 'call_user_func(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), ' . $params . ')';
+                    } else {
+                        $output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback[0] . '\'), \'' . $callback[1] . '\'), ' . $params . ')';
+                    }
+                    if (empty($params)) {
+                        $output = substr($output, 0, - 3) . ')';
+                    }
+                } else {
+                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
+                        $output = '$this->classCall(\'Plugin' . $func . '\', array(' . $params . '))';
+                    } elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func)) !== false) {
+                        $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\', 
+                        array(' . $params . '))';
+                    } else {
+                        $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
+                    }
+                }
+            }
+        } // Function plugin only (cannot be a class)
+        elseif ($pluginType & Core::FUNC_PLUGIN) {
             if ($pluginType & Core::COMPILABLE_PLUGIN) {
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
                     $funcCompiler = $this->customPlugins[$func]['callback'];
@@ -2014,8 +2104,7 @@ class Compiler implements ICompiler
                     if (function_exists('Plugin' . Core::toCamelCase($func) . 'Compile') !== false) {
                         $funcCompiler = 'Plugin' . Core::toCamelCase($func) . 'Compile';
                     } // Builtin helper plugin
-                    elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) .
-                            'Compile') !== false) {
+                    elseif (function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) . 'Compile') !== false) {
                         $funcCompiler = Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($func) .
                             'Compile';
                     } // Builtin function plugin
@@ -2025,6 +2114,7 @@ class Compiler implements ICompiler
                     }
                 }
                 array_unshift($params, $this);
+                // @TODO: Is it a real fix ?
                 if ($func === 'tif') {
                     $params[] = $tokens;
                 }
@@ -2056,76 +2146,14 @@ class Compiler implements ICompiler
                     }
                 }
             }
-        } elseif ($pluginType & Core::CLASS_PLUGIN) {
-            if ($pluginType & Core::COMPILABLE_PLUGIN) {
-                if ($pluginType & Core::CUSTOM_PLUGIN) {
-                    $callback = $this->customPlugins[$func]['callback'];
-                    if (!is_array($callback)) {
-                        if (!method_exists($callback, 'compile')) {
-                            throw new Exception('Custom plugin ' . $func . ' must implement the "compile" method to be compilable, or you should provide a full callback to the method to use');
-                        }
-                        if (($ref = new ReflectionMethod($callback, 'compile')) && $ref->isStatic()) {
-                            $funcCompiler = array($callback, 'compile');
-                        } else {
-                            $funcCompiler = array(new $callback(), 'compile');
-                        }
-                    } else {
-                        $funcCompiler = $callback;
-                    }
-                } else {
-                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
-                        $funcCompiler = array('Plugin' . Core::toCamelCase($func), 'compile');
-                    } else {
-                        $funcCompiler = array(
-                            Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
-                            'compile'
-                        );
-                    }
-                    array_unshift($params, $this);
-                }
-                $output = call_user_func_array($funcCompiler, $params);
-            } else {
-                $params = self::implode_r($params);
-                if ($pluginType & Core::CUSTOM_PLUGIN) {
-                    $callback = $this->customPlugins[$func]['callback'];
-                    if (!is_array($callback)) {
-                        if (!method_exists($callback, 'process')) {
-                            throw new Exception('Custom plugin ' . $func . ' must implement the "process" method to be usable, or you should provide a full callback to the method to use');
-                        }
-                        if (($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic()) {
-                            $output = 'call_user_func(array(\'' . $callback . '\', \'process\'), ' . $params . ')';
-                        } else {
-                            $output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback . '\'), \'process\'), ' . $params . ')';
-                        }
-                    } elseif (is_object($callback[0])) {
-                        $output = 'call_user_func(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), ' . $params . ')';
-                    } elseif (($ref = new ReflectionMethod($callback[0], $callback[1])) && $ref->isStatic()) {
-                        $output = 'call_user_func(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), ' . $params . ')';
-                    } else {
-                        $output = 'call_user_func(array($this->getObjectPlugin(\'' . $callback[0] . '\'), \'' . $callback[1] . '\'), ' . $params . ')';
-                    }
-                    if (empty($params)) {
-                        $output = substr($output, 0, - 3) . ')';
-                    }
-                } else {
-                    if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
-                        $output = '$this->classCall(\'Plugin' . $func . '\', array(' . $params . '))';
-                    } elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func)) !==
-                    false) {
-                        $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\', 
-                        array(' . $params . '))';
-                    } else{
-                        $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
-                    }
-                }
-            }
-        } elseif ($pluginType & Core::PROXY_PLUGIN) {
+        } // Proxy plugin
+        elseif ($pluginType & Core::PROXY_PLUGIN) {
             $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
-        } elseif ($pluginType & Core::SMARTY_FUNCTION) {
+        } // Smarty function (@deprecated)
+        elseif ($pluginType & Core::SMARTY_FUNCTION) {
+            $params = '';
             if (isset($params['*'])) {
                 $params = self::implode_r($params['*'], true);
-            } else {
-                $params = '';
             }
 
             if ($pluginType & Core::CUSTOM_PLUGIN) {
@@ -2142,7 +2170,8 @@ class Compiler implements ICompiler
             } else {
                 $output = 'smarty_function_' . $func . '(array(' . $params . '), $this)';
             }
-        } elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
+        } // Template plugin
+        elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
             array_unshift($params, '$this');
             $params                                 = self::implode_r($params);
             $output                                 = 'Plugin' . Core::toCamelCase($func) .
@@ -2156,9 +2185,9 @@ class Compiler implements ICompiler
             return $parsingParams;
         } elseif ($curBlock === 'namedparam') {
             return array($output, $output);
-        } else {
-            return $output;
         }
+
+        return $output;
     }
 
     /**
@@ -3210,7 +3239,8 @@ class Compiler implements ICompiler
                     $p = $p[0];
                 }
 
-                if ($pluginType & Core::FUNC_PLUGIN) {
+                // Only for PHP function, who is not a PHP class
+                if ($pluginType & Core::FUNC_PLUGIN && !($pluginType & Core::CLASS_PLUGIN)) {
                     if ($pluginType & Core::COMPILABLE_PLUGIN) {
                         if ($mapped) {
                             throw new CompilationException($this, 'The @ operator can not be used on compiled plugins.');
@@ -3284,6 +3314,10 @@ class Compiler implements ICompiler
                         } else {
                             if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                                 $output = '$this->classCall(\'Plugin' . Core::toCamelCase($func) . '\', array(' . $params . '))';
+                            } elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($func)) !== false) {
+                                $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . $func . '\', array(' . $params . '))';
+                            } elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func)) !== false) {
+                                $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\', array(' . $params . '))';
                             } else {
                                 $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
                             }
@@ -3363,35 +3397,31 @@ class Compiler implements ICompiler
             elseif (isset($this->customPlugins[$name])) {
                 $pluginType = $this->customPlugins[$name]['type'] | Core::CUSTOM_PLUGIN;
             } // Class blocks plugin
-            elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name), false) !==
-                false) {
+            elseif (class_exists(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name)) !== false) {
+                $pluginType = Core::CLASS_PLUGIN;
                 if (is_subclass_of(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name), 'Dwoo\Block\Plugin')) {
-                    $pluginType = Core::BLOCK_PLUGIN;
-                } else {
-                    $pluginType = Core::CLASS_PLUGIN;
+                    $pluginType += Core::BLOCK_PLUGIN;
                 }
                 $interfaces = class_implements(Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
                 }
             } // Class functions plugin
-            elseif(class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name), false) !==
-                false) {
-                $pluginType = Core::CLASS_PLUGIN;
+            elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name)) !== false) {
+                $pluginType = Core::FUNC_PLUGIN + Core::CLASS_PLUGIN;
                 $interfaces = class_implements(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
                 }
             } // Class without namespace
-            elseif(class_exists('Plugin' . Core::toCamelCase($name), false) !== false) {
+            elseif (class_exists('Plugin' . Core::toCamelCase($name)) !== false) {
                 $pluginType = Core::CLASS_PLUGIN;
                 $interfaces = class_implements('Plugin' . Core::toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
                 }
             } // Function plugin (with/without namespaces)
-            elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase
-                    ($name)) !==
+            elseif (function_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase ($name)) !==
                 false || function_exists('Plugin' . Core::toCamelCase($name)) !== false) {
                 $pluginType = Core::FUNC_PLUGIN;
             } // Function plugin compile (with/without namespaces)
@@ -3399,9 +3429,11 @@ class Compiler implements ICompiler
                     'Compile') !== false || function_exists('Plugin' . Core::toCamelCase($name) . 'Compile') !==
                 false) {
                 $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
-            } // Helper plugin compile
-            elseif(function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($name) . 'Compile')
-                !== false) {
+            } // Helper plugin class compile
+            elseif (class_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($name)) !== false) {
+                $pluginType = Core::CLASS_PLUGIN | Core::COMPILABLE_PLUGIN;
+            } // Helper plugin function compile
+            elseif (function_exists(Core::NAMESPACE_PLUGINS_HELPERS . 'Plugin' . Core::toCamelCase($name) . 'Compile') !== false) {
                 $pluginType = Core::FUNC_PLUGIN | Core::COMPILABLE_PLUGIN;
             } // Smarty modifier
             elseif (function_exists('smarty_modifier_' . $name) !== false) {
@@ -3416,8 +3448,7 @@ class Compiler implements ICompiler
             else {
                 if ($pluginType === - 1) {
                     try {
-                        $this->getDwoo()->getLoader()->loadPlugin(
-                            'Plugin' . Core::toCamelCase($name));
+                        $this->getDwoo()->getLoader()->loadPlugin('Plugin' . Core::toCamelCase($name));
                     }
                     catch (Exception $e) {
                         if (isset($phpFunc)) {

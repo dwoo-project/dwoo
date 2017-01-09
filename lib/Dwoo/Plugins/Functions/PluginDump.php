@@ -1,22 +1,24 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo\Plugins\Functions
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-19
+ * @version   1.3.2
+ * @date      2017-01-06
  * @link      http://dwoo.org/
  */
 
 namespace Dwoo\Plugins\Functions;
 
 use Dwoo\Plugin;
+use Iterator;
+use ReflectionObject;
 
 /**
  * Dumps values of the given variable, or the entire data if nothing provided
@@ -32,6 +34,12 @@ class PluginDump extends Plugin
     protected $outputObjects;
     protected $outputMethods;
 
+    /**
+     * @param string $var
+     * @param bool   $show_methods
+     *
+     * @return string
+     */
     public function process($var = '$', $show_methods = false)
     {
         $this->outputMethods = $show_methods;
@@ -65,6 +73,12 @@ class PluginDump extends Plugin
         return $out . '</div></div>';
     }
 
+    /**
+     * @param $var
+     * @param $scope
+     *
+     * @return string
+     */
     protected function export($var, $scope)
     {
         $out = '';
@@ -86,6 +100,12 @@ class PluginDump extends Plugin
         return $out;
     }
 
+    /**
+     * @param $i
+     * @param $v
+     *
+     * @return string
+     */
     protected function exportVar($i, $v)
     {
         if (is_string($v) || is_bool($v) || is_numeric($v)) {
@@ -99,6 +119,12 @@ class PluginDump extends Plugin
         }
     }
 
+    /**
+     * @param $i
+     * @param $obj
+     *
+     * @return string
+     */
     protected function exportObj($i, $obj)
     {
         if (array_search($obj, $this->outputObjects, true) !== false) {
