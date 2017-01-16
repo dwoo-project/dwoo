@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-07
+ * @version   1.4.0
+ * @date      2017-01-16
  * @link      http://dwoo.org/
  */
 
@@ -2895,7 +2895,7 @@ class Compiler implements ICompiler
         }
 
         $breaker = false;
-        while (list($k, $char) = each($breakChars)) {
+        foreach ($breakChars as $k => $char) {
             $test = strpos($substr, $char);
             if ($test !== false && $test < $end) {
                 $end     = $test;
@@ -3532,7 +3532,7 @@ class Compiler implements ICompiler
         }
 
         // loops over the param map and assigns values from the template or default value for unset optional params
-        while (list($k, $v) = each($map)) {
+        foreach ($map as $k => $v){
             if ($v[0] === '*') {
                 // "rest" array parameter, fill every remaining params in it and then break
                 if (count($ps) === 0) {
