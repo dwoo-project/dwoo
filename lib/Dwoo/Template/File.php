@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.4.0
- * @date      2017-01-27
+ * @version   1.3.4
+ * @date      2017-03-01
  * @link      http://dwoo.org/
  */
 
@@ -274,10 +274,10 @@ class File extends Str
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
-            $this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
+            $this->compileId = hash('md4', $this->getResourceIdentifier());
         }
 
-        return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+        return $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
