@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-06
+ * @version   1.3.4
+ * @date      2017-01-27
  * @link      http://dwoo.org/
  */
 
@@ -355,7 +355,7 @@ class Str implements ITemplate
      */
     public function getCompiledTemplate(Core $core, ICompiler $compiler = null)
     {
-        $compiledFile = $this->getCompiledFilename($core);
+        $compiledFile = $core->getCompileDir() . $this->getCompiledFilename($core);
 
         if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
             // already checked, return compiled file
@@ -449,7 +449,7 @@ class Str implements ITemplate
             $this->compileId = $this->name;
         }
 
-        return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+        return $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
