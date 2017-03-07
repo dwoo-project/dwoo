@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.4
- * @date      2017-01-27
+ * @date      2017-03-07
  * @link      http://dwoo.org/
  */
 
@@ -281,10 +281,10 @@ class Str implements ITemplate
             self::$cache['cached'][$this->cacheId] = true;
 
             return $cachedFile;
-        } else {
+        }
             // file is cacheable
             return true;
-        }
+
     }
 
     /**

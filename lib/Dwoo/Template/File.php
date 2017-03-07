@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
  * @version   1.3.4
- * @date      2017-03-01
+ * @date      2017-03-07
  * @link      http://dwoo.org/
  */
 
@@ -196,18 +196,17 @@ class File extends Str
      * @throws DwooException
      * @throws SecurityException
      */
-    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
+                                           $compileId = null, ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            $resourceId = str_replace(
-                array("\t", "\n", "\r", "\f", "\v"), array(
+            $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array(
                 '\\t',
                 '\\n',
                 '\\r',
                 '\\f',
                 '\\v'
-                ), $resourceId
-            );
+            ), $resourceId);
         }
         $resourceId = strtr($resourceId, '\\', '/');
 
@@ -274,7 +273,7 @@ class File extends Str
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
-            $this->compileId = hash('md4', $this->getResourceIdentifier());
+            $this->compileId = $this->getResourceIdentifier();
         }
 
         return $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
