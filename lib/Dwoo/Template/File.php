@@ -18,6 +18,7 @@ namespace Dwoo\Template;
 
 use Dwoo\Exception as DwooException;
 use Dwoo\Core as Core;
+use Dwoo\ICompiler;
 use Dwoo\ITemplate as ITemplate;
 use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Template\File as TemplateFile;
@@ -265,9 +266,11 @@ class File extends Str
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
+     * @param Core $core the Core instance that requests the file name
+     *
      * @return string the full path to the compiled file
      */
-    protected function getCompiledFilename()
+    protected function getCompiledFilename(Core $core)
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {

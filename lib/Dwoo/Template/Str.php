@@ -354,7 +354,7 @@ class Str implements ITemplate
      */
     public function getCompiledTemplate(Core $core, ICompiler $compiler = null)
     {
-        $compiledFile = $core->getCompileDir() . $this->getCompiledFilename();
+        $compiledFile = $this->getCompiledFilename($core);
 
         if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
             // already checked, return compiled file
@@ -438,16 +438,18 @@ class Str implements ITemplate
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
+     * @param Core $core the Core instance that requests the file name
+     *
      * @return string the full path to the compiled file
      */
-    protected function getCompiledFilename()
+    protected function getCompiledFilename(Core $core)
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
             $this->compileId = $this->name;
         }
 
-        return $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+        return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
@@ -470,7 +472,7 @@ class Str implements ITemplate
                 $cacheId = '';
             }
             // force compiled id generation
-            $this->getCompiledFilename();
+            $this->getCompiledFilename($core);
 
             $this->cacheId = str_replace('../', '__',
                 $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
