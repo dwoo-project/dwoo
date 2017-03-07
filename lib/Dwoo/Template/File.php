@@ -265,11 +265,9 @@ class File extends Str
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
-     * @param Core $core the dwoo instance that requests the file name
-     *
      * @return string the full path to the compiled file
      */
-    protected function getCompiledFilename(Core $core)
+    protected function getCompiledFilename()
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {

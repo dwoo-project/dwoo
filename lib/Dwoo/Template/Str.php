@@ -260,10 +260,9 @@ class Str implements ITemplate
      */
     public function getCachedTemplate(Core $core)
     {
+        $cacheLength = $core->getCacheTime();
         if ($this->cacheTime !== null) {
             $cacheLength = $this->cacheTime;
-        } else {
-            $cacheLength = $core->getCacheTime();
         }
 
         // file is not cacheable
@@ -282,9 +281,9 @@ class Str implements ITemplate
 
             return $cachedFile;
         }
-            // file is cacheable
-            return true;
 
+        // file is cacheable
+        return true;
     }
 
     /**
@@ -355,7 +354,7 @@ class Str implements ITemplate
      */
     public function getCompiledTemplate(Core $core, ICompiler $compiler = null)
     {
-        $compiledFile = $core->getCompileDir() . $this->getCompiledFilename($core);
+        $compiledFile = $core->getCompileDir() . $this->getCompiledFilename();
 
         if ($this->compilationEnforced !== true && isset(self::$cache['compiled'][$this->compileId]) === true) {
             // already checked, return compiled file
@@ -429,7 +428,8 @@ class Str implements ITemplate
      *
      * @return $this
      */
-    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
+                                           $compileId = null, ITemplate $parentTemplate = null)
     {
         return new self($resourceId, $cacheTime, $cacheId, $compileId);
     }
@@ -438,11 +438,9 @@ class Str implements ITemplate
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
-     * @param Core $core the dwoo instance that requests the file name
-     *
      * @return string the full path to the compiled file
      */
-    protected function getCompiledFilename(Core $core)
+    protected function getCompiledFilename()
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
@@ -472,9 +470,10 @@ class Str implements ITemplate
                 $cacheId = '';
             }
             // force compiled id generation
-            $this->getCompiledFilename($core);
+            $this->getCompiledFilename();
 
-            $this->cacheId = str_replace('../', '__', $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
+            $this->cacheId = str_replace('../', '__',
+                $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
         return $core->getCacheDir() . $this->cacheId . '.html';
