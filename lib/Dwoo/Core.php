@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-06
+ * @version   1.3.4
+ * @date      2017-03-01
  * @link      http://dwoo.org/
  */
 
@@ -49,7 +49,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.3.2';
+    const VERSION = '1.3.4';
 
     /**
      * Unique number of this dwoo release, based on version number.
@@ -57,7 +57,7 @@ class Core
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 132;
+    const RELEASE_TAG = 134;
 
     /**
      * Constants that represents all plugin types
@@ -1412,7 +1412,7 @@ class Core
         }
         unset($varstr);
 
-        while (list($k, $sep) = each($m[1])) {
+        foreach ($m[1] as $k => $sep) {
             if ($sep === '.' || $sep === '[' || $sep === '') {
                 // strip enclosing quotes if present
                 $m[2][$k] = preg_replace('#^(["\']?)(.*?)\1$#', '$2', $m[2][$k]);
@@ -1587,7 +1587,7 @@ class Core
             $cur = $this->scope;
         }
 
-        while (list($k, $sep) = each($m[1])) {
+        foreach ($m[1] as $k => $sep) {
             if ($sep === '.' || $sep === '[' || $sep === '') {
                 if ((is_array($cur) || $cur instanceof ArrayAccess) && isset($cur[$m[2][$k]])) {
                     $cur = $cur[$m[2][$k]];
@@ -1633,7 +1633,7 @@ class Core
                 array_pop($m[2])
             );
 
-            while (list($k, $sep) = each($m[1])) {
+            foreach ($m[1] as $k => $sep) {
                 if ($sep === '.' || $sep === '[' || $sep === '') {
                     if (is_array($cur) === false) {
                         $cur = array();

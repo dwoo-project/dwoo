@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
+ * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-23
+ * @version   1.3.4
+ * @date      2017-03-07
  * @link      http://dwoo.org/
  */
 
@@ -46,41 +46,41 @@ interface ITemplate
      * Returns the cached template output file name, true if it's cache-able but not cached
      * or false if it's not cached.
      *
-     * @param Core $dwoo the dwoo instance that requests it
+     * @param Core $core the dwoo instance that requests it
      *
      * @return string|bool
      */
-    public function getCachedTemplate(Core $dwoo);
+    public function getCachedTemplate(Core $core);
 
     /**
      * Caches the provided output into the cache file.
      *
-     * @param Core   $dwoo   the dwoo instance that requests it
+     * @param Core   $core   the dwoo instance that requests it
      * @param string $output the template output
      *
      * @return mixed full path of the cached file or false upon failure
      */
-    public function cache(Core $dwoo, $output);
+    public function cache(Core $core, $output);
 
     /**
      * Clears the cached template if it's older than the given time.
      *
-     * @param Core $dwoo      the dwoo instance that was used to cache that template
+     * @param Core $core      the dwoo instance that was used to cache that template
      * @param int  $olderThan minimum time (in seconds) required for the cache to be cleared
      *
      * @return bool true if the cache was not present or if it was deleted, false if it remains there
      */
-    public function clearCache(Core $dwoo, $olderThan = - 1);
+    public function clearCache(Core $core, $olderThan = - 1);
 
     /**
      * Returns the compiled template file name.
      *
-     * @param Core      $dwoo     the dwoo instance that requests it
+     * @param Core      $core     the dwoo instance that requests it
      * @param ICompiler $compiler the compiler that must be used
      *
      * @return string
      */
-    public function getCompiledTemplate(Core $dwoo, ICompiler $compiler = null);
+    public function getCompiledTemplate(Core $core, ICompiler $compiler = null);
 
     /**
      * Returns the template name.
@@ -140,6 +140,7 @@ interface ITemplate
      * necessary permission checks if required, if the security policy prevents the template
      * generation it should throw a new Security\Exception with a relevant message
      *
+     * @param Core      $core
      * @param mixed     $resourceId     the resource identifier
      * @param int       $cacheTime      duration of the cache validity for this template, if null it defaults to the
      *                                  Dwoo instance that will render this template if null it defaults to the Dwoo
@@ -153,7 +154,8 @@ interface ITemplate
      * @param ITemplate $parentTemplate the template that is requesting a new template object (through an include,
      *                                  extends or any other plugin) an include, extends or any other plugin)
      *
-     * @return ITemplate|null|false
+     * @return ITemplate|false|null
      */
-    public static function templateFactory(Core $dwoo, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null);
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
+                                           $compileId = null, ITemplate $parentTemplate = null);
 }

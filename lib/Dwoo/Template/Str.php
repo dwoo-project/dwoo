@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-06
+ * @version   1.3.4
+ * @date      2017-03-07
  * @link      http://dwoo.org/
  */
 
@@ -260,10 +260,9 @@ class Str implements ITemplate
      */
     public function getCachedTemplate(Core $core)
     {
+        $cacheLength = $core->getCacheTime();
         if ($this->cacheTime !== null) {
             $cacheLength = $this->cacheTime;
-        } else {
-            $cacheLength = $core->getCacheTime();
         }
 
         // file is not cacheable
@@ -281,10 +280,10 @@ class Str implements ITemplate
             self::$cache['cached'][$this->cacheId] = true;
 
             return $cachedFile;
-        } else {
-            // file is cacheable
-            return true;
         }
+
+        // file is cacheable
+        return true;
     }
 
     /**
@@ -429,7 +428,8 @@ class Str implements ITemplate
      *
      * @return $this
      */
-    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
+                                           $compileId = null, ITemplate $parentTemplate = null)
     {
         return new self($resourceId, $cacheTime, $cacheId, $compileId);
     }
@@ -438,7 +438,7 @@ class Str implements ITemplate
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
-     * @param Core $core the dwoo instance that requests the file name
+     * @param Core $core the Core instance that requests the file name
      *
      * @return string the full path to the compiled file
      */
@@ -474,7 +474,8 @@ class Str implements ITemplate
             // force compiled id generation
             $this->getCompiledFilename($core);
 
-            $this->cacheId = str_replace('../', '__', $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
+            $this->cacheId = str_replace('../', '__',
+                $this->compileId . strtr($cacheId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
         }
 
         return $core->getCacheDir() . $this->cacheId . '.html';

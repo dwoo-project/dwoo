@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-06
+ * @version   1.3.4
+ * @date      2017-03-01
  * @link      http://dwoo.org/
  */
 
@@ -42,7 +42,7 @@ class PluginCapitalize extends Plugin
         } else {
             $bits = explode(' ', (string)$value);
             $out  = '';
-            while (list(, $v) = each($bits)) {
+            foreach ($bits as $k => $v){
                 if (preg_match('#^[^0-9]+$#', $v)) {
                     $out .= ' ' . mb_convert_case($v, MB_CASE_TITLE, $this->core->getCharset());
                 } else {

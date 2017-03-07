@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-03
+ * @version   1.3.4
+ * @date      2017-03-07
  * @link      http://dwoo.org/
  */
 
@@ -18,6 +18,7 @@ namespace Dwoo\Template;
 
 use Dwoo\Exception as DwooException;
 use Dwoo\Core as Core;
+use Dwoo\ICompiler;
 use Dwoo\ITemplate as ITemplate;
 use Dwoo\Security\Exception as SecurityException;
 use Dwoo\Template\File as TemplateFile;
@@ -196,18 +197,17 @@ class File extends Str
      * @throws DwooException
      * @throws SecurityException
      */
-    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null, $compileId = null, ITemplate $parentTemplate = null)
+    public static function templateFactory(Core $core, $resourceId, $cacheTime = null, $cacheId = null,
+                                           $compileId = null, ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            $resourceId = str_replace(
-                array("\t", "\n", "\r", "\f", "\v"), array(
+            $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array(
                 '\\t',
                 '\\n',
                 '\\r',
                 '\\f',
                 '\\v'
-                ), $resourceId
-            );
+            ), $resourceId);
         }
         $resourceId = strtr($resourceId, '\\', '/');
 
@@ -266,7 +266,7 @@ class File extends Str
      * Returns the full compiled file name and assigns a default value to it if
      * required.
      *
-     * @param Core $core the dwoo instance that requests the file name
+     * @param Core $core the Core instance that requests the file name
      *
      * @return string the full path to the compiled file
      */
@@ -274,7 +274,7 @@ class File extends Str
     {
         // no compile id was provided, set default
         if ($this->compileId === null) {
-            $this->compileId = str_replace('../', '__', strtr($this->getResourceIdentifier(), '\\:', '/-'));
+            $this->compileId = $this->getResourceIdentifier();
         }
 
         return $this->compileId . '.d' . Core::RELEASE_TAG . '.php';

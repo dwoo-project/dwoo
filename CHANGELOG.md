@@ -1,3 +1,16 @@
+## 1.3.4 (2017-03-07)
+`Added`
+* Add `docker-compose.yml` file for unit testing only.
+
+`Changed`
+* Update PHPUnit commands in *tests/README.md* file.
+* Ignore `composer.lock` file.
+* Update code `while (list(, $v) = each($args))` to `foreach ($args as $key => $v)`.
+
+`Fixed`
+* Fixing issue [#58](https://github.com/dwoo-project/dwoo/issues/58).
+* Update method `Dwoo\Template\File::getCompiledFilename`.
+
 ## 1.3.3 (2017-01-09)
 `Added`
 * Add new parameter `allowed_tags` for **strip_tags** plugin.
