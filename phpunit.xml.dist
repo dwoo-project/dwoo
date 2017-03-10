@@ -22,9 +22,6 @@
     <filter>
         <whitelist>
             <directory suffix=".php">./lib/Dwoo</directory>
-            <exclude>
-                <directory>./lib/Dwoo/Adapters/</directory>
-            </exclude>
         </whitelist>
     </filter>
 </phpunit>
