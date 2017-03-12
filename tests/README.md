@@ -26,36 +26,24 @@ Run `docker-compose up -d` to create the [PHPFarm](https://github.com/splitbrain
 
 PHP5.3
 ------
-```bash
-php-5.3 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-5.3 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 PHP5.4
 ------
-```bash
-php-5.4 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-5.4 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 PHP5.5
 ------
-```bash
-php-5.5 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-5.5 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 PHP5.6
 ------
-```bash
-php-5.6 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-5.6 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 PHP7.0
 ------
-```bash
-php-7.0 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-7.0 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
 
 PHP7.1
 ------
-```bash
-php-7.1 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text
-```
+    php-7.1 vendor/bin/phpunit -d memory_limit=512M --colors --debug  --coverage-text

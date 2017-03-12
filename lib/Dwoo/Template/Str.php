@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.4
- * @date      2017-03-07
+ * @version   1.4.0
+ * @date      2017-03-09
  * @link      http://dwoo.org/
  */
 
@@ -77,10 +77,10 @@ class Str implements ITemplate
      *
      * @var array
      */
-    protected static $cache = array(
-        'cached'   => array(),
-        'compiled' => array()
-    );
+    protected static $cache = [
+        'cached'   => [],
+        'compiled' => []
+    ];
 
     /**
      * Holds the compiler that built this template.
@@ -125,6 +125,8 @@ class Str implements ITemplate
 
         if ($compileId !== null) {
             $this->compileId = str_replace('../', '__', strtr($compileId, '\\%?=!:;' . PATH_SEPARATOR, '/-------'));
+        } else {
+            $this->compileId = $templateString;
         }
 
         if ($cacheId !== null) {
@@ -368,7 +370,7 @@ class Str implements ITemplate
             if ($compiler === null) {
                 $compiler = $core->getDefaultCompilerFactory($this->getResourceName());
 
-                if ($compiler === null || $compiler === array('Dwoo\Compiler', 'compilerFactory')) {
+                if ($compiler === null || $compiler === ['Dwoo\Compiler', 'compilerFactory']) {
                     $compiler = Compiler::compilerFactory();
                 } else {
                     $compiler = call_user_func($compiler);
@@ -444,12 +446,7 @@ class Str implements ITemplate
      */
     protected function getCompiledFilename(Core $core)
     {
-        // no compile id was provided, set default
-        if ($this->compileId === null) {
-            $this->compileId = $this->name;
-        }
-
-        return $core->getCompileDir() . $this->compileId . '.d' . Core::RELEASE_TAG . '.php';
+        return $core->getCompileDir() . hash('md4', $this->compileId) . '.d' . Core::RELEASE_TAG . '.php';
     }
 
     /**
