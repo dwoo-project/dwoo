@@ -8,9 +8,9 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.4.0
- * @date      2017-03-09
+ * @date      2017-03-16
  * @link      http://dwoo.org/
  */
 
@@ -42,7 +42,7 @@ class File extends Str
      *
      * @var array
      */
-    protected $includePath = [];
+    protected $includePath = array();
 
     /**
      * Resolved path cache when looking for a file in multiple include paths.
@@ -66,7 +66,7 @@ class File extends Str
      *                            template from others, if null it defaults to the filename+bits of the path
      * @param mixed  $includePath a string for a single path to look into for the given file, or an array of paths
      */
-    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = [])
+    public function __construct($file, $cacheTime = null, $cacheId = null, $compileId = null, $includePath = array())
     {
         parent::__construct($file, $cacheTime, $cacheId, $compileId);
         $this->template = null;
@@ -84,7 +84,7 @@ class File extends Str
     public function setIncludePath($paths)
     {
         if (is_array($paths) === false) {
-            $paths = [$paths];
+            $paths = array($paths);
         }
 
         $this->includePath  = $paths;
@@ -144,7 +144,7 @@ class File extends Str
     {
         if ($this->resolvedPath !== null) {
             return $this->resolvedPath;
-        } elseif (array_filter($this->getIncludePath()) == []) {
+        } elseif (array_filter($this->getIncludePath()) == array()) {
             return $this->file;
         } else {
             foreach ($this->getIncludePath() as $path) {
@@ -202,13 +202,13 @@ class File extends Str
                                            $compileId = null, ITemplate $parentTemplate = null)
     {
         if (DIRECTORY_SEPARATOR === '\\') {
-            $resourceId = str_replace(["\t", "\n", "\r", "\f", "\v"], [
+            $resourceId = str_replace(array("\t", "\n", "\r", "\f", "\v"), array(
                 '\\t',
                 '\\n',
                 '\\r',
                 '\\f',
                 '\\v'
-            ], $resourceId);
+            ), $resourceId);
         }
         $resourceId = strtr($resourceId, '\\', '/');
 
