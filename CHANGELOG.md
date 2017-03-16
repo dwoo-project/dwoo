@@ -1,3 +1,20 @@
+## 1.3.5 (2017-03-16)
+`Added`
+* Add new constant test from file `testShortClassConstants`.
+
+`Changed`
+* Update tests, add new test `testClassConstants`.
+* Update `Loader::rebuildClassPathCache` method, using `DirectoryIterator` class instead of `glob` function.
+
+`Fixed`
+* Fix class `BaseTests`, remove *cached* and *compiled* files when calling **destructor**.
+* Constants error when using 2 trailing slashes, issue [#63](https://github.com/dwoo-project/dwoo/issues/63).
+* Fix `parseConstKey` method, replacing double `\\` by single `\`.
+* Fix `throw new` exception, display on one line.
+
+`Removed`
+* Remove useless `else` and non accessing code.
+
 ## 1.3.4 (2017-03-07)
 `Added`
 * Add `docker-compose.yml` file for unit testing only.
