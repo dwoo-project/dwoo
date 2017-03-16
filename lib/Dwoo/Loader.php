@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-23
+ * @copyright 2013-2017 David Sanchez
+ * @license   http://dwoo.org/LICENSE LGPLv3
+ * @version   1.4.0
+ * @date      2017-03-16
  * @link      http://dwoo.org/
  */
 
@@ -77,40 +77,26 @@ class Loader implements ILoader
     /**
      * Rebuilds class paths, scans the given directory recursively and saves all paths in the given file.
      *
-     * @param string $path      the plugin path to scan
-     * @param string $cacheFile the file where to store the plugin paths cache, it will be overwritten
+     * @param string         $path      the plugin path to scan
+     * @param string|boolean $cacheFile the file where to store the plugin paths cache, it will be overwritten
      *
      * @throws Exception
      */
     protected function rebuildClassPathCache($path, $cacheFile)
     {
+        $tmp = array();
         if ($cacheFile !== false) {
             $tmp             = $this->classPath;
             $this->classPath = array();
         }
 
         // iterates over all files/folders
-        $list = glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*');
-        if (is_array($list)) {
-            foreach ($list as $f) {
-                if (is_dir($f)) {
-                    $this->rebuildClassPathCache($f, false);
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if (!$fileInfo->isDot()) {
+                if ($fileInfo->isDir()) {
+                    $this->rebuildClassPathCache($fileInfo->getPathname(), false);
                 } else {
-                    // TODO: is it still valid now?
-                    $this->classPath[str_replace(array(
-                        'function.',
-                        'block.',
-                        'modifier.',
-                        'outputfilter.',
-                        'filter.',
-                        'prefilter.',
-                        'postfilter.',
-                        'pre.',
-                        'post.',
-                        'output.',
-                        'shared.',
-                        'helper.'
-                    ), '', basename($f, '.php'))] = $f;
+                    $this->classPath[$fileInfo->getBasename('.php')] = $fileInfo->getPathname();
                 }
             }
         }
@@ -118,8 +104,7 @@ class Loader implements ILoader
         // save in file if it's the first call (not recursed)
         if ($cacheFile !== false) {
             if (!file_put_contents($cacheFile, serialize($this->classPath))) {
-                throw new Exception('Could not write into ' . $cacheFile .
-                    ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
+                throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
             }
             $this->classPath += $tmp;
         }
@@ -156,12 +141,10 @@ class Loader implements ILoader
                 } elseif (isset($this->classPath[$class . 'Compile'])) {
                     include_once $this->classPath[$class . 'Compile'];
                 } else {
-                    throw new Exception('Plugin "' . $class .
-                        '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                    throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
                 }
             } else {
-                throw new Exception('Plugin "' . $class .
-                    '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
         }
     }

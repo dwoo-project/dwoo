@@ -41,10 +41,9 @@ namespace Dwoo\Tests
         }
 
         /**
-         * Tears down the fixture, for example, close a network connection.
-         * This method is called after a test is executed.
+         * Clear cache and compiled directories
          */
-        protected function tearDown()
+        public function __destruct()
         {
             $this->clearDir($this->cacheDir, true);
             $this->clearDir($this->compileDir, true);
@@ -63,7 +62,7 @@ namespace Dwoo\Tests
                 if (!$emptyOnly) {
                     rmdir($path);
                 }
-            } else {
+            } elseif (is_file($path)) {
                 unlink($path);
             }
         }

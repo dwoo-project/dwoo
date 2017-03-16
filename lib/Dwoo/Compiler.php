@@ -8,9 +8,9 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.4
- * @date      2017-03-01
+ * @license   http://dwoo.org/LICENSE LGPLv3
+ * @version   1.4.0
+ * @date      2017-03-16
  * @link      http://dwoo.org/
  */
 
@@ -1208,7 +1208,6 @@ class Compiler implements ICompiler
             }
 
             throw new CompilationException($this, 'Syntax malformation, a block of type "' . $type . '" was closed but was not opened');
-            break;
         }
 
         return $output;
@@ -1708,9 +1707,9 @@ class Compiler implements ICompiler
 
         if ($curBlock === 'root' && substr($out, 0, strlen(self::PHP_OPEN)) !== self::PHP_OPEN) {
             return self::PHP_OPEN . 'echo ' . $out . ';' . self::PHP_CLOSE;
-        } else {
-            return $out;
         }
+
+        return $out;
     }
 
     /**
@@ -2261,9 +2260,9 @@ class Compiler implements ICompiler
             return $parsingParams;
         } elseif ($curBlock === 'namedparam') {
             return array($output, substr($srcOutput, 1, - 1));
-        } else {
-            return $output;
         }
+
+        return $output;
     }
 
     /**
@@ -2305,9 +2304,9 @@ class Compiler implements ICompiler
             return $parsingParams;
         } elseif ($curBlock === 'namedparam') {
             return array($output, $m[1]);
-        } else {
-            return $output;
         }
+
+        return $output;
     }
 
     /**
@@ -2320,17 +2319,17 @@ class Compiler implements ICompiler
      */
     protected function parseConstKey($key, $curBlock)
     {
+        $key = str_replace('\\\\', '\\', $key);
+
         if ($this->securityPolicy !== null && $this->securityPolicy->getConstantHandling() === SecurityPolicy::CONST_DISALLOW) {
             return 'null';
         }
 
         if ($curBlock !== 'root') {
-            $output = '(defined("' . $key . '") ? ' . $key . ' : null)';
-        } else {
-            $output = $key;
+            return '(defined("' . $key . '") ? ' . $key . ' : null)';
         }
 
-        return $output;
+        return $key;
     }
 
     /**
@@ -2545,15 +2544,14 @@ class Compiler implements ICompiler
                 return $output;
             } elseif (isset($assign)) {
                 return self::PHP_OPEN . $output . ';' . self::PHP_CLOSE;
-            } else {
-                return $output;
             }
+
+            return $output;
         } else {
             if ($curBlock === 'string' || $curBlock === 'delimited_string') {
                 return array(0, '');
-            } else {
-                throw new CompilationException($this, 'Invalid variable name <em>' . $substr . '</em>');
             }
+            throw new CompilationException($this, 'Invalid variable name <em>' . $substr . '</em>');
         }
     }
 

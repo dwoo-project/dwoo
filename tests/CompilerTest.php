@@ -7,6 +7,7 @@ namespace Dwoo\Tests
     use Dwoo\Core;
     use PluginHelper;
     use Dwoo\Template\Str as TemplateString;
+    use Dwoo\Template\File as TemplateFile;
     use Dwoo\Security\Policy as SecurityPolicy;
 
     /**
@@ -282,10 +283,10 @@ replace="BAR"
             if (!defined('TEST')) {
                 define('TEST', 'Test');
             }
-            $tpl = new TemplateString('{$dwoo.const.TEST} {$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
+            $tpl = new TemplateString('{$dwoo.const.TEST}');
             $tpl->forceCompilation();
 
-            $this->assertEquals(TEST . ' ' . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+            $this->assertEquals(TEST, $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
         public function testShortConstants()
@@ -297,6 +298,21 @@ replace="BAR"
             $tpl->forceCompilation();
 
             $this->assertEquals(TEST . ' ' . (PHP_MAJOR_VERSION * PHP_MINOR_VERSION), $this->dwoo->get($tpl, array(), $this->compiler));
+        }
+
+        public function testClassConstants()
+        {
+            $tpl = new TemplateString('{$dwoo.const.Dwoo\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\Core::BLOCK_PLUGIN}');
+            $tpl->forceCompilation();
+            $this->assertEquals((Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+
+            $tpl = new TemplateString('{$dwoo.const.Dwoo\\Core::FUNC_PLUGIN*$dwoo.const.Dwoo\\Core::BLOCK_PLUGIN}');
+            $tpl->forceCompilation();
+            $this->assertEquals((Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
+
+            $tpl = new TemplateFile(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR . 'constants.html');
+            $tpl->forceCompilation();
+            $this->assertEquals((Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN) . "\n" . (Core::FUNC_PLUGIN * Core::BLOCK_PLUGIN), $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
         public function testShortClassConstants()

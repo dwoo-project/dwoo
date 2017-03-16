@@ -8,9 +8,9 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
+ * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.4.0
- * @date      2017-03-09
+ * @date      2017-03-16
  * @link      http://dwoo.org/
  */
 
@@ -77,10 +77,10 @@ class Str implements ITemplate
      *
      * @var array
      */
-    protected static $cache = [
-        'cached'   => [],
-        'compiled' => []
-    ];
+    protected static $cache = array(
+        'cached'   => array(),
+        'compiled' => array()
+    );
 
     /**
      * Holds the compiler that built this template.
@@ -370,7 +370,7 @@ class Str implements ITemplate
             if ($compiler === null) {
                 $compiler = $core->getDefaultCompilerFactory($this->getResourceName());
 
-                if ($compiler === null || $compiler === ['Dwoo\Compiler', 'compilerFactory']) {
+                if ($compiler === null || $compiler === array('Dwoo\Compiler', 'compilerFactory')) {
                     $compiler = Compiler::compilerFactory();
                 } else {
                     $compiler = call_user_func($compiler);
