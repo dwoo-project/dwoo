@@ -534,10 +534,7 @@ class Core
                     'callback' => $callback
                 );
             } else {
-                throw new Exception(
-                    'Callback could not be processed correctly, please check that the function/class 
-                you used exists'
-                );
+                throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
             }
         } elseif ($callback instanceof Closure) {
             $this->plugins[$name] = array(
@@ -545,10 +542,7 @@ class Core
                 'callback' => $callback
             );
         } else {
-            throw new Exception(
-                'Callback could not be processed correctly, please check that the function/class you 
-            used exists'
-            );
+            throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         }
     }
 
@@ -586,16 +580,9 @@ class Core
                 }
                 catch (Exception $e) {
                     if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS)) {
-                        throw new Exception(
-                            'Wrong filter name : ' . $callback . ', the "Filter" prefix should 
-                        not be used, please only use "' . str_replace('Filter', '', $callback) . '"'
-                        );
+                        throw new Exception('Wrong filter name : ' . $callback . ', the "Filter" prefix should not be used, please only use "' . str_replace('Filter', '', $callback) . '"');
                     } else {
-                        throw new Exception(
-                            'Wrong filter name : ' . $callback . ', when using autoload the filter must
-                         be in one of your plugin dir as "name.php" containig a class or function named
-                         "Filter<name>"'
-                        );
+                        throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containig a class or function named "Filter<name>"');
                     }
                 }
             }
@@ -605,10 +592,7 @@ class Core
             } elseif (function_exists($class)) {
                 $callback = $class;
             } else {
-                throw new Exception(
-                    'Wrong filter name : ' . $callback . ', when using autoload the filter must be in
-                one of your plugin dir as "name.php" containig a class or function named "Filter<name>"'
-                );
+                throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containig a class or function named "Filter<name>"');
             }
 
             $this->filters[] = $callback;
