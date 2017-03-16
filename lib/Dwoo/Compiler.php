@@ -1208,7 +1208,6 @@ class Compiler implements ICompiler
             }
 
             throw new CompilationException($this, 'Syntax malformation, a block of type "' . $type . '" was closed but was not opened');
-            break;
         }
 
         return $output;
@@ -1708,9 +1707,9 @@ class Compiler implements ICompiler
 
         if ($curBlock === 'root' && substr($out, 0, strlen(self::PHP_OPEN)) !== self::PHP_OPEN) {
             return self::PHP_OPEN . 'echo ' . $out . ';' . self::PHP_CLOSE;
-        } else {
-            return $out;
         }
+
+        return $out;
     }
 
     /**
@@ -2261,9 +2260,9 @@ class Compiler implements ICompiler
             return $parsingParams;
         } elseif ($curBlock === 'namedparam') {
             return array($output, substr($srcOutput, 1, - 1));
-        } else {
-            return $output;
         }
+
+        return $output;
     }
 
     /**
