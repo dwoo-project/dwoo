@@ -141,12 +141,10 @@ class Loader implements ILoader
                 } elseif (isset($this->classPath[$class . 'Compile'])) {
                     include_once $this->classPath[$class . 'Compile'];
                 } else {
-                    throw new Exception('Plugin "' . $class .
-                        '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                    throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
                 }
             } else {
-                throw new Exception('Plugin "' . $class .
-                    '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
+                throw new Exception('Plugin "' . $class . '" can not be found, maybe you forgot to bind it if it\'s a custom plugin ?', E_USER_NOTICE);
             }
         }
     }
