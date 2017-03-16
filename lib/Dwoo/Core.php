@@ -8,9 +8,9 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.4
- * @date      2017-03-01
+ * @license   http://dwoo.org/LICENSE LGPLv3
+ * @version   1.4.0
+ * @date      2017-03-16
  * @link      http://dwoo.org/
  */
 
@@ -329,10 +329,7 @@ class Core
             $_tpl = new TemplateFile($_tpl);
             $_tpl->setIncludePath($this->getTemplateDir());
         } else {
-            throw new Exception(
-                'Dwoo->get\'s first argument must be a ITemplate (i.e. TemplateFile) or 
-            a valid path to a template file', E_USER_NOTICE
-            );
+            throw new Exception('Dwoo->get\'s first argument must be a ITemplate (i.e. TemplateFile) or a valid path to a template file', E_USER_NOTICE);
         }
 
         // save the current template, enters render mode at the same time
@@ -347,10 +344,7 @@ class Core
         } elseif ($data instanceof ArrayAccess) {
             $this->data = $data;
         } else {
-            throw new Exception(
-                'Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or
-            an associative array', E_USER_NOTICE
-            );
+            throw new Exception('Dwoo->get/Dwoo->output\'s data argument must be a IDataProvider object (i.e. Data) or an associative array', E_USER_NOTICE);
         }
 
         $this->addGlobal('template', $_tpl->getName());
