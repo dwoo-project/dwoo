@@ -2305,9 +2305,9 @@ class Compiler implements ICompiler
             return $parsingParams;
         } elseif ($curBlock === 'namedparam') {
             return array($output, $m[1]);
-        } else {
-            return $output;
         }
+
+        return $output;
     }
 
     /**
