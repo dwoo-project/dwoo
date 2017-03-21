@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
- * @version   1.4.0
- * @date      2017-03-16
+ * @version   1.3.6
+ * @date      2017-03-21
  * @link      http://dwoo.org/
  */
 
@@ -2159,7 +2159,7 @@ class Compiler implements ICompiler
                 $callback = $this->customPlugins[$func]['callback'];
                 if (is_array($callback)) {
                     if (is_object($callback[0])) {
-                        $output = 'call_user_func_array(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
+                        $output = 'call_user_func_array(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
                     } else {
                         $output = 'call_user_func_array(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
                     }
@@ -3199,7 +3199,7 @@ class Compiler implements ICompiler
                     $callback = $this->customPlugins[$func]['callback'];
                     if (is_array($callback)) {
                         if (is_object($callback[0])) {
-                            $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                            $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(' . $params . '))';
                         } else {
                             $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
                         }
@@ -3215,8 +3215,11 @@ class Compiler implements ICompiler
                 }
             } else {
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
-                    $callback   = $this->customPlugins[$func]['callback'];
-                    $pluginName = $callback;
+                    $pluginName = $callback = $this->customPlugins[$func]['callback'];
+                    if (($pluginType & Core::CLASS_PLUGIN) && !is_array($callback)) {
+                        $pluginName = $this->customPlugins[$func]['callback'];
+                        $callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
+                    }
                 } else {
                     if (class_exists('Plugin' . Core::toCamelCase($func)) !== false || function_exists('Plugin' .
                             Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''))
@@ -3288,10 +3291,7 @@ class Compiler implements ICompiler
                             if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                                 $funcCompiler = array('Plugin' . Core::toCamelCase($func), 'compile');
                             } else {
-                                $funcCompiler = array(
-                                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
-                                    'compile'
-                                );
+                                $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func), 'compile');
                             }
                             array_unshift($params, $this);
                         }
@@ -3301,7 +3301,11 @@ class Compiler implements ICompiler
 
                         if ($pluginType & Core::CUSTOM_PLUGIN) {
                             if (is_object($callback[0])) {
-                                $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                                if (is_array($this->getDwoo()->getCustomPlugin($func))) {
+                                    $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                                } else {
+                                    $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(' . $params . '))';
+                                }
                             } else {
                                 $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
                             }
