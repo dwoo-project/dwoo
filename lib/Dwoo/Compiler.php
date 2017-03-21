@@ -652,7 +652,7 @@ class Compiler implements ICompiler
      */
     public function getCore()
     {
-        return $this->dwoo;
+        return $this->core;
     }
 
     /**
