@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.4.0
- * @date      2017-03-16
+ * @date      2017-03-21
  * @link      http://dwoo.org/
  */
 
@@ -541,6 +541,21 @@ class Core
                 'type'     => self::FUNC_PLUGIN | $compilable,
                 'callback' => $callback
             );
+        } elseif (is_object($callback)) {
+            if (is_subclass_of($callback, 'Dwoo\Block\Plugin')) {
+                $this->plugins[$name] = array(
+                    'type'     => self::BLOCK_PLUGIN | $compilable,
+                    'callback' => get_class($callback),
+                    'class'    => $callback
+                );
+            } else {
+                $this->plugins[$name] = array(
+                    'type'     => self::CLASS_PLUGIN | $compilable,
+                    'callback' => $callback,
+                    'class'    => $callback,
+                    'function' => ($compilable ? 'compile' : 'process')
+                );
+            }
         } else {
             throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         }
