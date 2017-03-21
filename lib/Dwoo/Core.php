@@ -9,7 +9,7 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
- * @version   1.4.0
+ * @version   1.3.6
  * @date      2017-03-21
  * @link      http://dwoo.org/
  */
