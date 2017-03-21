@@ -8,9 +8,9 @@
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.2
- * @date      2017-01-06
+ * @license   http://dwoo.org/LICENSE LGPLv3
+ * @version   1.3.6
+ * @date      2017-03-21
  * @link      http://dwoo.org/
  */
 
@@ -41,7 +41,7 @@ class PluginExtendsCheck extends Plugin implements ICompilable
         $resource   = $m[1];
         $identifier = $m[2];
 
-        $tpl = $compiler->getDwoo()->templateFactory($resource, $identifier);
+        $tpl = $compiler->getCore()->templateFactory($resource, $identifier);
 
         if ($tpl === null) {
             throw new CompilationException($compiler,
