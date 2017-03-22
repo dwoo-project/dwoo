@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.3.6
- * @date      2017-03-21
+ * @date      2017-03-22
  * @link      http://dwoo.org/
  */
 
@@ -2066,6 +2066,9 @@ class Compiler implements ICompiler
                     if (!is_array($callback)) {
                         if (!method_exists($callback, 'process')) {
                             throw new Exception('Custom plugin ' . $func . ' must implement the "process" method to be usable, or you should provide a full callback to the method to use');
+                        }
+                        if (is_object($callback)) {
+                            $callback = get_class($callback);
                         }
                         if (($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic()) {
                             $output = 'call_user_func(array(\'' . $callback . '\', \'process\'), ' . $params . ')';
