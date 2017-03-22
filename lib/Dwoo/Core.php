@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.3.6
- * @date      2017-03-21
+ * @date      2017-03-22
  * @link      http://dwoo.org/
  */
 
@@ -772,6 +772,9 @@ class Core
     public function setCacheDir($dir)
     {
         $this->cacheDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (!file_exists($this->cacheDir)) {
+            mkdir($this->cacheDir, 0777, true);
+        }
         if (is_writable($this->cacheDir) === false) {
             throw new Exception('The cache directory must be writable, chmod "' . $this->cacheDir . '" to make it writable');
         }
@@ -802,6 +805,9 @@ class Core
     public function setCompileDir($dir)
     {
         $this->compileDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (!file_exists($this->compileDir)) {
+            mkdir($this->compileDir, 0777, true);
+        }
         if (is_writable($this->compileDir) === false) {
             throw new Exception('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable');
         }
