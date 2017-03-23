@@ -10,7 +10,7 @@
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
  * @version   1.3.6
- * @date      2017-03-22
+ * @date      2017-03-23
  * @link      http://dwoo.org/
  */
 
@@ -49,7 +49,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.3.4';
+    const VERSION = '1.3.6';
 
     /**
      * Unique number of this dwoo release, based on version number.
@@ -57,7 +57,7 @@ class Core
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 134;
+    const RELEASE_TAG = 136;
 
     /**
      * Constants that represents all plugin types
