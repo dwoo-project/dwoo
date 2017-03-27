@@ -1,16 +1,16 @@
 <?php
 /**
- * Copyright (c) 2013-2016
+ * Copyright (c) 2013-2017
  *
  * @category  Library
  * @package   Dwoo
  * @author    Jordi Boggiano <j.boggiano@seld.be>
  * @author    David Sanchez <david38sanchez@gmail.com>
  * @copyright 2008-2013 Jordi Boggiano
- * @copyright 2013-2016 David Sanchez
- * @license   http://dwoo.org/LICENSE Modified BSD License
- * @version   1.3.0
- * @date      2016-09-23
+ * @copyright 2013-2017 David Sanchez
+ * @license   http://dwoo.org/LICENSE LGPLv3
+ * @version   1.3.6
+ * @date      2017-03-21
  * @link      http://dwoo.org/
  */
 
@@ -32,12 +32,12 @@ interface ICompiler
     /**
      * Compiles the provided string down to php code.
      *
-     * @param Core      $dwoo
+     * @param Core      $core
      * @param ITemplate $template the template to compile
      *
      * @return string a compiled php code string
      */
-    public function compile(Core $dwoo, ITemplate $template);
+    public function compile(Core $core, ITemplate $template);
 
     /**
      * Adds the custom plugins loaded into Dwoo to the compiler so it can load them.

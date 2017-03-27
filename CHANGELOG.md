@@ -1,3 +1,14 @@
+## 1.3.6 (2017-03-27)
+`Changed`
+* In `setCacheDir` and `setCompileDir` methods, create directory path if not exist if possible.
+* Rename `Compiler::getDwoo()` to `Compiler::getCore()`.
+
+`Fixed`
+* Fix bug, using object for custom plugin and using `getobjectPlugin` method.
+* Fix error, `getCore` need to return `$this->core`.
+* Fix output data bug in `replaceModifiers` method.
+* Fix `addPlugin` method, add code when passing object in `$callback`.
+
 ## 1.3.5 (2017-03-16)
 `Added`
 * Add new constant test from file `testShortClassConstants`.

@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
- * @version   1.4.0
- * @date      2017-03-16
+ * @version   1.3.6
+ * @date      2017-03-23
  * @link      http://dwoo.org/
  */
 
@@ -49,7 +49,7 @@ class Core
      *
      * @var string
      */
-    const VERSION = '1.3.4';
+    const VERSION = '1.3.6';
 
     /**
      * Unique number of this dwoo release, based on version number.
@@ -57,7 +57,7 @@ class Core
      * has been compiled before this release or not, so that old templates are
      * recompiled automatically when Dwoo is updated
      */
-    const RELEASE_TAG = 134;
+    const RELEASE_TAG = 136;
 
     /**
      * Constants that represents all plugin types
@@ -534,21 +534,30 @@ class Core
                     'callback' => $callback
                 );
             } else {
-                throw new Exception(
-                    'Callback could not be processed correctly, please check that the function/class 
-                you used exists'
-                );
+                throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
             }
         } elseif ($callback instanceof Closure) {
             $this->plugins[$name] = array(
                 'type'     => self::FUNC_PLUGIN | $compilable,
                 'callback' => $callback
             );
+        } elseif (is_object($callback)) {
+            if (is_subclass_of($callback, 'Dwoo\Block\Plugin')) {
+                $this->plugins[$name] = array(
+                    'type'     => self::BLOCK_PLUGIN | $compilable,
+                    'callback' => get_class($callback),
+                    'class'    => $callback
+                );
+            } else {
+                $this->plugins[$name] = array(
+                    'type'     => self::CLASS_PLUGIN | $compilable,
+                    'callback' => $callback,
+                    'class'    => $callback,
+                    'function' => ($compilable ? 'compile' : 'process')
+                );
+            }
         } else {
-            throw new Exception(
-                'Callback could not be processed correctly, please check that the function/class you 
-            used exists'
-            );
+            throw new Exception('Callback could not be processed correctly, please check that the function/class you used exists');
         }
     }
 
@@ -586,16 +595,9 @@ class Core
                 }
                 catch (Exception $e) {
                     if (strstr($callback, self::NAMESPACE_PLUGINS_FILTERS)) {
-                        throw new Exception(
-                            'Wrong filter name : ' . $callback . ', the "Filter" prefix should 
-                        not be used, please only use "' . str_replace('Filter', '', $callback) . '"'
-                        );
+                        throw new Exception('Wrong filter name : ' . $callback . ', the "Filter" prefix should not be used, please only use "' . str_replace('Filter', '', $callback) . '"');
                     } else {
-                        throw new Exception(
-                            'Wrong filter name : ' . $callback . ', when using autoload the filter must
-                         be in one of your plugin dir as "name.php" containig a class or function named
-                         "Filter<name>"'
-                        );
+                        throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containig a class or function named "Filter<name>"');
                     }
                 }
             }
@@ -605,10 +607,7 @@ class Core
             } elseif (function_exists($class)) {
                 $callback = $class;
             } else {
-                throw new Exception(
-                    'Wrong filter name : ' . $callback . ', when using autoload the filter must be in
-                one of your plugin dir as "name.php" containig a class or function named "Filter<name>"'
-                );
+                throw new Exception('Wrong filter name : ' . $callback . ', when using autoload the filter must be in one of your plugin dir as "name.php" containig a class or function named "Filter<name>"');
             }
 
             $this->filters[] = $callback;
@@ -773,6 +772,9 @@ class Core
     public function setCacheDir($dir)
     {
         $this->cacheDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (!file_exists($this->cacheDir)) {
+            mkdir($this->cacheDir, 0777, true);
+        }
         if (is_writable($this->cacheDir) === false) {
             throw new Exception('The cache directory must be writable, chmod "' . $this->cacheDir . '" to make it writable');
         }
@@ -803,6 +805,9 @@ class Core
     public function setCompileDir($dir)
     {
         $this->compileDir = rtrim($dir, '/\\') . DIRECTORY_SEPARATOR;
+        if (!file_exists($this->compileDir)) {
+            mkdir($this->compileDir, 0777, true);
+        }
         if (is_writable($this->compileDir) === false) {
             throw new Exception('The compile directory must be writable, chmod "' . $this->compileDir . '" to make it writable');
         }

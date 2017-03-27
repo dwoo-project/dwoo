@@ -9,8 +9,8 @@
  * @copyright 2008-2013 Jordi Boggiano
  * @copyright 2013-2017 David Sanchez
  * @license   http://dwoo.org/LICENSE LGPLv3
- * @version   1.4.0
- * @date      2017-03-16
+ * @version   1.3.6
+ * @date      2017-03-22
  * @link      http://dwoo.org/
  */
 
@@ -226,7 +226,7 @@ class Compiler implements ICompiler
      *
      * @var Core
      */
-    public $dwoo;
+    public $core;
 
     /**
      * Holds an instance of this class, used by getInstance when you don't
@@ -477,7 +477,7 @@ class Compiler implements ICompiler
     {
         if (!class_exists($class) && !function_exists($class)) {
             try {
-                $this->getDwoo()->getLoader()->loadPlugin($name);
+                $this->getCore()->getLoader()->loadPlugin($name);
             }
             catch (Exception $e) {
                 throw new Exception('Processor ' . $name . ' could not be found in your plugin directories, please ensure it is in a file named ' . $name . '.php in the plugin directory');
@@ -650,9 +650,9 @@ class Compiler implements ICompiler
      *
      * @return Core
      */
-    public function getDwoo()
+    public function getCore()
     {
-        return $this->dwoo;
+        return $this->core;
     }
 
     /**
@@ -703,19 +703,19 @@ class Compiler implements ICompiler
     /**
      * Compiles the provided string down to php code.
      *
-     * @param Core      $dwoo
+     * @param Core      $core
      * @param ITemplate $template the template to compile
      *
      * @return string a compiled php string
      * @throws CompilationException
      */
-    public function compile(Core $dwoo, ITemplate $template)
+    public function compile(Core $core, ITemplate $template)
     {
         // init vars
         //		$compiled = '';
         $tpl                  = $template->getSource();
         $ptr                  = 0;
-        $this->dwoo           = $dwoo;
+        $this->core           = $core;
         $this->template       = $template;
         $this->templateSource = &$tpl;
         $this->pointer        = &$ptr;
@@ -916,7 +916,7 @@ class Compiler implements ICompiler
                     "\n\t\$this->getLoader()->loadPlugin('$plugin');\n";
                     break;
                 case Core::PROXY_PLUGIN:
-                    $output .= $this->getDwoo()->getPluginProxy()->getLoader($plugin);
+                    $output .= $this->getCore()->getPluginProxy()->getLoader($plugin);
                     break;
                 default:
                     throw new CompilationException($this, 'Type error for ' . $plugin . ' with type' . $type);
@@ -1082,7 +1082,7 @@ class Compiler implements ICompiler
 
         $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type);
         if (class_exists($class) === false) {
-            $this->getDwoo()->getLoader()->loadPlugin($type);
+            $this->getCore()->getLoader()->loadPlugin($type);
         }
         $params = $this->mapParams($params, array($class, 'init'), $paramtype);
 
@@ -1145,7 +1145,7 @@ class Compiler implements ICompiler
 
         $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type);
         if (class_exists($class) === false) {
-            $this->getDwoo()->getLoader()->loadPlugin($type);
+            $this->getCore()->getLoader()->loadPlugin($type);
         }
         $this->stack[]  = array(
             'type'   => $type,
@@ -1972,7 +1972,7 @@ class Compiler implements ICompiler
             $output = 'smarty_modifier_' . $func . '(' . implode(', ', $params) . ')';
         } // Proxy plugin
         elseif ($pluginType & Core::PROXY_PLUGIN) {
-            $params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
+            $params = $this->mapParams($params, $this->getCore()->getPluginProxy()->getCallback($func), $state);
         } // Template plugin
         elseif ($pluginType & Core::TEMPLATE_PLUGIN) {
             // transforms the parameter array from (x=>array('paramname'=>array(values))) to (paramname=>array(values))
@@ -2067,6 +2067,9 @@ class Compiler implements ICompiler
                         if (!method_exists($callback, 'process')) {
                             throw new Exception('Custom plugin ' . $func . ' must implement the "process" method to be usable, or you should provide a full callback to the method to use');
                         }
+                        if (is_object($callback)) {
+                            $callback = get_class($callback);
+                        }
                         if (($ref = new ReflectionMethod($callback, 'process')) && $ref->isStatic()) {
                             $output = 'call_user_func(array(\'' . $callback . '\', \'process\'), ' . $params . ')';
                         } else {
@@ -2147,7 +2150,7 @@ class Compiler implements ICompiler
             }
         } // Proxy plugin
         elseif ($pluginType & Core::PROXY_PLUGIN) {
-            $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
+            $output = call_user_func(array($this->getCore()->getPluginProxy(), 'getCode'), $func, $params);
         } // Smarty function (@deprecated)
         elseif ($pluginType & Core::SMARTY_FUNCTION) {
             $params = '';
@@ -2159,7 +2162,7 @@ class Compiler implements ICompiler
                 $callback = $this->customPlugins[$func]['callback'];
                 if (is_array($callback)) {
                     if (is_object($callback[0])) {
-                        $output = 'call_user_func_array(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
+                        $output = 'call_user_func_array(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
                     } else {
                         $output = 'call_user_func_array(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(array(' . $params . '), $this))';
                     }
@@ -3184,11 +3187,11 @@ class Compiler implements ICompiler
                     $output = $func . '(' . $params . ')';
                 }
             } elseif ($pluginType & Core::PROXY_PLUGIN) {
-                $params = $this->mapParams($params, $this->getDwoo()->getPluginProxy()->getCallback($func), $state);
+                $params = $this->mapParams($params, $this->getCore()->getPluginProxy()->getCallback($func), $state);
                 foreach ($params as &$p) {
                     $p = $p[0];
                 }
-                $output = call_user_func(array($this->getDwoo()->getPluginProxy(), 'getCode'), $func, $params);
+                $output = call_user_func(array($this->getCore()->getPluginProxy(), 'getCode'), $func, $params);
             } elseif ($pluginType & Core::SMARTY_MODIFIER) {
                 $params = $this->mapParams($params, null, $state);
                 $params = $params['*'][0];
@@ -3199,7 +3202,7 @@ class Compiler implements ICompiler
                     $callback = $this->customPlugins[$func]['callback'];
                     if (is_array($callback)) {
                         if (is_object($callback[0])) {
-                            $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                            $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(' . $params . '))';
                         } else {
                             $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
                         }
@@ -3215,8 +3218,11 @@ class Compiler implements ICompiler
                 }
             } else {
                 if ($pluginType & Core::CUSTOM_PLUGIN) {
-                    $callback   = $this->customPlugins[$func]['callback'];
-                    $pluginName = $callback;
+                    $pluginName = $callback = $this->customPlugins[$func]['callback'];
+                    if (($pluginType & Core::CLASS_PLUGIN) && !is_array($callback)) {
+                        $pluginName = $this->customPlugins[$func]['callback'];
+                        $callback   = array($pluginName, ($pluginType & Core::COMPILABLE_PLUGIN) ? 'compile' : 'process');
+                    }
                 } else {
                     if (class_exists('Plugin' . Core::toCamelCase($func)) !== false || function_exists('Plugin' .
                             Core::toCamelCase($func) . (($pluginType & Core::COMPILABLE_PLUGIN) ? 'Compile' : ''))
@@ -3288,10 +3294,7 @@ class Compiler implements ICompiler
                             if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                                 $funcCompiler = array('Plugin' . Core::toCamelCase($func), 'compile');
                             } else {
-                                $funcCompiler = array(
-                                    Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func),
-                                    'compile'
-                                );
+                                $funcCompiler = array(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func), 'compile');
                             }
                             array_unshift($params, $this);
                         }
@@ -3301,7 +3304,11 @@ class Compiler implements ICompiler
 
                         if ($pluginType & Core::CUSTOM_PLUGIN) {
                             if (is_object($callback[0])) {
-                                $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                                if (is_array($this->getCore()->getCustomPlugin($func))) {
+                                    $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->plugins[\'' . $func . '\'][\'callback\'][0], \'' . $callback[1] . '\'), array(' . $params . '))';
+                                } else {
+                                    $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array($this->getCustomPlugin(\'' . $func . '\'), \'' . $callback[1] . '\'), array(' . $params . '))';
+                                }
                             } else {
                                 $output = ($mapped ? '$this->arrayMap' : 'call_user_func_array') . '(array(\'' . $callback[0] . '\', \'' . $callback[1] . '\'), array(' . $params . '))';
                             }
@@ -3446,12 +3453,12 @@ class Compiler implements ICompiler
             else {
                 if ($pluginType === - 1) {
                     try {
-                        $this->getDwoo()->getLoader()->loadPlugin('Plugin' . Core::toCamelCase($name));
+                        $this->getCore()->getLoader()->loadPlugin('Plugin' . Core::toCamelCase($name));
                     }
                     catch (Exception $e) {
                         if (isset($phpFunc)) {
                             $pluginType = Core::NATIVE_PLUGIN;
-                        } elseif (is_object($this->getDwoo()->getPluginProxy()) && $this->getDwoo()->getPluginProxy()->handles($name)) {
+                        } elseif (is_object($this->getCore()->getPluginProxy()) && $this->getCore()->getPluginProxy()->handles($name)) {
                             $pluginType = Core::PROXY_PLUGIN;
                             break;
                         } else {
