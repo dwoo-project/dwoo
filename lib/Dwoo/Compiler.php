@@ -1080,8 +1080,11 @@ class Compiler implements ICompiler
             echo 'Compiler::' . __FUNCTION__ . "\n";
         }
 
-        $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type);
-        if (class_exists($class) === false) {
+        $class = current(array_filter([
+            'Plugin' . Core::toCamelCase($type),
+            Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($type)
+        ], 'class_exists'));
+        if (false === $class) {
             $this->getCore()->getLoader()->loadPlugin($type);
         }
         $params = $this->mapParams($params, array($class, 'init'), $paramtype);
@@ -1183,7 +1186,10 @@ class Compiler implements ICompiler
                 if ($top['custom']) {
                     $class = $top['class'];
                 } else {
-                    $class = Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($top['type']);
+                    $class = current(array_filter([
+                        'Plugin' . Core::toCamelCase($top['type']),
+                        Core::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . Core::toCamelCase($top['type'])
+                    ], 'class_exists'));
                 }
                 if (count($this->stack)) {
                     $this->curBlock = &$this->stack[count($this->stack) - 1];
@@ -2089,7 +2095,7 @@ class Compiler implements ICompiler
                     if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
                         $output = '$this->classCall(\'Plugin' . $func . '\', array(' . $params . '))';
                     } elseif (class_exists(Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func)) !== false) {
-                        $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\', 
+                        $output = '$this->classCall(\'' . Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . $func . '\',
                         array(' . $params . '))';
                     } else {
                         $output = '$this->classCall(\'' . $func . '\', array(' . $params . '))';
@@ -3314,7 +3320,7 @@ class Compiler implements ICompiler
                             }
                         } elseif ($mapped) {
                             $output = '$this->arrayMap(array($this->getObjectPlugin(\''.
-                                Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '\'), 
+                                Core::NAMESPACE_PLUGINS_FUNCTIONS . 'Plugin' . Core::toCamelCase($func) . '\'),
                             \'process\'), array(' . $params . '))';
                         } else {
                             if (class_exists('Plugin' . Core::toCamelCase($func)) !== false) {
@@ -3421,6 +3427,9 @@ class Compiler implements ICompiler
             } // Class without namespace
             elseif (class_exists('Plugin' . Core::toCamelCase($name)) !== false) {
                 $pluginType = Core::CLASS_PLUGIN;
+                if (is_subclass_of('Plugin' . Core::toCamelCase($name), 'Dwoo\Block\Plugin')) {
+                    $pluginType += Core::BLOCK_PLUGIN;
+                }
                 $interfaces = class_implements('Plugin' . Core::toCamelCase($name));
                 if (in_array('Dwoo\ICompilable', $interfaces) !== false || in_array('Dwoo\ICompilable\Block', $interfaces) !== false) {
                     $pluginType |= Core::COMPILABLE_PLUGIN;
