@@ -32,8 +32,6 @@ namespace Dwoo\Tests
             $tpl = new TemplateString('{loaderTest}');
             $tpl->forceCompilation();
             $this->assertEquals('Moo', $this->dwoo->get($tpl, array(), $this->compiler));
-
-            $tpl = new TemplateString('{blockTest}moo{/blockTest}');
         }
 
         public function testPluginLoadBlock()
