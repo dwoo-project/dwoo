@@ -1173,7 +1173,10 @@ class Core
         if (isset($this->plugins[$blockName])) {
             $class = $this->plugins[$blockName]['class'];
         } else {
-            $class = self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . self::toCamelCase($blockName);
+            $class = current(array_filter([
+                'Plugin' . self::toCamelCase($blockName),
+                self::NAMESPACE_PLUGINS_BLOCKS . 'Plugin' . self::toCamelCase($blockName)
+            ], 'class_exists'));
         }
 
         if ($this->curBlock !== null) {
