@@ -60,8 +60,7 @@ class PluginIf extends BlockPlugin implements ICompilableBlock, IElseable
     {
         $p = array();
 
-        reset($params);
-        while (list($k, $v) = each($params)) {
+	foreach($params as $k => $v) {
             $v = (string)$v;
             if (substr($v, 0, 1) === '"' || substr($v, 0, 1) === '\'') {
                 $vmod = strtolower(substr($v, 1, - 1));
