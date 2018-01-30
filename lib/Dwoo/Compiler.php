@@ -2719,7 +2719,8 @@ class Compiler implements ICompiler
                         array_shift($m[2]);
                         array_shift($m[1]);
                     } elseif ($i === '_root' || $i === '__') {
-                        $output = '$this->data';
+                        // $output = '$this->data';
+                        $output = '$this->getData()';
                         array_shift($m[2]);
                         array_shift($m[1]);
                     } elseif ($i === '_key') {
