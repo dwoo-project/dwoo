@@ -1,6 +1,6 @@
 {
     "name": "dwoo/dwoo",
-    "license": "LGPL",
+    "license": "LGPL-3.0",
     "type": "library",
     "description": "Dwoo is a PHP5/PHP7 template engine which is (almost) fully compatible with Smarty templates and plugins, but is written from scratch for PHP5, and adds many features.",
     "authors": [
