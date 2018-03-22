@@ -83,7 +83,9 @@ class File extends Str
      */
     public function setIncludePath($paths)
     {
-        if (is_array($paths) === false) {
+        if ($paths == null) {
+          $paths = array();
+        } elseif (is_array($paths) === false) {
             $paths = array($paths);
         }
 
