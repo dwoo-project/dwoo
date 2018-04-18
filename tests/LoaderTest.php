@@ -34,6 +34,18 @@ namespace Dwoo\Tests
             $this->assertEquals('Moo', $this->dwoo->get($tpl, array(), $this->compiler));
         }
 
+        public function testPluginLoadBlock()
+        {
+            $loader = new Loader(__DIR__ . '/temp/cache');
+
+            $this->dwoo->setLoader($loader);
+            $loader->addDirectory(__DIR__ . '/resources/plugins');
+
+            $tpl = new TemplateString('{loaderBlockTest}moo{/loaderBlockTest}');
+            $tpl->forceCompilation();
+            $this->assertEquals('Moo', $this->dwoo->get($tpl, array(), $this->compiler));
+        }
+
         public function testRebuildClassPath()
         {
             $loader = new Loader(__DIR__ . '/temp/cache');
