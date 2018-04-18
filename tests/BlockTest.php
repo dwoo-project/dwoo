@@ -256,6 +256,19 @@ Root Footer
 '));
         }
 
+        public function testIncludeExtended()
+        {
+            $tpl = new TemplateFile(dirname(__FILE__) . '/resources/include_extended/including.html');
+            $tpl->forceCompilation();
+
+            $this->assertEquals($this->dwoo->get($tpl, array(), $this->compiler),"<html>
+<div>Extended</div>
+
+</html>
+");
+
+        }
+
         public function testIf()
         {
             $tpl = new TemplateString('{if "BAR"==reverse($foo|reverse|upper)}true{/if}');
