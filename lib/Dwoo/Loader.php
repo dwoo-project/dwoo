@@ -66,10 +66,19 @@ class Loader implements ILoader
 
         // include class paths or rebuild paths if the cache file isn't there
         $cacheFile = $this->cacheDir . 'classpath.cache.d' . Core::RELEASE_TAG . '.php';
+
+        $chachedClassPath = null;
+
         if (file_exists($cacheFile)) {
-            $classpath       = file_get_contents($cacheFile);
-            $this->classPath = unserialize($classpath) + $this->classPath;
-        } else {
+
+            $chachedClassPath = unserialize(file_get_contents($cacheFile));
+
+            if (is_array($chachedClassPath)) {
+                $this->classPath = $chachedClassPath + $this->classPath;
+            }
+        }
+
+        if (!is_array($chachedClassPath)) {
             $this->rebuildClassPathCache($this->corePluginDir, $cacheFile);
         }
     }
