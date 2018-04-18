@@ -112,7 +112,7 @@ class Loader implements ILoader
 
         // save in file if it's the first call (not recursed)
         if ($cacheFile !== false) {
-            if (!file_put_contents($cacheFile, serialize($this->classPath))) {
+            if (!file_put_contents($cacheFile, serialize($this->classPath), LOCK_EX)) {
                 throw new Exception('Could not write into ' . $cacheFile . ', either because the folder is not there (create it) or because of the chmod configuration (please ensure this directory is writable by php), alternatively you can change the directory used with $dwoo->setCompileDir() or provide a custom loader object with $dwoo->setLoader()');
             }
             $this->classPath += $tmp;
