@@ -66,3 +66,12 @@ php:7.1:
       - php composer.phar install
       - echo "Running PHPUnit Tests on PHP7.1"
       - php vendor/bin/phpunit --colors --debug  --coverage-text
+
+# PHP7.2
+php:7.2:
+    image: php:7.2
+    script:
+      - curl -sS https://getcomposer.org/installer | php
+      - php composer.phar install
+      - echo "Running PHPUnit Tests on PHP7.2"
+      - php vendor/bin/phpunit --colors --debug  --coverage-text

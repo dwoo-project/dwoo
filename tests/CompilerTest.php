@@ -490,7 +490,9 @@ replace="BAR"
 
         public function testSetStringValToTrueWhenUsingNamedParams()
         {
-            $this->dwoo->addPlugin('test', create_function('Dwoo\Core $dwoo, $name, $bool=false', 'return $bool ? $name."!" : $name."?";'));
+            $this->dwoo->addPlugin('test', function (Core $dwoo, $name, $bool = false) {
+                return $bool ? $name . "!" : $name . "?";
+            });
             $tpl = new TemplateString('{test name="Name"}{test name="Name" bool}');
             $tpl->forceCompilation();
 
