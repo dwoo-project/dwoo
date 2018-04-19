@@ -71,7 +71,7 @@ class Loader implements ILoader
 
         if (file_exists($cacheFile)) {
 
-            $chachedClassPath = unserialize(file_get_contents($cacheFile));
+            $chachedClassPath = @unserialize(file_get_contents($cacheFile));
 
             if (is_array($chachedClassPath)) {
                 $this->classPath = $chachedClassPath + $this->classPath;
@@ -184,7 +184,7 @@ class Loader implements ILoader
         $chachedClassPath = null;
 
         if (file_exists($cacheFile)) {
-            $chachedClassPath = unserialize(file_get_contents($cacheFile));
+            $chachedClassPath = @unserialize(file_get_contents($cacheFile));
         }
 
         if (is_array($chachedClassPath)) {
