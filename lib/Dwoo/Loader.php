@@ -71,7 +71,7 @@ class Loader implements ILoader
 
         if (file_exists($cacheFile)) {
 
-            $chachedClassPath = @unserialize(file_get_contents($cacheFile));
+            $chachedClassPath = unserialize(file_get_contents($cacheFile));
 
             if (is_array($chachedClassPath)) {
                 $this->classPath = $chachedClassPath + $this->classPath;
@@ -180,15 +180,9 @@ class Loader implements ILoader
         $cacheFile = $this->cacheDir . 'classpath-' . substr(strtr($pluginDir, '/\\:' . PATH_SEPARATOR, '----'),
                 strlen($pluginDir) > 80 ? - 80 : 0) . '.d' . Core::RELEASE_TAG . '.php';
         $this->paths[$pluginDir] = $cacheFile;
-
-        $chachedClassPath = null;
-
         if (file_exists($cacheFile)) {
-            $chachedClassPath = @unserialize(file_get_contents($cacheFile));
-        }
-
-        if (is_array($chachedClassPath)) {
-            $this->classPath = $chachedClassPath + $this->classPath;
+            $classpath       = file_get_contents($cacheFile);
+            $this->classPath = unserialize($classpath) + $this->classPath;
         } else {
             $this->rebuildClassPathCache($pluginDir, $cacheFile);
         }
