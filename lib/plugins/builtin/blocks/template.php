@@ -71,7 +71,7 @@ class Dwoo_Plugin_template extends Dwoo_Block_Plugin implements Dwoo_ICompilable
         }
         $init .= '/* -- template start output */';
 
-        $funcName = 'Dwoo_Plugin_'.$params['name'].'_'.$params['uuid'];
+        $funcName = 'Dwoo_Plugin_'.$params['name'];
 
         $search = array(
             '$this->charset',

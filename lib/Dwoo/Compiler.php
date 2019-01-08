@@ -533,9 +533,11 @@ class Dwoo_Compiler implements Dwoo_ICompiler
      * @param string $uuid   unique id of the function
      * @param string $body   function php code
      */
-    public function addTemplatePlugin($name, array $params, $uuid, $body = null)
+    public function addTemplatePlugin($name, array $params, $uuid, $body = null, Dwoo_ITemplate $sourceTpl = null)
     {
-        $this->templatePlugins[$name] = array('params' => $params, 'body' => $body, 'uuid' => $uuid);
+        if (!array_key_exists($name, $this->templatePlugins) || $this->templatePlugins[$name]['uuid'] == $uuid) {
+            $this->templatePlugins[$name] = array('params'=> $params, 'body' => $body, 'uuid' => $uuid, 'sourceTpl' => $sourceTpl);
+        }
     }
 
     /**
@@ -2031,7 +2033,7 @@ class Dwoo_Compiler implements Dwoo_ICompiler
         } elseif ($pluginType & Dwoo_Core::TEMPLATE_PLUGIN) {
             array_unshift($params, '$this');
             $params = self::implode_r($params);
-            $output = 'Dwoo_Plugin_'.$func.'_'.$this->templatePlugins[$func]['uuid'].'('.$params.')';
+            $output = 'Dwoo_Plugin_'.$func.'('.$params.')';
             $this->templatePlugins[$func]['called'] = true;
         }
 
