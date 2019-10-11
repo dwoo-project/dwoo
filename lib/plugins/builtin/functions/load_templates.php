@@ -47,30 +47,46 @@ function Dwoo_Plugin_load_templates_compile(Dwoo_Compiler $compiler, $file)
 
     $cmp = clone $compiler;
     $cmp->compile($compiler->getDwoo(), $tpl);
-    foreach ($cmp->getTemplatePlugins() as $template => $args) {
-        $compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body']);
+    $usedTemplates = array($tpl);
+    foreach ($cmp->getTemplatePlugins() as $template=>$args) {
+        if (isset($args['sourceTpl'])) {
+            $sourceTpl = $args['sourceTpl'];
+        } else {
+            $sourceTpl = $tpl;
+        }
+
+        $compiler->addTemplatePlugin($template, $args['params'], $args['uuid'], $args['body'], $sourceTpl);
+
+        if (!in_array($sourceTpl, $usedTemplates, true)) {
+            $usedTemplates[] = $sourceTpl;
+        }
     }
-    foreach ($cmp->getUsedPlugins() as $plugin => $type) {
+    foreach ($cmp->getUsedPlugins() as $plugin=>$type) {
         $compiler->addUsedPlugin($plugin, $type);
     }
 
     $out = '\'\';// checking for modification in '.$resource.':'.$identifier."\r\n";
 
-    $modCheck = $tpl->getIsModifiedCode();
+    foreach ($usedTemplates AS $usedTemplate) {
+        $modCheck = $usedTemplate->getIsModifiedCode();
 
-    if ($modCheck) {
-        $out .= 'if (!('.$modCheck.')) { ob_end_clean(); return false; }';
-    } else {
-        $out .= 'try {
-	$tpl = $this->templateFactory("'.$resource.'", "'.$identifier.'");
+        if ($modCheck) {
+            $out .= 'if (!('.$modCheck.')) { ob_end_clean(); return false; }';
+        } else {
+            $usedTemplateResourceName = $usedTemplate->getResourceName();
+            $usedTemplateResourceIdentifier = $usedTemplate->getResourceIdentifier();
+            $out .= '
+try {
+	$tpl = $this->templateFactory("'.$usedTemplateResourceName.'", "'.$usedTemplateResourceIdentifier.'");
 } catch (Dwoo_Exception $e) {
-	$this->triggerError(\'Load Templates : Resource <em>'.$resource.'</em> was not added to Dwoo, can not extend <em>'.$identifier.'</em>\', E_USER_WARNING);
+	$this->triggerError(\'Load Templates : Resource <em>'.$usedTemplateResourceName.'</em> was not added to Dwoo, can not extend <em>'.$usedTemplateResourceIdentifier.'</em>\', E_USER_WARNING);
 }
 if ($tpl === null)
-	$this->triggerError(\'Load Templates : Resource "'.$resource.':'.$identifier.'" was not found.\', E_USER_WARNING);
+	$this->triggerError(\'Load Templates : Resource "'.$usedTemplateResourceName.':'.$usedTemplateResourceIdentifier.'" was not found.\', E_USER_WARNING);
 elseif ($tpl === false)
-	$this->triggerError(\'Load Templates : Resource "'.$resource.'" does not support extends.\', E_USER_WARNING);
-if ($tpl->getUid() != "'.$tpl->getUid().'") { ob_end_clean(); return false; }';
+	$this->triggerError(\'Load Templates : Resource "'.$usedTemplateResourceName.'" does not support extends.\', E_USER_WARNING);
+if ($tpl->getUid() != "'.$usedTemplate->getUid().'") { ob_end_clean(); return false; }';
+        }
     }
 
     return $out;
